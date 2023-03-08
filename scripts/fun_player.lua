@@ -10,6 +10,7 @@ end
 local function player_hunger_up(player, delta)
     player.components.talker:Say("饱食度升级了")
     value(player)
+    GLOBAL.TheWorld.components.ksfun_data:Save(player)
 end
 
 
