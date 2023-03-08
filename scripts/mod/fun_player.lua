@@ -15,7 +15,7 @@ end
 
 -- 初始化角色
 AddPlayerPostInit(function(player)
-    player.components.AddComponent("ksfun_hunger")
+    player:AddComponent("ksfun_hunger")
     player.components.ksfun_hunger:SetHungerUpFunc(player_hunger_up)
 
     player:ListenForEvent("oneat", function(inst, data)
