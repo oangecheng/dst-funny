@@ -8,8 +8,8 @@ local KsFunHealth = Class(function(self, inst)
 end)
 
 -- 升级需要多少经验值
-local function require_exp()
-    return (self.level + 1) * 100
+local function require_exp(level)
+    return (level + 1) * 100
 end
 
 -- 设置监听
@@ -23,9 +23,9 @@ function KsFunHealth:GainExp(value)
 
     -- 计算可以升的级数
     local delta = 0
-    while self.exp > requireExp() do
+    while self.exp > require_exp(self.level) do
         delta = delta + 1 
-        self.exp = self.exp - requireExp()
+        self.exp = self.exp - require_exp(self.level)
         self.level = self.level + 1
     end
 
