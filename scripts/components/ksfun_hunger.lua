@@ -19,6 +19,11 @@ function KsFunHunger:SetLevel(level, gain_exp)
     if self.hunger_up_func ~= nil then
         self.hunger_up_func(self.inst, gain_exp)
     end
+
+    if self.inst.replica.ksfun_hunger then
+        self.inst.replica.ksfun_hunger:SyncData(level)
+    end
+
 end
 
 -- 设置监听
