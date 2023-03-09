@@ -39,7 +39,7 @@ function KsFunHealth:GainExp(value)
 
     -- 大于0表示可以升级，触发升级逻辑
     if delta > 0 then
-        SetLevel(self.level, true)
+        self:SetLevel(self.level, true)
     end
 end 
 
