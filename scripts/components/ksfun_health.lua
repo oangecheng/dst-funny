@@ -4,7 +4,7 @@ local KsFunHealth = Class(function(self, inst)
     self.level  = 0
     self.exp = 0
     self.exp_multi = 1
-    self.helth_up_func = nil
+    self.health_up_func = nil
 end)
 
 -- 升级需要多少经验值
@@ -12,9 +12,17 @@ local function require_exp(level)
     return (level + 1) * 100
 end
 
+function KsFunHunger:SetLevel(level, gain_exp)
+    self.level = level
+       -- 大于0表示可以升级，触发升级逻辑
+    if self.health_up_func ~= nil then
+        self.health_up_func(self.inst, gain_exp)
+    end
+end
+
 -- 设置监听
 function KsFunHealth:SetHealthUpFunc(func)
-    self.helth_up_func = func
+    self.health_up_func = func
 end
 
 -- 获取经验
@@ -30,8 +38,8 @@ function KsFunHealth:GainExp(value)
     end
 
     -- 大于0表示可以升级，触发升级逻辑
-    if delta > 0 and self.helth_up_func ~= nil then
-        self.helth_up_func(self.inst, value)
+    if delta > 0 then
+        SetLevel(self.level, true)
     end
 end 
 

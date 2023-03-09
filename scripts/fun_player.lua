@@ -1,16 +1,20 @@
--- 刷新角色的最大饥饿值
-local function value(inst)
+-- 刷新角色的最大饥饿值 
+
+
+local function update_hunger_status(inst)
     local lv = inst.components.ksfun_hunger.level
-	local hunger_percent = inst.components.hunger:GetPercent()
-	inst.components.hunger.max = 100 + lv*2
+	inst.components.hunger.max = 100 + lv
+    local hunger_percent = inst.components.hunger:GetPercent()
 	inst.components.hunger:SetPercent(hunger_percent)
 end
 
 
-local function player_hunger_up(player, delta)
-    player.components.talker:Say("饱食度升级了")
-    value(player)
-    GLOBAL.TheWorld.components.ksfun_data:Save(player)
+local function player_hunger_up(player, gain_exp)
+    if gain_exp then
+        player.components.talker:Say("吃的越多，肚子越大！")
+    end
+    update_hunger_status(player)
+    GLOBAL.TheWorld.components.ksfun_data:CachePlayerStatus(player)
 end
 
 
@@ -27,6 +31,6 @@ AddPlayerPostInit(function(player)
     end)
 
     player.OnLoad = function(inst)
-        value(inst) 
+        update_hunger_status(inst) 
     end
 end)

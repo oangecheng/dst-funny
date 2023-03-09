@@ -12,6 +12,13 @@ local function require_exp(level)
     return (level + 1) *100
 end
 
+function KsFunHunger:SetLevel(level, gain_exp)
+    self.level = level
+    if self.sanity_up_func ~= nil then
+        self.sanity_up_func(self.inst, gain_exp)
+    end
+end
+
 -- 设置监听
 function KsFunSanity:SetSanityUpFunc(func)
     self.sanity_up_func = func
@@ -30,8 +37,8 @@ function KsFunSanity:GainExp(value)
     end
 
     -- 大于0表示可以升级，触发升级逻辑
-    if delta > 0 and self.sanity_up_func ~= nil then
-        self.sanity_up_func(self.inst, delta)
+    if delta > 0 then
+        SetLevel(self.level, true)
     end
 end 
 
