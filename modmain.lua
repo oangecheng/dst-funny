@@ -11,7 +11,7 @@ end)
 
 if GLOBAL.TheNet:GetIsServer() then
 
-    modimport("scripts/mod/fun_player.lua")
+    modimport("scripts/mod/ksfun_hunger_policy.lua")
 
     AddPrefabPostInit("world",function(inst)
         inst:AddComponent("ksfun_data")
