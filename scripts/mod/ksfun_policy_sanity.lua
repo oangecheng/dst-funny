@@ -14,14 +14,22 @@ local EXP_DEFS = {
 
 -- 更新角色的精神数据
 local function update_sanity_state(inst)
-    
+    local lv = inst.components.ksfun_sanity.level
+	inst.components.sanity.max = 100 + lv
+    local sanity_percent = inst.components.sanity:GetPercent()
+	inst.components.sanity:SetPercent(sanity_percent)
 end
 
 
--- 血量提升时
+-- 精神等级提升的时候
 local function on_sanity_up(inst, gain_exp)
-end
+    update_sanity_state(inst)
+    GLOBAL.TheWorld.components.ksfun_data:CachePlayerStatus(inst)
 
+    if gain_exp then
+        inst.components.talker:Say("我越来越聪明了！")
+    end
+end
 
 
 -- 查找对应列表中物品
@@ -39,6 +47,7 @@ local function get_target_exp(data)
 end
 
 
+-- 制作物品
 local function on_item_build(inst, data)
     local exp = get_target_exp(data) * 1
     if inst.components.ksfun_sanity then
@@ -47,6 +56,7 @@ local function on_item_build(inst, data)
 end
 
 
+-- 制作建筑的经验是物品的两倍
 local function on_structure_build(inst, data)
     local exp = get_target_exp(data) * 2
     if inst.components.ksfun_sanity then
