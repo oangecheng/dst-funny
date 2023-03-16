@@ -11,11 +11,14 @@ end)
 
 if GLOBAL.TheNet:GetIsServer() then
 
-    modimport("scripts/mod/ksfun_hunger_policy.lua")
-    modimport("scripts/mod/ksfun_health_policy.lua")
+    -- 加载各种玩法
+    modimport("scripts/mod/ksfun_policy_hunger.lua")
+    modimport("scripts/mod/ksfun_policy_health.lua")
+    modimport("scripts/mod/ksfun_policy_sanity.lua")
 
+    -- 世界初始化
     AddPrefabPostInit("world",function(inst)
-        inst:AddComponent("ksfun_data")
+        inst:AddComponent("ksfun_world_player")
     end)
 
 end

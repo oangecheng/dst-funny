@@ -23,7 +23,7 @@ local function on_hunger_up(player, gain_exp)
         player.components.talker:Say("吃的越多，肚子越大！")
     end
     update_hunger_status(player)
-    GLOBAL.TheWorld.components.ksfun_data:CachePlayerStatus(player)
+    GLOBAL.TheWorld.components.ksfun_world_player:CachePlayerStatus(player)
 end
 
 

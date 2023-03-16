@@ -24,7 +24,7 @@ end
 -- 精神等级提升的时候
 local function on_sanity_up(inst, gain_exp)
     update_sanity_state(inst)
-    GLOBAL.TheWorld.components.ksfun_data:CachePlayerStatus(inst)
+    GLOBAL.TheWorld.components.ksfun_world_player:CachePlayerStatus(inst)
 
     if gain_exp then
         inst.components.talker:Say("我越来越聪明了！")

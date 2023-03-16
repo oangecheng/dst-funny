@@ -10,7 +10,7 @@ end
 -- 血量提升时
 local function on_health_up(inst, gain_exp)
     update_health_state(inst)
-    GLOBAL.TheWorld.components.ksfun_data:CachePlayerStatus(player)
+    GLOBAL.TheWorld.components.ksfun_world_player:CachePlayerStatus(player)
     if gain_exp then
         inst.components.talker:Say("血量提升！")
     end
