@@ -1,6 +1,62 @@
 -- 刷新角色的最大饥饿值 
 
-local HUNGER_RATE_TOKEN = "ksfun_hunger"
+local HUNGER_RATE_TOKEN = "ksfun_hunger_rate"
+local HUNGER_WORK_TOKEN = "ksfun_hunger_work"
+
+
+local function need_hook_speed(self)
+    if TheWorld.ismastersim then
+        if self.inst.components.rider ~= nil and self.inst.components.rider:IsRiding() then return false end
+        if self.inst.components.ksfun_hunger == nil then return false end
+        return self.inst.components.ksfun_hunger.level > 100 or false
+    else
+        if self.inst.replica.rider and self.inst.replica.rider:IsRiding() then return false end
+        if self.inst.replica.ksfun_hunger == nil then return false end
+        return self.inst.replica.ksfun_hunger.level > 100 or false
+    end
+end
+
+
+local function hook_carry_heavy_speed(self)
+    local oldGetSpeedMultiplier = self.GetSpeedMultiplier
+	if TheWorld.ismastersim then
+		self.GetSpeedMultiplier = function(self)
+			if need_hook_speed(self) then
+				local mult = self:ExternalSpeedMultiplier()
+				if self.inst.components.inventory ~= nil then
+					for k, v in pairs(self.inst.components.inventory.equipslots) do
+						if v.components.equippable ~= nil then
+							local item_speed_mult = v.components.equippable:GetWalkSpeedMult()
+							mult = mult * math.max(item_speed_mult, 1)
+						end
+					end
+				end
+				return mult * (self:TempGroundSpeedMultiplier() or self.groundspeedmultiplier) * self.throttle
+			elseif oldGetSpeedMultiplier then
+				return oldGetSpeedMultiplier(self)
+			end
+		end
+	else
+		self.GetSpeedMultiplier = function(self)
+			if need_hook_speed(self) then
+				local mult = self:ExternalSpeedMultiplier()
+				local inventory = self.inst.replica.inventory
+				if inventory ~= nil then
+					for k, v in pairs(inventory:GetEquips()) do
+						local inventoryitem = v.replica.inventoryitem
+						if inventoryitem ~= nil then
+							local item_speed_mult = inventoryitem:GetWalkSpeedMult()
+							mult = mult * math.max(item_speed_mult,1)
+						end
+					end
+				end
+				return mult * (self:TempGroundSpeedMultiplier() or self.groundspeedmultiplier) * self.throttle
+			elseif oldGetSpeedMultiplier then
+				return oldGetSpeedMultiplier(self)
+			end
+		end
+	end
+end
 
 
 -- 更新角色的状态
@@ -14,6 +70,15 @@ local function update_hunger_status(inst)
     -- 100级之后每级新增千分之5的饱食度下降
     local multi = math.max(0 , lv - 100) * 0.005 + 1
     inst.components.hunger.burnratemodifiers:SetModifier(HUNGER_RATE_TOKEN, multi)
+
+    -- 升级可以提升角色的工作效率
+    -- 吃得多力气也越大
+    if inst.components.workmultiplier then
+        local multi = lv / 100 + 1
+        inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP, multi,  HUNGER_WORK_TOKEN)
+        inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE, multi, HUNGER_WORK_TOKEN)
+        inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, multi, HUNGER_WORK_TOKEN)
+    end 
 end
 
 
@@ -36,9 +101,10 @@ local function calcu_food_exp(eater, food)
     return (0 * hunger + health * 0.4 + sanity * 0.6) * 20
 end
 
+-- 初始化组件
+local function init_player(player)
+    if not TheWorld.ismastersim then return end
 
--- 初始化角色
-AddPlayerPostInit(function(player)
     player:AddComponent("ksfun_hunger")
     player.components.ksfun_hunger:SetHungerUpFunc(on_hunger_up)
 
@@ -56,4 +122,7 @@ AddPlayerPostInit(function(player)
             old_on_load(inst)
         end
     end
-end)
+end
+
+AddPlayerPostInit(init_player)
+AddComponentPostInit("locomotor", hook_carry_heavy_speed)
