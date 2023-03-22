@@ -12,7 +12,7 @@ local function require_exp(level)
     return (level + 1) *100
 end
 
-function KsFunHunger:SetLevel(level, gain_exp)
+function KsFunSanity:SetLevel(level, gain_exp)
     self.level = level
     if self.sanity_up_func ~= nil then
         self.sanity_up_func(self.inst, gain_exp)

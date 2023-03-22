@@ -29,7 +29,9 @@ local function on_kill_other(inst, data)
         local exp = victim.components.health.maxhealth
         local x,y,z = victim.Transform:GetWorldPosition()
         local players = TheSim:FindEntities(x,y,z, 10, {"player"})
-        local players_count = #ents
+        
+        if players == nil then return end
+        local players_count = #players
         -- 单人模式经验100%，多人经验获取会减少，最低50%
         local exp_multi = math.max((6 - players_count) * 0.2, 0.5)
         for i, player in ipairs(players) do

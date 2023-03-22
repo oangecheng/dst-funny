@@ -12,7 +12,7 @@ local function require_exp(level)
     return (level + 1) * 100
 end
 
-function KsFunHunger:SetLevel(level, gain_exp)
+function KsFunHealth:SetLevel(level, gain_exp)
     self.level = level
        -- 大于0表示可以升级，触发升级逻辑
     if self.health_up_func ~= nil then
