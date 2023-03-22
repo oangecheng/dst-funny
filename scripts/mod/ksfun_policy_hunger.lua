@@ -1,6 +1,5 @@
 -- 刷新角色的最大饥饿值 
 
-local HUNGER_RATE_TOKEN = "ksfun_hunger_rate"
 local HOOK_SPEED_LEVEL = 100
 
 
@@ -46,11 +45,18 @@ end
 
 
 
--- 升级触发事件
+-- 饱食等级提升
 local function on_hunger_up(player, gain_exp)
     if gain_exp then
         player.components.talker:Say("吃的越多，肚子越大！")
     end
+    update_hunger_status(player)
+    GLOBAL.TheWorld.components.ksfun_world_player:CachePlayerStatus(player)
+end
+
+
+-- 饱食等级下降
+local function on_hunger_down(player)
     update_hunger_status(player)
     GLOBAL.TheWorld.components.ksfun_world_player:CachePlayerStatus(player)
 end
@@ -66,19 +72,33 @@ local function calcu_food_exp(eater, food)
 end
 
 
+-- 死亡降低饱食等级
+local function on_death(inst, data)
+    if inst.components.ksfun_hunger then
+        inst.components.ksfun_hunger:Downgrade(1)
+    end
+end
+
+
+-- 吃东西获得经验
+local function on_eat(inst, data)
+    if data and data.food then
+        hunger_exp = calcu_food_exp(inst, data.food)
+        inst.components.ksfun_hunger:GainExp(hunger_exp) 
+    end
+end
+
+
 -- 初始化组件
 local function init_player(player)
     if not TheWorld.ismastersim then return end
 
     player:AddComponent("ksfun_hunger")
     player.components.ksfun_hunger:SetHungerUpFunc(on_hunger_up)
+    player.components.ksfun_hunger:SetHungerDownFunc(on_hunger_down)
 
-    player:ListenForEvent("oneat", function(inst, data)
-        if data and data.food then
-            hunger_exp = calcu_food_exp(inst, data.food)
-            inst.components.ksfun_hunger:GainExp(hunger_exp) 
-        end
-    end)
+    player:ListenForEvent("oneat", on_eat)
+    player:ListenForEvent("death", on_death)
 
     local old_on_load = player.OnLoad
     player.OnLoad = function(inst)

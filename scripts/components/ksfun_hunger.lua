@@ -1,11 +1,3 @@
--- 生命值组件
-local KsFunHunger = Class(function(self, inst)
-    self.inst = inst
-    self.level  = 0
-    self.exp = 0
-    self.exp_multi = 1
-    self.hunger_up_func = nil
-end)
 
 -- 升级需要多少经验值
 local function require_exp(level)
@@ -13,23 +5,56 @@ local function require_exp(level)
 end
 
 
+local function sync_data(inst, level)
+    if inst.replica.ksfun_hunger then
+        inst.replica.ksfun_hunger:SyncData(level)
+    end
+end
+
+
+-- 生命值组件
+local KsFunHunger = Class(function(self, inst)
+    self.inst = inst
+    self.level  = 0
+    self.exp = 0
+    self.exp_multi = 1
+    self.hunger_up_func = nil
+    self.hunger_down_func = nil
+end)
+
+
+-- 设置监听
+function KsFunHunger:SetHungerUpFunc(func)
+    self.hunger_up_func = func
+end
+-- 设置监听
+function KsFunHunger:SetHungerDownFunc(func)
+    self.hunger_down_func = func
+end 
+
+
+-- 升级函数
 function KsFunHunger:SetLevel(level, gain_exp)
     self.level = level
        -- 大于0表示可以升级，触发升级逻辑
     if self.hunger_up_func ~= nil then
         self.hunger_up_func(self.inst, gain_exp)
     end
-
-    if self.inst.replica.ksfun_hunger then
-        self.inst.replica.ksfun_hunger:SyncData(level)
-    end
-
+    sync_data(self.inst, self.level)
 end
 
--- 设置监听
-function KsFunHunger:SetHungerUpFunc(func)
-    self.hunger_up_func = func
-end 
+
+-- 降级函数
+-- 等级下降，当前经验清空
+function KsFunHunger:Downgrade(delta)
+    self.level = math.max(self.level - delta, 0)
+    self.exp = 0
+    if self.hunger_down_func then
+        self.hunger_down_func(self.inst)
+    end
+    sync_data(self.inst, self.level)
+end
+
 
 -- 获取经验
 function KsFunHunger:GainExp(value)
