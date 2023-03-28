@@ -22,11 +22,22 @@ function KSFUN_TASK_SYSTEM:Attach(task)
     local i = findExistTask(task, self.tasks)
     if not i then
         table.insert(self.tasks, task)
+        task.components.ksfun_task:Bind(self.inst)
     end
-    -- 当前没有任务在执行，开始执行任务
-    if not current_task then
-        task.components.ksfun_task:Start(self.inst)
-        current_task = task
+end
+
+
+-- 开始执行任务
+function KSFUN_TASK_SYSTEM:Start(task)
+    if current_task ~= nil then return end
+    local next_t = nil
+    for i,v in ipairs(self.tasks) do
+        next = v
+        break
+    end
+    if next_t ~= nil then
+        current_task = next_t
+        current_task.components.ksfun_task:Start()
     end
 end
 
@@ -36,14 +47,7 @@ function KSFUN_TASK_SYSTEM:Detach(task)
     local i = findExistTask(task, self.tasks)
     if i then
         table.remove(self.tasks, i)
-    end
-    -- 当有任务移除时，5s后执行列表当中的下一个任务
-    for i,v in ipairs(self.tasks) do
-        self.inst:DoTaskInTime(5, function(inst)
-            v.components.ksfun_task:Start(self.inst)
-            current_task = v
-        end)
-        break
+        self:Start()
     end
 end
 

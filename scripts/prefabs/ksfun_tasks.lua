@@ -16,6 +16,8 @@ OWNER_DEFS = {
     {type = 2, name = "ksfun_weapon"}
 }
 
+
+-- 击杀任务完成判定
 local function isKillTaskSuccess(inst, data, task)
     if not (data and data.victim) then return false end
     local demand = task.demand.data
@@ -30,48 +32,48 @@ end
 
 
 -- 任务成功监听
-local function onTaskSuccess(inst, task)
-    inst.components.timer:StopTimer(inst)
-    inst:DoTaskInTime(0, inst.Remove)
+local function onTaskSuccess(task)
+    task.inst.components.timer:StopTimer(inst)
+    task.inst:DoTaskInTime(0, inst.Remove)
 end
 
 
 -- 任务失败监听
-local function onTaskFail(inst, task)
-    inst:DoTaskInTime(0, inst.Remove)
+local function onTaskFail(task)
+    task.inst:DoTaskInTime(0, task.inst.Remove)
 end
 
 
-local function startMonitorTask(inst, task)
-    local player = task.player
-    if task.demand.type == 1 then
-
-        player:ListenForEvent("killed", function(inst, data)
+local function startMonitorTask(task)
+    local inst = task.inst
+    local target = task.target
+    if task.demand.data.type == 1 then
+        target:ListenForEvent("killed", function(inst, data)
             if isKillTaskSuccess(inst, data, task) then
                 task:Success()
             end
         end)
 
-    elseif task.demand.type == 2 then
+    elseif task.demand.data.type == 2 then
 
     end
 end
 
 
-local function onTaskStart(inst, task)
+local function onTaskStart(task)
     -- 任务开始校验一下，后面不需要校验了
-    if not (task and task.player and task.demand and task.reward) then 
-        return 
+    if not task then return  end
+    -- 角色说话
+    if task.target.components.talker then
+        task.target.components.talker:Say(task.desc)
     end
 
-    task.player.components.talker:Say(task.desc)
-
-    local function onTimeDone(inst, data)
+    local function onTimeDone(data)
         task:Fail()
     end
 
-    startMonitorTask(inst, task)
-    inst.components.timer:StartTimer(inst, task.demand.data.duration)
+    startMonitorTask(task)
+    inst.components.timer:StartTimer(task.inst, task.demand.data.duration)
     inst:ListenForEvent("timerdone", onTimeDone)
 end
 
@@ -98,9 +100,12 @@ local function MakeTask(name, data)
         inst.components.ksfun_task.reward = data.reward
         inst.components.ksfun_task.punish = data.punish
 
-        inst.components.ksfun_task.on_start = onTaskStart
-        inst.components.ksfun_task.on_success = onTaskSuccess
-        inst.components.ksfun_task.on_fail = onTaskFail
+        inst.components.ksfun_task.onStart = onTaskStart
+        inst.components.ksfun_task.onSuccess = onTaskSuccess
+        inst.components.ksfun_task.onFail = onTaskFail
+        inst.components.ksfun_task.onAttach = function(task)
+            inst.entity:SetParent(task.target)
+        end
 
         return inst
     end
