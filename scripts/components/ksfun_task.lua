@@ -50,3 +50,6 @@ function KSFUN_TASK:Fail()
         self.player:PushEvent("ksfun_task_state", self)
     end
 end
+
+
+return KSFUN_TASK
