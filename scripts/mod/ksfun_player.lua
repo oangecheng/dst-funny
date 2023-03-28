@@ -1,23 +1,20 @@
 
+-- 任务状态变更
+local function onTaskStateChange(task)
+    if not (task and task.player and task.inst) then return end
+    local state = task.state
+    -- 任务成功或者失败需要从任务系统当中移除
+    if (state == 0) or (state == -1) then
+        local task_system = task.player.components.ksfun_task_system
+        if task_system then
+            task_system:Detach(task.inst)
+        end
+    end
+end
 
 
 -- 初始化角色
 AddPlayerPostInit(function(player)
-    player:AddComponent("ksfun_hunger")
-    player.components.ksfun_hunger:SetHungerUpFunc(on_hunger_up)
-
-    player:ListenForEvent("oneat", function(inst, data)
-        if data and data.food then
-            hunger_exp = calcu_food_exp(inst, data.food)
-            inst.components.ksfun_hunger:GainExp(hunger_exp) 
-        end
-    end)
-
-    local old_on_load = player.OnLoad
-    player.OnLoad = function(inst)
-        update_hunger_status(inst) 
-        if old_on_load ~= nil then
-            old_on_load(inst)
-        end
-    end
+    player:AddComponent("ksfun_task_system")
+    player:ListenForEvent("ksfun_task_state", onTaskStateChange)
 end)

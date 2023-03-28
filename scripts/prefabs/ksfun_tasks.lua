@@ -31,7 +31,6 @@ end
 
 -- 任务成功监听
 local function onTaskSuccess(inst, task)
-    task.player.components.talker:Say("任务完成")
     inst.components.timer:StopTimer(inst)
     inst:DoTaskInTime(0, inst.Remove)
 end
@@ -39,7 +38,6 @@ end
 
 -- 任务失败监听
 local function onTaskFail(inst, task)
-    task.player.components.talker:Say("任务失败")
     inst:DoTaskInTime(0, inst.Remove)
 end
 
@@ -73,7 +71,7 @@ local function onTaskStart(inst, task)
     end
 
     startMonitorTask(inst, task)
-    inst.components.timer:StartTimer(inst, task.demand.duration)
+    inst.components.timer:StartTimer(inst, task.demand.data.duration)
     inst:ListenForEvent("timerdone", onTimeDone)
 end
 
@@ -107,7 +105,7 @@ local function MakeTask(name, data)
         return inst
     end
 
-    return Prefab(name, fn, nil, 1)
+    return Prefab(name, fn, nil, prefabs)
 end
 
 

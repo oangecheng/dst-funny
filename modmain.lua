@@ -15,6 +15,7 @@ modimport("scripts/mod/ksfun_policy_hunger.lua")
 if GLOBAL.TheNet:GetIsServer() then
     modimport("scripts/mod/ksfun_policy_health.lua")
     modimport("scripts/mod/ksfun_policy_sanity.lua")
+    modimport("scripts/mod/ksfun_player.lua")
 
     -- 世界初始化
     AddPrefabPostInit("world",function(inst)
