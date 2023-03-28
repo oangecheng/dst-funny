@@ -1,6 +1,6 @@
 
 DEMAND_DEFS = {
-    {type = 1, data = {victim = "dragonfly", num = 1, duration = 2*TUNING.TOTAL_DAY_TIME}}
+    {type = 1, data = {victim = "dragonfly", num = 1, duration = 15}}
 }
 
 REWARD_DEFS = {
@@ -17,13 +17,19 @@ OWNER_DEFS = {
 }
 
 
+local function onTaskFinish(task)
+    task.target:PushEvent("ksfun_task_finish", task)
+    task.inst:DoTaskInTime(0.5, task.inst.Remove)
+end
+
+
 -- 击杀任务完成判定
 local function isKillTaskSuccess(inst, data, task)
     if not (data and data.victim) then return false end
     local demand = task.demand.data
     if data.victim.prefab == demand.victim then
         demand.num = math.max(demand.num - 1, 0)
-        if demand.num == 0 and on_success then
+        if demand.num == 0 then
             return true
         end
     end
@@ -33,23 +39,32 @@ end
 
 -- 任务成功监听
 local function onTaskSuccess(task)
-    task.inst.components.timer:StopTimer(inst)
-    task.inst:DoTaskInTime(0, inst.Remove)
+     -- 角色说话
+     if task.target.components.talker then
+        task.target.components.talker:Say("任务完成")
+    end
+    
+    task.inst.components.timer:StopTimer(task.inst)
+    onTaskFinish(task)
 end
 
 
 -- 任务失败监听
 local function onTaskFail(task)
-    task.inst:DoTaskInTime(0, task.inst.Remove)
+    -- 角色说话
+    if task.target.components.talker then
+        task.target.components.talker:Say("任务失败")
+    end
+    onTaskFinish(task)
 end
 
 
 local function startMonitorTask(task)
     local inst = task.inst
     local target = task.target
-    if task.demand.data.type == 1 then
-        target:ListenForEvent("killed", function(inst, data)
-            if isKillTaskSuccess(inst, data, task) then
+    if task.demand.type == 1 then
+        target:ListenForEvent("killed", function(player, data)
+            if isKillTaskSuccess(player, data, task) then
                 task:Success()
             end
         end)
@@ -73,8 +88,8 @@ local function onTaskStart(task)
     end
 
     startMonitorTask(task)
-    inst.components.timer:StartTimer(task.inst, task.demand.data.duration)
-    inst:ListenForEvent("timerdone", onTimeDone)
+    task.inst.components.timer:StartTimer(task.inst, task.demand.data.duration)
+    task.inst:ListenForEvent("timerdone", onTimeDone)
 end
 
 
@@ -95,7 +110,7 @@ local function MakeTask(name, data)
 
         inst:AddComponent("timer")
         inst:AddComponent("ksfun_task")
-        inst.components.ksfun_task.type = data.type
+        inst.components.ksfun_task.name = data.type
         inst.components.ksfun_task.demand = data.demand
         inst.components.ksfun_task.reward = data.reward
         inst.components.ksfun_task.punish = data.punish
@@ -104,7 +119,6 @@ local function MakeTask(name, data)
         inst.components.ksfun_task.onSuccess = onTaskSuccess
         inst.components.ksfun_task.onFail = onTaskFail
         inst.components.ksfun_task.onAttach = function(task)
-            inst.entity:SetParent(task.target)
         end
 
         return inst

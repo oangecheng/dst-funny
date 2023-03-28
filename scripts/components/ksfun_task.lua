@@ -41,7 +41,7 @@ end
 function KSFUN_TASK:Success()
     self.state = 2
     if self.onSuccess then
-        self.onSuccess(self.inst)
+        self.onSuccess(self)
     end
 end  
 
@@ -49,7 +49,7 @@ end
 function KSFUN_TASK:Fail()
     self.state = -1
     if self.onFail then
-        self.onFail(self.inst)
+        self.onFail(self)
     end
 end
 

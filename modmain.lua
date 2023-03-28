@@ -1,5 +1,9 @@
 GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) end})
 
+PrefabFiles = {
+    "ksfun_tasks",
+}
+
 
 AddReplicableComponent("ksfun_hunger")
 

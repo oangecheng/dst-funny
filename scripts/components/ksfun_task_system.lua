@@ -1,7 +1,7 @@
 
 -- 查找任务
 local function findExistTask(task, list)
-    for i,v in ipairs(self.tasks) do
+    for i,v in ipairs(list) do
         if v.prefab == task.prefab then
             return i
         end
@@ -29,21 +29,22 @@ end
 
 -- 开始执行任务
 function KSFUN_TASK_SYSTEM:Start(task)
-    if current_task ~= nil then return end
+    if self.current_task ~= nil then return end
     local next_t = nil
     for i,v in ipairs(self.tasks) do
-        next = v
+        next_t = v
         break
     end
     if next_t ~= nil then
-        current_task = next_t
-        current_task.components.ksfun_task:Start()
+        self.current_task = next_t
+        self.current_task.components.ksfun_task:Start()
     end
 end
 
 
 -- 将任务从队列当中移除
 function KSFUN_TASK_SYSTEM:Detach(task)
+    self.current_task = nil
     local i = findExistTask(task, self.tasks)
     if i then
         table.remove(self.tasks, i)

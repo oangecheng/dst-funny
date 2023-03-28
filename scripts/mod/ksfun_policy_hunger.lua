@@ -82,6 +82,11 @@ end
 
 -- 吃东西获得经验
 local function on_eat(inst, data)
+
+    local task = SpawnPrefab("ksfun_task_test")
+    inst.components.ksfun_task_system:Attach(task)
+    inst.components.ksfun_task_system:Start()
+
     if data and data.food then
         hunger_exp = calcu_food_exp(inst, data.food)
         inst.components.ksfun_hunger:GainExp(hunger_exp) 
