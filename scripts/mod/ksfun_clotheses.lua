@@ -14,6 +14,7 @@ local function  cacheOriginData(inst)
     if inst.componenst.equippable then
         ksfun_clothes.origin_dapperness = inst.components.equippable.dapperness
     else
+    end
     -- 保暖
     ksfun_clothes.origin_insulation_w = 0
     ksfun_clothes.origin_insulation_s = 0
@@ -28,6 +29,7 @@ local function  cacheOriginData(inst)
     if inst.components.waterproofer then
         ksfun_clothes.origin_waterproofer = inst.components.waterproofer:GetEffectiveness()
     else
+    end
 end
 
 
