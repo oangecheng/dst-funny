@@ -4,6 +4,8 @@ PrefabFiles = {
     "ksfun_tasks",
 }
 
+require("ksfun_tuning")
+
 
 AddReplicableComponent("ksfun_hunger")
 
@@ -15,6 +17,7 @@ end)
 
 -- 加载各种玩法
 modimport("scripts/mod/ksfun_policy_hunger.lua")
+modimport("scripts/mod/ksfun_clotheses.lua")
 
 if GLOBAL.TheNet:GetIsServer() then
     modimport("scripts/mod/ksfun_policy_health.lua")
