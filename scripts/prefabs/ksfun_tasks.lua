@@ -4,7 +4,7 @@ DEMAND_DEFS = {
 }
 
 REWARD_DEFS = {
-    {type = 1, data = {item = "greengem", num = 5}}
+    {type = 1, data = {item = "walrushat", num = 5}}
 }
 
 PUNISH_DEFS = {
@@ -39,9 +39,20 @@ end
 
 -- 任务成功监听
 local function onTaskSuccess(task)
+    local player = task.target
      -- 角色说话
-     if task.target.components.talker then
-        task.target.components.talker:Say("任务完成")
+     if player and player.components.talker then
+        player.components.talker:Say("任务完成")
+    end
+
+    if task.reward then
+        if task.reward.type == 1 then
+            local item = SpawnPrefab(task.reward.item)
+            if item and player and player.components.inventory then
+                item.components.ksfun_clothes.EnableLevelUp(1)
+                player.components.inventory:GiveItem(item, nil, player:GetPosition())
+            end
+        end
     end
     
     task.inst.components.timer:StopTimer(task.inst)
