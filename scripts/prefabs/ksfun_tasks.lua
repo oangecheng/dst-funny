@@ -47,9 +47,9 @@ local function onTaskSuccess(task)
 
     if task.reward then
         if task.reward.type == 1 then
-            local item = SpawnPrefab(task.reward.item)
+            local item = SpawnPrefab(task.reward.data.item)
             if item and player and player.components.inventory then
-                item.components.ksfun_clothes.EnableLevelUp(1)
+                item.components.ksfun_clothes:EnableLevelUp(1)
                 player.components.inventory:GiveItem(item, nil, player:GetPosition())
             end
         end

@@ -33,7 +33,7 @@ end
 
 --- 
 local DAPPERNESS_ITEM_DEFS = {
-    goldnugget = 200,
+    "goldnugget",
 }
 
 
@@ -43,7 +43,7 @@ local function cacheOriginData(inst)
         inst.origin_dapperness = inst.components.equippable.dapperness
     end
     if inst.components.insulator then
-        if inst.insulator:IsType(SEASONS.WINTER) then
+        if inst.components.insulator:IsType(SEASONS.WINTER) then
             inst.origin_insulation_w = inst.components.insulator.insulation
         else
             inst.origin_insulation_s = inst.components.insulator.insulation
@@ -114,13 +114,15 @@ end
 --- 物品属性变更
 local function onStateChangeFunc(inst)
     if inst.components.ksfun_clothes:IsProtected() then
-        inst.Remove = function()
-            inst.components.Lock(true)
-        end
     end
     updateDapperness(inst)
     updateInsulation(inst)
     updateWaterproof(inst)
+
+    if inst.components.ksfun_quality then
+        inst.components.ksfun_quality:SetQuality(KSFUN_TUNING.QUALITY.GREEN)
+    end    
+
 end
 
 
@@ -186,14 +188,7 @@ local function initPrefab(inst)
 
     inst:AddComponent("ksfun_quality")
     inst.components.ksfun_quality.onQualityChangeFun = onQualityChangeFun
-    inst.ksfunchangename = GLOBAL.net_bool(inst.GUID, "ksfunchangename", "ksfunchangenamedirty")
-    inst:ListenForEvent("ksfunchangenamedirty", function(inst)
-		if inst.ksfunchangename:value() then
-			inst.displaynamefn = function(aaa)
-				return subfmt(STRINGS.NAMES["KSFUN_ITEM"], { backpack = STRINGS.NAMES[string.upper(inst.prefab)] }, {num = "绿色"})
-			end
-		end
-	end)
+    
 
     -- 添加可交易组件
     if inst.components.trader == nil then
@@ -211,7 +206,7 @@ local function initPrefab(inst)
 
     local oldLoad = inst.OnLoad
     inst.OnLoad = function(inst)
-        updateClothesState(inst)
+        onStateChangeFunc(inst)
         if oldLoad then
             oldLoad(inst)
         end
@@ -219,8 +214,25 @@ local function initPrefab(inst)
 end
 
 
-if TheWorld.ismastersim then
-    for i,v in ipairs(HAT_DEFS) do
-        AddPrefabPostInit(v, initPrefab)
-    end
+local function net(inst)
+    inst.ksfunchangename = GLOBAL.net_bool(inst.GUID, "ksfunchangename", "ksfunchangenamedirty")
+    inst:ListenForEvent("ksfunchangenamedirty", function(inst)
+		if inst.ksfunchangename:value() then
+			inst.displaynamefn = function(aaa)
+				return subfmt(STRINGS.NAMES["KSFUN_ITEM"], { item = STRINGS.NAMES[string.upper(inst.prefab)], quality = "绿" })
+			end
+		end
+	end)
 end
+
+
+for i,v in ipairs(HAT_DEFS) do
+    AddPrefabPostInit(v, function(inst)
+        net(inst)
+        if GLOBAL.TheNet:GetIsServer() then
+            initPrefab(inst)
+        end
+    end)
+ end
+
+

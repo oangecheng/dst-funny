@@ -9,6 +9,9 @@ require("ksfun_tuning")
 
 AddReplicableComponent("ksfun_hunger")
 
+modimport("scripts/strings_c.lua")
+
+
 local medalPage = require "mod/my_screen"
 AddClassPostConstruct("widgets/controls", function(self, owner)
 	self.medalPage = self:AddChild(medalPage(self.owner))--说明页图标

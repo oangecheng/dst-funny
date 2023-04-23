@@ -10,7 +10,8 @@ end
 --- @param clothes 组件
 --- @param ability 对应能力
 --- @param state 状态
-local function changeState(clothes, ability, state)
+local function changeState(inst, ability, state)
+    local clothes = inst.components.ksfun_clothes
     if ability == 1 then clothes.dapperness.state = state end
     if ability == 2 then clothes.waterproofer.state = state end
     if ability == 3 then clothes.insulation_win.state = state end
@@ -22,7 +23,8 @@ end
 --- @param clothes 组件
 --- @param ability 对应能力
 --- @param state 状态
-local function isStateAbove(clothes, ability, state)
+local function isStateAbove(inst, ability, state)
+    local clothes = inst.components.ksfun_clothes
     if ability == 1 then return clothes.dapperness.state > state end
     if ability == 2 then return clothes.waterproofer.state > state end
     if ability == 3 then return clothes.insulation_win.state > state end
@@ -59,8 +61,9 @@ end)
 --- 启用能力之后可以使用物品解锁升级对应的能力
 --- @param ability int 精神1 防水2 保暖3 隔热4
 function KSFUN_CLOTHES:EnableLevelUp(ability)
-    changeState(self, 1)
-    if self.onLevelUpEnabledFunc then
+    changeState(self.inst, ability, 1)
+
+    if self.onLevelUpEnabledFunc ~= nil then
         self.onLevelUpEnabledFunc(self.inst, ability)
     end
 end
@@ -69,26 +72,26 @@ end
 --- 判断升级能力是否开启
 --- @param ability int 精神1 防水2 保暖3 隔热4
 function KSFUN_CLOTHES:IsLevelUpEnabled(ability)
-    return isStateAbove(self, ability, 0)
+    return isStateAbove(self.inst, ability, 0)
 end
 
 
 --- 解锁升级能力
 function KSFUN_CLOTHES:EnableAbility(ability)
-    changeState(self, ability,  2)
+    changeState(self.inst, ability,  2)
 end
 
 
 --- 判断对应能力是否已经解锁 
 function KSFUN_CLOTHES:IsAbilityEnabled(ability)
-    return isStateAbove(self, ability, 1)
+    return isStateAbove(self.inst, ability, 1)
 end
 
 
 -- 锁定，比如耐久为0时，需要移除所有效果
 function KSFUN_CLOTHES:Lock(locked)
     self.locked = locked
-    if self.onLockFunc then
+    if self.onLockFunc ~= nil then
         self.onLockFunc(self.locked)
     end
 end
@@ -114,7 +117,7 @@ function KSFUN_CLOTHES:GainDappernessExp(exp)
         delta = delta + 1
     end
 
-    if (delta > 0) and self.onStateChangeFunc then
+    if (delta > 0) and self.onStateChangeFunc ~= nil then
         self.onStateChangeFunc(self.inst)
     end
 end
@@ -125,7 +128,7 @@ function KSFUN_CLOTHES:GainWaterprooferExp(exp)
     local data = self.waterproofer
     if not (data and self:IsAbilityEnabled(2)) then return end
     data.lv = data.lv + exp
-    if (exp > 0) and self.onStateChangeFunc then
+    if (exp > 0) and self.onStateChangeFunc ~= nil then
         self.onStateChangeFunc(self.inst)
     end
 end
@@ -144,7 +147,7 @@ function KSFUN_CLOTHES:GainInsulatorWinExp(exp)
         delta = delta + 1
     end
 
-    if (delta > 0) and self.onStateChangeFunc then
+    if (delta > 0) and self.onStateChangeFunc ~= nil then
         self.onStateChangeFunc(self.inst)
     end
 end
@@ -162,8 +165,8 @@ function KSFUN_CLOTHES:GainInsulatorSummerExp(exp)
         delta = delta + 1
     end
 
-    if (delta > 0) and self.onStateChangeFunc then
-        self.onStateChangeFunc()
+    if (delta > 0) and self.onStateChangeFunc ~= nil then
+        self.onStateChangeFunc(self.inst)
     end
 end
 
