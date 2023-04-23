@@ -17,10 +17,23 @@ local ENABLE_ITEM_DEFS = {
     insulation_summer = "townportaltalisman"
 }
 
+-- 给所有物品添加 tradable 组件
+if GLOBAL.TheNet:GetIsServer() then
+	local items = ENABLE_ITEM_DEFS
+	-- 没有添加可交易组件的物品，添加上
+	for i=1, #items do
+		AddPrefabPostInit(items[i], function(inst) 
+			if inst.components.tradable == nil then
+				inst:AddComponent("tradable")
+			end
+		end)
+	end
+end
+
 
 --- 
 local DAPPERNESS_ITEM_DEFS = {
-    { name = "walrushat", exp = 200},
+    goldnugget = 200,
 }
 
 
@@ -123,7 +136,23 @@ end
 
 
 
-local function onAcceptTest()
+local function onAcceptTest(inst, item, giver)
+    local clothes = inst.components.ksfun_clothes
+    if clothes then
+        if clothes:IsLevelUpEnabled(1) then
+            if clothes:IsAbilityEnabled(1) then
+                if table.contains(DAPPERNESS_ITEM_DEFS, item.prefab) then
+                    return true
+                end
+            else
+                if item.prefab == ENABLE_ITEM_DEFS.dapperness then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
 end
 
 
@@ -135,9 +164,7 @@ local function onLevelUpEnabledFunc(inst, ability)
     elseif ability == 4 then
     end
     
-    if inst.components.trader == nil then
-        inst:AddComponent("trader")
-    end
+
     if inst.components.ksfun_quality then
         inst.components.ksfun_quality:SetQuality(KSFUN_TUNING.QUALITY.GREEN)
     end    
@@ -167,6 +194,15 @@ local function initPrefab(inst)
 			end
 		end
 	end)
+
+    -- 添加可交易组件
+    if inst.components.trader == nil then
+        inst:AddComponent("trader")
+    end
+    local oldFunc = inst.components.trader.abletoaccepttest
+    inst.components.trader:SetAbleToAcceptTest(function(inst, item, giver)
+        return onAcceptTest(inst, item, giver) or (oldFunc and oldFunc(inst, item, giver))
+    end)
 
 
     -- 存下原始数据
