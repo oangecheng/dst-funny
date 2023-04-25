@@ -164,12 +164,7 @@ local function onLevelUpEnabledFunc(inst, ability)
     elseif ability == 2 then
     elseif ability == 3 then
     elseif ability == 4 then
-    end
-    
-
-    if inst.components.ksfun_quality then
-        inst.components.ksfun_quality:SetQuality(KSFUN_TUNING.QUALITY.GREEN)
-    end    
+    end 
 end
 
 
@@ -186,7 +181,7 @@ local function initPrefab(inst)
     inst.components.ksfun_clothes.onLockFunc = onClothesLock
     inst.components.ksfun_clothes.onLevelUpEnabledFunc = onLevelUpEnabledFunc
 
-    inst:AddComponent("ksfun_quality")
+    inst:AddComponent("ksfun_item_quality")
     inst.components.ksfun_quality.onQualityChangeFun = onQualityChangeFun
     
 

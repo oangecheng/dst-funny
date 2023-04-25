@@ -46,10 +46,9 @@ local function onTaskSuccess(task)
     end
 
     if task.reward then
-        if task.reward.type == 1 then
+        if task.reward.type == KSFUN_TUNING.TASK_REWARD_TYPES.ITEM then
             local item = SpawnPrefab(task.reward.data.item)
             if item and player and player.components.inventory then
-                item.components.ksfun_clothes:EnableLevelUp(1)
                 player.components.inventory:GiveItem(item, nil, player:GetPosition())
             end
         end
@@ -105,9 +104,23 @@ end
 
 
 
+local function createTestTask()
+    local task  = {}
+    local demand = require("defs/ksfun_task_demand_defs")
+    local reward = require("defs/ksfun_task_reward_defs")
+    
+    task.demand = demand.createDemandByType(KSFUN_TUNING.TASK_DEMAND_TYPES.KILL)
+    tasks.reward = reward.createRewardByType(KSFUN_TUNING.TASK_REWARD_TYPES.ITEM, task.demand.lv)
+    tasks.punish = PUNISH_DEFS[1]
+    return task
+end
+
+
 local function MakeTask(name, data)
     local function fn()
         local inst = CreateEntity()
+        inst:AddTag("CLASSIFIED")
+        inst:AddTag("ksfun_task")
 
         if not TheWorld.ismastersim then
             inst:DoTaskInTime(0, inst.Remove)
@@ -116,20 +129,21 @@ local function MakeTask(name, data)
 
         inst.entity:Hide()
         inst.persists = true
-        inst:AddTag("CLASSIFIED")
-        inst:AddTag("ksfun_task")
 
         inst:AddComponent("timer")
         inst:AddComponent("ksfun_task")
-        inst.components.ksfun_task.name = data.type
-        inst.components.ksfun_task.demand = data.demand
-        inst.components.ksfun_task.reward = data.reward
-        inst.components.ksfun_task.punish = data.punish
 
         inst.components.ksfun_task.onStart = onTaskStart
         inst.components.ksfun_task.onSuccess = onTaskSuccess
         inst.components.ksfun_task.onFail = onTaskFail
+
+        -- 任务生成时，
         inst.components.ksfun_task.onAttach = function(task)
+            local task = createTestTask()
+            task.name = data.type
+            task.demand = data.demand
+            task.reward = data.reward
+            task.punish = data.punish
         end
 
         return inst
@@ -137,13 +151,5 @@ local function MakeTask(name, data)
 
     return Prefab(name, fn, nil, prefabs)
 end
-
-
-local data = {
-    type = 1,
-    demand = DEMAND_DEFS[1],
-    reward = REWARD_DEFS[1],
-    punish = PUNISH_DEFS[1],
-}
 
 return MakeTask("ksfun_task_test", data)
