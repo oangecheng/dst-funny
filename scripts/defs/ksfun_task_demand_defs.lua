@@ -128,6 +128,12 @@ local function createDemandKill()
     -- 1级难度任务为2天，每增加一级难度，时间+1天
     local time = KSFUN_TUNING.TASK_TIME_TOTAL_DAY * (1 + lv)
 
+    -- 测试代码, 数量至多为2， 30s时间
+    if KSFUN_TUNING.DEBUG then
+        count = math.min(2, count)
+        time = KSFUN_TUNING.TASK_TIME_SEG
+    end
+
     return {
         type = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL,
         level = lv,

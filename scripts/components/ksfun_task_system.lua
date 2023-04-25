@@ -2,7 +2,7 @@
 -- 查找任务
 local function findExistTask(task, list)
     for i,v in ipairs(list) do
-        if v.prefab == task.prefab then
+        if v.name == task.name then
             return i
         end
     end
@@ -46,6 +46,7 @@ end
 function KSFUN_TASK_SYSTEM:Detach(task)
     self.current_task = nil
     local i = findExistTask(task, self.tasks)
+    print("哈哈哈哈"..tostring(i))
     if i then
         table.remove(self.tasks, i)
         self:Start()

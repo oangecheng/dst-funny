@@ -1,7 +1,7 @@
 
 local REWARD = {}
 
-local REWARD_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES
+local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 local LV_DEFS = KSFUN_TUNING.TASK_REWARD_LEVELS
 local ITEM_QUALITY = KSFUN_TUNING.ITEM_QUALITY
 
@@ -63,11 +63,11 @@ local ITEMS_LV6 = {
   "opalpreciousgem", -- 彩虹宝石
   "opalstaff", -- 月杖
 }
-local clothes = require("ksfun_clothes_defs")
+local clothes = require("defs/ksfun_clothes_defs")
 for i = 1, #clothes do
     table.insert(ITEMS_LV6, clothes[i])
 end
-local weapon = require("ksfun_weapon_defs")
+local weapon = require("defs/ksfun_weapon_defs")
 for i = 1, #clothes do
     table.insert(ITEMS_LV6, weapon[i])
 end

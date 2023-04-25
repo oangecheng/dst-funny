@@ -18,8 +18,9 @@ OWNER_DEFS = {
 
 
 local function onTaskFinish(task)
+    task.target:RemoveEventCallback("killed", task.inst.monitorFunc)
     task.target:PushEvent("ksfun_task_finish", task)
-    task.inst:DoTaskInTime(0.5, task.inst.Remove)
+    task.inst:DoTaskInTime(0.5, task.inst:Remove())
 end
 
 
@@ -72,13 +73,16 @@ end
 local function startMonitorTask(task)
     local inst = task.inst
     local target = task.target
-    if task.demand.type == 1 then
-        target:ListenForEvent("killed", function(player, data)
-            if isKillTaskSuccess(player, data, task) then
-                task:Success()
-            end
-        end)
 
+    inst.monitorFunc = function(player, data)
+        if isKillTaskSuccess(player, data, task) then
+            task:Success()
+        end
+    end
+
+    if task.demand.type == 1 then
+        target:ListenForEvent("killed", inst.monitorFunc)
+    
     elseif task.demand.data.type == 2 then
 
     end
@@ -90,7 +94,11 @@ local function onTaskStart(task)
     if not task then return  end
     -- 角色说话
     if task.target.components.talker then
-        task.target.components.talker:Say(task.desc)
+        local victim_name = STRINGS.NAMES[string.upper(task.demand.data.victim)] or ""
+        local count = task.demand.data.num or 0
+        local reward_name = STRINGS.NAMES[string.upper(task.reward.data.item)] or ""
+        local str = "击杀"..tostring(count).."个"..victim_name.."奖励"..reward_name
+        task.target.components.talker:Say(str)
     end
 
     local function onTimeDone(data)
@@ -110,20 +118,20 @@ local function createTestTask()
     local reward = require("defs/ksfun_task_reward_defs")
     
     task.demand = demand.createDemandByType(KSFUN_TUNING.TASK_DEMAND_TYPES.KILL)
-    tasks.reward = reward.createRewardByType(KSFUN_TUNING.TASK_REWARD_TYPES.ITEM, task.demand.lv)
-    tasks.punish = PUNISH_DEFS[1]
+    task.reward = reward.createRewardByType(KSFUN_TUNING.TASK_REWARD_TYPES.ITEM, task.demand.level)
+    task.punish = PUNISH_DEFS[1]
     return task
 end
 
 
-local function MakeTask(name, data)
+local function MakeTask(name)
     local function fn()
         local inst = CreateEntity()
         inst:AddTag("CLASSIFIED")
         inst:AddTag("ksfun_task")
 
         if not TheWorld.ismastersim then
-            inst:DoTaskInTime(0, inst.Remove)
+            inst:DoTaskInTime(0, inst:Remove())
             return inst
         end
 
@@ -137,13 +145,15 @@ local function MakeTask(name, data)
         inst.components.ksfun_task.onSuccess = onTaskSuccess
         inst.components.ksfun_task.onFail = onTaskFail
 
+        inst.monitorFunc = nil
+
         -- 任务生成时，
         inst.components.ksfun_task.onAttach = function(task)
-            local task = createTestTask()
-            task.name = data.type
-            task.demand = data.demand
-            task.reward = data.reward
-            task.punish = data.punish
+            local test = createTestTask()
+            task.name = test.type
+            task.demand = test.demand
+            task.reward = test.reward
+            task.punish = test.punish
         end
 
         return inst
@@ -152,4 +162,4 @@ local function MakeTask(name, data)
     return Prefab(name, fn, nil, prefabs)
 end
 
-return MakeTask("ksfun_task_test", data)
+return MakeTask("ksfun_task_test")

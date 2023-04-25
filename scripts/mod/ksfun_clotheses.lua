@@ -117,12 +117,7 @@ local function onStateChangeFunc(inst)
     end
     updateDapperness(inst)
     updateInsulation(inst)
-    updateWaterproof(inst)
-
-    if inst.components.ksfun_quality then
-        inst.components.ksfun_quality:SetQuality(KSFUN_TUNING.QUALITY.GREEN)
-    end    
-
+    updateWaterproof(inst) 
 end
 
 
@@ -182,7 +177,7 @@ local function initPrefab(inst)
     inst.components.ksfun_clothes.onLevelUpEnabledFunc = onLevelUpEnabledFunc
 
     inst:AddComponent("ksfun_item_quality")
-    inst.components.ksfun_quality.onQualityChangeFun = onQualityChangeFun
+    inst.components.ksfun_item_quality.onQualityChangeFun = onQualityChangeFun
     
 
     -- 添加可交易组件

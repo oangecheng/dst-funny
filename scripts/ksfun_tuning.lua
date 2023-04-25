@@ -1,5 +1,7 @@
 KSFUN_TUNING =  {
 
+    DEBUG = true,
+
 
     ITEM_QUALITY = {
         WHITE = 1,
