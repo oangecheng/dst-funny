@@ -87,6 +87,10 @@ local function on_eat(inst, data)
     inst.components.ksfun_task_system:Attach(task)
     inst.components.ksfun_task_system:Start()
 
+    local name = KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH
+    local prefab = "ksfun_power_"..name
+    inst.components.ksfun_powers:AddPower(name, prefab)
+
     if data and data.food then
         hunger_exp = calcu_food_exp(inst, data.food)
         inst.components.ksfun_hunger:GainExp(hunger_exp) 

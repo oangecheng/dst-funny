@@ -25,6 +25,15 @@ local KSFUN_POWERS = Class(function(self, inst)
 end)
 
 
+function KSFUN_POWERS:GetPower(name)
+    local power = self.powers[name]
+    if power then
+        return power.inst
+    else
+        return nil
+    end
+end
+
 --- 设置新增属性监听
 --- 一般用来刷新数据
 function KSFUN_POWERS:SetOnPowerAddFunc(func)

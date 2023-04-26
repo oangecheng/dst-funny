@@ -3,6 +3,11 @@ KSFUN_TUNING =  {
     DEBUG = true,
 
 
+    PLAYER_POWER_NAMES = {
+        HEALTH = "player_health",
+    },
+
+
     ITEM_QUALITY = {
         WHITE = 1,
         GREEN = 2,

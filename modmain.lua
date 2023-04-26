@@ -2,6 +2,7 @@ GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) en
 
 PrefabFiles = {
     "ksfun_tasks",
+    "ksfun_player_powers",
 }
 
 Assets = {
@@ -44,7 +45,7 @@ AddPlayerPostInit(function(inst)
 end)
 
 if GLOBAL.TheNet:GetIsServer() then
-    modimport("scripts/mod/ksfun_policy_health.lua")
+    -- modimport("scripts/mod/ksfun_policy_health.lua")
     modimport("scripts/mod/ksfun_policy_sanity.lua")
     modimport("scripts/mod/ksfun_player.lua")
 
