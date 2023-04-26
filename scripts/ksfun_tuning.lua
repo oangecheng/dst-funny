@@ -46,7 +46,12 @@ KSFUN_TUNING =  {
     },
     TASK_REWARD_LEVELS = {
         UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, LV_MAX = 6,
-    }
+    },
 
+
+    EVENTS = {
+        PLAYER_STATE_CHANGE = "ksfun_player_state_change",
+        
+    }
 
 }

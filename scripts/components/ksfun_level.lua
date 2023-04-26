@@ -1,11 +1,12 @@
 
 -- 升级需要多少经验值
-local function defaultExpFunc(level)
-    return (level + 1) * 100
+local function defaultExpFunc(inst, lv)
+    return (lv + 1) * 100
 end
 
 
 local KSFUN_LEVEL = Class(function(self, inst)
+    self.inst = inst
     self.lv = 0
     self.exp = 0
 
@@ -47,15 +48,15 @@ function KSFUN_LEVEL:GainExp(exp)
 
      -- 计算可以升的级数
      local delta = 0
-     while self.exp > expFun(self.level) do
+     while self.exp > expFun(self.inst, self.lv) do
          delta = delta + 1 
-         self.exp = self.exp - expFun(self.level)
-         self.level = self.level + 1
+         self.exp = self.exp - expFun(self.inst, self.lv)
+         self.lv = self.lv + 1
      end
  
      -- 大于0表示可以升级，触发升级逻辑
      if delta > 0 then
-         self:SetLevel(self.level, true)
+         self:SetLevel(self.lv, true)
      end
 
 end

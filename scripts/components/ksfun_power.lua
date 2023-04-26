@@ -40,26 +40,28 @@ end
 function KSFUN_POWER:Attach(name, target)
     self.target = target
     self.name = name
-    if self.onAttachFun then
-        self.onAttachFun(self.inst, target, name)
+    if self.onAttachFunc then
+        self.onAttachFunc(self.inst, target, name)
     end
 end
 
 
 --- 解绑目标
 --- 属性系统可以换绑
+--- 如果target为nil，则认为无效，因为还没有绑定过
 function KSFUN_POWER:Deatch()
     local temp = self.target
     self.target = nil
-    if self.onDetachFunc then
+    if temp and self.onDetachFunc then
         self.onDetachFunc(self.inst, temp, self.name)
     end
 end
 
 
 --- 属性覆盖
+--- 一般用在临时属性上
 function KSFUN_POWER:Extend()
-    if self.onExtendFunc then
+    if self.onExtendFunc and self.target then
         self.onExtendFunc(self.inst, self.target, self.name)
     end
 end
@@ -69,7 +71,7 @@ end
 --- @return string
 function KSFUN_POWER:GetDesc()
     if self.onGetDescFunc and self.target then
-        return self.onGetDescFunc(self.onGetDescFunc)
+        return self.onGetDescFunc(self.inst)
     else
         return nil
     end

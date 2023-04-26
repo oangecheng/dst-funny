@@ -83,9 +83,9 @@ end
 -- 吃东西获得经验
 local function on_eat(inst, data)
 
-    local task = SpawnPrefab("ksfun_task_test")
-    inst.components.ksfun_task_system:Attach(task)
-    inst.components.ksfun_task_system:Start()
+    -- local task = SpawnPrefab("ksfun_task_test")
+    -- inst.components.ksfun_task_system:Attach(task)
+    -- inst.components.ksfun_task_system:Start()
 
     local name = KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH
     local prefab = "ksfun_power_"..name

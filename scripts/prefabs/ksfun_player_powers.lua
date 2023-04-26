@@ -1,28 +1,5 @@
 
-local function onLvUpFunc(inst, lv, notice)
-    if inst.onLvUpFunc then
-        inst.onLvUpFunc(inst, lv, notice)
-    end
-end
-
-
-local function onExpChangeFunc(inst, exp)
-    if inst.onExpChangeFunc then
-        inst.onExpChangeFunc(inst, exp)
-    end
-end
-
-
-local function nextLvExpFunc(lv)
-    if inst.nextLvExpFunc then
-        return inst.nextLvExpFunc(lv)
-    end
-    return 100 
-end
-
-
-
-local function MakePower(data)
+local function MakePower(data, level)
     local function fn()
         local inst = CreateEntity()
 
@@ -46,9 +23,9 @@ local function MakePower(data)
         inst.components.ksfun_power.keepondespawn = true
 
         inst:AddComponent("ksfun_level")
-        inst.components.ksfun_level:SetLvUpFunc(onLvUpFunc)
-        inst.components.ksfun_level:SetExpChangeFunc(onExpChangeFunc)
-        inst.components.ksfun_level:SetNextLvExpFunc(nextLvExpFunc)
+        inst.components.ksfun_level:SetLvUpFunc(level.onLvUpFunc)
+        inst.components.ksfun_level:SetExpChangeFunc(level.onExpChangeFunc)
+        inst.components.ksfun_level:SetNextLvExpFunc(level.nextLvExpFunc)
 
 
         if data.duration and data.duration > 0 and data.onTimeDoneFunc then
@@ -65,4 +42,4 @@ end
 
 local test = require("powers/ksfun_player_health")
 
-MakePower(test.data)
+return MakePower(test.data, test.level)

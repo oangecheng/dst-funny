@@ -1,4 +1,4 @@
-local function addPower(self, ent, name)
+local function addPower(self, name, ent)
     if ent.components.ksfun_power then
         self.powers[name] = {
             inst = ent,
@@ -64,7 +64,9 @@ function KSFUN_POWERS:AddPower(name, prefab)
     local power = self.powers[name]
     if power == nil then
         local ent = SpawnPrefab(prefab)
-        addPower(self, name, ent)
+        if ent then
+            addPower(self, name, ent)
+        end
         return ent
     else
         power.inst.components.ksfun_power:Extend()
@@ -120,7 +122,7 @@ function KSFUN_POWERS:OnSave()
         local saved--[[, refs]] = v.inst:GetSaveRecord()
         data[k] = saved
     end
-    return { powers = data, enable = enable }
+    return { powers = data, enable = self.enable }
 end
 
 
@@ -133,7 +135,7 @@ function KSFUN_POWERS:OnLoad(data)
             if self.powers[k] == nil then
                 local ent = SpawnSaveRecord(v)
                 if ent ~= nil then
-                    AddPower(self, k, ent)
+                    addPower(self, k, ent)
                 end
             end
         end
