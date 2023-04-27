@@ -10,18 +10,18 @@ local KSFUN_LEVEL = Class(function(self, inst)
     self.lv = 0
     self.exp = 0
 
-    self.onLvUpFunc = nil
-    self.onExpChangeFunc = nil
+    self.onLvChangeFunc = nil
+    self.onStateChangeFunc = nil
     self.nextLvExpFunc = nil
 end)
 
 
-function KSFUN_LEVEL:SetLvUpFunc(func)
-    self.onLvUpFunc = func
+function KSFUN_LEVEL:SetOnLvChangeFunc(func)
+    self.onLvChangeFunc = func
 end
 
-function KSFUN_LEVEL:SetExpChangeFunc(func)
-    self.onExpChangeFunc = func
+function KSFUN_LEVEL:SetOnStateChangeFunc(func)
+    self.onStateChangeFunc = func
 end
 
 function KSFUN_LEVEL:SetNextLvExpFunc(func)
@@ -30,8 +30,8 @@ end
 
 
 function KSFUN_LEVEL:SetLevel(lv, notice)
-    if self.onLvUpFunc then
-        self.onLvUpFunc(self.inst, lv, notice)
+    if self.onLvChangeFunc then
+        self.onLvChangeFunc(self.inst, lv, notice)
     end
 end
 
@@ -57,6 +57,10 @@ function KSFUN_LEVEL:GainExp(exp)
      -- 大于0表示可以升级，触发升级逻辑
      if delta > 0 then
          self:SetLevel(self.lv, true)
+     end
+
+     if self.onStateChangeFunc then
+        self.onStateChangeFunc(self.inst)
      end
 
 end

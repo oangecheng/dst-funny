@@ -2,6 +2,8 @@
 local function MakePower(data, level)
     local function fn()
         local inst = CreateEntity()
+        inst:AddTag("ksfun_power")
+        inst:AddTag("ksfun_level")
 
         if not TheWorld.ismastersim then
             --Not meant for client!
@@ -23,8 +25,8 @@ local function MakePower(data, level)
         inst.components.ksfun_power.keepondespawn = true
 
         inst:AddComponent("ksfun_level")
-        inst.components.ksfun_level:SetLvUpFunc(level.onLvUpFunc)
-        inst.components.ksfun_level:SetExpChangeFunc(level.onExpChangeFunc)
+        inst.components.ksfun_level:SetOnLvChangeFunc(level.onLvChangeFunc)
+        inst.components.ksfun_level:SetOnStateChangeFunc(level.onStateChangeFunc)
         inst.components.ksfun_level:SetNextLvExpFunc(level.nextLvExpFunc)
 
 

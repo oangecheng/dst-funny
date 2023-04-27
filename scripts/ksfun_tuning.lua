@@ -5,6 +5,7 @@ KSFUN_TUNING =  {
 
     PLAYER_POWER_NAMES = {
         HEALTH = "player_health",
+        HUNGER = "player_hunger"
     },
 
 

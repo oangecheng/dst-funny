@@ -17,7 +17,7 @@ end
 
 
 --- 生命上限提升时
-local function onLvUpFunc(inst, lv, notice)
+local function onLvChangeFunc(inst, lv, notice)
     updateHealthState(inst, false)
     if notice and inst.target then
         inst.target.components.talker:Say("血量提升！")
@@ -103,8 +103,8 @@ KSFUN_HEALTH.data = {
 }
 
 KSFUN_HEALTH.level = {
-    onLvUpFunc = onLvUpFunc,
-    onExpChangeFunc = nil,
+    onLvChangeFunc = onLvChangeFunc,
+    onStateChangeFunc = nil,
     nextLvExpFunc = nextLvExpFunc
 }
 
