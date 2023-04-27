@@ -69,12 +69,12 @@ end
 --- power 绑定
 --- @param 属性  玩家  属性名称
 local function onAttach(inst, player, name)
+    inst.target = player
     --- 缓存原始血量
     if not inst.originHealth then
         inst.originHealth = player.components.health.maxhealth
     end
 
-    inst.target = player
     inst.onKillOther = onKillOther
     updateHealthState(inst, true)
     player:ListenForEvent("killed", inst.onKillOther)
@@ -85,6 +85,7 @@ end
 --- 血量回复到初始值
 --- @param 属性 角色 属性名称
 local function onDetach(inst, player, name)
+    inst.target = nil
     player:RemoveEventCallback("killed", inst.onKillOther)
     if player.components.health and inst.originHealth then
         local percent = player.components.health:GetPercent()
