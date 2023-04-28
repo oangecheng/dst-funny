@@ -1,5 +1,9 @@
 GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) end})
 
+modimport("scripts/strings_c.lua")
+require("ksfun_tuning")
+
+
 PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
@@ -10,12 +14,10 @@ Assets = {
     Asset("IMAGE", "images/ksfun_player_panel_bg.tex"),
 }
 
-require("ksfun_tuning")
 
 
 AddReplicableComponent("ksfun_hunger")
-
-modimport("scripts/strings_c.lua")
+AddReplicableComponent("ksfun_powers")
 
 
 local player_panel = require "mod/my_screen"

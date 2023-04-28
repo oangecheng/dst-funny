@@ -62,16 +62,19 @@ end
 --- @param name type=string prefab type=string
 function KSFUN_POWERS:AddPower(name, prefab)
     local power = self.powers[name]
+    local ret = nil
     if power == nil then
         local ent = SpawnPrefab(prefab)
         if ent then
             addPower(self, name, ent)
         end
-        return ent
+        ret = ent
     else
         power.inst.components.ksfun_power:Extend()
-        return power.inst
+        ret =  power.inst
     end
+    self:SyncData()
+    return ret
 end
 
 
@@ -89,6 +92,7 @@ function KSFUN_POWERS:RemovePower(name)
         else
             power.inst:Remove()
         end
+        self:SyncData()
     end
 end
 
@@ -111,6 +115,32 @@ function KSFUN_POWERS:ResumePower(name)
         if power.inst.components.ksfun_power then
             power.inst.components.ksfun_power:Attach(name, self.inst)
         end
+    end
+end
+
+
+--- 同步用户数据
+--- power的等级经验
+function KSFUN_POWERS:SyncData()
+    local data = ""
+    local index = 0
+    local size = #self.powers
+    for k,v in ipairs(self.powers) do
+        index = index + 1
+        local power = k.inst
+        local lv = power.components.ksfun_level.lv
+        local exp = power.components.ksfun_level.exp
+        -- 名称;等级;经验值;描述
+        local d = k .. "," .. tostring(lv) .. "," .. tostring(exp)
+
+        if data ~= "" then
+            data = data .. ";"
+        end
+        data = data .. d
+    end
+
+    if data ~= "" and self.inst.replica.ksfun_powers then
+        self.inst.replica.ksfun_powers:SyncData(data)
     end
 end
 
@@ -140,7 +170,7 @@ function KSFUN_POWERS:OnLoad(data)
             end
         end
     end
-
+    self:SyncData()
 end
 
 

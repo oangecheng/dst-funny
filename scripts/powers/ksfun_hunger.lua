@@ -81,6 +81,24 @@ local function nextLvExpFunc(inst, lv)
 end
 
 
+-- 计算食物能够获得的经验值
+local function calcFoodExp(eater, food)
+    if food == nil or food.components.edible == nil then return 0 end
+    local hunger = food.components.edible:GetHunger(eater)
+    local health = food.components.edible:GetHealth(eater)
+    local sanity = food.components.edible:GetSanity(eater)
+    return (0.2 * hunger + health * 0.4 + sanity * 0.6) * 20
+end
+
+
+local function onEat(eater, data)
+    local hunger_level = eater.components.ksfun_powers:GetPower(NAMES.HUNGER)
+    if data and data.food and hunger_level then
+        hunger_exp = calcFoodExp(eater, data.food)
+        hunger_level:GainExp(hunger_exp) 
+    end
+end
+
 
 --- 绑定对象
 local function onAttachFunc(inst, player, name)
@@ -89,11 +107,13 @@ local function onAttachFunc(inst, player, name)
         inst.originHunger = player.components.hunger.max
     end
     updateHungerStatus(inst)
+    player:ListenForEvent("oneat", onEat)
 end
 
 
 --- 解绑对象
 local function onDetachFunc(inst, player, name)
+    player:RemoveEventCallback("oneat", onEat)
     local hunger = player.components.hunger
     if hunger then
         hunger.burnratemodifiers:RemoveModifier(inst)
@@ -113,12 +133,6 @@ local function onDetachFunc(inst, player, name)
     inst.target = nil
     inst.originHealth = nil
 end
-
-
-
-local function hookPlayerWalkSpeed(inst)
-end
-
 
 
 KSFUN_HUNGER.power = {

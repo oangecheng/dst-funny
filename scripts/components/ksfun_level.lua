@@ -47,22 +47,22 @@ function KSFUN_LEVEL:GainExp(exp)
     end
 
      -- 计算可以升的级数
-     local delta = 0
-     while self.exp > expFun(self.inst, self.lv) do
-         delta = delta + 1 
-         self.exp = self.exp - expFun(self.inst, self.lv)
-         self.lv = self.lv + 1
-     end
+    local delta = 0
+    while self.exp > expFun(self.inst, self.lv) do
+        delta = delta + 1 
+        self.exp = self.exp - expFun(self.inst, self.lv)
+        self.lv = self.lv + 1
+    end
  
      -- 大于0表示可以升级，触发升级逻辑
-     if delta > 0 then
-         self:SetLevel(self.lv, true)
-     end
+    if delta > 0 then
+        self:SetLevel(self.lv, true)
+    end
 
-     if self.onStateChangeFunc then
+    -- 刷新客户端数据
+    if self.onStateChangeFunc then
         self.onStateChangeFunc(self.inst)
-     end
-
+    end
 end
 
 

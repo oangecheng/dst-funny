@@ -73,7 +73,7 @@ function KSFUN_POWER:GetDesc()
     if self.onGetDescFunc and self.target then
         return self.onGetDescFunc(self.inst)
     else
-        return nil
+        return ""
     end
 end
 
