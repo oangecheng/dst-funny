@@ -29,7 +29,7 @@ end)
 
 
 -- 加载各种玩法
-modimport("scripts/mod/ksfun_policy_hunger.lua")
+modimport("scripts/mod/ksfun_hook.lua")
 modimport("scripts/mod/ksfun_clotheses.lua")
 
 
