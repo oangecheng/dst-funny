@@ -42,7 +42,6 @@ AddPlayerPostInit(function(inst)
             inst.player_panel:Show()
             inst.player_panel_showing = true
         end
-
     end)
 end)
 
@@ -52,7 +51,7 @@ if GLOBAL.TheNet:GetIsServer() then
     modimport("scripts/mod/ksfun_player.lua")
 
     -- 世界初始化
-    AddPrefabPostInit("world",function(inst)
+    AddPrefabPostInit("world", function(inst)
         inst:AddComponent("ksfun_world_player")
     end)
 

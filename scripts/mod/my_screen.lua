@@ -7,17 +7,14 @@ local Image = require "widgets/image"
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
-
 local function onPlayerStateChange(self, powers, owner)
-	print("角色属性发生变更")
+	print(KSFUN_TUNING.LOG_TAG.."ksfun_player_panel onPlayerStateChange")
 	local hunger = powers[NAMES.HUNGER]
 	if hunger then
 		self.hunger:Show()
-		self.hunger:SetText("等级=" .. tostring(hunger.lv) .. "  经验=" .. tostring(hunger.exp))
+		self.hunger:SetString("饱食度: 等级=" .. tostring(hunger.lv) .. "  经验=" .. tostring(hunger.exp))
 	end
 end
-
-
 
 
 local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
@@ -29,6 +26,7 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	local y = 500
 	local half_w = 512 * scale / 4
 	local half_h = 512 * scale / 4
+
 	
 	self.bg = self.root:AddChild(Image("images/ksfun_player_panel_bg.xml", "ksfun_player_panel_bg.tex"))
 	self.bg:SetScale(scale, scale, scale)
@@ -37,12 +35,23 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.bg:SetPosition(0, y, 0)
 
 
-	self.hunger = self.root:AddChild(TextButton())
+	local offsetX = x
+	local offsetY = half_h + 25
+
+	self.title = self.root:AddChild(Text(NEWFONT, 25))
+	self.title:SetString("属性面板")
+	self.title:SetScale(2, 2, 2)
+	self.title:SetHAnchor(0)
+	self.title:SetVAnchor(0)
+	self.title:SetPosition(x,  y + offsetY , 0)
+
+	offsetY = offsetY - 50
+
+	self.hunger = self.root:AddChild(Text(NEWFONT, 25))
 	self.hunger:SetScale(2, 2, 2)
-	self.hunger:SetHAnchor(0) -- 设置原点x坐标位置，0、1、2分别对应屏幕中、左、右
-	self.hunger:SetVAnchor(0) -- 设置原点y坐标位置，0、1、2分别对应屏幕中、上、下
-	self.hunger:SetPosition(x,  y , 0)
-	self.hunger:Hide()
+	self.hunger:SetHAnchor(0)
+	self.hunger:SetVAnchor(0)
+	self.hunger:SetPosition(x,  y + offsetY, 0)
 
 	
 	self.pageClose = self.root:AddChild(TextButton())

@@ -42,6 +42,9 @@ local function MakePower(data, level)
     return Prefab("ksfun_power_"..data.name, fn, nil, prefabs)
 end
 
-local test = require("powers/ksfun_player_health")
+local health = require("powers/ksfun_player_health")
+local hunger = require("powers/ksfun_hunger")
 
-return MakePower(test.data, test.level)
+
+return MakePower(health.data, health.level),
+MakePower(hunger.power, hunger.level)

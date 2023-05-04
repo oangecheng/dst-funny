@@ -1,6 +1,7 @@
 KSFUN_TUNING =  {
 
     DEBUG = true,
+    LOG_TAG = "ksfun_log: ",
 
 
     PLAYER_POWER_NAMES = {
@@ -60,7 +61,7 @@ KSFUN_TUNING =  {
 
     EVENTS = {
         PLAYER_STATE_CHANGE = "ksfun_player_state_change",
-        PLAYER_PANEL = "ksfun_player_refresh_panel"
+        PLAYER_PANEL = "ksfun_player_refresh_panel",
     }
 
 }

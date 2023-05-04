@@ -34,7 +34,7 @@ local function updateHungerStatus(inst)
     -- 100级之后每级新增千分之5的饱食度下降
     if lv > 100  then
         local hunger_multi = calcHungerMulti(lv)
-        inst.components.hunger.burnratemodifiers:SetModifier(inst, hunger_multi)
+        player.components.hunger.burnratemodifiers:SetModifier(inst, hunger_multi)
     end
 
     
@@ -66,6 +66,7 @@ end
 --- 通知用户面板刷新状态
 local function onStateChangeFunc(inst)
     if inst.target then
+        print(KSFUN_TUNING.LOG_TAG.."ksfun_hunger onStateChangeFunc")
         inst.target:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_STATE_CHANGE)
     end
 end
@@ -92,10 +93,10 @@ end
 
 
 local function onEat(eater, data)
-    local hunger_level = eater.components.ksfun_powers:GetPower(NAMES.HUNGER)
-    if data and data.food and hunger_level then
-        hunger_exp = calcFoodExp(eater, data.food)
-        hunger_level:GainExp(hunger_exp) 
+    local hunger = eater.components.ksfun_powers:GetPower(NAMES.HUNGER)
+    if data and data.food and hunger then
+        local hunger_exp = calcFoodExp(eater, data.food)
+        hunger.components.ksfun_level:GainExp(hunger_exp) 
     end
 end
 
@@ -103,7 +104,7 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, player, name)
     inst.target = player
-    if not ints.originHunger then
+    if not inst.originHunger then
         inst.originHunger = player.components.hunger.max
     end
     updateHungerStatus(inst)
@@ -147,3 +148,5 @@ KSFUN_HUNGER.level = {
     onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
+
+return KSFUN_HUNGER

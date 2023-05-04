@@ -1,18 +1,24 @@
 
 local function onPowerWithLevelDirty(self, inst)
     local data = self._itempowers:value()
+    print("onPowerWithLevelDirty ".. data)
     if data then
-        local powers = data.split(";")
-        for i1,v1 in ipairs(powers) do
-            local d = v1.split(",")
-            for i2,v2 in ipairs(d) do
-                if #v2 == 3 then
-                    self.powers[v2[1]] = {
-                        lv =  tonumber(v2[2]),
-                        exp = tonumber(v2[3]),
-                    }
-                end
+        local d1 = string.split(data, ";")
+        for i1,v1 in pairs(d1) do
+            local d2 = string.split(v1, ",")
+            if #d2 == 3 then
+                local name = d2[1]
+                local lv =  tonumber(d2[2])
+                local exp = tonumber(d2[3])
+                self.powers[name] = {
+                    name = name,
+                    lv = lv,
+                    exp = exp,
+                }
             end
+        end
+        for k,v in pairs(self.powers) do
+            print(KSFUN_TUNING.LOG_TAG.."onPowerWithLevelDirty"..k.." "..tostring(v.lv))
         end
         if self.inst then
             self.inst:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, self.powers)
@@ -54,7 +60,7 @@ end
 --- @param name 属性 string
 --- @return {lv = number, exp = number}
 function KSFUN_POWERS:GetPower(name)
-    return self.power[name]
+    return self.powers[name]
 end
 
 

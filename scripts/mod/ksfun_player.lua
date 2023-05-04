@@ -17,6 +17,7 @@ end
 --- 角色属性变化, 等级，经验值这些
 --- 用来更新面板数据
 local function onPlayerPowerChange(inst)
+    print(KSFUN_TUNING.LOG_TAG.."ksfun_player onPlayerPowerChange")
     if inst.components.ksfun_powers then
         inst.components.ksfun_powers:SyncData()
     end
@@ -45,8 +46,14 @@ AddPlayerPostInit(function(player)
 
     --- 添加饱食度属性，testcode
     if KSFUN_TUNING.DEBUG then
-        local name = KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER
-        local prefab = "ksfun_power_"..name
-        inst.components.ksfun_powers:AddPower(name, prefab)
+        player:DoTaskInTime(0.5, function(inst)
+            local name = KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH
+            local prefab = "ksfun_power_"..name
+            player.components.ksfun_powers:AddPower(name, prefab)
+    
+            local name2 = KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER
+            local prefab = "ksfun_power_"..name2
+            player.components.ksfun_powers:AddPower(name2, prefab)
+        end)
     end
 end)

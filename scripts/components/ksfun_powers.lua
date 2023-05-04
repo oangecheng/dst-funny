@@ -1,13 +1,17 @@
 local function addPower(self, name, ent)
+    print(KSFUN_TUNING.LOG_TAG.."addPower 1")
     if ent.components.ksfun_power then
+        print(KSFUN_TUNING.LOG_TAG.."addPower 2")
         self.powers[name] = {
             inst = ent,
         }
+        print(KSFUN_TUNING.LOG_TAG.."addPower 3")
+        ent.persists = false
+        ent.components.ksfun_power:Attach(name, self.inst)
+        print(KSFUN_TUNING.LOG_TAG.."addPower 4")
         if self.onPowerAddFunc then
             self.onPowerAddFunc(self.inst, name, ent)
         end
-        ent.persists = false
-        ent.components.ksfun_power:Attach(name, self.inst)
     else
         ent:Remove()
     end
@@ -125,9 +129,10 @@ function KSFUN_POWERS:SyncData()
     local data = ""
     local index = 0
     local size = #self.powers
-    for k,v in ipairs(self.powers) do
+
+    for k,v in pairs(self.powers) do
         index = index + 1
-        local power = k.inst
+        local power = v.inst
         local lv = power.components.ksfun_level.lv
         local exp = power.components.ksfun_level.exp
         -- 名称;等级;经验值;描述
