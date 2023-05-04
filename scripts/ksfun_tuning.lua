@@ -9,6 +9,12 @@ KSFUN_TUNING =  {
         SANITY = "player_sanity",
     },
 
+    ITEM_POWER_NAMES = {
+        WATER_PROOFER = "item_water_proofer",
+        DAPPERNESS = "item_dapperness",
+        INSULATOR = "item_insulator",
+    },
+
 
     ITEM_QUALITY = {
         WHITE = 1,
@@ -16,7 +22,8 @@ KSFUN_TUNING =  {
         BLUE = 3,
         GOLD = 4,
         ORANGE = 5,
-        MAX = 5,
+        RED = 6,
+        MAX = 6,
     },
     
 

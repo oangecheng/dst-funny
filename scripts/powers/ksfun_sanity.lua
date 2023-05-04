@@ -83,6 +83,7 @@ local function onAttachFunc(inst, player, name)
     if not ints.originSanity then
         inst.originSanity = player.components.sanity.max
     end
+    updateSanityStatus(inst)
     player:ListenForEvent("builditem", onBuildItemFunc)
     player:ListenForEvent("buildstructure", oBuildStructureFunc)
 end
