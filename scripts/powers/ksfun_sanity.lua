@@ -42,16 +42,48 @@ local function nextLvExpFunc(inst, lv)
 end
 
 
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  SCULPTING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  PERDOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  BOOKCRAFT  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  LUNARFORGING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  ROBOTMODULECRAFT  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  ORPHANAGE  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  FOODPROCESSING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  ANCIENT  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  WARGOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  SPIDERCRAFT  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  MOON_ALTAR  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARTOGRAPHY  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  SCIENCE  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  CATCOONOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  SEAFARING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  MADSCIENCE  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARNIVAL_PRIZESHOP  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  RABBITOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  FISHING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  HERMITCRABSHOP  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARRATOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  SHADOW  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  MAGIC  2	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARNIVAL_HOSTSHOP  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  TURFCRAFTING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  WINTERSFEASTCOOKING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  PIGOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  MASHTURFCRAFTING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  BEEFOFFERING  0	
+-- [00:01:47]: 哈哈哈哈哈 calcItemExp  CELESTIAL  0	
+
 --- 计算建造每个物品获得的经验值
 local function calcItemExp(data)
-    print("哈哈哈哈哈 calcItemExp"..tostring(data))
+    -- for k,v in pairs(data.recipe.level) do
+    --     print("哈哈哈哈哈 calcItemExp  "..tostring(k).."  "..tostring(v))
+    -- end
     return 25
 end
 
 
 --- 计算建造每个建筑获得的经验值
 local function calcStructureExp(data)
-    print("哈哈哈哈哈 calcStructureExp"..tostring(data))
     return 50
 end
 
@@ -60,7 +92,6 @@ end
 --- @param player 玩家
 --- @param data 物品数据
 local function onBuildItemFunc(player, data)
-    print("哈哈哈哈哈 onBuildItemFunc"..tostring(data))
     local power = player.components.ksfun_powers:GetPower(NAMES.SANITY)
     if power and power.components.ksfun_level then
         local exp = calcItemExp(data)
