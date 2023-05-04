@@ -54,6 +54,11 @@ AddPlayerPostInit(function(player)
             local name2 = KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER
             local prefab = "ksfun_power_"..name2
             player.components.ksfun_powers:AddPower(name2, prefab)
+
+                
+            local name3 = KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY
+            local prefab = "ksfun_power_"..name3
+            player.components.ksfun_powers:AddPower(name3, prefab)
         end)
     end
 end)

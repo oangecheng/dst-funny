@@ -10,7 +10,7 @@ local function updateSanityStatus(inst)
     if sanity and level and inst.originSanity then
         local percent = sanity:GetPercent()
         sanity.max = inst.originSanity + level.lv
-        sanity:SetParent(percent)
+        sanity:SetPercent(percent)
     end
 end
 
@@ -44,13 +44,14 @@ end
 
 --- 计算建造每个物品获得的经验值
 local function calcItemExp(data)
-    print("哈哈哈哈哈"..tostring(data))
+    print("哈哈哈哈哈 calcItemExp"..tostring(data))
     return 25
 end
 
 
 --- 计算建造每个建筑获得的经验值
 local function calcStructureExp(data)
+    print("哈哈哈哈哈 calcStructureExp"..tostring(data))
     return 50
 end
 
@@ -59,9 +60,11 @@ end
 --- @param player 玩家
 --- @param data 物品数据
 local function onBuildItemFunc(player, data)
+    print("哈哈哈哈哈 onBuildItemFunc"..tostring(data))
     local power = player.components.ksfun_powers:GetPower(NAMES.SANITY)
     if power and power.components.ksfun_level then
-        power.components.ksfun_level:GainExp(calcItemExp(data))
+        local exp = calcItemExp(data)
+        power.components.ksfun_level:GainExp(exp)
     end
 end
 
@@ -72,7 +75,8 @@ end
 local function oBuildStructureFunc(player, data)
     local power = player.components.ksfun_powers:GetPower(NAMES.SANITY)
     if power and power.components.ksfun_level then
-        power.components.ksfun_level:GainExp(calcStructureExp(data))
+        local exp = calcStructureExp(data)
+        power.components.ksfun_level:GainExp(exp)
     end
 end
 
@@ -80,7 +84,7 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, player, name)
     inst.target = player
-    if not ints.originSanity then
+    if not inst.originSanity then
         inst.originSanity = player.components.sanity.max
     end
     updateSanityStatus(inst)
@@ -107,7 +111,7 @@ end
 
 
 KSFUN_SANITY.power = {
-    name = NAMES.HUNGER,
+    name = NAMES.SANITY,
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,

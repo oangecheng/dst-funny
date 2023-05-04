@@ -44,7 +44,9 @@ end
 
 local health = require("powers/ksfun_player_health")
 local hunger = require("powers/ksfun_hunger")
+local sanity = require("powers/ksfun_sanity")
 
 
 return MakePower(health.data, health.level),
-MakePower(hunger.power, hunger.level)
+MakePower(hunger.power, hunger.level),
+MakePower(sanity.power, sanity.level)
