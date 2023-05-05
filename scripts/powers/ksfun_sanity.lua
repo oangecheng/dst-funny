@@ -6,12 +6,16 @@ local ITEM_EXP_DEF = 10
 -- 建筑基础经验值定义
 local STRUCTURE_EXP_DEF = 20
 -- 各科技等级经验值倍率
+--- SCIENCE 1,2,3
+--- MAGIC 6,7,  (SCIENCE最大倍率x2)
+--- ANCIENT 14,15,16 (MAGIC最大倍率x2)
+--- CELESTIAL 14,16, (同ANCIENT, 月岛科技等级只有1和3)
 local EXP_MULTI_DEFS = {
-    OTHER = 1,
-    SCIENCE = 1,
-    MAGIC = 6,
-    ANCIENT = 16,
-    CELESTIAL = 16,
+    SCIENCE = 0,
+    MAGIC = 4,
+    ANCIENT = 12,
+    CELESTIAL = 13,
+    LUNARFORGING = 13,
 }
 
 
@@ -56,60 +60,39 @@ local function nextLvExpFunc(inst, lv)
 end
 
 
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  SCULPTING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  PERDOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  BOOKCRAFT  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  LUNARFORGING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  ROBOTMODULECRAFT  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  ORPHANAGE  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  FOODPROCESSING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  ANCIENT  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  WARGOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  SPIDERCRAFT  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  MOON_ALTAR  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARTOGRAPHY  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  SCIENCE  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  CATCOONOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  SEAFARING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  MADSCIENCE  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARNIVAL_PRIZESHOP  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  RABBITOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  FISHING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  HERMITCRABSHOP  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARRATOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  SHADOW  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  MAGIC  2	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  CARNIVAL_HOSTSHOP  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  TURFCRAFTING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  WINTERSFEASTCOOKING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  PIGOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  MASHTURFCRAFTING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  BEEFOFFERING  0	
--- [00:01:47]: 哈哈哈哈哈 calcItemExp  CELESTIAL  0	
+--- 根据物品等级计算经验倍率
+--- 远古和魔法从等级2开始
+local function getExpMultiByRecipeLevel(recipe_level)
+    local multi = 2
+    if recipe_level == nil then return multi end
+    if recipe_level.SCIENCE ~= 0 then
+        multi = tonumber(recipe_level.SCIENCE) + EXP_MULTI_DEFS.SCIENCE  
+    elseif recipe_level.MAGIC ~= 0 then
+        multi = tonumber(recipe_level.MAGIC) + EXP_MULTI_DEFS.MAGIC
+    elseif recipe_level.ANCIENT ~= 0 then
+        multi = tonumber(recipe_level.ANCIENT) + EXP_MULTI_DEFS.ANCIENT
+    elseif recipe_level.CELESTIAL ~= 0 then
+        multi = tonumber(recipe_level.CELESTIAL) + EXP_MULTI_DEFS.CELESTIAL
+    elseif recipe_level.LUNARFORGING ~= 0 then
+        multi = tonumber(recipe_level.LUNARFORGING) + EXP_MULTI_DEFS.LUNARFORGING
+    end
+    multi = math.max(1, multi)
+    return multi
+end
 
 --- 计算建造每个物品获得的经验值
 local function calcItemExp(data)
     local recipe_level = data.recipe.level
-    local multi = 1
-    if recipe_level then
-        if recipe_level.SCIENCE ~= 0 then
-            multi = tonumber(recipe_level.SCIENCE) -1 + EXP_MULTI_DEFS.SCIENCE  
-        elseif recipe_level.MAGIC ~= 0 then
-            multi = tonumber(recipe_level.MAGIC) - 2 + EXP_MULTI_DEFS.MAGIC
-        elseif recipe_level.ANCIENT ~= 0 then
-            multi = tonumber(recipe_level.ANCIENT) - 2 + EXP_MULTI_DEFS.ANCIENT
-        elseif recipe_level.CELESTIAL ~= 0 then
-            multi = tonumber(recipe_level.CELESTIAL) - 1 + EXP_MULTI_DEFS.CELESTIAL
-        end
-    end
-    multi = math.max(1, multi)
+    local multi = getExpMultiByRecipeLevel(recipe_level)
     return multi * ITEM_EXP_DEF
 end
 
 
 --- 计算建造每个建筑获得的经验值
 local function calcStructureExp(data)
-    return 50
+    local recipe_level = data.recipe.level
+    local multi = getExpMultiByRecipeLevel(recipe_level)
+    return multi * STRUCTURE_EXP_DEF
 end
 
 

@@ -1,4 +1,7 @@
 
+local require = GLOBAL.require
+local STRINGS = GLOBAL.STRINGS
+
 
 --- 查找对应的能力获取经验值
 function KsFunPowerGainExp(inst, name, exp)
@@ -9,3 +12,6 @@ function KsFunPowerGainExp(inst, name, exp)
         end
     end
 end
+
+
+GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
