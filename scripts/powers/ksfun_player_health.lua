@@ -24,6 +24,14 @@ local function onLvChangeFunc(inst, lv, notice)
     end
 end
 
+--- 用户等级状态变更
+--- 通知用户面板刷新状态
+local function onStateChangeFunc(inst)
+    if inst.target then
+        inst.target:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_STATE_CHANGE)
+    end
+end
+
 
 --- 击杀怪物后，范围10以内的角色都可以获得血量升级的经验值
 --- 范围内只有一个人时，经验值为100%获取
@@ -107,7 +115,7 @@ KSFUN_HEALTH.data = {
 
 KSFUN_HEALTH.level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = nil,
+    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc
 }
 

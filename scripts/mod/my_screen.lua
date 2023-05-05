@@ -14,6 +14,16 @@ local function onPlayerStateChange(self, powers, owner)
 		self.hunger:Show()
 		self.hunger:SetString("饱食度: 等级=" .. tostring(hunger.lv) .. "  经验=" .. tostring(hunger.exp))
 	end
+	local sanity = powers[NAMES.SANITY]
+	if sanity then
+		self.sanity:Show()
+		self.sanity:SetString("精神值: 等级=" .. tostring(sanity.lv) .. "  经验=" .. tostring(sanity.exp))
+	end
+	local health = powers[NAMES.HEALTH]
+	if health then
+		self.health:Show()
+		self.health:SetString("生命值: 等级=" .. tostring(health.lv) .. "  经验=" .. tostring(health.exp))
+	end
 end
 
 
@@ -45,7 +55,7 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.title:SetVAnchor(0)
 	self.title:SetPosition(x,  y + offsetY , 0)
 
-	offsetY = offsetY - 50
+	offsetY = offsetY - 75
 
 	self.hunger = self.root:AddChild(Text(NEWFONT, 25))
 	self.hunger:SetScale(2, 2, 2)
@@ -53,7 +63,23 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.hunger:SetVAnchor(0)
 	self.hunger:SetPosition(x,  y + offsetY, 0)
 
+	offsetY = offsetY - 50
+
+	self.sanity = self.root:AddChild(Text(NEWFONT, 25))
+	self.sanity:SetScale(2, 2, 2)
+	self.sanity:SetHAnchor(0)
+	self.sanity:SetVAnchor(0)
+	self.sanity:SetPosition(x,  y + offsetY, 0)
+
+	offsetY = offsetY - 50
+
+	self.health = self.root:AddChild(Text(NEWFONT, 25))
+	self.health:SetScale(2, 2, 2)
+	self.health:SetHAnchor(0)
+	self.health:SetVAnchor(0)
+	self.health:SetPosition(x,  y + offsetY, 0)
 	
+
 	self.pageClose = self.root:AddChild(TextButton())
     self.pageClose:SetText("关闭")
 	self.pageClose:SetScale(2, 2, 2)
