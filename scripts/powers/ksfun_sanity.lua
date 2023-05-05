@@ -1,6 +1,20 @@
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
+-- 物品基础经验值定义
+local ITEM_EXP_DEF = 10
+-- 建筑基础经验值定义
+local STRUCTURE_EXP_DEF = 20
+-- 各科技等级经验值倍率
+local EXP_MULTI_DEFS = {
+    OTHER = 1,
+    SCIENCE = 1,
+    MAGIC = 6,
+    ANCIENT = 16,
+    CELESTIAL = 16,
+}
+
+
 local KSFUN_SANITY = {}
 
 
@@ -75,10 +89,21 @@ end
 
 --- 计算建造每个物品获得的经验值
 local function calcItemExp(data)
-    -- for k,v in pairs(data.recipe.level) do
-    --     print("哈哈哈哈哈 calcItemExp  "..tostring(k).."  "..tostring(v))
-    -- end
-    return 25
+    local recipe_level = data.recipe.level
+    local multi = 1
+    if recipe_level then
+        if recipe_level.SCIENCE ~= 0 then
+            multi = tonumber(recipe_level.SCIENCE) -1 + EXP_MULTI_DEFS.SCIENCE  
+        elseif recipe_level.MAGIC ~= 0 then
+            multi = tonumber(recipe_level.MAGIC) - 2 + EXP_MULTI_DEFS.MAGIC
+        elseif recipe_level.ANCIENT ~= 0 then
+            multi = tonumber(recipe_level.ANCIENT) - 2 + EXP_MULTI_DEFS.ANCIENT
+        elseif recipe_level.CELESTIAL ~= 0 then
+            multi = tonumber(recipe_level.CELESTIAL) - 1 + EXP_MULTI_DEFS.CELESTIAL
+        end
+    end
+    multi = math.max(1, multi)
+    return multi * ITEM_EXP_DEF
 end
 
 
