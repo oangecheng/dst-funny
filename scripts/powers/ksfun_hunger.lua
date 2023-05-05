@@ -82,7 +82,9 @@ local function nextLvExpFunc(inst, lv)
 end
 
 
--- 计算食物能够获得的经验值
+--- 计算食物能够获得的经验值
+--- 经验系数 饱食0.2  生命值0.4 精神值0.6
+--- 如果是某一项为负值，此次获得的经验值可能为负数
 local function calcFoodExp(eater, food)
     if food == nil or food.components.edible == nil then return 0 end
     local hunger = food.components.edible:GetHunger(eater)

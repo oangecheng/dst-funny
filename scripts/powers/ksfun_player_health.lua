@@ -36,19 +36,21 @@ local function onKillOther(killer, data)
 
     if victim.components.freezable or victim:HasTag("monster") then
         local exp = victim.components.health.maxhealth
+
+        -- 击杀者能够得到满额的经验
+        KsFunPowerGainExp(killer, POWER_NAMES.HEALTH, exp)
+
+        -- 非击杀者经验值计算
         local x,y,z = victim.Transform:GetWorldPosition()
         local players = TheSim:FindEntities(x,y,z, 10, {"player"})
-        
         if players == nil then return end
         local players_count = #players
         -- 单人模式经验100%，多人经验获取会减少，最低50%
         local exp_multi = math.max((6 - players_count) * 0.2, 0.5)
         for i, player in ipairs(players) do
-            if player.components.ksfun_powers then
-                local inst = player.components.ksfun_powers:GetPower(POWER_NAMES.HEALTH)
-                if inst and inst.components.ksfun_level then
-                    inst.components.ksfun_level:GainExp(exp * exp_multi)
-                end
+            -- 击杀者已经给了经验了
+            if player ~= killer then
+                KsFunPowerGainExp(player, POWER_NAMES.HEALTH, exp * exp_multi)
             end
         end
     end
