@@ -32,7 +32,7 @@ local KSFUN_POWERS = Class(function(self, inst)
     self.powers= {}
     self.onPowersChangeFunc = nil
 
-    self._itempowers = net_string(inst.GUID, "ksfun_powers._itempowers", "ksfun_itemdirty")
+    self._itempowers = net_string(inst.GUID, "ksfun_power_system._itempowers", "ksfun_itemdirty")
     self.inst:ListenForEvent("ksfun_itemdirty", function(inst) onPowerWithLevelDirty(self, inst) end)
 
 end)

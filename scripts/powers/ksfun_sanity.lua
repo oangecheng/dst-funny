@@ -100,7 +100,7 @@ end
 --- @param player 玩家
 --- @param data 物品数据
 local function onBuildItemFunc(player, data)
-    local power = player.components.ksfun_powers:GetPower(NAMES.SANITY)
+    local power = player.components.ksfun_power_system:GetPower(NAMES.SANITY)
     if power and power.components.ksfun_level then
         local exp = calcItemExp(data)
         power.components.ksfun_level:GainExp(exp)
@@ -112,7 +112,7 @@ end
 --- @param player 玩家
 --- @param data 建筑数据
 local function oBuildStructureFunc(player, data)
-    local power = player.components.ksfun_powers:GetPower(NAMES.SANITY)
+    local power = player.components.ksfun_power_system:GetPower(NAMES.SANITY)
     if power and power.components.ksfun_level then
         local exp = calcStructureExp(data)
         power.components.ksfun_level:GainExp(exp)

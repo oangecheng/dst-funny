@@ -95,7 +95,7 @@ end
 
 
 local function onEat(eater, data)
-    local hunger = eater.components.ksfun_powers:GetPower(NAMES.HUNGER)
+    local hunger = eater.components.ksfun_power_system:GetPower(NAMES.HUNGER)
     if data and data.food and hunger then
         local hunger_exp = calcFoodExp(eater, data.food)
         hunger.components.ksfun_level:GainExp(hunger_exp) 

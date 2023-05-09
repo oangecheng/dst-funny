@@ -144,8 +144,8 @@ function KSFUN_POWERS:SyncData()
         data = data .. d
     end
 
-    if data ~= "" and self.inst.replica.ksfun_powers then
-        self.inst.replica.ksfun_powers:SyncData(data)
+    if data ~= "" and self.inst.replica.ksfun_power_system then
+        self.inst.replica.ksfun_power_system:SyncData(data)
     end
 end
 

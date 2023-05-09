@@ -18,7 +18,7 @@ Assets = {
 
 
 AddReplicableComponent("ksfun_hunger")
-AddReplicableComponent("ksfun_powers")
+AddReplicableComponent("ksfun_power_system")
 
 
 local player_panel = require "mod/my_screen"

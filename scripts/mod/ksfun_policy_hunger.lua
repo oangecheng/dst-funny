@@ -6,8 +6,8 @@ local HOOK_SPEED_LEVEL = 100
 local function needHookSpeed(self, ismastersim)
     if ismastersim then
         if self.inst.components.rider ~= nil and self.inst.components.rider:IsRiding() then return false end
-        if self.inst.components.ksfun_powers then
-            local power = self.inst.components.ksfun_powers:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
+        if self.inst.components.ksfun_power_system then
+            local power = self.inst.components.ksfun_power_system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
             if power and power.components.ksfun_level then
                 return power.components.ksfun_level.lv > HOOK_SPEED_LEVEL
             end
@@ -15,8 +15,8 @@ local function needHookSpeed(self, ismastersim)
         return false
     else
         if self.inst.replica.rider and self.inst.replica.rider:IsRiding() then return false end
-        if self.inst.replica.ksfun_powers then
-            local power = self.inst.replica.ksfun_powers:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
+        if self.inst.replica.ksfun_power_system then
+            local power = self.inst.replica.ksfun_power_system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
             if power and power.lv then
                 return power.lv > HOOK_SPEED_LEVEL
             end

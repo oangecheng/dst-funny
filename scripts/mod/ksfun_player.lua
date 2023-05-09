@@ -18,8 +18,8 @@ end
 --- 用来更新面板数据
 local function onPlayerPowerChange(inst)
     print(KSFUN_TUNING.LOG_TAG.."ksfun_player onPlayerPowerChange")
-    if inst.components.ksfun_powers then
-        inst.components.ksfun_powers:SyncData()
+    if inst.components.ksfun_power_system then
+        inst.components.ksfun_power_system:SyncData()
     end
 end
 
@@ -39,7 +39,7 @@ AddPlayerPostInit(function(player)
     player.components.health:SetPercent(percent)
 
     player:AddComponent("ksfun_task_system")
-    player:AddComponent("ksfun_powers")
+    player:AddComponent("ksfun_power_system")
 
     player:ListenForEvent("ksfun_task_finish", onTaskStateChange)
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
@@ -49,16 +49,16 @@ AddPlayerPostInit(function(player)
         player:DoTaskInTime(0.5, function(inst)
             local name = KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH
             local prefab = "ksfun_power_"..name
-            player.components.ksfun_powers:AddPower(name, prefab)
+            player.components.ksfun_power_system:AddPower(name, prefab)
     
             local name2 = KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER
             local prefab = "ksfun_power_"..name2
-            player.components.ksfun_powers:AddPower(name2, prefab)
+            player.components.ksfun_power_system:AddPower(name2, prefab)
 
                 
             local name3 = KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY
             local prefab = "ksfun_power_"..name3
-            player.components.ksfun_powers:AddPower(name3, prefab)
+            player.components.ksfun_power_system:AddPower(name3, prefab)
         end)
     end
 end)

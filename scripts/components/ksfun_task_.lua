@@ -18,12 +18,11 @@ end)
 
 
 -- player 任务需要绑定角色
-function KSFUN_TASK:Attach(name, player)
+function KSFUN_TASK:Attach(player)
     self.state = 1
-    self.name = name
     self.player = player
     if self.onAttachFunc then
-        self.onAttachFunc(self.inst, self.player, self.name)
+        self.onAttachFunc(self.inst, self.player)
     end
 end
 
@@ -34,7 +33,7 @@ function KSFUN_TASK:Deatch()
     self.player = nil
     self.state = 0
     if p and self.onDetachFunc then
-        self.onDetachFunc(self.inst, p, self.name)
+        self.onDetachFunc(self.inst, p)
     end
 end
 
@@ -43,7 +42,7 @@ end
 function KSFUN_TASK:Start()
     self.state = 1
     if self.player and self.onStartFunc then
-        self.onStartFunc(self.inst, self.player, self.name)
+        self.onStartFunc(self.inst, self.player)
     end
 end
 
@@ -52,7 +51,7 @@ end
 function KSFUN_TASK:Stop()
     self.state = 2
     if self.player and self.onStopFunc then
-        self.onStopFunc(self.inst, self.player, self.name)
+        self.onStopFunc(self.inst, self.player)
     end
 end
 
@@ -61,7 +60,7 @@ end
 function KSFUN_TASK:Win()
     self.state = 3
     if self.player and self.onWinFunc then
-        self.onWinFunc(self.inst, self.player, self.name)
+        self.onWinFunc(self.inst, self.player)
     end
 end
 
@@ -69,7 +68,7 @@ end
 function KSFUN_TASK:Lose()
     self.state = 4
     if self.player and self.onLoseFunc then
-        self.onLoseFunc(self.inst, self.player, self.name)
+        self.onLoseFunc(self.inst, self.player)
     end
 end
 
