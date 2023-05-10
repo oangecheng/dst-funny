@@ -1,7 +1,11 @@
 
 
 
-local function MakeTask(name, data)
+local function MakeTask(data)
+
+    local function finishTask(inst, player, name)
+        player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name})
+    end
 
 
     local function onAttachFunc(inst, player, name)
@@ -14,18 +18,21 @@ local function MakeTask(name, data)
     local function onDetachFunc(inst, player, name)
         data.onDetachFunc(inst, player, name)
         inst.components.timer:StopTimer(inst)
+        inst:Remove()
     end
 
 
     local function onWinFunc(inst, player, name)
         data.onWinFunc(inst, player, name)
         inst.components.timer:StopTimer(inst)
+        finishTask(inst, player, name)
     end
 
 
     local function onLoseFunc(inst, player, name)
         data.onLoseFunc(inst, player, name)
         inst.components.timer:StopTimer(inst)
+        finishTask(inst, player, name)
     end
 
 
@@ -45,7 +52,8 @@ local function MakeTask(name, data)
         inst:AddComponent("ksfun_task")
 
         -- 给任务赋值
-        inst.components.ksfun_task:SetTaskData(data.task_data)
+        local d = data.generateTaskData()
+        inst.components.ksfun_task:SetTaskData(d)
         inst.components.ksfun_task.onAttachFunc = onAttachFunc
         inst.components.ksfun_task.onDetachFunc = onDetachFunc
         inst.components.ksfun_task.onWinFunc = onWinFunc
@@ -68,7 +76,7 @@ local function MakeTask(name, data)
         return inst
     end
 
-    return Prefab("ksfun_task_"..name, fn, nil, prefabs)
+    return Prefab("ksfun_task_"..data.name, fn, nil, prefabs)
 end
 
 
@@ -76,4 +84,4 @@ end
 local data = require("tasks/ksfun_kill")
 
 
-return MakeTask(data.name, data)
+return MakeTask(data)

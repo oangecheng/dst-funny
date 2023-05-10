@@ -65,6 +65,7 @@ KSFUN_TUNING =  {
     EVENTS = {
         PLAYER_STATE_CHANGE = "ksfun_player_state_change",
         PLAYER_PANEL = "ksfun_player_refresh_panel",
+        TASK_FINISH = "ksfun_task_finish",
     }
 
 }

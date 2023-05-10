@@ -83,7 +83,7 @@ function KSFUN_TASK_SYSTEM:AddTask(name)
         end
         ret = ent
     else
-        ret = power.inst
+        ret = task.inst
         print(KSFUN_TUNING.LOG_TAG.."add a same name task")
     end
     self:SyncData()

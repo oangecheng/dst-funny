@@ -7,12 +7,29 @@ local KILL_TYPES = {
 }
 
 
+
+local function descFunc(inst, player, name)
+    local kill_task = inst.components.ksfun_task
+    if kill_task then
+        local task_data = kill_task:GetTaskData()
+        if task_data.type == KILL_TYPES.DEFAULT then
+            local victim_name = STRINGS.NAMES[string.upper(task_data.victim)] or ""
+            local time = KsFunFormatTime(task_data.duration)
+            return "在"..time.."时间内击杀"..tostring(task_data.num).."只"..victim_name
+        end
+    end
+    return ""
+end
+
+
+
 local function randomKillTask(task_lv)
     local victim, lv, num = MONSTER.RandomMonster(task_lv)
     return {
         type = KILL_TYPES.DEFAULT,
         victim = victim,
         num = num,
+        duration = 15,
         reward = nil,
         punish = nil,
     }
@@ -27,7 +44,7 @@ local function onKillOther(killer, data)
         if kill_task then
             local kill_data = kill_task:GetTaskData()
             if kill_data.type == KILL_TYPES.DEFAULT then
-                if kill_data.victim == data.victim then
+                if kill_data.victim == data.victim.prefab then
                     kill_data.num = kill_data.num - 1
                 end
                 if kill_data.num < 1 then
@@ -40,6 +57,8 @@ end
 
 
 local function onAttachFunc(inst, player, name)
+    local str = descFunc(inst, player, name)
+    player.components.talker:Say(str)
     player:ListenForEvent("killed", onKillOther)
 end
 
@@ -59,14 +78,18 @@ local function onLoseFunc(inst, player, name)
 end
 
 
+local function generateTaskData()
+    return randomKillTask(5)
+
+end
 
 local KILL = {
     name = NAME,
+    generateTaskData = generateTaskData,
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onWinFunc = onWinFunc,
     onLoseFunc = onLoseFunc,
-    task_data = randomKillTask(5)
 }
 
 

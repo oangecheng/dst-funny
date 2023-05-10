@@ -1,3 +1,10 @@
+
+local MOOSE = "MOOSE"
+if STRINGS.NAMES[MOOSE] == nil then
+    STRINGS.NAMES[MOOSE] = "麋鹿鹅" 
+end
+
+
 local LVS = {
     LV1 = 1,
     LV2 = 2,
@@ -74,6 +81,27 @@ local MONSTER_LV6 = {
     "crab_king", -- 帝王蟹
     "alterguardian_phase3", -- 天体英雄3阶
 }
+
+
+local function monsterCheck(monsters)
+    local indexs = {}
+    for i,v in ipairs(monsters) do
+        if STRINGS.NAMES[string.upper(v)] == nil then
+            table.insert(indexs, i)
+        end
+    end
+    for i,v in ipairs(indexs) do
+        table.remove(monsters, i)
+    end
+end
+
+
+monsterCheck(MONSTER_LV1)
+monsterCheck(MONSTER_LV2)
+monsterCheck(MONSTER_LV3)
+monsterCheck(MONSTER_LV4)
+monsterCheck(MONSTER_LV5)
+monsterCheck(MONSTER_LV6)
 
 
 local MONSTER_DEFS = {}
