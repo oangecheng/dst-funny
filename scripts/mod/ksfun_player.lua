@@ -41,8 +41,10 @@ AddPlayerPostInit(function(player)
     player:AddComponent("ksfun_task_system")
     player:AddComponent("ksfun_power_system")
 
-    player:ListenForEvent("ksfun_task_finish", onTaskStateChange)
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
+    player:ListenForEvent("oneat", function(inst)
+        player.components.ksfun_task_system:AddTask(KSFUN_TUNING.TASK_NAMES.KILL)
+    end)
 
     --- 添加饱食度属性，testcode
     if KSFUN_TUNING.DEBUG then

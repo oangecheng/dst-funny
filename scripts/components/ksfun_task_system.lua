@@ -20,24 +20,10 @@ local function addTask(self, name, ent)
 end
 
 
-
-local function startTask(self, name)
-    local task = self.tasks[name]
-    if task then
-        if task.inst.components.ksfun_task then
-            task.inst.components.ksfun_task:Start()
-            table.insert(self.current_names, name)
-        end
-    end
-end
-
-
-
 local KSFUN_TASK_SYSTEM = Class(function(self, inst)
     self.inst = inst
     self.enable = true
     self.tasks = {}
-    self.current_names = {}
 
     self.onTaskAddFunc = nil
     self.onTaskRemoveFunc = nil
@@ -83,6 +69,7 @@ function KSFUN_TASK_SYSTEM:AddTask(name)
 
     -- 超过最大数量时，不能再新增任务
     if #self.tasks >= MAX_TASK_NUM then
+        print(KSFUN_TUNING.LOG_TAG.."cant add task because limit")
         return nil
     end
 
@@ -107,7 +94,6 @@ end
 --- 彻底移除一个属性
 --- 这个属性会被永久移除，一般用于
 function KSFUN_TASK_SYSTEM:RemoveTask(name)
-
     local task = self.tasks[name]
     if task ~= nil then
         self.tasks[name] = nil
@@ -119,9 +105,6 @@ function KSFUN_TASK_SYSTEM:RemoveTask(name)
         else
             task.inst:Remove()
         end
-
-        KsFunRemoveTargetFromTable(self.current_names, name)
-
         self:SyncData()
     end
 end
@@ -135,7 +118,7 @@ end
 
 --- 指定暂停一个任务
 --- 暂不实现
-function KSFUN_TASK_SYSTEM:Pause(name)
+function KSFUN_TASK_SYSTEM:Stop(name)
     
 end
 
@@ -154,14 +137,13 @@ function KSFUN_TASK_SYSTEM:OnSave()
         local saved--[[, refs]] = v.inst:GetSaveRecord()
         data[k] = saved
     end
-    return { tasks = data, enable = self.enable, current_names = self.current_names }
+    return { tasks = data, enable = self.enable }
 end
 
 
 function KSFUN_TASK_SYSTEM:OnLoad(data)
     if data then
         self.enable = data.enable or true
-        self.current_names = data.current_names or {}
     end
     if data ~= nil and data.tasks ~= nil then
         for k, v in pairs(data.tasks) do

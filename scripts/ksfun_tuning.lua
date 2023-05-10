@@ -51,11 +51,14 @@ KSFUN_TUNING =  {
      
     },
 
-    TASK_DEMAND_LEVELS = {
-        UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, LV_MAX = 6,
+    
+    --- 任务等级定义，分为10级
+    TASK_LV_DEFS = {
+        UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, LV7 = 7, LV8 = 8, LV10 = 10, MAX = 10
     },
-    TASK_REWARD_LEVELS = {
-        UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, LV_MAX = 6,
+
+    TASK_NAMES = {
+        KILL = "kill",
     },
 
 
