@@ -32,71 +32,81 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.root = self:AddChild(Widget("ROOT"))
 	
 	local scale = 2
-	local x = 0
+	local x = 500
 	local y = 500
-	local half_w = 512 * scale / 4
-	local half_h = 512 * scale / 4
-
-	
-	self.bg = self.root:AddChild(Image("images/ksfun_player_panel_bg.xml", "ksfun_player_panel_bg.tex"))
-	self.bg:SetScale(scale, scale, scale)
-	self.bg:SetHAnchor(0)
-	self.bg:SetVAnchor(0)
-	self.bg:SetPosition(0, y, 0)
-
 
 	local offsetX = x
-	local offsetY = half_h + 25
+	local offsetY = 0
 
-	self.title = self.root:AddChild(Text(NEWFONT, 25))
-	self.title:SetString("属性面板")
-	self.title:SetScale(2, 2, 2)
-	self.title:SetHAnchor(0)
-	self.title:SetVAnchor(0)
-	self.title:SetPosition(x,  y + offsetY , 0)
+	-- offsetY = offsetY - 50
+	-- self["buff_card_title"] = self.root:AddChild(self:BuffCard())
+	-- self["buff_card_title"]:SetHAnchor(0)
+	-- self["buff_card_title"]:SetVAnchor(0)
+	-- self["buff_card_title"]:SetPosition(x, y + offsetY, 0)
 
-	offsetY = offsetY - 75
-
-	self.hunger = self.root:AddChild(Text(NEWFONT, 25))
-	self.hunger:SetScale(2, 2, 2)
-	self.hunger:SetHAnchor(0)
-	self.hunger:SetVAnchor(0)
-	self.hunger:SetPosition(x,  y + offsetY, 0)
 
 	offsetY = offsetY - 50
-
-	self.sanity = self.root:AddChild(Text(NEWFONT, 25))
-	self.sanity:SetScale(2, 2, 2)
-	self.sanity:SetHAnchor(0)
-	self.sanity:SetVAnchor(0)
-	self.sanity:SetPosition(x,  y + offsetY, 0)
-
-	offsetY = offsetY - 50
-
-	self.health = self.root:AddChild(Text(NEWFONT, 25))
-	self.health:SetScale(2, 2, 2)
-	self.health:SetHAnchor(0)
-	self.health:SetVAnchor(0)
-	self.health:SetPosition(x,  y + offsetY, 0)
-	
+	self["buff_card"] = self.root:AddChild(self:BuffCard())
+	self["buff_card"]:SetHAnchor(0)
+	self["buff_card"]:SetVAnchor(0)
+	self["buff_card"]:SetPosition(x, y + offsetY, 0)
 
 	self.pageClose = self.root:AddChild(TextButton())
     self.pageClose:SetText("关闭")
 	self.pageClose:SetScale(2, 2, 2)
 	self.pageClose:SetHAnchor(0) -- 设置原点x坐标位置，0、1、2分别对应屏幕中、左、右
 	self.pageClose:SetVAnchor(0) -- 设置原点y坐标位置，0、1、2分别对应屏幕中、上、下
-	self.pageClose:SetPosition(x,  y - half_h - 25, 0)
+	self.pageClose:SetPosition(x,  y, 0)
 	self.pageClose:SetOnClick(function()
 		self:Hide()
 		owner.player_panel_showing = false
 	end)
 
+
+
 	-- 监听变化，这个应该放外边去，临时
 	owner:ListenForEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, function(inst, data)
-		onPlayerStateChange(self, data, inst)
+		-- onPlayerStateChange(self, data, inst)
 	end)
 
+
 end)
+
+
+--构造单个buff卡
+function KSFUN_PLAYER_PANEL:BuffCard()
+	local widget = Widget()--生成选项卡，编号不同
+
+	local p = 10
+	local w = 1000
+	local half_w = (w - 2*p)/2
+
+
+	widget.bg = widget:AddChild(Image("images/global.xml", "square.tex"))
+	widget.bg:SetSize(w, 45)
+	widget.bg:SetTint(0, 0, 0, 0.5)
+	
+	--buff时长
+	widget.buff_time = widget:AddChild(Text(BODYTEXTFONT, 45))
+	widget.buff_time:SetPosition(-half_w/2, 0)
+	widget.buff_time:SetRegionSize(half_w, 45 )
+	widget.buff_time:SetHAlign( ANCHOR_MIDDLE )--ANCHOR_RIGHT)
+	widget.buff_time:SetVAlign( 0 )--ANCHOR_RIGHT)
+	widget.buff_time:SetString("属性：血量")
+	widget.buff_time:SetColour(1, 1, 1, 1)
+
+	--buff名
+	widget.buff_name = widget:AddChild(Text(BODYTEXTFONT, 45))
+	widget.buff_name:SetPosition(half_w/2, 0)
+	widget.buff_name:SetRegionSize(half_w, 45)
+	widget.buff_name:SetHAlign( ANCHOR_MIDDLE)
+	widget.buff_time:SetVAlign( 0 )--ANCHOR_RIGHT)
+
+	widget.buff_name:SetString("描述：等级100")
+	widget.buff_name:SetColour(1, 1, 1, 1)
+
+	return widget
+end
 
 
 
