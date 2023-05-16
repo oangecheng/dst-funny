@@ -5,15 +5,7 @@ if STRINGS.NAMES[MOOSE] == nil then
 end
 
 
-local LVS = {
-    LV1 = 1,
-    LV2 = 2,
-    LV3 = 3,
-    LV4 = 4,
-    LV5 = 5,
-    LV6 = 6,
-    MAX = 6,
-}
+local LV_DEFS = KSFUN_TUNING.TASK_LV_DEFS
 
 
 local MONSTER_LV1 = {
@@ -105,12 +97,12 @@ monsterCheck(MONSTER_LV6)
 
 
 local MONSTER_DEFS = {}
-MONSTER_DEFS[LVS.LV1] = MONSTER_LV1
-MONSTER_DEFS[LVS.LV2] = MONSTER_LV2
-MONSTER_DEFS[LVS.LV3] = MONSTER_LV3
-MONSTER_DEFS[LVS.LV4] = MONSTER_LV4
-MONSTER_DEFS[LVS.LV5] = MONSTER_LV5
-MONSTER_DEFS[LVS.LV6] = MONSTER_LV6
+MONSTER_DEFS[LV_DEFS.LV1] = MONSTER_LV1
+MONSTER_DEFS[LV_DEFS.LV2] = MONSTER_LV2
+MONSTER_DEFS[LV_DEFS.LV3] = MONSTER_LV3
+MONSTER_DEFS[LV_DEFS.LV4] = MONSTER_LV4
+MONSTER_DEFS[LV_DEFS.LV5] = MONSTER_LV5
+MONSTER_DEFS[LV_DEFS.LV6] = MONSTER_LV6
 
 
 local MOSTER = {}
@@ -118,11 +110,11 @@ local MOSTER = {}
 
 local function randomMonsterNum(monster_lv)
     local num = 1
-    if monster_lv > LVS.LV3 then
+    if monster_lv > LV_DEFS.LV3 then
         num = 1
-    elseif monster_lv == LVS.LV3 then
+    elseif monster_lv == LV_DEFS.LV3 then
         num = math.random(5)
-    elseif monster_lv == LVS.LV3 then
+    elseif monster_lv == LV_DEFS.LV3 then
         num = math.random(10)
     else
         num = math.random(30)
@@ -135,9 +127,9 @@ end
 --- @param moster_lv 怪物等级，无就随机等级
 --- @return 怪物代码 名称/等级/数量
 local function randomMonster(task_lv)
-    local lv = task_lv and task_lv or math.random(LVS.MAX)
-    lv = math.max(LVS.LV1, lv)
-    lv = math.min(LVS.MAX, lv)
+    local lv = task_lv and task_lv or math.random(LV_DEFS.MAX)
+    lv = math.max(LV_DEFS.LV1, lv)
+    lv = math.min(LV_DEFS.MAX, lv)
     local monsters = MONSTER_DEFS[lv] 
     local index = math.random(#monsters)
     local name = monsters[index]
