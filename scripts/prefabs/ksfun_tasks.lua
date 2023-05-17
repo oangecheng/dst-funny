@@ -67,9 +67,9 @@ local function MakeTask(data)
 
         -- 如果有时间限制，就初始化timer
         local task_data = inst.components.ksfun_task:GetTaskData()
-        if task_data and task_data.duration then
+        if task_data and task_data.demand.duration > 0 then
             -- 先暂停，等attach的时候才开始计算时间
-            inst.components.timer:StartTimer(inst, task_data.duration, true)
+            inst.components.timer:StartTimer(inst, task_data.demand.duration, true)
             inst:ListenForEvent("timerdone", onTimeDone)
         end
 

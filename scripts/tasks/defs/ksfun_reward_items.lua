@@ -88,7 +88,7 @@ end
 --- 随机生成一些物品
 --- @param task_lv 任务难度等级
 --- @return 名称，等级，数量
-local function randomItem(task_lv)
+local function randomNormalItem(task_lv)
     local lv = task_lv and task_lv or math.random(MAX_LV)
     lv = math.max(1, lv)
     lv = math.min(MAX_LV, lv)
@@ -104,7 +104,7 @@ end
 
 local REWADS_ITEMS = {}
 
-REWADS_ITEMS.randomItem = randomItem
+REWADS_ITEMS.randomNormlItem = randomNormalItem
 
 
 return REWADS_ITEMS

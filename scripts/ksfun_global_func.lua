@@ -24,6 +24,16 @@ function KsFunRemoveTargetFromTable(list, target)
 end
 
 
+function KsFunRandomValueFromKVTable(target)
+    local values = {}
+    for k,v in pairs(t) do
+        table.insert( values, v)
+    end
+    local index = math.random(#values)
+    return values[index]
+end
+
+
 function KsFunFormatTime(time)
     if time < 0 then return "--:--" end
 	local min = math.floor(time/60)
@@ -37,3 +47,4 @@ end
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
+GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable

@@ -113,11 +113,11 @@ local function randomMonsterNum(monster_lv)
     if monster_lv > LV_DEFS.LV3 then
         num = 1
     elseif monster_lv == LV_DEFS.LV3 then
-        num = math.random(5)
-    elseif monster_lv == LV_DEFS.LV3 then
-        num = math.random(10)
+        num = math.random(2)
+    elseif monster_lv == LV_DEFS.LV2 then
+        num = math.random(4)
     else
-        num = math.random(30)
+        num = math.random(8)
     end
     return num
 end
@@ -139,7 +139,7 @@ end
 
 
 
-MOSTER.RandomMonster = randomMonster
+MOSTER.randomMonster = randomMonster
 
 
 return MOSTER

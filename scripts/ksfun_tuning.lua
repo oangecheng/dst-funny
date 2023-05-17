@@ -31,28 +31,32 @@ KSFUN_TUNING =  {
 
     TASK_TIME_SEG = TUNING.SEG_TIME,
     TASK_TIME_TOTAL_DAY = TUNING.TOTAL_DAY_TIME,
+
+
     --- 任务需求的类型
     TASK_DEMAND_TYPES = {
         --- 击杀类型
-        KILL = 1,
-        KILL_JUNIOR = 2, 
-        KILL_SENIOR = 3,
-
-        PICK = 11,
-        DIG = 12,
-        HARMMER = 13,
-        MINE = 14,
-        CHOP = 15,
-        FISH = 16,
+        KILL = {
+            NORMAL = 1,
+            TIME_LIMIT = 2,
+            ATTACKED_LIMIT = 3,
+        },
     },
 
     TASK_REWARD_TYPES = {
-        ITEM = 1, -- 物品
-     
+        ITEM = {
+            NORMAL = 1,
+        }, -- 物品
+        KSFUN_ITEM = {
+            WEAPON = 1,
+            HAT = 2,
+            ARMOR = 3,
+            MELT = 4,
+        },
+        PLAYER_POWER = PLAYER_POWER_NAMES,
     },
 
-    
-    --- 任务等级定义，分为10级
+    --- 任务等级定义，分为6级
     TASK_LV_DEFS = {
         UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, MAX = 6
     },

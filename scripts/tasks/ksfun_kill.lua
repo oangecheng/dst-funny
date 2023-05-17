@@ -1,27 +1,18 @@
 
-local MONSTER = require("tasks/ksfun_monster_defs")
-local REWARD = require("tasks/ksfun_reward_items")
+local REWARD = require("tasks/defs/ksfun_reward_items")
+local DEMANDS = require("tasks/ksfun_task_demand")
 
 local NAME = KSFUN_TUNING.TASK_NAMES.KILL
-
-local KILL_TYPES = {
-    DEFAULT = 1,
-}
-
-local REWARD_TYPES = {
-    ITEM = 1,
-}
-
+local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
 
 
 local function descFunc(inst, player, name)
     local kill_task = inst.components.ksfun_task
     if kill_task then
-        local task_data = kill_task:GetTaskData()
-        if task_data.type == KILL_TYPES.DEFAULT then
-            local victim_name = STRINGS.NAMES[string.upper(task_data.victim)] or ""
-            local time = KsFunFormatTime(task_data.duration)
-            return "在"..time.."时间内击杀"..tostring(task_data.num).."只"..victim_name
+        local kill_demand = kill_task:GetTaskData().demand
+        if kill_demand.type == KILL_TYPES.NORMAL then
+            local victim_name = STRINGS.NAMES[string.upper(kill_demand.data.victim)] or ""
+            return "击杀"..tostring(kill_demand.data.num).."只"..victim_name
         end
     end
     return ""
@@ -30,13 +21,10 @@ end
 
 
 local function randomKillTask(task_lv)
-    local victim, lv, num = MONSTER.RandomMonster(task_lv)
-    local item, lv, num = REWARD.randomItem(task_lv)
+    local demand = DEMANDS.generateDemand(NAME, task_lv, KILL_TYPES.NORMAL)
+    local item, lv, num = REWARD.randomNormlItem(task_lv)
     return {
-        type = KILL_TYPES.DEFAULT,
-        victim = victim,
-        num = num,
-        duration = 15,
+        demand = demand,
         reward = {
             type = REWARD_TYPES.ITEM, 
             data = {
@@ -51,16 +39,17 @@ end
 
 local function onKillOther(killer, data)
     local victim = data.victim
+
     if killer.components.ksfun_task_system then
         local inst = killer.components.ksfun_task_system:GetTask(NAME)
         local kill_task = inst and inst.components.ksfun_task or nil
         if kill_task then
-            local kill_data = kill_task:GetTaskData()
-            if kill_data.type == KILL_TYPES.DEFAULT then
-                if kill_data.victim == data.victim.prefab then
-                    kill_data.num = kill_data.num - 1
+            local demand = kill_task:GetTaskData().demand
+            if demand.type == KILL_TYPES.NORMAL then
+                if demand.data.victim == victim.prefab then
+                    demand.data.num = demand.data.num - 1
                 end
-                if kill_data.num < 1 then
+                if demand.data.num < 1 then
                     kill_task:Win()
                 end 
             end
@@ -113,7 +102,6 @@ local KILL = {
     onWinFunc = onWinFunc,
     onLoseFunc = onLoseFunc,
 }
-
 
 
 return KILL
