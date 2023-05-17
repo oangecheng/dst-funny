@@ -7,7 +7,7 @@ local demands = {}
 
 demands[TASK_NAMES.KILL] = {
     generate = kills.generate,
-    random = kill.random,
+    random = kills.random,
 }
 
 

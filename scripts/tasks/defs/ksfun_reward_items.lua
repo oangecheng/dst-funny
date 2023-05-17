@@ -1,6 +1,6 @@
 
 local LV_DEFS = KSFUN_TUNING.TASK_LV_DEFS
-
+local MAX_LV = 6
 
 local ITEMS_LV1 = {
     "goldnugget", -- 金块

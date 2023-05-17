@@ -11,27 +11,27 @@ local function MakeTask(data)
     local function onAttachFunc(inst, player, name)
         data.onAttachFunc(inst, player, name)
         --- 重新启用timer
-        inst.components.timer:ResumeTimer(inst)
+        inst.components.timer:ResumeTimer("ksfun_task_over")
     end
 
 
     local function onDetachFunc(inst, player, name)
         data.onDetachFunc(inst, player, name)
-        inst.components.timer:StopTimer(inst)
-        inst:Remove()
+        inst.components.timer:StopTimer("ksfun_task_over")
+        inst:DoTaskInTime(0, inst:Remove())
     end
 
 
     local function onWinFunc(inst, player, name)
         data.onWinFunc(inst, player, name)
-        inst.components.timer:StopTimer(inst)
+        inst.components.timer:StopTimer("ksfun_task_over")
         finishTask(inst, player, name)
     end
 
 
     local function onLoseFunc(inst, player, name)
         data.onLoseFunc(inst, player, name)
-        inst.components.timer:StopTimer(inst)
+        inst.components.timer:StopTimer("ksfun_task_over")
         finishTask(inst, player, name)
     end
 
@@ -46,7 +46,9 @@ local function MakeTask(data)
             return inst
         end
 
+        inst.entity:AddTransform()
         inst.entity:Hide()
+        inst.persists = false
 
         inst:AddComponent("timer")
         inst:AddComponent("ksfun_task")
@@ -67,9 +69,10 @@ local function MakeTask(data)
 
         -- 如果有时间限制，就初始化timer
         local task_data = inst.components.ksfun_task:GetTaskData()
-        if task_data and task_data.demand.duration > 0 then
+        task_data.demand.data.duration = 30
+        if task_data and task_data.demand.data.duration > 0 then
             -- 先暂停，等attach的时候才开始计算时间
-            inst.components.timer:StartTimer(inst, task_data.demand.duration, true)
+            inst.components.timer:StartTimer("ksfun_task_over", task_data.demand.data.duration, true)
             inst:ListenForEvent("timerdone", onTimeDone)
         end
 

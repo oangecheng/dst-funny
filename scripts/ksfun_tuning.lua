@@ -1,3 +1,5 @@
+
+
 KSFUN_TUNING =  {
 
     DEBUG = true,
@@ -44,16 +46,29 @@ KSFUN_TUNING =  {
     },
 
     TASK_REWARD_TYPES = {
+        -- 普通物品奖励
         ITEM = {
             NORMAL = 1,
-        }, -- 物品
+        }, 
+        -- 品质物品奖励，可熔炼，锻造
         KSFUN_ITEM = {
-            WEAPON = 1,
-            HAT = 2,
-            ARMOR = 3,
-            MELT = 4,
+            WEAPON = 100,
+            HAT = 101,
+            ARMOR = 102,
+            MELT = 103,
         },
-        PLAYER_POWER = PLAYER_POWER_NAMES,
+        -- 属性奖励
+        PLAYER_POWER = {
+            HUNGER = 200,
+            SANITY = 201,
+            HEALTH = 202,
+        },
+        -- 属性等级奖励
+        LEVEL_UP = {
+            HUNGER = 300,
+            SANITY = 301,
+            HEALTH = 302,
+        },
     },
 
     --- 任务等级定义，分为6级
