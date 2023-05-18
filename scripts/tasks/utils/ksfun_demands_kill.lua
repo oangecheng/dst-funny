@@ -22,7 +22,7 @@ local function default(kill_type, task_lv, difficulty_multi)
             victim = victim,
             lv = lv,
             num = num,
-            duration = -1
+            duration = 30
         }
     }
 end

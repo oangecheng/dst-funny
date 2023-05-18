@@ -45,7 +45,7 @@ AddPlayerPostInit(function(player)
 
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)
-        HELPER:AddTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
+        HELPER.addTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
     end)
 
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)

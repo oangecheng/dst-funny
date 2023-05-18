@@ -178,7 +178,7 @@ end
 
 local REWADS_ITEMS = {}
 
-REWADS_ITEMS.randomNormlItem = randomNormalItem
+REWADS_ITEMS.randomNormalItem = randomNormalItem
 REWADS_ITEMS.randomKsFunItem = randomKsFunItem
 
 

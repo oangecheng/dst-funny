@@ -5,7 +5,7 @@ local HELPER = require("tasks/ksfun_task_helper")
 local function MakeTask(task_name)
 
     -- 生成任务
-    local task = HELPER.creaetTask(task_name)
+    local task = HELPER.createTask(task_name)
 
     local function finishTask(inst, player, name)
         player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name})
@@ -69,13 +69,14 @@ local function MakeTask(task_name)
             inst.components.ksfun_task:Lose()
         end
 
-        -- 如果有时间限制，就初始化timer
-        local task_data = inst.components.ksfun_task:GetTaskData()
-        task_data.demand.data.duration = 30
-        if task_data and task_data.demand.data.duration > 0 then
-            -- 先暂停，等attach的时候才开始计算时间
-            inst.components.timer:StartTimer("ksfun_task_over", task_data.demand.data.duration, true)
-            inst:ListenForEvent("timerdone", onTimeDone)
+        -- 初始化
+        inst.components.ksfun_task.onInitFunc = function(inst, task_data)
+            -- 如果有时间限制，就初始化timer
+            if task_data and task_data.demand.data.duration > 0 then
+                -- 先暂停，等attach的时候才开始计算时间
+                inst.components.timer:StartTimer("ksfun_task_over", task_data.demand.data.duration, true)
+                inst:ListenForEvent("timerdone", onTimeDone)
+            end
         end
 
         return inst

@@ -1,23 +1,30 @@
 local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 
-local ITMES  = require("tasks/defs/ksfun_rewards_items")
-local POWERS = require("tasks/defs/ksfun_rewards_powers")
+local ITMES  = require("tasks/defs/ksfun_reward_items")
+local POWERS = require("tasks/defs/ksfun_reward_powers")
+
+
+local REWARD_DEFS = {}
+
+--- 属性奖励
+REWARD_DEFS[REWARD_TYPES.PLAYER_POWER.NORMAL]     = { random = POWERS.randomNewPower}
+REWARD_DEFS[REWARD_TYPES.PLAYER_POWER_UP.NORMAL]  = { random = POWERS.randomPowerLv }
+REWARD_DEFS[REWARD_TYPES.PLAYER_POWER_EXP.NORMAL] = { random = POWERS.randomPowerExp}
+--- 物品类型
+REWARD_DEFS[REWARD_TYPES.ITEM.NORMAL] =  { random = ITMES.randomNormalItem }
+REWARD_DEFS[REWARD_TYPES.KSFUN_ITEM.NORMAL] =  { random = ITMES.randomKsFunItem }
+
+
+local function defaultReward(player, task_lv)
+    local d = REWARD_DEFS[REWARD_TYPES.ITEM.NORMAL]
+    return d.random(player, task_lv)
+end
+
+
 
 
 local REWARDS = {}
 
---- 属性奖励
-REWARDS[REWARD_TYPES.PLAYER_POWER.NORMAL]     = { random = POWERS.randomNewPower}
-REWARDS[REWARD_TYPES.PLAYER_POWER_UP.NORMAL]  = { random = POWERS.randomPowerLv }
-REWARDS[REWARD_TYPES.PLAYER_POWER_EXP.NORMAL] = { random = POWERS.randomPowerExp}
---- 物品类型
-REWARDS[REWARD_TYPES.ITEM.NORMAL]       =  { random = ITMES.randomNormalItem }
-REWARDS[REWARD_TYPES.KSFUN_ITEM.NORMAL] =  { random = ITMES.randomKsFunItem }
-
-
-local function defaultReward(player, task_lv)
-    return REWARDS[REWARD_TYPES.ITEM.NORMAL].random(player, task_lv)
-end
 
 --- 暂时只支持随机生成物品
 --- 制定类型type后续再迭代
@@ -49,4 +56,4 @@ REWARDS.randomReward = function(player, task_lv)
 end
 
 
-return REWARS
+return REWARDS

@@ -1,4 +1,6 @@
 
+local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
+
 
 local function onWinFunc(inst, player, name)
     player.components.talker:Say("任务成功")

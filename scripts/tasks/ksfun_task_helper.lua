@@ -25,8 +25,8 @@ end
 ----------------------------------------------我是分割线------------------------------------------------
 
 
-local REWARDS_UTIL = require("tasks/util/ksfun_rewards")
-local DEMANDS_UTIL = require("tasks/util/ksfun_demands")
+local REWARDS_UTIL = require("tasks/utils/ksfun_rewards")
+local DEMANDS_UTIL = require("tasks/utils/ksfun_demands")
 -- 普通任务
 local function killDemand(player, task_lv)
     return DEMANDS_UTIL.generateDemand(NAMES.KILL, task_lv, KILL_TYPES.NORMAL)
@@ -34,7 +34,7 @@ end
 
 
 local function createTaskData(player, name)
-    local task_lv = math.random(KSFUN_TUNING.LV_DEFS.MAX)
+    local task_lv = math.random(KSFUN_TUNING.TASK_LV_DEFS.MAX)
 
     local demand = killDemand(player, task_lv)
     local reward = REWARDS_UTIL.generateReward(player, task_lv)
@@ -73,4 +73,4 @@ HELPER.createTask = creaetTask
 HELPER.addTask = addTask
 
 
-return FACTORY
+return HELPER

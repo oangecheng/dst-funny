@@ -41,8 +41,11 @@ end
 --- 任务数据只能赋值一次，不可多次赋值
 function KSFUN_TASK:Init(data)
     -- 没有任务数据的时候，生成任务数据
-    if self.task_data == nil then
+    if data and self.task_data == nil then
         self.task_data = data
+        if self.onInitFunc then
+            self.onInitFunc(self.inst, data)
+        end
     end
 end
 
