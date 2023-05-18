@@ -93,7 +93,8 @@ local KSFUN_ITMES = {
     },
     -- 还没支持，熔炼系统
     MELT = {
-
+        "a",
+        "b",
     },
 }
 
@@ -141,7 +142,7 @@ end
 
 --- 随机获取一个熔炼相关物品
 local function randomKsFunItem(player, task_lv)
-     local types = KSFUN_TUNING.TASK_REWARD_TYPES.KSFUN_ITMES
+    local types = KSFUN_TUNING.TASK_REWARD_TYPES.KSFUN_ITEM
     local item_type = KsFunRandomValueFromKVTable(types)
 
     local list = nil

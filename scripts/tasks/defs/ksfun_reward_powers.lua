@@ -58,7 +58,7 @@ end
 --- 随机查找一个存在的属性给予等级奖励
 --- @param player 角色
 --- @param task_lv 等级
-REWARD_TYPES.randomPowerLv = function(player, task_lv)
+REWARD_POWERS.randomPowerLv = function(player, task_lv)
     local power = randomPower(player, false)
     local lv = math.random(3)
     if power then
@@ -77,7 +77,7 @@ end
 --- 随机一个属性给予一定的经验值奖励
 --- @param player 角色
 --- @param task_lv 等级
-REWARD_TYPES.randomPowerExp = function(player, task_lv)
+REWARD_POWERS.randomPowerExp = function(player, task_lv)
     local power = randomPower(player, false)
     local exp = math.random(task_lv) * 500
     if power then
