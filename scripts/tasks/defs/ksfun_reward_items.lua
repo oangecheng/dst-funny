@@ -3,8 +3,9 @@ local ITEMS_LV1 = {
     "goldnugget", -- 金块
     "charcoal", -- 木炭
     "flint", -- 燧石
+    "cutgrass",  -- 草
+    "marble", -- 大理石
     "nitre", -- 硝石
-    "marble" -- 大理石
 }
 
 
@@ -15,6 +16,7 @@ local ITEMS_LV2 = {
     "pigskin",  -- 猪皮
     "redgem", -- 红宝石
     "bluegem", -- 绿宝石
+
 }
 
 
@@ -116,10 +118,10 @@ end
 --- @param task_lv 任务难度等级
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, task_lv)
-    local max_lv = NORMAL_ITME_MAX_LV
-    local item_lv = task_lv and task_lv or math.random(max_lv)
-    item_lv = math.max(1, item_lv)
-    item_lv = math.min(max_lv, item_lv)
+
+    local r = task_lv or NORMAL_ITME_MAX_LV
+    local item_lv = math.random(r) 
+    item_lv = math.max(item_lv, NORMAL_ITME_MAX_LV)
 
     local items = NORMAL_ITMES[item_lv] 
     local index = math.random(#items)
