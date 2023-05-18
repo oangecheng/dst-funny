@@ -97,12 +97,12 @@ monsterCheck(MONSTER_LV6)
 
 
 local MONSTER_DEFS = {}
-MONSTER_DEFS[LV_DEFS.LV1] = MONSTER_LV1
-MONSTER_DEFS[LV_DEFS.LV2] = MONSTER_LV2
-MONSTER_DEFS[LV_DEFS.LV3] = MONSTER_LV3
-MONSTER_DEFS[LV_DEFS.LV4] = MONSTER_LV4
-MONSTER_DEFS[LV_DEFS.LV5] = MONSTER_LV5
-MONSTER_DEFS[LV_DEFS.LV6] = MONSTER_LV6
+MONSTER_DEFS[1] = MONSTER_LV1
+MONSTER_DEFS[2] = MONSTER_LV2
+MONSTER_DEFS[3] = MONSTER_LV3
+MONSTER_DEFS[4] = MONSTER_LV4
+MONSTER_DEFS[5] = MONSTER_LV5
+MONSTER_DEFS[6] = MONSTER_LV6
 
 
 local MOSTER = {}
@@ -110,11 +110,11 @@ local MOSTER = {}
 
 local function randomMonsterNum(monster_lv)
     local num = 1
-    if monster_lv > LV_DEFS.LV3 then
+    if monster_lv > 3 then
         num = 1
-    elseif monster_lv == LV_DEFS.LV3 then
+    elseif monster_lv == 3 then
         num = math.random(2)
-    elseif monster_lv == LV_DEFS.LV2 then
+    elseif monster_lv == 2 then
         num = math.random(4)
     else
         num = math.random(8)
@@ -127,9 +127,9 @@ end
 --- @param moster_lv 怪物等级，无就随机等级
 --- @return 怪物代码 名称/等级/数量
 local function randomMonster(task_lv)
-    local lv = task_lv and task_lv or math.random(LV_DEFS.MAX)
-    lv = math.max(LV_DEFS.LV1, lv)
-    lv = math.min(LV_DEFS.MAX, lv)
+    local lv = task_lv and task_lv or math.random(6)
+    lv = math.max(1, lv)
+    lv = math.min(6, lv)
     local monsters = MONSTER_DEFS[lv] 
     local index = math.random(#monsters)
     local name = monsters[index]

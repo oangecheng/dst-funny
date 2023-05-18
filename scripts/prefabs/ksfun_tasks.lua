@@ -1,36 +1,40 @@
+local HELPER = require("tasks/ksfun_task_helper")
 
 
 
-local function MakeTask(data)
+local function MakeTask(task_name)
+
+    -- 生成任务
+    local task = HELPER.creaetTask(task_name)
 
     local function finishTask(inst, player, name)
         player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name})
     end
 
 
-    local function onAttachFunc(inst, player, name)
-        data.onAttachFunc(inst, player, name)
+    local function onAttachFunc(inst, player, name, data)
+        task.onAttachFunc(inst, player, name, data)
         --- 重新启用timer
         inst.components.timer:ResumeTimer("ksfun_task_over")
     end
 
 
-    local function onDetachFunc(inst, player, name)
-        data.onDetachFunc(inst, player, name)
+    local function onDetachFunc(inst, player, name, data)
+        task.onDetachFunc(inst, player, name, data)
         inst.components.timer:StopTimer("ksfun_task_over")
         inst:DoTaskInTime(0, inst:Remove())
     end
 
 
-    local function onWinFunc(inst, player, name)
-        data.onWinFunc(inst, player, name)
+    local function onWinFunc(inst, player, name, data)
+        task.onWinFunc(inst, player, name, data)
         inst.components.timer:StopTimer("ksfun_task_over")
         finishTask(inst, player, name)
     end
 
 
-    local function onLoseFunc(inst, player, name)
-        data.onLoseFunc(inst, player, name)
+    local function onLoseFunc(inst, player, name, data)
+        task.onLoseFunc(inst, player, name, data)
         inst.components.timer:StopTimer("ksfun_task_over")
         finishTask(inst, player, name)
     end
@@ -53,9 +57,7 @@ local function MakeTask(data)
         inst:AddComponent("timer")
         inst:AddComponent("ksfun_task")
 
-        -- 给任务赋值
-        local d = data.generateTaskData()
-        inst.components.ksfun_task:SetTaskData(d)
+
         inst.components.ksfun_task.onAttachFunc = onAttachFunc
         inst.components.ksfun_task.onDetachFunc = onDetachFunc
         inst.components.ksfun_task.onWinFunc = onWinFunc
@@ -79,12 +81,10 @@ local function MakeTask(data)
         return inst
     end
 
-    return Prefab("ksfun_task_"..data.name, fn, nil, prefabs)
+    return Prefab("ksfun_task_"..task_name, fn, nil, prefabs)
 end
 
 
+local NAMES = KSFUN_TUNING.TASK_NAMES
 
-local data = require("tasks/ksfun_kill")
-
-
-return MakeTask(data)
+return MakeTask(NAMES.KILL)

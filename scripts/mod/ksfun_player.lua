@@ -2,6 +2,8 @@
 local DEFAULT_MAX_HEALTH = 120
 local EVENTS = KSFUN_TUNING.EVENTS
 
+local HELPER = require("tasks/ksfun_task_helper")
+
 
 
 -- 任务状态变更
@@ -43,28 +45,10 @@ AddPlayerPostInit(function(player)
 
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)
-        player.components.ksfun_task_system:AddTask(KSFUN_TUNING.TASK_NAMES.KILL)
+        HELPER:AddTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
     end)
 
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
     end)
-
-    -- --- 添加饱食度属性，testcode
-    -- if KSFUN_TUNING.DEBUG then
-    --     player:DoTaskInTime(0.5, function(inst)
-    --         local name = KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH
-    --         local prefab = "ksfun_power_"..name
-    --         player.components.ksfun_power_system:AddPower(name, prefab)
-    
-    --         local name2 = KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER
-    --         local prefab = "ksfun_power_"..name2
-    --         player.components.ksfun_power_system:AddPower(name2, prefab)
-
-                
-    --         local name3 = KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY
-    --         local prefab = "ksfun_power_"..name3
-    --         player.components.ksfun_power_system:AddPower(name3, prefab)
-    --     end)
-    -- end
 end)

@@ -1,7 +1,4 @@
 
-local LV_DEFS = KSFUN_TUNING.TASK_LV_DEFS
-local MAX_LV = 6
-
 local ITEMS_LV1 = {
     "goldnugget", -- 金块
     "charcoal", -- 木炭
@@ -63,41 +60,118 @@ local ITEMS_LV6 = {
 
 
 local NORMAL_ITMES = {}
-NORMAL_ITMES[LV_DEFS.LV1] = ITEMS_LV1
-NORMAL_ITMES[LV_DEFS.LV2] = ITEMS_LV2
-NORMAL_ITMES[LV_DEFS.LV3] = ITEMS_LV3
-NORMAL_ITMES[LV_DEFS.LV4] = ITEMS_LV4
-NORMAL_ITMES[LV_DEFS.LV5] = ITEMS_LV5
-NORMAL_ITMES[LV_DEFS.LV6] = ITEMS_LV6
+NORMAL_ITMES[1] = ITEMS_LV1
+NORMAL_ITMES[2] = ITEMS_LV2
+NORMAL_ITMES[3] = ITEMS_LV3
+NORMAL_ITMES[4] = ITEMS_LV4
+NORMAL_ITMES[5] = ITEMS_LV5
+NORMAL_ITMES[6] = ITEMS_LV6
+
+--- 普通物品的最大等级
+local NORMAL_ITME_MAX_LV = #NORMAL_ITMES
+
+
+local KSFUN_ITMES = {
+    WEAPON = {
+        "spear", -- 长矛
+        "spear_wathgrithr", -- 战斗长矛
+        "ruins_bat", -- 铥矿棒，可升级的铥矿棒
+        "nightsword", -- 暗影剑
+        "hambat", -- 火腿棒
+    },
+    HAT = {
+        "beefalohat",
+        "eyebrellahat",
+        "walrushat",
+        "alterguardianhat",
+    },
+    ARMOR = {
+        "armorwood",
+        "armorruins",
+    },
+    -- 还没支持，熔炼系统
+    MELT = {
+
+    },
+}
 
 
 --- 随机生成物品数量
---- 例如物品等级为 5, 那么最多生成 2^(6-5) = 2个，  最少生成 6-5 = 1 个
---- 例如物品等级为 3, 那么最多生成 2^(6-3) = 8个，  最少生成 6-3 = 3 个
---- 例如物品等级为 1, 那么最多生成 2^(6-1) = 32个， 最少生成 6-1 = 5 个
-local function randomItemNum(item_lv)
+--- 例如任务等级为 6 物品等级为 6, 那么最多生成 2^(6-5) = 2个，  最少生成 6-5 = 1 个
+--- 例如任务等级为 7 物品等级为 6, 那么最多生成 2^(6-6) = 1个，  最少生成 6-5 = 1 个， 等级附加1个，总共2个
+local function randomItemNum(task_lv, item_lv)
+    local max_lv = NORMAL_ITME_MAX_LV
     local num = 2
-    local m =  math.max(MAX_LV - item_lv, 0)
+    local m =  math.max(max_lv - item_lv, 0)
     local max = num^m
-    local min = math.min(MAX_LV - item_lv, max)
+    local min = math.min(max_lv - item_lv, max)
     min = math.max(min, 1)
-    return math.random(min, max)
+    -- 任务等级附加
+    local extra = math.max(task_lv - item_lv, 0)
+    return math.random(min, max) + extra
 end
 
 
 --- 随机生成一些物品
 --- @param task_lv 任务难度等级
---- @return 名称，等级，数量
-local function randomNormalItem(task_lv)
-    local lv = task_lv and task_lv or math.random(MAX_LV)
-    lv = math.max(1, lv)
-    lv = math.min(MAX_LV, lv)
+--- @return 名称，等级，数量，类型
+local function randomNormalItem(player, task_lv)
+    local max_lv = NORMAL_ITME_MAX_LV
+    local item_lv = task_lv and task_lv or math.random(max_lv)
+    item_lv = math.max(1, item_lv)
+    item_lv = math.min(max_lv, item_lv)
 
-    local items = NORMAL_ITMES[lv] 
+    local items = NORMAL_ITMES[item_lv] 
     local index = math.random(#items)
     local name = items[index]
-    local num = randomItemNum(lv)
-    return name, lv, num
+    local num = randomItemNum(task_lv, item_lv)
+    local item_type = KSFUN_TUNING.TASK_REWARD_TYPES.ITEM.NORMAL
+    return {
+        type = item_type,
+        data = {
+            item = name,
+            num = num,
+            lv = item_lv,
+        }
+    }
+end
+
+
+--- 随机获取一个熔炼相关物品
+local function randomKsFunItem(player, task_lv)
+     local types = KSFUN_TUNING.TASK_REWARD_TYPES.KSFUN_ITMES
+    local item_type = KsFunRandomValueFromKVTable(types)
+
+    local list = nil
+    local num = 1
+    if item_type == types.WEAPON then
+        list =  KSFUN_ITMES.WEAPON
+    elseif item_type == types.HAT then
+        list = KSFUN_ITMES.HAT
+    elseif item_type == types.ARMOR then
+        list = KSFUN_ITMES.ARMOR
+    else
+        list = KSFUN_ITMES.MELT
+        -- 熔炼物品1-2个
+        num = math.random(2)
+    end
+    
+    -- 随机一个物品
+    local name = KsFunRandomValueFromList(list)
+    -- 随机一个品质，做任务最高奖励品质是蓝色
+    -- 任务等级越高，获得蓝色品质的概率越大
+    local max_quality = KSFUN_TUNING.ITEM_QUALITY.BLUE
+    local quality = math.random(math.max(1, task_lv - 2))
+    local quality = math.min(quality, max_quality)
+
+    return {
+        type = item_type,
+        data = {
+            name = name,
+            num = num,
+            quality = quality,
+        }   
+    }
 end
 
 
@@ -105,6 +179,7 @@ end
 local REWADS_ITEMS = {}
 
 REWADS_ITEMS.randomNormlItem = randomNormalItem
+REWADS_ITEMS.randomKsFunItem = randomKsFunItem
 
 
 return REWADS_ITEMS

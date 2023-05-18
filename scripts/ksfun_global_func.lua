@@ -33,6 +33,11 @@ function KsFunRandomValueFromKVTable(target)
     return values[index]
 end
 
+function KsFunRandomValueFromList(target)
+    local index = math.random(#target)
+    return values[index]
+end
+
 
 function KsFunFormatTime(time)
     if time < 0 then return "--:--" end
@@ -48,3 +53,4 @@ GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
 GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable
+GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList

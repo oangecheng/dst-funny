@@ -3,13 +3,15 @@ local MAX_TASK_NUM_SAME_TIME = 1
 
 
 
-local function addTask(self, name, ent)
+local function addTask(self, name, ent, data)
     print(KSFUN_TUNING.LOG_TAG.."addTask "..name)
     if ent.components.ksfun_task then
         self.tasks[name] = {
             inst = ent,
         }
         ent.persists = false
+        -- init函数会有去重逻辑，只有首次生成任务时才有意义
+        ent.components.ksfun_task:Init(data)
         ent.components.ksfun_task:Attach(name, self.inst)
         if self.onTaskAddFunc then
             self.onTaskAddFunc(self.inst, name, ent)
@@ -65,7 +67,7 @@ end
 
 --- 新增一个属性
 --- @param name type=string
-function KSFUN_TASK_SYSTEM:AddTask(name)
+function KSFUN_TASK_SYSTEM:AddTask(name, data)
 
     -- 超过最大数量时，不能再新增任务
     if #self.tasks >= MAX_TASK_NUM then
@@ -79,7 +81,7 @@ function KSFUN_TASK_SYSTEM:AddTask(name)
         local prefab = "ksfun_task_"..name
         local ent = SpawnPrefab(prefab)
         if ent then
-            addTask(self, name, ent)
+            addTask(self, name, ent, data)
         end
         ret = ent
     else

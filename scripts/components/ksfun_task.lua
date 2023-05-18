@@ -1,7 +1,7 @@
 
 local function notify(self, func)
-    if func and self.player then
-        func(self.inst, self.player, self.name)
+    if func and self.player and self.task_data then
+        func(self.inst, self.player, self.name, self.task_data)
     end
 end
 
@@ -13,8 +13,9 @@ local KSFUN_TASK = Class(function(self, inst)
     self.name = nil
     --- state只做一些校验，不做存储，仅仅防重入
     self.state = 0
-    self.task_data = {}
+    self.task_data = nil
 
+    self.onInitFunc = nil
     self.onAttachFunc = nil
     self.onDetachFunc = nil
 
@@ -33,6 +34,16 @@ end
 
 function KSFUN_TASK:SetTaskData(data)
     self.task_data = data
+end
+
+
+--- 会多次调用，但是只会有一次生效
+--- 任务数据只能赋值一次，不可多次赋值
+function KSFUN_TASK:Init(data)
+    -- 没有任务数据的时候，生成任务数据
+    if self.task_data == nil then
+        self.task_data = data
+    end
 end
 
 
@@ -98,7 +109,7 @@ end
 
 
 function KSFUN_TASK:OnLoad(data)
-    self.task_data = data and data.task_data or {}
+    self.task_data = data and data.task_data or nil
 end
 
 

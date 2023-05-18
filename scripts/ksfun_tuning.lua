@@ -20,20 +20,23 @@ KSFUN_TUNING =  {
 
 
     ITEM_QUALITY = {
-        WHITE = 1,
-        GREEN = 2,
-        BLUE = 3,
-        GOLD = 4,
-        ORANGE = 5,
-        RED = 6,
-        MAX = 6,
+        WHITE = 1, GREEN = 2, BLUE = 3, GOLD = 4, ORANGE = 5, RED = 6, MAX = 6,
     },
-    
 
 
     TASK_TIME_SEG = TUNING.SEG_TIME,
     TASK_TIME_TOTAL_DAY = TUNING.TOTAL_DAY_TIME,
 
+
+
+    TASK_NAMES = {
+        KILL = "kill",
+    },
+
+    --- 任务等级定义，分为6级
+    TASK_LV_DEFS = {
+        UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, MAX = 6
+    },
 
     --- 任务需求的类型
     TASK_DEMAND_TYPES = {
@@ -52,32 +55,24 @@ KSFUN_TUNING =  {
         }, 
         -- 品质物品奖励，可熔炼，锻造
         KSFUN_ITEM = {
-            WEAPON = 100,
-            HAT = 101,
-            ARMOR = 102,
-            MELT = 103,
+            NORMAL = 100,
+            WEAPON = 101,
+            HAT    = 102,
+            ARMOR  = 103,
+            MELT   = 104,
         },
         -- 属性奖励
         PLAYER_POWER = {
-            HUNGER = 200,
-            SANITY = 201,
-            HEALTH = 202,
+            NORMAL = 200
         },
         -- 属性等级奖励
-        LEVEL_UP = {
-            HUNGER = 300,
-            SANITY = 301,
-            HEALTH = 302,
+        PLAYER_POWER_UP = {
+            NORMAL = 300
         },
-    },
-
-    --- 任务等级定义，分为6级
-    TASK_LV_DEFS = {
-        UNKNOWN = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, MAX = 6
-    },
-
-    TASK_NAMES = {
-        KILL = "kill",
+        -- 属性经验奖励
+        PLAYER_POWER_EXP = {
+            NORMAL = 400
+        },
     },
 
 

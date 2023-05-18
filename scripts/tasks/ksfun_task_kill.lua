@@ -1,6 +1,6 @@
 
-local REWARD = require("tasks/defs/ksfun_reward_items")
-local DEMANDS = require("tasks/ksfun_demands")
+local REWARD  = require("tasks/defs/ksfun_reward_items")
+local DEMANDS = require("tasks/utils/ksfun_demands")
 
 local NAME = KSFUN_TUNING.TASK_NAMES.KILL
 local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
@@ -17,24 +17,6 @@ local function descFunc(inst, player, name)
         end
     end
     return ""
-end
-
-
-
-local function randomKillTask(task_lv)
-    local demand = DEMANDS.generateDemand(NAME, task_lv, KILL_TYPES.NORMAL)
-    local item, lv, num = REWARD.randomNormlItem(task_lv)
-    return {
-        demand = demand,
-        reward = {
-            type = REWARD_TYPES.ITEM.NORMAL, 
-            data = {
-                item = item,
-                num = num,
-            }
-        },
-        punish = nil,
-    }
 end
 
 
@@ -59,49 +41,21 @@ local function onKillOther(killer, data)
 end
 
 
-local function onAttachFunc(inst, player, name)
+local function onAttachFunc(inst, player, name, data)
     local str = descFunc(inst, player, name)
     player.components.talker:Say(str)
     player:ListenForEvent("killed", onKillOther)
 end
 
 
-local function onDetachFunc(inst, player, name)
+local function onDetachFunc(inst, player, name, data)
     player:RemoveEventCallback("killed", onKillOther)
 end
 
 
-local function onWinFunc(inst, player, name)
-    player.components.talker:Say("任务成功")
-    local task_data = inst.components.ksfun_task:GetTaskData()
-    if task_data.reward then
-        if task_data.reward.type == REWARD_TYPES.ITEM.NORMAL then
-            for i=1, task_data.reward.data.num do
-                local item = SpawnPrefab(task_data.reward.data.item)
-                player.components.inventory:GiveItem(item, nil, player:GetPosition())
-            end
-        end
-    end
-end
-
-
-local function onLoseFunc(inst, player, name)
-    player.components.talker:Say("任务失败")
-end
-
-
-local function generateTaskData()
-    return randomKillTask(5)
-
-end
-
 local KILL = {
-    name = NAME,
-    generateTaskData = generateTaskData,
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onWinFunc = onWinFunc,
-    onLoseFunc = onLoseFunc,
 }
 
 
