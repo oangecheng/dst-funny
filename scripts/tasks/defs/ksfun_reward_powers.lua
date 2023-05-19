@@ -35,17 +35,18 @@ local function randomPower(player, existed)
 end
 
 
-local REWARD_POWERS = {}
+local reward_powers = {}
 
 
 --- 随机给予一个数据奖励
 --- @param player 角色
 --- @param task_lv 等级
-REWARD_POWERS.randomNewPower = function(player, task_lv)
+--- data = {power = a}
+reward_powers.randomNewPower = function(player, task_lv)
     local power = randomPower(player, false)
     if power then
         return {
-            type = REWARD_TYPES.PLAYER_POWER.NORMAL,
+            type = REWARD_TYPES.PLAYER_POWER,
             data = {
                 power = power
             }
@@ -58,12 +59,13 @@ end
 --- 随机查找一个存在的属性给予等级奖励
 --- @param player 角色
 --- @param task_lv 等级
-REWARD_POWERS.randomPowerLv = function(player, task_lv)
+--- data = {power = a, num = b}
+reward_powers.randomPowerLv = function(player, task_lv)
     local power = randomPower(player, false)
     local lv = math.random(3)
     if power then
         return {
-            type = REWARD_TYPES.PLAYER_POWER_UP.NORMAL,
+            type = REWARD_TYPES.PLAYER_POWER_LV,
             data = {
                 power = power,
                 num = lv,
@@ -77,12 +79,13 @@ end
 --- 随机一个属性给予一定的经验值奖励
 --- @param player 角色
 --- @param task_lv 等级
-REWARD_POWERS.randomPowerExp = function(player, task_lv)
+--- data = {power = a, num = b}
+reward_powers.randomPowerExp = function(player, task_lv)
     local power = randomPower(player, false)
     local exp = math.random(task_lv) * 500
     if power then
         return {
-            type = REWARD_TYPES.PLAYER_POWER_UP.NORMAL,
+            type = REWARD_TYPES.PLAYER_POWER_EXP,
             data = {
                 power = power,
                 num = exp,
@@ -93,4 +96,4 @@ REWARD_POWERS.randomPowerExp = function(player, task_lv)
 end
 
 
-return REWARD_POWERS
+return reward_powers

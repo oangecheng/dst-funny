@@ -1,5 +1,8 @@
 
-local ITEMS_LV1 = {
+local KSFUN_ITEM_TYPES = KSFUN_TUNING.KSFUN_ITEM_TYPES
+
+
+local item1 = {
     "goldnugget", -- 金块
     "charcoal", -- 木炭
     "flint", -- 燧石
@@ -9,7 +12,7 @@ local ITEMS_LV1 = {
 }
 
 
-local ITEMS_LV2 = {
+local item2 = {
     "livinglog", -- 活木
     "nightmarefuel", -- 噩梦燃料
     "waxpaper", -- 蜡纸
@@ -20,7 +23,7 @@ local ITEMS_LV2 = {
 }
 
 
-local ITEMS_LV3 = {
+local item3 = {
     "trunk_summer", -- 夏日象鼻
     "trunk_winter", -- 冬日象鼻
     "steelwool", -- 钢丝绒
@@ -31,7 +34,7 @@ local ITEMS_LV3 = {
 
 
 
-local ITEMS_LV4 = {
+local item4 = {
     "greengem",  -- 绿宝石
     "orangegem", -- 橙宝石
     "yellowgem", -- 黄宝石
@@ -41,7 +44,7 @@ local ITEMS_LV4 = {
 }
 
 
-local ITEMS_LV5 = {
+local item5 = {
     "minotaurhorn",
     "shroom_skin",
     "deerclops_eyeball",
@@ -55,44 +58,44 @@ local ITEMS_LV5 = {
 
 
 -- 等级6的物品中，包含可升级的物品
-local ITEMS_LV6 = {
+local item6 = {
   "opalpreciousgem", -- 彩虹宝石
   "opalstaff", -- 月杖
 }
 
 
-local NORMAL_ITMES = {}
-NORMAL_ITMES[1] = ITEMS_LV1
-NORMAL_ITMES[2] = ITEMS_LV2
-NORMAL_ITMES[3] = ITEMS_LV3
-NORMAL_ITMES[4] = ITEMS_LV4
-NORMAL_ITMES[5] = ITEMS_LV5
-NORMAL_ITMES[6] = ITEMS_LV6
+local items = {}
+items[1] = item1
+items[2] = item2
+items[3] = item3
+items[4] = item4
+items[5] = item5
+items[6] = item6
 
 --- 普通物品的最大等级
-local NORMAL_ITME_MAX_LV = #NORMAL_ITMES
+local item_max_lv = #items
 
 
-local KSFUN_ITMES = {
-    WEAPON = {
+local ksfun_items = {
+    weapon = {
         "spear", -- 长矛
         "spear_wathgrithr", -- 战斗长矛
         "ruins_bat", -- 铥矿棒，可升级的铥矿棒
         "nightsword", -- 暗影剑
         "hambat", -- 火腿棒
     },
-    HAT = {
+    hat = {
         "beefalohat",
         "eyebrellahat",
         "walrushat",
         "alterguardianhat",
     },
-    ARMOR = {
+    armor = {
         "armorwood",
         "armorruins",
     },
     -- 还没支持，熔炼系统
-    MELT = {
+    melt = {
         "a",
         "b",
     },
@@ -103,7 +106,7 @@ local KSFUN_ITMES = {
 --- 例如任务等级为 6 物品等级为 6, 那么最多生成 2^(6-5) = 2个，  最少生成 6-5 = 1 个
 --- 例如任务等级为 7 物品等级为 6, 那么最多生成 2^(6-6) = 1个，  最少生成 6-5 = 1 个， 等级附加1个，总共2个
 local function randomItemNum(task_lv, item_lv)
-    local max_lv = NORMAL_ITME_MAX_LV
+    local max_lv = item_max_lv
     local num = 2
     local m =  math.max(max_lv - item_lv, 0)
     local max = num^m
@@ -120,69 +123,72 @@ end
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, task_lv)
 
-    local r = task_lv or NORMAL_ITME_MAX_LV
+    local r = task_lv or item_max_lv
     local item_lv = math.random(r) 
-    item_lv = math.max(item_lv, NORMAL_ITME_MAX_LV)
+    item_lv = math.max(item_lv, item_max_lv)
 
     local items = NORMAL_ITMES[item_lv] 
     local index = math.random(#items)
     local name = items[index]
     local num = randomItemNum(task_lv, item_lv)
-    local item_type = KSFUN_TUNING.TASK_REWARD_TYPES.ITEM.NORMAL
     return {
-        type = item_type,
+        type = KSFUN_TUNING.TASK_REWARD_TYPES.ITEM,
         data = {
             item = name,
             num = num,
-            lv = item_lv,
         }
     }
 end
 
-
 --- 随机获取一个熔炼相关物品
 local function randomKsFunItem(player, task_lv)
-    local types = KSFUN_TUNING.TASK_REWARD_TYPES.KSFUN_ITEM
-    local item_type = KsFunRandomValueFromKVTable(types)
+    local item_type = KsFunRandomValueFromKVTable(KSFUN_ITEM_TYPES)
 
     local list = nil
     local num = 1
-    if item_type == types.WEAPON then
-        list =  KSFUN_ITMES.WEAPON
-    elseif item_type == types.HAT then
-        list = KSFUN_ITMES.HAT
-    elseif item_type == types.ARMOR then
-        list = KSFUN_ITMES.ARMOR
+    if item_type == KSFUN_ITEM_TYPES.WEAPON then
+        list =  ksfun_items.weapon
+    elseif item_type == KSFUN_ITEM_TYPES.HAT then
+        list = ksfun_items.hat
+    elseif item_type == KSFUN_ITEM_TYPES.ARMOR then
+        list = ksfun_items.armor
     else
-        list = KSFUN_ITMES.MELT
+        list = ksfun_items.melt
         -- 熔炼物品1-2个
         num = math.random(2)
     end
     
     -- 随机一个物品
     local name = KsFunRandomValueFromList(list)
-    -- 随机一个品质，做任务最高奖励品质是蓝色
-    -- 任务等级越高，获得蓝色品质的概率越大
-    local max_quality = KSFUN_TUNING.ITEM_QUALITY.BLUE
-    local quality = math.random(math.max(1, task_lv - 2))
-    local quality = math.min(quality, max_quality)
+    -- 随机一个等级
+    local lv = 1
+    --- 熔炼物品的等级单独计算
+    if item_type == KSFUN_ITEM_TYPES.MELT then
+        lv  = math.random(task_lv)
+    else
+        local temp = math.random(math.max(1, task_lv - 2))
+        lv = math.min(temp, 3) 
+    end
 
     return {
-        type = item_type,
+        -- 主类别
+        type = KSFUN_TUNING.REWARD_TYPES.KSFUN_ITEM,
         data = {
-            name = name,
+            item = name,
             num = num,
-            quality = quality,
+            -- 次类别
+            type = item_type,
+            lv = lv,
         }   
     }
 end
 
 
 
-local REWADS_ITEMS = {}
+local reward_items = {}
 
-REWADS_ITEMS.randomNormalItem = randomNormalItem
-REWADS_ITEMS.randomKsFunItem = randomKsFunItem
+reward_items.randomNormalItem = randomNormalItem
+reward_items.randomKsFunItem = randomKsFunItem
 
 
-return REWADS_ITEMS
+return reward_items

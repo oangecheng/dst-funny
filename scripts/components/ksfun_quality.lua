@@ -21,7 +21,7 @@ end
 
 
 --- 品质升级，每次只能提升一个品质
-function KSFUN_QUALITY:QualityUpgrade()
+function KSFUN_QUALITY:Up()
     if self.quality < QUALITY.MAX then
         self:SetQuality(self.quality + 1)
     end

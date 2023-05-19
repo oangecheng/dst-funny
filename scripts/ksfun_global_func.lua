@@ -33,6 +33,7 @@ function KsFunRandomValueFromKVTable(target)
     return values[index]
 end
 
+
 function KsFunRandomValueFromList(target)
     local index = math.random(#target)
     return target[index]
@@ -49,8 +50,15 @@ function KsFunFormatTime(time)
 end
 
 
+local LOG_TAG = "KsFunLog: "
+function KsFunLog(info, v1, v2, v3)
+    print(LOG_TAG..info.." "..tostring(v1).." "..tostring(v2).." "..tostring(v3))
+end
+
+
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
 GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable
 GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList
+GLOBAL.KsFunLog = KsFunLog

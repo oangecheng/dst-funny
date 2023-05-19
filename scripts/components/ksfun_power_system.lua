@@ -63,12 +63,14 @@ end
 
 
 --- 新增一个属性
---- @param name type=string prefab type=string
-function KSFUN_POWERS:AddPower(name, prefab)
+--- 对于一个inst，同一种属性只能添加一次，多次添加无效，会回调 OnExtend
+--- 对于临时power可以延长时间
+--- @param name 属性名称
+function KSFUN_POWERS:AddPower(name)
     local power = self.powers[name]
     local ret = nil
     if power == nil then
-        local ent = SpawnPrefab(prefab)
+        local ent = SpawnPrefab("ksfun_power_"..name)
         if ent then
             addPower(self, name, ent)
         end

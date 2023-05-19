@@ -36,6 +36,17 @@ function KSFUN_LEVEL:SetLevel(lv, notice)
 end
 
 
+function KSFUN_LEVEL:Up(v)
+    if v and v > 0 then
+        local newLv = self.lv + v
+        self:SetLevel(newLv, true)
+        if self.onStateChangeFunc then
+            self.onStateChangeFunc(self.inst)
+        end
+    end
+end
+
+
 function KSFUN_LEVEL:GainExp(exp)
     self.exp = self.exp + exp
 

@@ -1,40 +1,96 @@
 
 local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
+local KSFUN_ITEM_TYPES = REWARD_TYPES.KSFUN_ITEM_TYPES
 
 
-local function onWinFunc(inst, player, name)
-    local str = ""
+--- 属性奖励
+--- @param player 玩家
+--- @param 奖励的具体data
+local function rewardPower(player, data)
+    local power_name = data and data.power or nil
+    KsFunLog("rewardPower", power_name)
+    if power_name then
+        player.components.ksfun_power_system:AddPower(power_name)
+    end
+end
 
-    local task_data = inst.components.ksfun_task:GetTaskData()
-    if task_data.reward then
 
-        local t = task_data.reward.type
+--- 属性等级奖励
+--- @param player 玩家
+--- @param 奖励的具体data
+local function rewardPowerLv(player, data)
+    local power_name = data and data.power or nil
+    KsFunLog("rewardPowerLv", power_name)
+    if power_name then
+        local power = player.components.ksfun_power_system:GetPower(power_name)
+        if power then
+            power.components.ksfun_level:Up(data.num)
+        end
+    end
+end
 
-        if t == REWARD_TYPES.ITEM.NORMAL then
-            for i=1, task_data.reward.data.num do
-                local item = SpawnPrefab(task_data.reward.data.item)
-                player.components.inventory:GiveItem(item, nil, player:GetPosition())
+
+--- 属性经验奖励
+--- @param player 玩家
+--- @param 奖励的具体data
+local function rewardPowerExp(player, data)
+    local power_name = data and data.power or nil
+    KsFunLog("rewardPowerExp", power_name)
+    if power_name then
+        local power = player.components.ksfun_power_system:GetPower(power_name)
+        if power then
+            power.components.ksfun_level:GainExp(data.num)
+        end
+    end
+end
+
+
+--- 普通物品奖励
+local function rewardNomralItem(player, data)
+    local item = data and data.item or nil
+    KsFunLog("rewardNomralItem", item, data.num)
+    if item then
+        for i=1, data.num do
+            local ent = SpawnPrefab(item)
+            if ent then
+                player.components.inventory:GiveItem(ent, nil, player:GetPosition())
             end
         end
+    end
+end
 
-        if t == REWARD_TYPES.KSFUN_ITEM.WEAPON then
-            str = "武器奖励"
-        elseif t == REWARD_TYPES.KSFUN_ITEM.HAT then
-            str = "帽子奖励"
-        elseif t == REWARD_TYPES.KSFUN_ITEM.ARMOR then
-            str = "盔甲奖励"
-        elseif t == REWARD_TYPES.KSFUN_ITEM.MELT then
-            str = "材料奖励"
-        elseif t == REWARD_TYPES.PLAYER_POWER.NORMAL then
-            str = "属性奖励"
-        elseif t == REWARD_TYPES.PLAYER_POWER_UP.NORMAL then
-            str = "属性等级奖励"
-        elseif t == REWARD_TYPES.PLAYER_POWER_EXP.NORMAL then
-            str = "属性经验奖励"
+
+--- 特殊物品奖励
+--- 给物品赋予等级
+local function rewardKsFunItem(player, data)
+    local item = data and data.item or nil
+    KsFunLog("rewardNomralItem", item, data.num)
+    if item then
+        for i=1, data.num do
+            local ent = SpawnPrefab(item)
+            if ent then
+                -- 添加等级组件
+                ent:AddComponent("ksfun_level")
+                ent.components.ksfun_level:SetLevel(data.quality or 1)
+                player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+            end
         end
+    end
+end
 
-        player.components.talker:Say("任务成功"..str)
 
+local function onWinFunc(inst, player, name, task)
+    KsFunLog("onTaskWin", name)
+    local reward = task and task.reward or nil
+    --- 根据奖励的不同进行分发
+    if reward then
+        KsFunLog("onTaskWin reward", reward.type)
+        if     reward.type == REWARD_TYPES.ITEM             then rewardNomralItem(player, reward.data)
+        elseif reward.type == REWARD_TYPES.KSFUN_ITEM       then rewardKsFunItem(player, reward.data)
+        elseif reward.type == REWARD_TYPES.PLAYER_POWER     then rewardPower(player, reward.data)
+        elseif reward.type == REWARD_TYPES.PLAYER_POWER_LV  then rewardPowerLv(player, reward.data)
+        elseif reward.type == REWARD_TYPES.PLAYER_POWER_EXP then rewardKsFunItem(player, reward.data)
+        end
     end
 end
 

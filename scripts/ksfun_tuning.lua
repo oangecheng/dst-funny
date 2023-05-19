@@ -50,31 +50,23 @@ KSFUN_TUNING =  {
 
     TASK_REWARD_TYPES = {
         -- 普通物品奖励
-        ITEM = {
-            NORMAL = 1,
-        }, 
-        -- 品质物品奖励，可熔炼，锻造
-        KSFUN_ITEM = {
-            NORMAL = 100,
-            WEAPON = 101,
-            HAT    = 102,
-            ARMOR  = 103,
-            MELT   = 104,
-        },
+        ITEM = 1,
+        -- 升级物品
+        KSFUN_ITEM = 2,
         -- 属性奖励
-        PLAYER_POWER = {
-            NORMAL = 200
-        },
+        PLAYER_POWER = 3,
         -- 属性等级奖励
-        PLAYER_POWER_UP = {
-            NORMAL = 300
-        },
+        PLAYER_POWER_LV = 4,
         -- 属性经验奖励
-        PLAYER_POWER_EXP = {
-            NORMAL = 400
-        },
+        PLAYER_POWER_EXP = 5,
     },
 
+    KSFUN_ITEM_TYPES = {
+        WEAPON = 1,
+        HAT    = 2,
+        ARMOR  = 3,
+        MELT   = 4,
+    },
 
     EVENTS = {
         PLAYER_STATE_CHANGE = "ksfun_player_state_change",
