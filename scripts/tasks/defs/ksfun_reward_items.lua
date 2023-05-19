@@ -162,9 +162,14 @@ local function randomKsFunItem(player, task_lv)
     local name = KsFunRandomValueFromList(list)
     -- 随机一个等级
     local lv = 1
-    --- 熔炼物品的等级单独计算
+    
+    --- 熔炼物品单独处理
     if item_type == KSFUN_ITEM_TYPES.MELT then
-        lv  = math.random(task_lv)
+        local seg = 10 / task_lv
+        lv = math.random(task_lv) * seg
+        lv = math.ceil(lv)
+        lv = math.min(10, lv)
+        name = "ksfun_melt_stone_"..tostring(lv)
     else
         local temp = math.random(math.max(1, task_lv - 2))
         lv = math.min(temp, 3) 

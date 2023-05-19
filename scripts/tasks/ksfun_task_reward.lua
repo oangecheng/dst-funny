@@ -64,14 +64,16 @@ end
 --- 给物品赋予等级
 local function rewardKsFunItem(player, data)
     local item = data and data.item or nil
-    KsFunLog("rewardNomralItem", item, data.num)
+    KsFunLog("rewardNomralItem", item, data.num, data.lv)
     if item then
         for i=1, data.num do
             local ent = SpawnPrefab(item)
             if ent then
-                -- 添加等级组件
-                ent:AddComponent("ksfun_level")
-                ent.components.ksfun_level:SetLevel(data.quality or 1)
+                -- 没有等级组件的添加等级组件
+                if ent.components.ksfun_level == nil then
+                    ent:AddComponent("ksfun_level")
+                    ent.components.ksfun_level:SetLevel(data.lv or 1)
+                end
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())
             end
         end

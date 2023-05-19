@@ -44,8 +44,8 @@ local function onAttachFunc(inst, item, name)
     end
 
     inst.target = item
-    if not ints.originWaterProofer then
-        ints.originWaterProofer = item.components.waterproofer:GetEffectiveness()
+    if not inst.originWaterProofer then
+        inst.originWaterProofer = item.components.waterproofer:GetEffectiveness()
     end
 
     updateWaterproof(inst)
