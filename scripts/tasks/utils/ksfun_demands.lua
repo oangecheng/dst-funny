@@ -19,6 +19,7 @@ local DEMAND = {}
 --- @param task_lv 任务等级
 --- @param demand_type 需求的类型，比如击杀任务有自己的类型
 DEMAND.generateDemand = function(name, task_lv, demand_type)
+    KsFunLog("generateDemand", name, demand_type)
     local demand = demands[name]
     if demand ~= nil then    
         return demand.generate(task_lv, demand_type)
@@ -32,6 +33,7 @@ DEMAND.randomDemand = function(task_lv)
     local lv = task_lv 
     local name = KsFunRandomValueFromKVTable(TASK_NAMES)
     local demand = demands[name]
+    KsFunLog("randomDemand", name, task_lv)
     if demand ~= nil then
         return demand.random(lv)
     end

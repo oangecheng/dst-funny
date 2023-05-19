@@ -14,6 +14,7 @@ local function creaetTask(name)
         return {
             onAttachFunc = KILL.onAttachFunc,
             onDetachFunc = KILL.onDetachFunc,
+            descFunc     = KILL.descFunc,
             onWinFunc    = REWARD.onWinFunc,
             onLoseFunc   = PUNISH.onLoseFunc, 
         }
@@ -27,9 +28,12 @@ end
 
 local REWARDS_UTIL = require("tasks/utils/ksfun_rewards")
 local DEMANDS_UTIL = require("tasks/utils/ksfun_demands")
+
+
 -- 普通任务
 local function killDemand(player, task_lv)
-    return DEMANDS_UTIL.generateDemand(NAMES.KILL, task_lv, KILL_TYPES.NORMAL)
+    local kill_type = KsFunRandomValueFromKVTable(KILL_TYPES)
+    return DEMANDS_UTIL.generateDemand(NAMES.KILL, task_lv, kill_type)
 end
 
 

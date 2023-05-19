@@ -62,6 +62,7 @@ local function MakeTask(task_name)
         inst.components.ksfun_task.onDetachFunc = onDetachFunc
         inst.components.ksfun_task.onWinFunc = onWinFunc
         inst.components.ksfun_task.onLoseFunc = onLoseFunc
+        inst.components.ksfun_task.descFunc = task.descFunc
 
 
         -- 倒计时结束任务失败

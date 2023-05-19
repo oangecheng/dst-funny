@@ -129,21 +129,13 @@ end
 --- power的等级经验
 function KSFUN_POWERS:SyncData()
     local data = ""
-    local index = 0
-    local size = #self.powers
-
     for k,v in pairs(self.powers) do
-        index = index + 1
         local power = v.inst
         local lv = power.components.ksfun_level.lv
         local exp = power.components.ksfun_level.exp
         -- 名称;等级;经验值;描述
         local d = k .. "," .. tostring(lv) .. "," .. tostring(exp)
-
-        if data ~= "" then
-            data = data .. ";"
-        end
-        data = data .. d
+        data = data ..";".. d
     end
 
     if data ~= "" and self.inst.replica.ksfun_power_system then

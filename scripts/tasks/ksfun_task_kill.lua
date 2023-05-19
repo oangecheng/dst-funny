@@ -7,13 +7,19 @@ local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
 local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 
 
-local function descFunc(inst, player, name)
+local function descFunc(inst, player, name, d)
     local kill_task = inst.components.ksfun_task
     if kill_task then
         local kill_demand = kill_task:GetTaskData().demand
+        local victim_name = STRINGS.NAMES[string.upper(kill_demand.data.victim)] or ""
         if kill_demand.type == KILL_TYPES.NORMAL then
-            local victim_name = STRINGS.NAMES[string.upper(kill_demand.data.victim)] or ""
             return "击杀"..tostring(kill_demand.data.num).."只"..victim_name
+        end
+        if kill_demand.type == KILL_TYPES.TIME_LIMIT then
+            return "在"..kill_demand.data.duration.."秒内击杀"..tostring(kill_demand.data.num).."只"..victim_name
+        end
+        if kill_demand.type == KILL_TYPES.ATTACKED_LIMIT then
+            return "无伤击杀"..tostring(kill_demand.data.num).."只"..victim_name
         end
     end
     return ""
@@ -28,7 +34,7 @@ local function onKillOther(killer, data)
         local kill_task = inst and inst.components.ksfun_task or nil
         if kill_task then
             local demand = kill_task:GetTaskData().demand
-            if demand.type == KILL_TYPES.NORMAL then
+            if KSFUN_TUNING.DEBUG or demand.type == KILL_TYPES.NORMAL then
                 if demand.data.victim == victim.prefab then
                     demand.data.num = demand.data.num - 1
                 end
@@ -56,6 +62,7 @@ end
 local KILL = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
+    descFunc = descFunc,
 }
 
 

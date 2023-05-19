@@ -38,8 +38,8 @@ end
 
 function KSFUN_LEVEL:Up(v)
     if v and v > 0 then
-        local newLv = self.lv + v
-        self:SetLevel(newLv, true)
+        self.lv = self.lv + v
+        self:SetLevel(self.lv, true)
         if self.onStateChangeFunc then
             self.onStateChangeFunc(self.inst)
         end

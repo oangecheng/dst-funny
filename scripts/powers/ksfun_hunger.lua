@@ -56,7 +56,7 @@ end
 --- @param notice 是否需要说话
 local function onLvChangeFunc(inst, lv, notice)
     updateHungerStatus(inst)
-    if notice and inst.target then
+    if notice and inst.target and (not KSFUN_TUNING.DEBUG) then
         inst.target.components.talker:Say("饱食度提升！")
     end
 end

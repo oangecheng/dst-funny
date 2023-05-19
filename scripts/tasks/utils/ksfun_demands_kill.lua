@@ -38,9 +38,9 @@ local function timeLimit(task_lv)
     local ret = default(KILL_TYPES.TIME_LIMIT, task_lv, DIFFICULTY_MULTI.TIME_LIMIT)
     local data = ret.data
     --- 计算时长，6级任务，需要的时间为 2^6 * 30s = 8天
-    local time = calcDifficulty(data.lv, data.num) * KSFUN_TUNING.SEG_TIME
+    local time = calcDifficulty(data.lv, data.num) * KSFUN_TUNING.TIME_SEG
     data.duration = time
-    return data
+    return ret
 end
 
 

@@ -61,7 +61,7 @@ end
 --- @param task_lv 等级
 --- data = {power = a, num = b}
 reward_powers.randomPowerLv = function(player, task_lv)
-    local power = randomPower(player, false)
+    local power = randomPower(player, true)
     local lv = math.random(3)
     if power then
         return {
@@ -81,7 +81,7 @@ end
 --- @param task_lv 等级
 --- data = {power = a, num = b}
 reward_powers.randomPowerExp = function(player, task_lv)
-    local power = randomPower(player, false)
+    local power = randomPower(player, true)
     local exp = math.random(task_lv) * 500
     if power then
         return {

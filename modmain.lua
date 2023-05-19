@@ -8,6 +8,7 @@ modimport("scripts/ksfun_global_func.lua")
 PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
+    "ksfun_melt_stone",
 }
 
 Assets = {
@@ -17,8 +18,8 @@ Assets = {
 
 
 
-AddReplicableComponent("ksfun_hunger")
 AddReplicableComponent("ksfun_power_system")
+AddReplicableComponent("ksfun_task_system")
 
 
 local player_panel = require "mod/my_screen"

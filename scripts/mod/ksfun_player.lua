@@ -40,8 +40,8 @@ AddPlayerPostInit(function(player)
     player.components.health.maxhealth = getInitMaxHealth()
     player.components.health:SetPercent(percent)
 
-    player:AddComponent("ksfun_task_system")
     player:AddComponent("ksfun_power_system")
+    player:AddComponent("ksfun_task_system")
 
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)

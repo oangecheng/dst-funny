@@ -59,7 +59,7 @@ local rewards = {}
 
 --- 随机生成奖励
 rewards.randomReward = function(player, task_lv)
-    KsFunLog("randomReward", task_lv, power_type)
+    KsFunLog("randomReward", task_lv)
     return random(player, task_lv)
 end
 
@@ -67,7 +67,7 @@ end
 --- 暂时只支持随机生成物品
 --- z指定类型type后续再迭代
 rewards.generateReward = function(player, task_lv, reward_type)
-    KsFunLog("generateReward", task_lv, power_type)
+    KsFunLog("generateReward", task_lv, reward_type)
     -- 未指定type，随机生成任务
     if reward_type == nil then
         return random(player, task_lv)

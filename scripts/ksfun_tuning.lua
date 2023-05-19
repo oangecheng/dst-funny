@@ -24,8 +24,8 @@ KSFUN_TUNING =  {
     },
 
 
-    TASK_TIME_SEG = TUNING.SEG_TIME,
-    TASK_TIME_TOTAL_DAY = TUNING.TOTAL_DAY_TIME,
+    TIME_SEG = TUNING.SEG_TIME,
+    TIME_TOTAL_DAY = TUNING.TOTAL_DAY_TIME,
 
 
 
@@ -70,8 +70,9 @@ KSFUN_TUNING =  {
 
     EVENTS = {
         PLAYER_STATE_CHANGE = "ksfun_player_state_change",
-        PLAYER_PANEL = "ksfun_player_refresh_panel",
         TASK_FINISH = "ksfun_task_finish",
+
+        PLAYER_PANEL = "ksfun_player_refresh_panel",
     },
 
 

@@ -64,7 +64,7 @@ end
 --- 给物品赋予等级
 local function rewardKsFunItem(player, data)
     local item = data and data.item or nil
-    KsFunLog("rewardNomralItem", item, data.num, data.lv)
+    KsFunLog("rewardKsFunItem", item, data.num, data.lv)
     if item then
         for i=1, data.num do
             local ent = SpawnPrefab(item)

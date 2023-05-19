@@ -15,6 +15,8 @@ local KSFUN_TASK = Class(function(self, inst)
     self.state = 0
     self.task_data = nil
 
+    self.descFunc = nil
+
     self.onInitFunc = nil
     self.onAttachFunc = nil
     self.onDetachFunc = nil
@@ -34,6 +36,15 @@ end
 
 function KSFUN_TASK:SetTaskData(data)
     self.task_data = data
+end
+
+
+function KSFUN_TASK:GetDesc()
+    if self.name and self.player and self.task_data and self.descFunc then
+        return self.descFunc(self.inst, self.player, self.name, self.task_data)
+    else
+        return ""
+    end
 end
 
 

@@ -177,7 +177,7 @@ local function randomKsFunItem(player, task_lv)
 
     return {
         -- 主类别
-        type = KSFUN_TUNING.REWARD_TYPES.KSFUN_ITEM,
+        type = KSFUN_TUNING.TASK_REWARD_TYPES.KSFUN_ITEM,
         data = {
             item = name,
             num = num,
