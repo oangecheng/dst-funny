@@ -7,7 +7,7 @@ local Image = require "widgets/image"
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 local card_width = 800
-local card_padding = 10
+local card_padding = 20
 local card_height = 50
 local card_space = 5
 
@@ -20,6 +20,9 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.y = 500
 	self.x = 500
 	self.offsetY = 0
+
+	self.powers = {}
+	self.tasks = {}
 
 	self.pageClose = self.root:AddChild(TextButton())
     self.pageClose:SetText("关闭")
@@ -49,16 +52,16 @@ function KSFUN_PLAYER_PANEL:AddPowerCards()
 		for k,v in pairs(powers) do
 			local name = string.upper("ksfun_power_"..k)
 			name = STRINGS.NAMES[name]
-			if self[k] == nil then
-				self[k] = self.root:AddChild(self:KsFunCard())
+			if self.powers[k] == nil then
+				self.powers[k] = self.root:AddChild(self:KsFunCard())
 			end
 
-			self[k].title:SetString(name)
-			self[k].desc:SetString("等级: "..v.lv.."  经验: "..v.exp)
+			self.powers[k].title:SetString(name)
+			self.powers[k].desc:SetString("等级: "..v.lv.."  经验: "..v.exp)
 
-			self[k]:SetHAnchor(0)
-			self[k]:SetVAnchor(0)
-			self[k]:SetPosition(self.x, self.y + offsetY, 0)
+			self.powers[k]:SetHAnchor(0)
+			self.powers[k]:SetVAnchor(0)
+			self.powers[k]:SetPosition(self.x, self.y + offsetY, 0)
 			offsetY = offsetY - (card_height + card_space)
 		end
 	end
@@ -76,17 +79,24 @@ function KSFUN_PLAYER_PANEL:AddTaskCards(power_offsetY)
 		for k,v in pairs(tasks) do
 			local name = string.upper("ksfun_task_"..k)
 			name = STRINGS.NAMES[name]
-			if self[k] == nil then
-				self[k] = self.root:AddChild(self:KsFunCard())
+			if self.tasks[k] == nil then
+				self.tasks[k] = self.root:AddChild(self:KsFunCard())
 			end
 			
-			self[k].title:SetString(name)
-			self[k].desc:SetString(v.desc)
+			self.tasks[k].title:SetString(name)
+			self.tasks[k].desc:SetString(v.desc)
 
-			self[k]:SetHAnchor(0)
-			self[k]:SetVAnchor(0)
-			self[k]:SetPosition(x, y + power_offsetY + offsetY, 0)
+			self.tasks[k]:SetHAnchor(0)
+			self.tasks[k]:SetVAnchor(0)
+			self.tasks[k]:SetPosition(x, y + power_offsetY + offsetY, 0)
 			offsetY = offsetY - (card_height + card_space)
+		end
+
+		for k,v in pairs(self.tasks) do
+			if not table.containskey(tasks, k) then
+				self.tasks[k] = nil
+				v:Kill()
+			end
 		end
 	end
 end
@@ -109,16 +119,16 @@ function KSFUN_PLAYER_PANEL:KsFunCard()
 	widget.title = widget:AddChild(Text(BODYTEXTFONT, 45))
 	widget.title:SetPosition(-half_w/2, 0)
 	widget.title:SetRegionSize(half_w, card_height)
-	widget.title:SetHAlign( ANCHOR_MIDDLE )--ANCHOR_RIGHT)
+	widget.title:SetHAlign( ANCHOR_LEFT )--ANCHOR_RIGHT)
 	widget.title:SetVAlign( 0 )--ANCHOR_RIGHT)
 	widget.title:SetString("")
 	widget.title:SetColour(1, 1, 1, 1)
 
 	-- 属性值
 	widget.desc = widget:AddChild(Text(BODYTEXTFONT, 45))
-	widget.desc:SetPosition(half_w/2, 0)
-	widget.desc:SetRegionSize(half_w, card_height)
-	widget.desc:SetHAlign( ANCHOR_MIDDLE)
+	widget.desc:SetPosition(half_w / 4, 0)
+	widget.desc:SetRegionSize(half_w * 1.5, card_height)
+	widget.desc:SetHAlign( ANCHOR_LEFT)
 	widget.desc:SetVAlign( 0 )--ANCHOR_RIGHT)
 
 	widget.desc:SetString("")

@@ -133,7 +133,7 @@ local function randomMonster(task_lv)
     local monsters = MONSTER_DEFS[lv] 
     local index = math.random(#monsters)
     local name = monsters[index]
-    local num = KSFUN_TUNING.DEBUG and 1 or randomMonsterNum(lv)
+    local num = randomMonsterNum(lv)
     return name, lv, num
 end
 

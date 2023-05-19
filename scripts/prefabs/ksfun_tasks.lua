@@ -76,9 +76,10 @@ local function MakeTask(task_name)
             if task_data and task_data.demand.data.duration > 0 then
                 -- 先暂停，等attach的时候才开始计算时间
                 inst.components.timer:StartTimer("ksfun_task_over", task_data.demand.data.duration, true)
-                inst:ListenForEvent("timerdone", onTimeDone)
             end
         end
+
+        inst:ListenForEvent("timerdone", onTimeDone)
 
         return inst
     end

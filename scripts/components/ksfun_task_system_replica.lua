@@ -2,7 +2,9 @@
 
 local function onTaskDataDirty(self, inst)
     local data = self._itemtasks:value()
-    if data then
+    if data == nil then return end
+    
+    if data ~= "" then
         local d1 = string.split(data, ";")
         for i1,v1 in pairs(d1) do
             local d2 = string.split(v1, ",")
@@ -14,10 +16,13 @@ local function onTaskDataDirty(self, inst)
                 }
             end
         end
-        KsFunLog("onTaskDataDirty", data)
-        if self.inst then
-            self.inst:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, self.tasks)
-        end
+    else
+        self.tasks = {}
+    end
+
+    KsFunLog("onTaskDataDirty", data)
+    if self.inst then
+        self.inst:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, self.tasks)
     end
 
 end

@@ -139,7 +139,7 @@ function KSFUN_TASK_SYSTEM:SyncData()
         data = data ..";".. d
     end
     KsFunLog("sync task data", data)
-    if data ~= "" and self.inst.replica.ksfun_task_system then
+    if data and self.inst.replica.ksfun_task_system then
         self.inst.replica.ksfun_task_system:SyncData(data)
     end
 end

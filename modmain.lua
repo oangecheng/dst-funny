@@ -32,8 +32,6 @@ end)
 
 -- 加载各种玩法
 modimport("scripts/mod/ksfun_hook.lua")
-modimport("scripts/mod/ksfun_clotheses.lua")
-
 
 AddPlayerPostInit(function(inst)
     TheInput:AddKeyDownHandler(108, function() 
@@ -48,8 +46,6 @@ AddPlayerPostInit(function(inst)
 end)
 
 if GLOBAL.TheNet:GetIsServer() then
-    -- modimport("scripts/mod/ksfun_policy_health.lua")
-    -- modimport("scripts/mod/ksfun_policy_sanity.lua")
     modimport("scripts/mod/ksfun_player.lua")
 
     -- 世界初始化
