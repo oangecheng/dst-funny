@@ -6,6 +6,7 @@ local assets = {
 
 local name_prefix = "ksfun_melt_stone_"
 
+-- forgging stone
 local function makeMeltStone(name, lv)
     local function fn()
         local inst = CreateEntity()
