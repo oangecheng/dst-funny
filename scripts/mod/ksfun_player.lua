@@ -33,6 +33,12 @@ local function getInitMaxHealth()
 end
 
 
+AddPrefabPostInit("researchlab", function(inst)
+    inst:AddComponent("container")
+    inst.components.container:WidgetSetup("forgstation")
+end)
+
+
 -- 初始化角色
 AddPlayerPostInit(function(player)
     --- 修改角色基础血量
