@@ -138,17 +138,22 @@ local function onDetachFunc(inst, player, name)
 end
 
 
-KSFUN_HUNGER.power = {
+local power = {
     name = NAMES.HUNGER,
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,
 }
 
-KSFUN_HUNGER.level = {
+local level = {
     onLvChangeFunc = onLvChangeFunc,
     onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
+}
+
+KSFUN_HUNGER.data = {
+    power = power,
+    level = level,
 }
 
 return KSFUN_HUNGER

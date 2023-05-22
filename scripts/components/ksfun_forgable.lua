@@ -5,8 +5,10 @@ local function forg(self, item, maxcount)
     local successcount = 0
 
     local itemcount = 1
-    if item.components.stackable then
-        itemcount = item.components.stackable:StackSize()
+
+    local stackable = item.components.stackable
+    if stackable then
+        itemcount = stackable:StackSize()
     end
     -- 锻造次数
     local forgcount = math.min(maxcount or 1, itemcount)
@@ -17,11 +19,19 @@ local function forg(self, item, maxcount)
         end       
     end
 
-    return {
-        item = item,
-        count = forgcount,
-        success = successcount
-    }
+    if stackable then
+        local size = stackable:StackSize()
+        local left = size - forgcount
+        if left > 0 then
+            stackable:SetStackSize(left)
+        else
+            item:Remove()
+        end
+    else
+        item:Remove()
+    end
+
+    return successcount
 end
 
 
@@ -29,21 +39,33 @@ end
 local KSFUN_FORGABLE = Class(function(self, inst)
     self.inst = inst
     self.forgitems = {}
-    self.ratio = 0.8
+    self.ratio = 1
 
     --- 锻造成功
-    self.onForgSuccessFunc = nil
+    self.onSuccessFunc = nil
     --- 不可锻造
-    self.onForgInvalidFunc = nil
+    self.onInvalidFunc = nil
     --- 锻造失败
-    self.onForgFailFunc = nil
+    self.onFailFunc = nil
 end)
 
 
-function KSFUN_FORGABLE:SetForgSuccessRatio(ratio)
+function KSFUN_FORGABLE:SetSuccessRatio(ratio)
     self.ratio = ratio
 end
 
+
+function KSFUN_FORGABLE:SetOnSuccessFunc(func)
+    self.onSuccessFunc = func
+end
+
+function KSFUN_FORGABLE:SetOnFailFunc(func)
+    self.onFailFunc = func
+end
+
+function KSFUN_FORGABLE:SetOnInvalidFunc(func)
+    self.onInvalidFunc = func
+end
 
 --- 尝试锻造，支持批量
 --- @param item 物品inst
@@ -58,24 +80,24 @@ function KSFUN_FORGABLE:Forg(item)
         -- 可升级次数为0时，不可锻造，直接通知
         if maxcount == 0 then
             if self.onForgInvalidFunc then
-                self.onForgInvalidFunc(self.inst, {item = item, msg = STRINGS.KSFUN_FORG_FAIL_MSG_2})
+                self.onInvalidFunc(self.inst, {item = item, msg = STRINGS.KSFUN_FORG_FAIL_MSG_2})
             end
             return
         end
 
-        local data = forg(self, item, maxcount)
-        if data.success > 0 then
+        local successcount = forg(self, item, maxcount)
+        if successcount > 0 then
             if self.onForgSuccessFunc then
-                self.onForgSuccessFunc(self.inst, data)
+                self.onSuccessFunc(self.inst, {successcount = successcount})
             end
         else
             if self.onForgFailFunc then
-                self.onForgFailFunc(self.inst, data)
+                self.onFailFunc(self.inst)
             end
         end
     else
         if self.onForgInvalidFunc then
-            self.onForgInvalidFunc(self.inst, {item = item, msg = STRINGS.KSFUN_FORG_FAIL_MSG_1})
+            self.onInvalidFunc(self.inst, {item = item, msg = STRINGS.KSFUN_FORG_FAIL_MSG_1})
         end
     end
 end
@@ -88,6 +110,11 @@ function KSFUN_FORGABLE:AddForgItem(itemprefab)
 end
 
 
+function KSFUN_FORGABLE:SetForgItems(itemprefabs)
+    self.forgitems = itemprefabs
+end
+
+
 function KSFUN_FORGABLE:IsForgItem(item)
     return table.contains(self.forgitems, item)
 end
@@ -95,13 +122,16 @@ end
 
 
 function KSFUN_FORGABLE:OnSave()
-    return { forgitems = self.forgitems }
+    return { 
+        forgitems = self.forgitems,
+        ratio = self.ratio
+     }
 end
 
 
 function KSFUN_FORGABLE:OnLoad(data)
     self.forgitems = data.forgitems or {}
-    self.ratio = data.ratio or 0.8
+    self.ratio = data.ratio or 1
 end
 
 

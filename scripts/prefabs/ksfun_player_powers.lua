@@ -1,5 +1,28 @@
 
-local function MakePower(data, level)
+
+
+local helper = require("powers/ksfun_power_helper")
+
+
+local function onForgSuccessFunc(inst, data)
+    if inst.components.ksfun_level then
+        inst.components.ksfun_level:Up(data.successcount)
+    end
+end
+
+
+local function onForgFailFunc(inst)
+    KsFunLog("onForgFailFunc")
+end
+
+
+local function onForgInvalidFunc(inst, data)
+    KsFunLog("onForgInvalidFunc", data.msg)
+end
+
+
+local function MakePower(name, data)
+
     local function fn()
         local inst = CreateEntity()
         inst:AddTag("ksfun_power")
@@ -18,22 +41,39 @@ local function MakePower(data, level)
         inst:AddTag("CLASSIFIED")
 
         inst:AddComponent("ksfun_power")
-        inst.components.ksfun_power:SetOnAttachFunc(data.onAttachFunc)
-        inst.components.ksfun_power:SetOnDetachFunc(data.onDetachFunc)
-        inst.components.ksfun_power:SetOnExtendFunc(data.onExtendFunc)
-        inst.components.ksfun_power:SetOnGetDescFun(data.onGetDescFunc)
+        inst.components.ksfun_power:SetOnAttachFunc(data.power.onAttachFunc)
+        inst.components.ksfun_power:SetOnDetachFunc(data.power.onDetachFunc)
+        inst.components.ksfun_power:SetOnExtendFunc(data.power.onExtendFunc)
+        inst.components.ksfun_power:SetOnGetDescFunc(data.power.onGetDescFunc)
         inst.components.ksfun_power.keepondespawn = true
 
-        inst:AddComponent("ksfun_level")
-        inst.components.ksfun_level:SetOnLvChangeFunc(level.onLvChangeFunc)
-        inst.components.ksfun_level:SetOnStateChangeFunc(level.onStateChangeFunc)
-        inst.components.ksfun_level:SetNextLvExpFunc(level.nextLvExpFunc)
+
+        -- 可升级的
+        if data.level then
+            inst:AddComponent("ksfun_level")
+            inst.components.ksfun_level:SetOnLvChangeFunc(level.onLvChangeFunc)
+            inst.components.ksfun_level:SetOnStateChangeFunc(level.onStateChangeFunc)
+            inst.components.ksfun_level:SetNextLvExpFunc(level.nextLvExpFunc)
+
+            -- 锻造功能依赖等级
+            if data.forg then
+                inst:AddComponent("ksfun_forgable")
+                inst.components.ksfun_forgable:SetForgItems(data.forgitems)
+                inst.components.ksfun_forgable:SetOnSuccessFunc(onForgSuccessFunc)
+                inst.components.ksfun_forgable:SetOnInvalidFunc(onForgInvalidFunc)
+                inst.components.ksfun_forgable:SetOnFailFunc(onForgFailFunc)
+            end
+        end
 
 
-        if data.duration and data.duration > 0 and data.onTimeDoneFunc then
+       
+
+        -- 添加临时属性
+        if data.duration and data.duration > 0 then
             inst:AddComponent("timer")
             inst.components.timer:StartTimer("powerover", data.duration)
-            inst:ListenForEvent("timerdone", data.onTimeDoneFunc)
+            inst:ListenForEvent("timerdone", function(inst, data)
+            end)
         end
 
         return inst
@@ -42,11 +82,19 @@ local function MakePower(data, level)
     return Prefab("ksfun_power_"..data.name, fn, nil, prefabs)
 end
 
-local health = require("powers/ksfun_player_health")
-local hunger = require("powers/ksfun_hunger")
-local sanity = require("powers/ksfun_sanity")
 
 
-return MakePower(health.data, health.level),
-MakePower(hunger.power, hunger.level),
-MakePower(sanity.power, sanity.level)
+local powers = {}
+for k,v in pairs(KSFUN_TUNING.ITEM_POWER_NAMES) do
+    local data = helper.MakeItemPower(v)
+    table.insert( powers, MakePower(v, data))
+end
+
+
+for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
+    local data = helper.MakePlayerPower(v)
+    table.insert( powers, MakePower(v, data))
+end
+
+
+return unpack(powers)

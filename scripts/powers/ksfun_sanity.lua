@@ -149,17 +149,23 @@ end
 
 
 
-KSFUN_SANITY.power = {
-    name = NAMES.SANITY,
+local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,
 }
 
-KSFUN_SANITY.level = {
+local level = {
     onLvChangeFunc = onLvChangeFunc,
     onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
+
+
+KSFUN_HUNGER.data = {
+    power = power,
+    level = level,
+}
+
 
 return KSFUN_SANITY

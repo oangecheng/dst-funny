@@ -105,19 +105,23 @@ local function onDetach(inst, player, name)
 end
 
 
-KSFUN_HEALTH.data = {
-    name = POWER_NAMES.HEALTH,
+local power = {
     onAttachFunc = onAttach,
     onDetachFunc = onDetach,
     onExtendFunc = nil,
     onGetDescFunc = nil
 }
 
-KSFUN_HEALTH.level = {
+local level = {
     onLvChangeFunc = onLvChangeFunc,
     onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc
 }
 
+
+KSFUN_HEALTH.data = {
+    power = power,
+    level = level,
+}
 
 return KSFUN_HEALTH

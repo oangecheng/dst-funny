@@ -29,7 +29,7 @@ function KSFUN_POWER:SetOnExtendFunc(func)
 end
 
 
-function KSFUN_POWER:SetOnGetDescFun(func)
+function KSFUN_POWER:SetOnGetDescFunc(func)
     self.onGetDescFunc = func
 end
 

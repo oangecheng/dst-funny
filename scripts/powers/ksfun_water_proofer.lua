@@ -1,4 +1,3 @@
-local NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 
 local KSFUN_WATER_PROOFER = {}
 
@@ -63,23 +62,32 @@ end
 
 
 
-KSFUN_WATER_PROOFER.power = {
-    name = NAMES.WATER_PROOFER,
+local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,
 }
 
 
-KSFUN_WATER_PROOFER.level = {
+local level = {
     onLvChangeFunc = onLvChangeFunc,
     onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 
 
-KSFUN_WATER_PROOFER.quality = {
-    onQualityChangeFunc = onQualityChangeFunc,
+local forg = {
+    forgitems = {
+        "pigskin",
+        "tentaclespots"
+    },
+}
+
+
+KSFUN_WATER_PROOFER.data = {
+    power = power,
+    level = level,
+    forg = forg
 }
 
 return KSFUN_WATER_PROOFER
