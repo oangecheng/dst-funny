@@ -1,6 +1,7 @@
 
 local function forg(self, item)
     -- 没有升级组件，强化失效
+    KsFunLog("forg", item.prefab)
     local ksfunlv = self.inst.components.ksfun_level
     if ksfunlv == nil then return end
 
@@ -13,7 +14,7 @@ local function forg(self, item)
         if not ksfunlv:IsMax() then
             left = left - 1
             local r = math.random(100)
-            if r > self.ratio * 100 then
+            if self.ratio * 100 > r then
                 ksfunlv:GainExp(exp)
             end
         end
@@ -69,7 +70,7 @@ end
 --- @param exp 物品经验值
 --- forgitems = {name = exp}
 function KSFUN_FORGABLE:AddForgItem(itemprefab, exp)
-    if not table.contains(self.forgitems, itemprefab) then
+    if not table.containskey(self.forgitems, itemprefab) then
         self[itemprefab] = exp
     end
 end
@@ -80,8 +81,8 @@ function KSFUN_FORGABLE:SetForgItems(itemprefabs)
 end
 
 
-function KSFUN_FORGABLE:IsForgItem(item)
-    return table.contains(self.forgitems, item)
+function KSFUN_FORGABLE:IsForgItem(itemprefab)
+    return table.containskey(self.forgitems, itemprefab)
 end
 
 

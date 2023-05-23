@@ -13,7 +13,7 @@ end
 
 
 function KSFUN_BREAKABLE:Break(item)
-    if self:IsBreakItem(item) then
+    if self:IsBreakItem(item.prefab) then
         if self.onBreakFunc then
             self.onBreakFunc(self.inst, item)
             item:DoTaskInTime(0, item:Remove())
@@ -22,21 +22,21 @@ function KSFUN_BREAKABLE:Break(item)
 end
 
 
-function KSFUN_BREAKABLE:SetItems(items)
-    self.breakitems = items
+function KSFUN_BREAKABLE:SetItems(itemprefabs)
+    self.breakitems = itemprefabs
 end
 
 
-function KSFUN_BREAKABLE:AddBreakItem(item)
-    if not table.contains(self.breakitems, item) then
-        table.insert(self.breakitems, item)
+function KSFUN_BREAKABLE:AddBreakItem(itemprefab)
+    if not table.contains(self.breakitems, itemprefab) then
+        table.insert(self.breakitems, itemprefab)
     end
 end
 
 
 --- 判断是否是可突破材料
-function KSFUN_BREAKABLE:IsBreakItem(item)
-    return table.contains(self.breakitems, item)
+function KSFUN_BREAKABLE:IsBreakItem(itemprefab)
+    return table.contains(self.breakitems, itemprefab)
 end
 
 

@@ -19,12 +19,12 @@ end
 
 
 function ENHANTABLE:Enhant(item)
-    if table.contains(item.prefab) then
+    if table.contains(self.items, item.prefab) then
         local level  = self.inst.components.ksfun_level
         local system = self.inst.components.ksfun_power_system
         if level and system and system:GetPowerNum() < level.lv then
             if self.onEnhantFunc then
-                self.onEnhantFunc(self.inst)
+                self.onEnhantFunc(self.inst, item)
             end
             item:DoTaskInTime(0, item:Remove())
         end

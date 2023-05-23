@@ -84,10 +84,10 @@ end
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
-    if inst.components.insulator == nil then
-        inst:AddComponent("insulator")
+    if item.components.insulator == nil then
+        item:AddComponent("insulator")
     end
-    local insulator = inst.components.insulator
+    local insulator = item.components.insulator
 
     inst.target = item
     if not inst.origininsulation_w then
@@ -110,7 +110,7 @@ end
 
 --- 解绑对象
 local function onDetachFunc(inst, item, name)
-    local insulator = inst.components.insulator
+    local insulator = item.components.insulator
     if insulator and inst.origininsulation then
         insulator.type = inst.origintype
         insulator:SetInsulation(inst.origininsulation)

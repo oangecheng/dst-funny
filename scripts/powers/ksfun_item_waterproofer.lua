@@ -30,8 +30,9 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
     -- 没有防水组件，添加
-    if inst.components.waterproofer == nil then
-        inst:AddComponent("waterproofer")
+    if item.components.waterproofer == nil then
+        item:AddComponent("waterproofer")
+        item.components.waterproofer:SetEffectiveness(0)
     end
 
     inst.target = item
@@ -45,8 +46,8 @@ end
 
 --- 解绑对象
 local function onDetachFunc(inst, item, name)
-    if inst.originWaterProofer and inst.components.waterproofer then
-        inst.components.waterproofer:SetEffectiveness(inst.originWaterProofer)
+    if inst.originWaterProofer and item.components.waterproofer then
+        item.components.waterproofer:SetEffectiveness(inst.originWaterProofer)
     end
     inst.originWaterProofer = nil
     inst.target = nil

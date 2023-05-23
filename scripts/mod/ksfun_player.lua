@@ -3,6 +3,20 @@ local DEFAULT_MAX_HEALTH = 120
 local EVENTS = KSFUN_TUNING.EVENTS
 
 local HELPER = require("tasks/ksfun_task_helper")
+local ksfunitemsmaker = require("mod/ksfun_items_maker")
+local ksfunitems = require("defs/ksfun_items_def")
+
+
+for k,v in pairs(ksfunitems.hantitems) do
+    AddPrefabPostInit(k, function(inst)
+        inst:AddComponent("ksfun_item")
+        inst:AddComponent("ksfun_level")
+        inst:AddComponent("ksfun_enhantable")
+        inst:AddComponent("ksfun_breakable")
+        inst:AddComponent("ksfun_power_system")
+    end)
+end
+
 
 
 
@@ -32,10 +46,38 @@ local function getInitMaxHealth()
     return DEFAULT_MAX_HEALTH
 end
 
+local function onOpen(inst)
+    inst.SoundEmitter:PlaySound("saltydog/common/saltbox/open")
+
+
+end
+local function onClose(inst)
+    inst.SoundEmitter:PlaySound("saltydog/common/saltbox/close")
+
+    local item1 = inst.components.container:GetItemInSlot(1)
+    local item2 = inst.components.container:GetItemInSlot(2)
+    if item1 and item2 then
+        if item2.prefab == "goldnugget" then
+            item1.components.ksfun_breakable:Break(item2)
+        elseif item2.prefab == "opalpreciousgem" then
+            item1.components.ksfun_enhantable:Enhant(item2)
+        elseif item2.prefab == "pigskin" then
+            local power = item1.components.ksfun_power_system:GetPower("item_water_proofer")
+            power.components.ksfun_forgable:Forg(item2)
+        end
+        
+    end
+end
+
+
 
 AddPrefabPostInit("researchlab", function(inst)
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("forgstation")
+    inst.components.container:WidgetSetup("researchlab")
+    inst.components.container.onopenfn = onOpen
+    inst.components.container.onclosefn = onClose
+    inst.components.container.skipclosesnd = true
+    inst.components.container.skipopensnd = true
 end)
 
 
@@ -51,7 +93,10 @@ AddPlayerPostInit(function(player)
 
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)
-        HELPER.addTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
+        local e = ksfunitemsmaker.MakeKsFunItem("walrushat")
+        inst.components.inventory:GiveItem(e, nil, player:GetPosition())
+        -- HELPER.addTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
+
     end)
 
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)

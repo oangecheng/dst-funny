@@ -1,6 +1,7 @@
+local containers = require "containers"
+local params = containers.params
 
-
-params.forgstation =
+params.researchlab =
 {
     widget =
     {

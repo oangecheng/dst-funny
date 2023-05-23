@@ -19,7 +19,6 @@ local EXP_MULTI_DEFS = {
 }
 
 
-local KSFUN_SANITY = {}
 
 
 local function updateSanityStatus(inst)
@@ -162,7 +161,9 @@ local level = {
 }
 
 
-KSFUN_HUNGER.data = {
+local KSFUN_SANITY = {}
+
+KSFUN_SANITY.data = {
     power = power,
     level = level,
 }

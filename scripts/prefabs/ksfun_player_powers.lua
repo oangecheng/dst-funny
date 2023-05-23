@@ -34,14 +34,14 @@ local function MakePower(name, data)
         -- 可升级的
         if data.level then
             inst:AddComponent("ksfun_level")
-            inst.components.ksfun_level:SetOnLvChangeFunc(level.onLvChangeFunc)
-            inst.components.ksfun_level:SetOnStateChangeFunc(level.onStateChangeFunc)
-            inst.components.ksfun_level:SetNextLvExpFunc(level.nextLvExpFunc)
+            inst.components.ksfun_level:SetOnLvChangeFunc(data.level.onLvChangeFunc)
+            inst.components.ksfun_level:SetOnStateChangeFunc(data.level.onStateChangeFunc)
+            inst.components.ksfun_level:SetNextLvExpFunc(data.level.nextLvExpFunc)
 
             -- 锻造功能依赖等级
             if data.forg then
                 inst:AddComponent("ksfun_forgable")
-                inst.components.ksfun_forgable:SetForgItems(data.forgitems)
+                inst.components.ksfun_forgable:SetForgItems(data.forg.forgitems)
             end
         end
 
@@ -54,22 +54,22 @@ local function MakePower(name, data)
             end)
         end
 
-        inst.OnLoad = function(inst, data)
+        inst.OnLoad = function(inst, d)
             if data.power.onLoadFunc then
-                data.power.onLoadFunc(inst, data)
+                data.power.onLoadFunc(inst, d)
             end
         end
 
-        inst.OnSave = function(inst, data)
+        inst.OnSave = function(inst, d)
             if data.power.onSaveFunc then
-                data.power.onSaveFunc(inst, data)
+                data.power.onSaveFunc(inst, d)
             end
         end
 
         return inst
     end
 
-    return Prefab("ksfun_power_"..data.name, fn, nil, prefabs)
+    return Prefab("ksfun_power_"..name, fn, nil, prefabs)
 end
 
 

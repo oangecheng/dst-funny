@@ -2,21 +2,19 @@ local ksfunitems = require("defs/ksfun_items_def")
 
 
 local function addKsFunComponents(inst)
-    inst:AddComponent("ksfun_level")
-    inst:AddComponent("ksfun_enhantable")
-    inst:AddComponent("ksfun_breakable")
-    inst:AddComponent("ksfun_power_system")
+  
 end
 
 
 local function initHantable(inst)
-    local items = ksfun_items.hantitems[inst.prefab]
-    local names = ksfun_items.names[inst.prefab]
+    local items = ksfunitems.hantitems[inst.prefab]
+    local names = ksfunitems.names[inst.prefab]
     if items and names then
         inst.components.ksfun_enhantable:SetItems(items)
-        inst.components.ksfun_enhantable:SetOnEnhantFunc(function(inst)
+        inst.components.ksfun_enhantable:SetOnEnhantFunc(function(inst, item)
+            KsFunLog("onEnhant", item.prefab)
             local system = inst.components.ksfun_power_system
-            system:AddPower(names[1])
+            system:AddPower(KSFUN_TUNING.DEBUG and "item_water_proofer" or names[1])
         end)
     end
 end
@@ -26,16 +24,15 @@ local function initBreakable(inst)
     inst.components.ksfun_breakable:SetItems({"goldnugget"})
     inst.components.ksfun_breakable:SetOnBreakFunc(function(ent, item)
         if inst.components.ksfun_level then
-            inst.components.ksfun_level:UpMax(1)
+            inst.components.ksfun_level:Up(1)
         end
     end)
 end
 
 
 
-
 local function initLevel(inst)
-    inst.components.ksfun_level:SetMax(1)
+    inst.components.ksfun_level:SetLevel(1)
     local onLvChangeFunc = function(inst, lv, notice)
     end
 end
@@ -46,9 +43,9 @@ local function MakeKsFunItem(prefab)
     if inst then
         addKsFunComponents(inst)
 
-        initLevel()
-        initBreakable()
-        initHantable()
+        initLevel(inst)
+        initBreakable(inst)
+        initHantable(inst)
     end
 
     return inst

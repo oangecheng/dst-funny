@@ -32,10 +32,10 @@ end
 
 
 function KSFUN_LEVEL:SetLevel(lv, notice)
-    if lv < max then
+    if lv < self.max then
         self.lv = lv
     else
-        self.lv = max
+        self.lv = self.max
         self.exp = 0
     end
 
@@ -88,7 +88,7 @@ function KSFUN_LEVEL:GainExp(exp)
 
      -- 计算可以升的级数
     local delta = 0
-    while self.exp > expFun(self.inst, self.lv) do
+    while self.exp >= expFun(self.inst, self.lv) do
         delta = delta + 1 
         self.exp = self.exp - expFun(self.inst, self.lv)
     end

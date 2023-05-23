@@ -31,7 +31,7 @@ end
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
-    local equippable = inst.components.equippable
+    local equippable = item.components.equippable
     inst.target = item
     if not inst.origindapperness then
         inst.origindapperness = equippable.dapperness
