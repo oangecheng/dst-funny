@@ -24,7 +24,7 @@ local function forg(self, item)
             stackable:SetStackSize(left)
         end
     else
-        item:Remove()
+        item:DoTaskInTime(0, item:Remove())
     end
 end
 

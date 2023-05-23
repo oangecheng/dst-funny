@@ -1,5 +1,6 @@
 
 local KSFUN_ITEM_TYPES = KSFUN_TUNING.KSFUN_ITEM_TYPES
+local ksfun_items = require("defs/ksfun_items_def")
 
 
 local item1 = {
@@ -74,32 +75,6 @@ items[6] = item6
 
 --- 普通物品的最大等级
 local item_max_lv = #items
-
-
-local ksfun_items = {
-    weapon = {
-        "spear", -- 长矛
-        "spear_wathgrithr", -- 战斗长矛
-        "ruins_bat", -- 铥矿棒，可升级的铥矿棒
-        "nightsword", -- 暗影剑
-        "hambat", -- 火腿棒
-    },
-    hat = {
-        "beefalohat",
-        "eyebrellahat",
-        "walrushat",
-        "alterguardianhat",
-    },
-    armor = {
-        "armorwood",
-        "armorruins",
-    },
-    -- 还没支持，熔炼系统
-    melt = {
-        "a",
-        "b",
-    },
-}
 
 
 --- 随机生成物品数量

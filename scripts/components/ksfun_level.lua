@@ -45,6 +45,15 @@ function KSFUN_LEVEL:SetLevel(lv, notice)
 end
 
 
+function KSFUN_LEVEL:SetMax(max)
+    self.max = max
+end
+
+function KSFUN_LEVEL:UpMax(v)
+    self.max = self.max + v
+end
+
+
 --- 判断当前是否已是最大等级
 function KSFUN_LEVEL:IsMax()
     return self.lv == self.max

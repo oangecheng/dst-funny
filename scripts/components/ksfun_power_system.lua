@@ -103,6 +103,11 @@ function KSFUN_POWERS:RemovePower(name)
 end
 
 
+function KSFUN_POWERS:GetPowerNum()
+    return #self.powers
+end
+
+
 --- 暂停属性作用 
 function KSFUN_POWERS:PausePower(name)
     local power = self.powers[name]

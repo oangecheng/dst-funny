@@ -1,6 +1,7 @@
 
 local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 local KSFUN_ITEM_TYPES = REWARD_TYPES.KSFUN_ITEM_TYPES
+local ksfunitemsmaker = require("mod/ksfun_items_maker")
 
 
 --- 属性奖励
@@ -67,11 +68,12 @@ local function rewardKsFunItem(player, data)
     KsFunLog("rewardKsFunItem", item, data.num, data.lv)
     if item then
         for i=1, data.num do
-            local ent = SpawnPrefab(item)
+            local ent = ksfun_items_maker.MakeKsFunItem(item)
             if ent then
                 -- 没有等级组件的添加等级组件
                 if ent.components.ksfun_level == nil then
                     ent:AddComponent("ksfun_level")
+
                     ent.components.ksfun_level:SetLevel(data.lv or 1)
                 end
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())
