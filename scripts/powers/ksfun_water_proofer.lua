@@ -1,6 +1,10 @@
 
 local KSFUN_WATER_PROOFER = {}
 
+local forgitems = {}
+forgitems["pigskin"] = 20
+forgitems["tentaclespots"] = 100
+
 
 local function updateWaterproof(inst)
     local waterproofer = inst.target and inst.target.components.waterproofer or nil
@@ -25,13 +29,7 @@ end
 
 --- 下一级防水所需经验值
 local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 10 or 100 * (lv+1)
-end
-
-
---- 品质变化监听
-local function onQualityChangeFunc(inst, quality)
-
+    return KSFUN_TUNING.DEBUG and 10 or (20 + lv)
 end
 
 
@@ -77,10 +75,7 @@ local level = {
 
 
 local forg = {
-    forgitems = {
-        "pigskin",
-        "tentaclespots"
-    },
+    forgitems = forgitems
 }
 
 

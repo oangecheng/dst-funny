@@ -32,6 +32,7 @@ end)
 
 -- 加载各种玩法
 modimport("scripts/mod/ksfun_hook.lua")
+modimport("scripts/widgets/containers.lua")
 
 AddPlayerPostInit(function(inst)
     TheInput:AddKeyDownHandler(108, function() 

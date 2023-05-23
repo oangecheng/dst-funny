@@ -4,23 +4,6 @@
 local helper = require("powers/ksfun_power_helper")
 
 
-local function onForgSuccessFunc(inst, data)
-    if inst.components.ksfun_level then
-        inst.components.ksfun_level:Up(data.successcount)
-    end
-end
-
-
-local function onForgFailFunc(inst)
-    KsFunLog("onForgFailFunc")
-end
-
-
-local function onForgInvalidFunc(inst, data)
-    KsFunLog("onForgInvalidFunc", data.msg)
-end
-
-
 local function MakePower(name, data)
 
     local function fn()
@@ -59,14 +42,9 @@ local function MakePower(name, data)
             if data.forg then
                 inst:AddComponent("ksfun_forgable")
                 inst.components.ksfun_forgable:SetForgItems(data.forgitems)
-                inst.components.ksfun_forgable:SetOnSuccessFunc(onForgSuccessFunc)
-                inst.components.ksfun_forgable:SetOnInvalidFunc(onForgInvalidFunc)
-                inst.components.ksfun_forgable:SetOnFailFunc(onForgFailFunc)
             end
         end
 
-
-       
 
         -- 添加临时属性
         if data.duration and data.duration > 0 then

@@ -1,39 +1,32 @@
 
-
-local function forg(self, item, maxcount)
-    -- 成功次数
-    local successcount = 0
-
-    local itemcount = 1
+local function forg(self, item)
+    -- 没有升级组件，强化失效
+    local ksfunlv = self.inst.components.ksfun_level
+    if ksfunlv == nil then return end
 
     local stackable = item.components.stackable
-    if stackable then
-        itemcount = stackable:StackSize()
-    end
-    -- 锻造次数
-    local forgcount = math.min(maxcount or 1, itemcount)
-    for i = 1, forgcount do
-        local r = math.random(100)
-        if r > self.ratio * 100 then
-            successcount = successcount + 1
-        end       
-    end
+    local count = stackable and stackable:StackSize() or 1
+    local exp = self.forgitems[item.prefab]
+    local left = count
 
-    if stackable then
-        local size = stackable:StackSize()
-        local left = size - forgcount
-        if left > 0 then
+    for i = 1, count do
+        if not ksfunlv:IsMax() then
+            left = left - 1
+            local r = math.random(100)
+            if r > self.ratio * 100 then
+                ksfunlv:GainExp(exp)
+            end
+        end
+    end
+    
+    if left > 0 then
+        if stackable then
             stackable:SetStackSize(left)
-        else
-            item:Remove()
         end
     else
         item:Remove()
     end
-
-    return successcount
 end
-
 
 
 local KSFUN_FORGABLE = Class(function(self, inst)
@@ -42,10 +35,7 @@ local KSFUN_FORGABLE = Class(function(self, inst)
     self.ratio = 1
 
     --- 锻造成功
-    self.onSuccessFunc = nil
-    --- 不可锻造
-    self.onInvalidFunc = nil
-    --- 锻造失败
+    self.onForgFunc = nil
     self.onFailFunc = nil
 end)
 
@@ -55,57 +45,32 @@ function KSFUN_FORGABLE:SetSuccessRatio(ratio)
 end
 
 
-function KSFUN_FORGABLE:SetOnSuccessFunc(func)
-    self.onSuccessFunc = func
+function KSFUN_FORGABLE:SetOnForgFunc(func)
+    self.onForgFunc = func
 end
+
 
 function KSFUN_FORGABLE:SetOnFailFunc(func)
     self.onFailFunc = func
 end
 
-function KSFUN_FORGABLE:SetOnInvalidFunc(func)
-    self.onInvalidFunc = func
-end
 
 --- 尝试锻造，支持批量
 --- @param item 物品inst
---- @param maxcount 最大锻造次数，不设置默认为1
 function KSFUN_FORGABLE:Forg(item)
     if self:IsForgItem(item.prefab) then
-
-        local maxcount = 1
-        if self.inst.components.ksfun_level then
-            maxcount = self.inst.components.ksfun_level:GetLeftUpCount()
-        end
-        -- 可升级次数为0时，不可锻造，直接通知
-        if maxcount == 0 then
-            if self.onForgInvalidFunc then
-                self.onInvalidFunc(self.inst, {item = item, msg = STRINGS.KSFUN_FORG_FAIL_MSG_2})
-            end
-            return
-        end
-
-        local successcount = forg(self, item, maxcount)
-        if successcount > 0 then
-            if self.onForgSuccessFunc then
-                self.onSuccessFunc(self.inst, {successcount = successcount})
-            end
-        else
-            if self.onForgFailFunc then
-                self.onFailFunc(self.inst)
-            end
-        end
-    else
-        if self.onForgInvalidFunc then
-            self.onInvalidFunc(self.inst, {item = item, msg = STRINGS.KSFUN_FORG_FAIL_MSG_1})
-        end
+        forg(self, item)
     end
 end
 
 
-function KSFUN_FORGABLE:AddForgItem(itemprefab)
+--- 添加强化材料
+--- @param itemprefab 物品代码
+--- @param exp 物品经验值
+--- forgitems = {name = exp}
+function KSFUN_FORGABLE:AddForgItem(itemprefab, exp)
     if not table.contains(self.forgitems, itemprefab) then
-        table.insert(self.forgitems, itemprefab)
+        self[itemprefab] = exp
     end
 end
 
