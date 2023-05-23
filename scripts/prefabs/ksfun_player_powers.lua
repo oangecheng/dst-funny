@@ -54,6 +54,18 @@ local function MakePower(name, data)
             end)
         end
 
+        inst.OnLoad = function(inst, data)
+            if data.power.onLoadFunc then
+                data.power.onLoadFunc(inst, data)
+            end
+        end
+
+        inst.OnSave = function(inst, data)
+            if data.power.onSaveFunc then
+                data.power.onSaveFunc(inst, data)
+            end
+        end
+
         return inst
     end
 

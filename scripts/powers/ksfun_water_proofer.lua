@@ -21,12 +21,6 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 用户等级状态变更
---- 通知用户面板刷新状态
-local function onStateChangeFunc(inst)
-end
-
-
 --- 下一级防水所需经验值
 local function nextLvExpFunc(inst, lv)
     return KSFUN_TUNING.DEBUG and 10 or (20 + lv)
@@ -69,7 +63,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 
