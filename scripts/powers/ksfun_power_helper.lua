@@ -4,13 +4,15 @@ local helper = {}
 
 
 local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
-local waterproofer = require("powers/ksfun_water_proofer")
+local waterproofer = require("powers/ksfun_item_waterproofer")
+local dapperness   = require("powers/ksfun_item_dapperness")
+local insulator    = require("powers/ksfun_item_insulator")
 
 
 local itempowers = {}
 itempowers[ITEM_NAMES.WATER_PROOFER] = waterproofer
-itempowers[ITEM_NAMES.DAPPERNESS] = nil
-itempowers[ITEM_NAMES.INSULATOR] = nil
+itempowers[ITEM_NAMES.DAPPERNESS] = dapperness
+itempowers[ITEM_NAMES.INSULATOR] = insulator
 
 
 helper.MakeItemPower = function(name)
