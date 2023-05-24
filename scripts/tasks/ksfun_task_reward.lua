@@ -68,14 +68,10 @@ local function rewardKsFunItem(player, data)
     KsFunLog("rewardKsFunItem", item, data.num, data.lv)
     if item then
         for i=1, data.num do
-            local ent = ksfun_items_maker.MakeKsFunItem(item)
+            local ent = SpawnPrefab(item)
             if ent then
-                -- 没有等级组件的添加等级组件
-                if ent.components.ksfun_level == nil then
-                    ent:AddComponent("ksfun_level")
-
-                    ent.components.ksfun_level:SetLevel(data.lv or 1)
-                end
+                ent.components.ksfun_breakable:Enable()
+                ent.components.ksfun_enhantable:Enable()
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())
             end
         end

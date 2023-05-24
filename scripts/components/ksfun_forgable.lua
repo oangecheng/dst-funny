@@ -7,7 +7,7 @@ local function forg(self, item)
 
     local stackable = item.components.stackable
     local count = stackable and stackable:StackSize() or 1
-    local exp = self.forgitems[item.prefab]
+    local exp = self.items[item.prefab] or 1
     local left = count
 
     for i = 1, count do
@@ -32,7 +32,7 @@ end
 
 local KSFUN_FORGABLE = Class(function(self, inst)
     self.inst = inst
-    self.forgitems = {}
+    self.items = {}
     self.ratio = 1
 
     --- 锻造成功
@@ -61,42 +61,43 @@ end
 function KSFUN_FORGABLE:Forg(item)
     if self:IsForgItem(item.prefab) then
         forg(self, item)
+        return true
     end
+    return false
 end
 
 
 --- 添加强化材料
 --- @param itemprefab 物品代码
 --- @param exp 物品经验值
---- forgitems = {name = exp}
+--- items = {name = exp}
 function KSFUN_FORGABLE:AddForgItem(itemprefab, exp)
-    if not table.containskey(self.forgitems, itemprefab) then
+    if not table.containskey(self.items, itemprefab) then
         self[itemprefab] = exp
     end
 end
 
 
 function KSFUN_FORGABLE:SetForgItems(itemprefabs)
-    self.forgitems = itemprefabs
+    self.items = itemprefabs
 end
 
 
 function KSFUN_FORGABLE:IsForgItem(itemprefab)
-    return table.containskey(self.forgitems, itemprefab)
+    return table.containskey(self.items, itemprefab)
 end
-
 
 
 function KSFUN_FORGABLE:OnSave()
     return { 
-        forgitems = self.forgitems,
-        ratio = self.ratio
+        items  = self.items,
+        ratio  = self.ratio,
      }
 end
 
 
 function KSFUN_FORGABLE:OnLoad(data)
-    self.forgitems = data.forgitems or {}
+    self.items = data.items or {}
     self.ratio = data.ratio or 1
 end
 

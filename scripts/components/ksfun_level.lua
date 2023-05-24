@@ -47,10 +47,12 @@ end
 
 function KSFUN_LEVEL:SetMax(max)
     self.max = max
+    self:SetLevel(math.min(self.max, self.lv))
 end
 
+
 function KSFUN_LEVEL:UpMax(v)
-    self.max = self.max + v
+    self.max = self.max + v or 1
 end
 
 

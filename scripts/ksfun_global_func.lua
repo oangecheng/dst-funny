@@ -56,9 +56,42 @@ function KsFunLog(info, v1, v2, v3)
 end
 
 
+function KsFunRandomPower(inst, powers, existed)
+    local temp = {}
+
+    -- 随机排序
+    for k, v in pairs(powers) do
+        local i = math.random(1 + #temp)
+        table.insert(temp, i, v)
+    end
+
+    local system = inst and inst.components.ksfun_power_system or nil
+
+    if system then
+        for i,v in ipairs(temp) do
+            -- 找到第一个不存在的属性返回， 找不到返回nil
+            local p = system:GetPower(v)
+            if existed then
+                if p ~= nil then
+                    return v
+                end
+            else
+                if p == nil then
+                    return v
+                end
+            end
+        end
+    end
+
+    return nil
+end
+
+
+
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
 GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable
 GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList
+GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunLog = KsFunLog

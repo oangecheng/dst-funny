@@ -108,6 +108,14 @@ function KSFUN_POWERS:GetPowerNum()
 end
 
 
+function KSFUN_POWERS:GetAllPowers()
+    local list = {}
+    for k,v in pairs(self.powers) do
+        list[k] = v.inst
+    end
+end
+
+
 --- 暂停属性作用 
 function KSFUN_POWERS:PausePower(name)
     local power = self.powers[name]

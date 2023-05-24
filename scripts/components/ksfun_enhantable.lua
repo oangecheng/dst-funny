@@ -2,8 +2,7 @@
 
 local ENHANTABLE = Class(function(self, inst)
     self.inst = inst
-    self.items = {}
-
+    self.enable = false
     self.onEnhantFunc = nil
 end)
 
@@ -13,34 +12,34 @@ function ENHANTABLE:SetOnEnhantFunc(func)
 end
 
 
-function ENHANTABLE:SetItems(itemprefabs)
-    self.items = itemprefabs
+function ENHANTABLE:Enable()
+    self.enable = true
 end
 
 
+--- 尝试附魔
 function ENHANTABLE:Enhant(item)
-    if table.contains(self.items, item.prefab) then
-        local level  = self.inst.components.ksfun_level
-        local system = self.inst.components.ksfun_power_system
-        if level and system and system:GetPowerNum() < level.lv then
-            if self.onEnhantFunc then
-                self.onEnhantFunc(self.inst, item)
-            end
+    KsFunLog("enhant start", inst.prefab, item.prefab, self.enable)
+    if self.enable and self.onEnhantFunc then
+        if self.onEnhantFunc(self.inst, item) then
+            KsFunLog("enhant success")
             item:DoTaskInTime(0, item:Remove())
+            return true
         end
     end
+    return false
 end
 
 
 function ENHANTABLE:OnSave()
     return {
-        items = self.items
+        enable = self.enable
     }
 end
 
 
 function ENHANTABLE:OnLoad(data)
-    self.items = data.items or {}
+    self.enable = data.enable
 end
 
 

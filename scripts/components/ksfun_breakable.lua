@@ -1,7 +1,7 @@
 
 local KSFUN_BREAKABLE = Class(function(self, inst)
     self.inst = inst
-    self.breakitems = {}
+    self.enable = false
 
     self.onBreakFunc = nil
 end)
@@ -12,43 +12,34 @@ function KSFUN_BREAKABLE:SetOnBreakFunc(func)
 end
 
 
+function KSFUN_BREAKABLE:Enable()
+    self.enable = true
+end
+
+
+--- 装备突破，能够提升最大等级上限
 function KSFUN_BREAKABLE:Break(item)
-    if self:IsBreakItem(item.prefab) then
-        if self.onBreakFunc then
-            self.onBreakFunc(self.inst, item)
+    KsFunLog("break start", inst.prefab, item.prefab, self.enable)
+    if enable and self.onBreakFunc then
+        if self.onBreakFunc(self.inst, item) then
             item:DoTaskInTime(0, item:Remove())
+            KsFunLog("break success", inst.prefab)
+            return true
         end
     end
-end
-
-
-function KSFUN_BREAKABLE:SetItems(itemprefabs)
-    self.breakitems = itemprefabs
-end
-
-
-function KSFUN_BREAKABLE:AddBreakItem(itemprefab)
-    if not table.contains(self.breakitems, itemprefab) then
-        table.insert(self.breakitems, itemprefab)
-    end
-end
-
-
---- 判断是否是可突破材料
-function KSFUN_BREAKABLE:IsBreakItem(itemprefab)
-    return table.contains(self.breakitems, itemprefab)
+    return false
 end
 
 
 function KSFUN_BREAKABLE:OnSave()
     return {
-        breakitems = self.breakitems,
+        enable = self.enable,
     }
 end
 
 
 function KSFUN_BREAKABLE:OnLoad(data)
-    self.breakitems = data.breakitems or {}
+    self.enable = data.enable
 end
 
 
