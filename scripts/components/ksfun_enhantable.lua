@@ -19,7 +19,7 @@ end
 
 --- 尝试附魔
 function ENHANTABLE:Enhant(item)
-    KsFunLog("enhant start", inst.prefab, item.prefab, self.enable)
+    KsFunLog("enhant start", self.inst.prefab, item.prefab, self.enable)
     if self.enable and self.onEnhantFunc then
         if self.onEnhantFunc(self.inst, item) then
             KsFunLog("enhant success")

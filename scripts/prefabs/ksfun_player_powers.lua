@@ -35,7 +35,12 @@ local function MakePower(name, data)
         if data.level then
             inst:AddComponent("ksfun_level")
             inst.components.ksfun_level:SetOnLvChangeFunc(data.level.onLvChangeFunc)
-            inst.components.ksfun_level:SetOnStateChangeFunc(data.level.onStateChangeFunc)
+            inst.components.ksfun_level:SetOnStateChangeFunc(function(ent)
+                data.level.onStateChangeFunc(ent)
+                if inst.target then
+                    inst.target.components.ksfun_power_system:SyncData()
+                end
+            end)
             inst.components.ksfun_level:SetNextLvExpFunc(data.level.nextLvExpFunc)
 
             if data.breakable then
@@ -49,7 +54,6 @@ local function MakePower(name, data)
             -- 锻造功能依赖等级
             if data.forgable then
                 inst:AddComponent("ksfun_forgable")
-                inst.components.ksfun_forgable:Enable()
                 inst.components.ksfun_forgable:SetForgItems(data.forgable.items)
             end
         end

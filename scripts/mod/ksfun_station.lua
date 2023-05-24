@@ -1,4 +1,4 @@
-local ksfunitems = require("defs/ksfun_items_def")
+local ksfunitems_def = require("defs/ksfun_items_def")
 local POWERS = KSFUN_TUNING.ITEM_POWER_NAMES
 
 
@@ -45,8 +45,10 @@ local function onClose(inst, doer)
     local item2 = inst.components.container:GetItemInSlot(2)
 
     if item1 and item2 then
-        if table.containskey(ksfunitems.enhantitems, item1.prefab) then
+        if table.containskey(ksfunitems_def.ksfunitems, item1.prefab) then
             if handKsFunItem(item1, item2) then
+                doer.components.talker:Say("强化成功！")
+            else
                 doer.components.talker:Say("当前材料无法进行强化！")
             end
         else

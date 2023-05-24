@@ -1,4 +1,4 @@
-local ksfunitems = require("defs/ksfun_items_def")
+local itemsdef = require("defs/ksfun_items_def")
 
 
 --- 触发附魔机制
@@ -7,8 +7,8 @@ local ksfunitems = require("defs/ksfun_items_def")
 --- @return true 成功 false 失败
 local function onEnhantFunc(inst, item)
     KsFunLog("onEnhantFunc", item.prefab)
-    local items = ksfunitems.enhantitems[inst.prefab]
-    local powernames = ksfunitems.powernames[inst.prefab]
+    local items = itemsdef.ksfunitems[inst.prefab].items
+    local powernames = itemsdef.ksfunitems[inst.prefab].names
 
     if table.contains(items, item.prefab) then
         local system = inst.components.ksfun_power_system
@@ -42,12 +42,13 @@ end
 local function onBreakFunc(inst, item)
     KsFunLog("onBreakFunc", item.prefab)
     local items = {"goldnugget"}
-    if table.contains(item.prefab) then
+    if table.contains(items, item.prefab) then
         local level  = inst.components.ksfun_level
         if level then
             KsFunLog("onBreakFunc", level.lv)
             level:UpMax(1)
             level:Up(1)
+            return true
         end
     end
     return false
@@ -68,18 +69,16 @@ end
 
 
 --- 给特殊物品添加组件
-if TheWorld.ismastersim then
-    for k,v in pairs(ksfunitems.enhantitems) do
-        AddPrefabPostInit(k, function(inst)
-            inst:AddComponent("ksfun_level")
-            inst:AddComponent("ksfun_enhantable")
-            inst:AddComponent("ksfun_breakable")
-            inst:AddComponent("ksfun_power_system")
-            
-            initLevel(inst)
-            initBreakable(inst)
-            initEnhantable(inst)
-            
-        end)
-    end
-end
+for k,v in pairs(itemsdef.ksfunitems) do
+    AddPrefabPostInit(k, function(inst)
+        inst:AddComponent("ksfun_level")
+        inst:AddComponent("ksfun_enhantable")
+        inst:AddComponent("ksfun_breakable")
+        inst:AddComponent("ksfun_power_system")
+        
+        initLevel(inst)
+        initBreakable(inst)
+        initEnhantable(inst)
+        
+    end)
+end    

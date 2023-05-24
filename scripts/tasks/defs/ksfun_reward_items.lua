@@ -128,9 +128,10 @@ local function randomKsFunItem(player, task_lv)
     elseif item_type == KSFUN_ITEM_TYPES.ARMOR then
         list = ksfun_items.armor
     else
-        list = ksfun_items.melt
-        -- 熔炼物品1-2个
-        num = math.random(2)
+        -- list = ksfun_items.melt
+        -- -- 熔炼物品1-2个
+        -- num = math.random(2)
+        list = ksfun_items.weapon
     end
     
     -- 随机一个物品

@@ -19,11 +19,11 @@ end
 
 --- 装备突破，能够提升最大等级上限
 function KSFUN_BREAKABLE:Break(item)
-    KsFunLog("break start", inst.prefab, item.prefab, self.enable)
-    if enable and self.onBreakFunc then
+    KsFunLog("break start", self.inst.prefab, item.prefab, self.enable)
+    if self.enable and self.onBreakFunc then
         if self.onBreakFunc(self.inst, item) then
             item:DoTaskInTime(0, item:Remove())
-            KsFunLog("break success", inst.prefab)
+            KsFunLog("break success", self.inst.prefab)
             return true
         end
     end

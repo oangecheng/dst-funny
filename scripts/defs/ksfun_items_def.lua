@@ -23,35 +23,22 @@ local itemsdef = {
 }
 
 
+
 --- 定义每种类型的物品能添加哪些属性
-local powernames = {}
-local function setItemHantableNames(list, names)
+local ksfunitems = {}
+local function initKsFunItems(list, powernames, enhantitems)
     for i, v in ipairs(list) do
-        powernames[v] = names
+        ksfunitems[v] = {
+            names = powernames,
+            items = enhantitems,
+        }
     end
 end
-setItemHantableNames(itemsdef.weapon, {NAMES.DAMAGE})
-setItemHantableNames(itemsdef.hat,    {NAMES.DAPPERNESS, NAMES.WATER_PROOFER, NAMES.INSULATOR})
-setItemHantableNames(itemsdef.armor,  {NAMES.DAPPERNESS, NAMES.WATER_PROOFER, NAMES.INSULATOR})
+initKsFunItems(itemsdef.weapon, {NAMES.DAMAGE, NAMES.CHOP}, {"opalpreciousgem"})
+initKsFunItems(itemsdef.hat,    {NAMES.DAPPERNESS, NAMES.WATER_PROOFER, NAMES.INSULATOR}, {"opalpreciousgem"})
+initKsFunItems(itemsdef.armor,  {NAMES.DAPPERNESS, NAMES.WATER_PROOFER, NAMES.INSULATOR}, {"opalpreciousgem"})
 
 
+itemsdef.ksfunitems = ksfunitems
 
---- 定义哪些物品能够给目标物品添加词缀
-local enhantitems = {}
-local function setItemHantableItems(list, itemprefabs)
-    for i, v in ipairs(list) do
-        enhantitems[v] = itemprefabs
-    end
-end
---- 临时采用彩虹宝石附加属性，后期调整
-setItemHantableItems(itemsdef.weapon, {"opalpreciousgem"})
-setItemHantableItems(itemsdef.hat,    {"opalpreciousgem"})
-setItemHantableItems(itemsdef.armor,  {"opalpreciousgem"})
-
-
-local items = {}
-
-items.powernames = powernames
-items.enhantitems = enhantitems
-
-return items
+return itemsdef

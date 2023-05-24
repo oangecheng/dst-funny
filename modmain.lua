@@ -33,14 +33,13 @@ end)
 -- 加载各种玩法
 modimport("scripts/mod/ksfun_hook.lua")
 modimport("scripts/widgets/ksfun_containers.lua")
-modimport("scripts/mod/ksfun_items_maker.lua")
 
 
 
 AddPlayerPostInit(function(inst)
     TheInput:AddKeyDownHandler(108, function() 
         if inst.player_panel_showing then
-            inst.player_panel:Hide()
+            inst.player_panel:KsFunHide()
             inst.player_panel_showing = false
         else
             inst.player_panel:KsFunShow()
@@ -54,6 +53,7 @@ end)
 if GLOBAL.TheNet:GetIsServer() then
     modimport("scripts/mod/ksfun_station.lua")
     modimport("scripts/mod/ksfun_player.lua")
+    modimport("scripts/mod/ksfun_items_maker.lua")
 
     -- 世界初始化
     AddPrefabPostInit("world", function(inst)

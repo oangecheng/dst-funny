@@ -79,13 +79,13 @@ local forgable = {
     items = forgitems
 }
 
-local power = {}
+local chop = {}
 
-power.data = {
+chop.data = {
     power = power,
     level = level,
     forgable = forgable,
 }
 
 
-return power
+return chop

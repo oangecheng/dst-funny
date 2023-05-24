@@ -1,7 +1,6 @@
 
 local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 local KSFUN_ITEM_TYPES = REWARD_TYPES.KSFUN_ITEM_TYPES
-local ksfunitemsmaker = require("mod/ksfun_items_maker")
 
 
 --- 属性奖励
@@ -89,7 +88,7 @@ local function onWinFunc(inst, player, name, task)
         elseif reward.type == REWARD_TYPES.KSFUN_ITEM       then rewardKsFunItem(player, reward.data)
         elseif reward.type == REWARD_TYPES.PLAYER_POWER     then rewardPower(player, reward.data)
         elseif reward.type == REWARD_TYPES.PLAYER_POWER_LV  then rewardPowerLv(player, reward.data)
-        elseif reward.type == REWARD_TYPES.PLAYER_POWER_EXP then rewardKsFunItem(player, reward.data)
+        elseif reward.type == REWARD_TYPES.PLAYER_POWER_EXP then rewardPowerExp(player, reward.data)
         end
     end
 end

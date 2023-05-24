@@ -113,6 +113,7 @@ function KSFUN_POWERS:GetAllPowers()
     for k,v in pairs(self.powers) do
         list[k] = v.inst
     end
+    return list
 end
 
 

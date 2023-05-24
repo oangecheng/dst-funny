@@ -17,6 +17,7 @@ KSFUN_TUNING =  {
         DAPPERNESS = "item_dapperness",
         INSULATOR = "item_insulator",
         DAMAGE = "item_damage",
+        CHOP = "item_chop",
     },
 
 

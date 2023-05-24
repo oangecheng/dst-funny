@@ -32,7 +32,7 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.pageClose:SetVAnchor(0) -- 设置原点y坐标位置，0、1、2分别对应屏幕中、上、下
 	self.pageClose:SetPosition(self.x,  self.y, 0)
 	self.pageClose:SetOnClick(function()
-		self:Hide()
+		self:KsFunHide()
 		owner.player_panel_showing = false
 	end)
 
@@ -56,11 +56,10 @@ local function getEquipments(self)
 			end
 		end
 	else
-		if self.owner.replica.inventory ~= nil then
-			if inventory ~= nil then
-				for k, v in pairs(inventory:GetEquips()) do
-					self:AddPowerCards(v)
-				end
+		local inventory = self.owner.replica.inventory
+		if inventory ~= nil then
+			for k, v in pairs(inventory:GetEquips()) do
+				self:AddPowerCards(v)
 			end
 		end
 	end
@@ -75,14 +74,25 @@ end
 
 function KSFUN_PLAYER_PANEL:KsFunShow()
 	self:Show()
-
 	self.offsetY = - 50
-
-	local y = self:AddPowerCards(self.owner)
-	self:AddTaskCards(y)
-
+	self:AddPowerCards(self.owner)
+	self:AddTaskCards()
 	getEquipments(self)
+end
 
+
+function KSFUN_PLAYER_PANEL:KsFunHide()
+	self:Hide()
+	for k,v in pairs(self.powers) do
+		v:Kill()
+		self.powers[k] = nil
+	end
+	self.powers = {}
+	for k,v in pairs(self.tasks) do
+		v:Kill()
+		self.tasks[k] = nil		
+	end
+	self.tasks = {}
 end
 
 
@@ -90,7 +100,7 @@ end
 function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
 	local powers = {}
-	if GLOBAL.TheNet:GetIsServer() then
+	if TheWorld.ismastersim then
 		local system = inst.components.ksfun_power_system
 		if system ~= nil then
 			local list = system:GetAllPowers()
@@ -105,11 +115,6 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 		if system then
 			powers = system:GetPowers()
 		end
-	end
-
-	--- 空数据不处理
-	if next(powers) == nil then
-		return 
 	end
 
 	for k,v in pairs(powers) do
@@ -132,7 +137,7 @@ end
 
 
 
-function KSFUN_PLAYER_PANEL:AddTaskCards(power_offsetY)
+function KSFUN_PLAYER_PANEL:AddTaskCards()
 	local system = self.owner.replica.ksfun_task_system
 
 	local tasks = system:GetTasks()
@@ -152,13 +157,6 @@ function KSFUN_PLAYER_PANEL:AddTaskCards(power_offsetY)
 			self.tasks[k]:SetPosition(self.x, self.y + self.offsetY, 0)
 			
 			updateCardOffsetY(self)
-		end
-
-		for k,v in pairs(self.tasks) do
-			if not table.containskey(tasks, k) then
-				self.tasks[k] = nil
-				v:Kill()
-			end
 		end
 	end
 end
