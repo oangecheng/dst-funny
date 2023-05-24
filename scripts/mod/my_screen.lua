@@ -19,6 +19,7 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	
 	self.y = 500
 	self.x = 500
+
 	self.offsetY = 0
 
 	self.powers = {}
@@ -35,44 +36,104 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 		owner.player_panel_showing = false
 	end)
 
+	-- 面板距离关闭按钮50
+	self.offsetY = self.offsetY - 50
 
 	-- 监听变化，这个应该放外边去，临时
 	owner:ListenForEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, function(inst, data)
-		local y = self:AddPowerCards()
-		self:AddTaskCards(y)
+		-- local y = self:AddPowerCards()
+		-- self:AddTaskCards(y)
 	end)
 end)
 
 
-function KSFUN_PLAYER_PANEL:AddPowerCards()
-	local system = self.owner.replica.ksfun_power_system
-	local powers = system:GetPowers()
-	local offsetY = -50
-	if powers then
-		for k,v in pairs(powers) do
-			local name = string.upper("ksfun_power_"..k)
-			name = STRINGS.NAMES[name]
-			if self.powers[k] == nil then
-				self.powers[k] = self.root:AddChild(self:KsFunCard())
+
+local function getEquipments(self)
+	if TheWorld.ismastersim then
+		if self.owner.components.inventory ~= nil then
+			for k, v in pairs(self.owner.components.inventory.equipslots) do
+				self:AddPowerCards(v)
 			end
-
-			self.powers[k].title:SetString(name)
-			self.powers[k].desc:SetString("等级: "..v.lv.."  经验: "..v.exp)
-
-			self.powers[k]:SetHAnchor(0)
-			self.powers[k]:SetVAnchor(0)
-			self.powers[k]:SetPosition(self.x, self.y + offsetY, 0)
-			offsetY = offsetY - (card_height + card_space)
+		end
+	else
+		if self.owner.replica.inventory ~= nil then
+			if inventory ~= nil then
+				for k, v in pairs(inventory:GetEquips()) do
+					self:AddPowerCards(v)
+				end
+			end
 		end
 	end
-	return offsetY
 end
+
+
+-- 新增一条向下偏移位置
+local function updateCardOffsetY(self)
+	self.offsetY = self.offsetY - (card_height + card_space)
+end
+
+
+function KSFUN_PLAYER_PANEL:KsFunShow()
+	self:Show()
+
+	self.offsetY = - 50
+
+	local y = self:AddPowerCards(self.owner)
+	self:AddTaskCards(y)
+
+	getEquipments(self)
+
+end
+
+
+
+function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
+
+	local powers = {}
+	if GLOBAL.TheNet:GetIsServer() then
+		local system = inst.components.ksfun_power_system
+		if system ~= nil then
+			local list = system:GetAllPowers()
+			for k,v in pairs(list) do
+				local l = v.components.ksfun_level
+				list[k] = {name = k, lv = l.lv, exp = l.exp}
+			end
+		end
+		
+	else
+		local system = inst.replica.ksfun_power_system
+		if system then
+			powers = system:GetPowers()
+		end
+	end
+
+	--- 空数据不处理
+	if next(powers) == nil then
+		return 
+	end
+
+	for k,v in pairs(powers) do
+		local name = string.upper("ksfun_power_"..k)
+		name = STRINGS.NAMES[name]
+		if self.powers[k] == nil then
+			self.powers[k] = self.root:AddChild(self:KsFunCard())
+		end
+
+		self.powers[k].title:SetString(name)
+		self.powers[k].desc:SetString("等级: "..v.lv.."  经验: "..v.exp)
+
+		self.powers[k]:SetHAnchor(0)
+		self.powers[k]:SetVAnchor(0)
+		self.powers[k]:SetPosition(self.x, self.y + self.offsetY, 0)
+
+		updateCardOffsetY(self)
+	end
+end
+
+
 
 function KSFUN_PLAYER_PANEL:AddTaskCards(power_offsetY)
 	local system = self.owner.replica.ksfun_task_system
-	local x = self.x
-	local y = self.y
-	local offsetY = 0
 
 	local tasks = system:GetTasks()
 	if tasks then
@@ -88,8 +149,9 @@ function KSFUN_PLAYER_PANEL:AddTaskCards(power_offsetY)
 
 			self.tasks[k]:SetHAnchor(0)
 			self.tasks[k]:SetVAnchor(0)
-			self.tasks[k]:SetPosition(x, y + power_offsetY + offsetY, 0)
-			offsetY = offsetY - (card_height + card_space)
+			self.tasks[k]:SetPosition(self.x, self.y + self.offsetY, 0)
+			
+			updateCardOffsetY(self)
 		end
 
 		for k,v in pairs(self.tasks) do
@@ -137,6 +199,10 @@ function KSFUN_PLAYER_PANEL:KsFunCard()
 	return widget
 end
 
+
+function KSFUN_PLAYER_PANEL:AddItemsCard()
+
+end
 
 
 return KSFUN_PLAYER_PANEL

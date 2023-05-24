@@ -43,7 +43,7 @@ AddPlayerPostInit(function(inst)
             inst.player_panel:Hide()
             inst.player_panel_showing = false
         else
-            inst.player_panel:Show()
+            inst.player_panel:KsFunShow()
             inst.player_panel_showing = true
         end
     end)
