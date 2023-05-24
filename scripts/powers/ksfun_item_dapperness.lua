@@ -66,7 +66,7 @@ local level = {
 
 
 local forg = {
-    forgitems = forgitems
+    items = forgitems
 }
 
 

@@ -30,7 +30,7 @@ local function setItemHantableNames(list, names)
         powernames[v] = names
     end
 end
-setItemHantableNames(itemsdef.weapon, {NAMES.DAPPERNESS})
+setItemHantableNames(itemsdef.weapon, {NAMES.DAMAGE})
 setItemHantableNames(itemsdef.hat,    {NAMES.DAPPERNESS, NAMES.WATER_PROOFER, NAMES.INSULATOR})
 setItemHantableNames(itemsdef.armor,  {NAMES.DAPPERNESS, NAMES.WATER_PROOFER, NAMES.INSULATOR})
 
@@ -43,6 +43,7 @@ local function setItemHantableItems(list, itemprefabs)
         enhantitems[v] = itemprefabs
     end
 end
+--- 临时采用彩虹宝石附加属性，后期调整
 setItemHantableItems(itemsdef.weapon, {"opalpreciousgem"})
 setItemHantableItems(itemsdef.hat,    {"opalpreciousgem"})
 setItemHantableItems(itemsdef.armor,  {"opalpreciousgem"})

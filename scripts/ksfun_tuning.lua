@@ -16,6 +16,7 @@ KSFUN_TUNING =  {
         WATER_PROOFER = "item_waterproofer",
         DAPPERNESS = "item_dapperness",
         INSULATOR = "item_insulator",
+        DAMAGE = "item_damage",
     },
 
 
