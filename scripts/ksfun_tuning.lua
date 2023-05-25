@@ -14,10 +14,11 @@ KSFUN_TUNING =  {
 
     ITEM_POWER_NAMES = {
         WATER_PROOFER = "item_waterproofer",
-        DAPPERNESS = "item_dapperness",
-        INSULATOR = "item_insulator",
-        DAMAGE = "item_damage",
-        CHOP = "item_chop",
+        DAPPERNESS    = "item_dapperness",
+        INSULATOR     = "item_insulator",
+        DAMAGE        = "item_damage",
+        CHOP          = "item_chop",
+        MINE          = "item_mine",
     },
 
 
