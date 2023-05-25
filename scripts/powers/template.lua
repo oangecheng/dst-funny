@@ -75,9 +75,9 @@ local breakable = {
     onBreakFunc = onBreakFunc,
 }
 
-local power = {}
+local p = {}
 
-power.data = {
+p.data = {
     power = power,
     level = level,
     forgable = forgable,
@@ -85,4 +85,4 @@ power.data = {
 }
 
 
-return power
+return p
