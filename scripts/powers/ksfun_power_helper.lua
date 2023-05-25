@@ -11,6 +11,7 @@ local insulator    = require("powers/ksfun_item_insulator")
 local damage       = require("powers/ksfun_item_damage")
 local chop         = require("powers/ksfun_item_chop")
 local mine         = require("powers/ksfun_item_mine")
+local lifesteal    = require("powers/ksfun_item_lifesteal")
 
 
 local itempowers = {}
@@ -20,6 +21,7 @@ itempowers[ITEM_NAMES.INSULATOR]     = insulator
 itempowers[ITEM_NAMES.DAMAGE]        = damage
 itempowers[ITEM_NAMES.CHOP]          = chop
 itempowers[ITEM_NAMES.MINE]          = mine
+itempowers[ITEM_NAMES.LIFESTEAL]     = lifesteal
 
 
 helper.MakeItemPower = function(name)

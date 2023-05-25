@@ -19,6 +19,7 @@ KSFUN_TUNING =  {
         DAMAGE        = "item_damage",
         CHOP          = "item_chop",
         MINE          = "item_mine",
+        LIFESTEAL     = "item_lifesteal",
     },
 
 

@@ -1,4 +1,5 @@
-
+local forgitems = {}
+forgitems["mosquitosack"] = 2
 
 
 local function updatPowerStatus(inst)
@@ -20,9 +21,10 @@ local function onStateChangeFunc(inst)
 end
 
 
+
 --- 升级到下一级所需经验值
 local function nextLvExpFunc(inst, lv)
-    
+    return KSFUN_TUNING.DEBUG and 1 or (10 * (lv + 1))
 end
 
 
@@ -33,16 +35,44 @@ local function setUpMaxLv(inst, max)
 end
 
 
+--- 攻击回血
+local function onAttack(power, weapon, attacker, target)
+    local level  = power.components.ksfun_level
+    local health = attacker and attacker.components.health or nil
+    if level and health then
+        health:DoDelta(level:GetLevel(), false, "ksfun_item_lifesteal")
+    end
+end
+
+
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
-    setUpMaxLv(inst, 10000)
+
+    local weapon = target.components.weapon
+    if weapon then
+        -- 缓存原函数
+        weapon.ksfunOldOnAttack = weapon.onattack
+        weapon:SetOnAttack(function(ent, attacker, victim)
+            onAttack(inst, ent, attacker, victim)
+            if weapon.ksfunOldOnAttack then
+                weapon.ksfunOldOnAttack(ent, attacker, victim)
+            end
+        end)
+    end
+
+    setUpMaxLv(inst, 5)
     updatPowerStatus(inst)
 end
 
 
 --- 解绑对象
 local function onDetachFunc(inst, target, name)
+    local weapon = target.components.weapon
+    -- 恢复onAttack函数
+    if weapon then
+        weapon:SetOnAttack(weapon.ksfunOldOnAttack)
+    end
     inst.target = nil
     inst.originSanity = nil
 end
@@ -70,18 +100,12 @@ local forgable = {
     items = nil
 }
 
-local breakable = {
-    initMaxLv = 10,
-    onBreakFunc = onBreakFunc,
-}
-
 local power = {}
 
 power.data = {
     power = power,
     level = level,
     forgable = forgable,
-    breakable = breakable,
 }
 
 
