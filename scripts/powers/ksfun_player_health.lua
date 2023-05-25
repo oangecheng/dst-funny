@@ -10,7 +10,7 @@ local function updateHealthState(power, isInit)
     if player and player.components.health then
         local initHealth = power.originHealth or 120
         player.components.health.maxhealth = initHealth + lv
-        local percent = player.components.health:GetPercent()
+        local percent = power.percent or player.components.health:GetPercent()
         player.components.health:SetPercent(percent)
     end
 end
@@ -80,9 +80,14 @@ end
 --- @param 属性  玩家  属性名称
 local function onAttach(inst, player, name)
     inst.target = player
+
     --- 缓存原始血量
     if not inst.originHealth then
         inst.originHealth = player.components.health.maxhealth
+    end
+
+    if not inst.percent then
+        inst.percent = player.components.health:GetPercent()
     end
 
     inst.onKillOther = onKillOther
@@ -95,13 +100,30 @@ end
 --- 血量回复到初始值
 --- @param 属性 角色 属性名称
 local function onDetach(inst, player, name)
-    inst.target = nil
     player:RemoveEventCallback("killed", inst.onKillOther)
     if player.components.health and inst.originHealth then
         local percent = player.components.health:GetPercent()
         player.components.health.maxhealth = inst.originHealth or 120
         player.components.health:SetPercent(percent)
     end
+    inst.target = nil
+end
+
+
+local function getPercent(inst)
+    if inst.target then
+        return inst.target.components.health:GetPercent()
+    end
+    return nil
+end
+
+
+local function onSave(inst, data)
+    data.percent = getPercent(inst)
+end
+
+local function onLoad(inst, data)
+    inst.percent = data.percent or nil
 end
 
 
@@ -109,7 +131,9 @@ local power = {
     onAttachFunc = onAttach,
     onDetachFunc = onDetach,
     onExtendFunc = nil,
-    onGetDescFunc = nil
+    onGetDescFunc = nil,
+    onLoadFunc   = onLoad,
+    onSaveFunc   = onSave,
 }
 
 local level = {
