@@ -69,14 +69,14 @@ local level = {
 
 
 local forg = {
-    forgitems = forgitems
+    items = forgitems
 }
 
 
 KSFUN_WATER_PROOFER.data = {
     power = power,
     level = level,
-    forg = forg
+    forgable = forg
 }
 
 return KSFUN_WATER_PROOFER

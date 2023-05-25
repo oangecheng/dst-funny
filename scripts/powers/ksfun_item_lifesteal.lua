@@ -72,9 +72,9 @@ local function onDetachFunc(inst, target, name)
     -- 恢复onAttack函数
     if weapon then
         weapon:SetOnAttack(weapon.ksfunOldOnAttack)
+        weapon.ksfunOldOnAttack = nil
     end
     inst.target = nil
-    inst.originSanity = nil
 end
 
 
@@ -97,16 +97,16 @@ local level = {
 
 
 local forgable = {
-    items = nil
+    items = forgitems
 }
 
-local power = {}
+local lifesteal = {}
 
-power.data = {
+lifesteal.data = {
     power = power,
     level = level,
     forgable = forgable,
 }
 
 
-return power
+return lifesteal

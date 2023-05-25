@@ -75,7 +75,7 @@ local ksfundapperness = {}
 ksfundapperness.data = {
     power = power,
     level = level,
-    forg = forg
+    forgable = forg
 }
 
 return ksfundapperness

@@ -152,7 +152,7 @@ local level = {
 
 
 local forg = {
-    forgitems = forgitems
+    items = forgitems
 }
 
 
@@ -161,7 +161,7 @@ local ksfuninsulator = {}
 ksfuninsulator.data = {
     power = power,
     level = level,
-    forg = forg
+    forgable = forg
 }
 
 return ksfuninsulator

@@ -31,16 +31,19 @@ local function MakePower(name, data)
         inst.components.ksfun_power.keepondespawn = true
 
 
+        inst:ListenForEvent("ksfun_level_changed", function(ent, data)
+            local target = ent.components.ksfun_power.target
+            if target then
+                target.components.ksfun_power_system:SyncData()
+            end
+        end)
+
+
         -- 可升级的
         if data.level then
             inst:AddComponent("ksfun_level")
             inst.components.ksfun_level:SetOnLvChangeFunc(data.level.onLvChangeFunc)
-            inst.components.ksfun_level:SetOnStateChangeFunc(function(ent)
-                data.level.onStateChangeFunc(ent)
-                if inst.target then
-                    inst.target.components.ksfun_power_system:SyncData()
-                end
-            end)
+            inst.components.ksfun_level:SetOnStateChangeFunc(data.level.onStateChangeFunc)
             inst.components.ksfun_level:SetNextLvExpFunc(data.level.nextLvExpFunc)
 
             if data.breakable then

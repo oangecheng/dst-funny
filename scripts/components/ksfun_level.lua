@@ -40,8 +40,9 @@ function KSFUN_LEVEL:SetLevel(lv, notice)
     end
 
     if self.onLvChangeFunc then
-        self.onLvChangeFunc(self.inst, lv, notice)
-    end    
+        self.onLvChangeFunc(self.inst, self.lv, notice)
+    end
+    self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
 end
 
 
@@ -63,16 +64,13 @@ end
 
 --- 判断当前是否已是最大等级
 function KSFUN_LEVEL:IsMax()
-    return self.lv == self.max
+    return self.lv >= self.max
 end
 
 
 function KSFUN_LEVEL:Up(v)
     if v and v > 0 then
-        self:SetLevel(self.lv, true)
-        if self.onStateChangeFunc then
-            self.onStateChangeFunc(self.inst)
-        end
+        self:SetLevel(self.lv + v, true)
     end
 end
 
@@ -103,18 +101,18 @@ function KSFUN_LEVEL:GainExp(exp)
      -- 大于0表示可以升级，触发升级逻辑
     if delta > 0 then
         self:SetLevel(self.lv + delta, true)
+    else
+        -- 刷新客户端数据
+        inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
     end
 
-    -- 刷新客户端数据
-    if self.onStateChangeFunc then
-        self.onStateChangeFunc(self.inst)
-    end
+
 end
 
 
 function KSFUN_LEVEL:OnSave()
     return {
-        lv = self.lv,
+        lv  = self.lv,
         exp = self.exp,
         max = self.max,
     }
@@ -122,7 +120,7 @@ end
 
 
 function KSFUN_LEVEL:OnLoad(data)
-    self.lv = data.lv or 0
+    self.lv  = data.lv or 0
     self.exp = data.exp or 0
     self.max = data.max or 10000
 end
