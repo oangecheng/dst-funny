@@ -12,6 +12,7 @@ local damage       = require("powers/ksfun_item_damage")
 local chop         = require("powers/ksfun_item_chop")
 local mine         = require("powers/ksfun_item_mine")
 local lifesteal    = require("powers/ksfun_item_lifesteal")
+local aoe          = require("powers/ksfun_item_aoe")
 
 
 local itempowers = {}
@@ -22,6 +23,7 @@ itempowers[ITEM_NAMES.DAMAGE]        = damage
 itempowers[ITEM_NAMES.CHOP]          = chop
 itempowers[ITEM_NAMES.MINE]          = mine
 itempowers[ITEM_NAMES.LIFESTEAL]     = lifesteal
+itempowers[ITEM_NAMES.AOE]           = aoe
 
 
 helper.MakeItemPower = function(name)

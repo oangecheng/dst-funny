@@ -47,6 +47,7 @@ local weaponnames = {
     NAMES.CHOP, 
     NAMES.MINE, 
     NAMES.LIFESTEAL,
+    NAMES.AOE,
 }
 
 local hatnames = {
