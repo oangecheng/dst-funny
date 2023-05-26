@@ -88,6 +88,22 @@ end
 
 
 
+function KsFunIsValidVictim(victim)
+    return victim ~= nil
+        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
+                victim:HasTag("veggie") or
+                victim:HasTag("structure") or
+                victim:HasTag("wall") or
+                victim:HasTag("balloon") or
+                victim:HasTag("groundspike") or
+                victim:HasTag("smashable") or
+                victim:HasTag("abigail") or
+                victim:HasTag("companion"))
+        and victim.components.health ~= nil
+end
+
+
+
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
@@ -95,3 +111,4 @@ GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable
 GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList
 GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunLog = KsFunLog
+GLOBAL.KsFunIsValidVictim = KsFunIsValidVictim

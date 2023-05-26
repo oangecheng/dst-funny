@@ -36,12 +36,15 @@ end
 
 
 --- 攻击回血
+--- 需要有生命值的生物
 local function onAttack(power, weapon, attacker, target)
-    local level  = power.components.ksfun_level
-    local health = attacker and attacker.components.health or nil
-    if level and health then
-        health:DoDelta(level:GetLevel(), false, "ksfun_item_lifesteal")
-    end
+    if KsFunIsValidVictim(target) then
+        local level  = power.components.ksfun_level
+        local health = attacker and attacker.components.health or nil
+        if level and health then
+            health:DoDelta(level:GetLevel(), false, "ksfun_item_lifesteal")
+        end
+    end 
 end
 
 
