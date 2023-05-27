@@ -25,12 +25,6 @@ local function onLvChangeFunc(inst, lv)
 end
 
 
---- 等级变更，包括经验值
-local function onStateChangeFunc(inst)
-    
-end
-
-
 --- 下一级饱食度所需经验值
 local function nextLvExpFunc(inst, lv)
     return KSFUN_TUNING.DEBUG and 1 or 10
@@ -53,7 +47,6 @@ end
 --- 解绑对象
 local function onDetachFunc(inst, target, name)
     inst.target = nil
-    inst.originSanity = nil
 end
 
 
@@ -70,7 +63,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 

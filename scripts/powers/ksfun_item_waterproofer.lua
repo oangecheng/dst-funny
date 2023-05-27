@@ -29,13 +29,17 @@ end
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
+
+    inst.target = item
+
     -- 没有防水组件，添加
     if item.components.waterproofer == nil then
         item:AddComponent("waterproofer")
         item.components.waterproofer:SetEffectiveness(0)
     end
 
-    inst.target = item
+    
+
     if not inst.originWaterProofer then
         inst.originWaterProofer = item.components.waterproofer:GetEffectiveness()
     end

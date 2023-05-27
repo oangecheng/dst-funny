@@ -7,11 +7,15 @@ forgitems["ruins_bat"] = 10
 
 
 
-
 local function updatPowerStatus(inst)
-    if inst.target and inst.damage then
-        local level = inst.components.ksfun_level:GetLevel()
-        inst.target.components.weapon:SetDamage(inst.damage + level)
+    local power = inst.components.ksfun_power
+    local data  = power:GetData()
+    if power:IsEnable() and data then
+        local damage = data.damage or 0
+        if inst.target and inst.target.components.weapon then
+            local level = inst.components.ksfun_level:GetLevel()
+            inst.target.components.weapon:SetDamage(damage + level)
+        end
     end
 end
 
@@ -24,12 +28,6 @@ local function onLvChangeFunc(inst, lv)
 end
 
 
---- 等级变更，包括经验值
-local function onStateChangeFunc(inst)
-    
-end
-
-
 --- 下一级饱食度所需经验值
 local function nextLvExpFunc(inst, lv)
     return KSFUN_TUNING.DEBUG and 1 or 20 * (lv + 1)
@@ -39,9 +37,16 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
-    if not inst.damage then
-        inst.damage = target.components.weapon.damage
+
+    if target.components.weapon then
+        local d = target.components.weapon.damage
+        inst.components.ksfun_power:SetData({ damage = d})
     end
+
+    inst.components.ksfun_power:SetOnEnableChangedFunc(function(enable)
+        updatPowerStatus(inst)
+    end)
+
     updatPowerStatus(inst)
 end
 
@@ -49,7 +54,6 @@ end
 --- 解绑对象
 local function onDetachFunc(inst, target, name)
     inst.target = nil
-    inst.damage = nil
 end
 
 
@@ -66,7 +70,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 

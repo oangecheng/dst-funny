@@ -71,6 +71,7 @@ end
 --- 给特殊物品添加组件
 for k,v in pairs(itemsdef.ksfunitems) do
     AddPrefabPostInit(k, function(inst)
+        inst:AddComponent("ksfun_item_forever")
         inst:AddComponent("ksfun_level")
         inst:AddComponent("ksfun_enhantable")
         inst:AddComponent("ksfun_breakable")

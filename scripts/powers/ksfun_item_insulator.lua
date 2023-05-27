@@ -14,9 +14,10 @@ local switchitem = "purplegem"
 local function updateInsulation(inst)
     local insulator = inst.target and inst.target.components.insulator or nil
     local level = inst.components.ksfun_level
-    if insulator then
-        insulator:SetInsulation(inst.origininsulation + level.lv)
-        local type = inst.type or inst.origintype or insulator.type
+    local data  = inst.components.ksfun_power:GetData()
+    if insulator and data then
+        insulator:SetInsulation(data.insulation + level.lv)
+        local type = inst.type or data.type or insulator.type
         if type == SEASONS.SUMMER then
             insulator:SetSummer()
         elseif type  == SEASONS.WINTER then
@@ -57,22 +58,22 @@ end
 local function onLvChangeFunc(inst, lv, notice)
     updateInsulation(inst)
 
-    --- 月圆之夜概率触发事件
-    if (not inst.switch) and inst.target and TheWorld.state.isfullmoon then
-        local r = math.random(1000)
-        if lv > r then
-            inst.switch = true
-            if inst.target.components.trader == nil then
-                inst.target:AddComponent(trader)
-            end
+    -- --- 月圆之夜概率触发事件
+    -- if (not inst.switch) and inst.target and TheWorld.state.isfullmoon then
+    --     local r = math.random(1000)
+    --     if lv > r then
+    --         inst.switch = true
+    --         if inst.target.components.trader == nil then
+    --             inst.target:AddComponent(trader)
+    --         end
 
-            inst.components.trader.onaccept = onItemGiven
-            local oldFunc = inst.target.components.trader.abletoaccepttest
-            inst.target.components.trader:SetAbleToAcceptTest(function(inst, item, giver)
-                return onAcceptTest(inst, item, giver) or (oldFunc and oldFunc(inst, item, giver))
-            end)
-        end
-    end
+    --         inst.components.trader.onaccept = onItemGiven
+    --         local oldFunc = inst.target.components.trader.abletoaccepttest
+    --         inst.target.components.trader:SetAbleToAcceptTest(function(inst, item, giver)
+    --             return onAcceptTest(inst, item, giver) or (oldFunc and oldFunc(inst, item, giver))
+    --         end)
+    --     end
+    -- end
 end
 
 
@@ -84,25 +85,19 @@ end
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
+
+    inst.target = item
+
+
     if item.components.insulator == nil then
         item:AddComponent("insulator")
     end
-    local insulator = item.components.insulator
 
-    inst.target = item
-    if not inst.origininsulation_w then
-        local insulation, type = insulator:GetInsulation()
-        inst.origintype = type
-        inst.origininsulation = insulation
-    end
+    local insulation, type = item.components.insulator:GetInsulation()
+    inst.components.ksfun_power:SetData({insulation = insulation, type = type})        
 
-    if inst.type == nil then
-        inst.type = inst.origintype
-    end
-
-    if inst.switch == nil then
-        inst.switch = false
-    end
+    inst.type = type
+    inst.switch = false
 
     updateInsulation(inst)
 end
@@ -111,12 +106,11 @@ end
 --- 解绑对象
 local function onDetachFunc(inst, item, name)
     local insulator = item.components.insulator
-    if insulator and inst.origininsulation then
-        insulator.type = inst.origintype
-        insulator:SetInsulation(inst.origininsulation)
+    local data = inst.components.ksfun_power:GetData()
+    if insulator and data then
+        -- type不需要恢复
+        insulator:SetInsulation(data.insulation)
     end
-    inst.origintype = nil
-    inst.origininsulation = nil
 end
 
 

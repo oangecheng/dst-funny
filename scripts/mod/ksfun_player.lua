@@ -44,10 +44,14 @@ AddPlayerPostInit(function(player)
 
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)
-        local ent = SpawnPrefab("spear")
+        local ent = SpawnPrefab("walrushat")
         if ent then
+            ent.components.ksfun_item_forever:Enable()
             ent.components.ksfun_breakable:Enable()
             ent.components.ksfun_enhantable:Enable()
+            if ent.components.finiteuses then
+                ent.components.finiteuses:SetPercent(0.01)
+            end
             inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
         end
         HELPER.addTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)

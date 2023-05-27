@@ -15,13 +15,6 @@ local function onLvChangeFunc(inst, lv)
 end
 
 
---- 等级变更，包括经验值
-local function onStateChangeFunc(inst)
-    
-end
-
-
-
 --- 升级到下一级所需经验值
 local function nextLvExpFunc(inst, lv)
     return KSFUN_TUNING.DEBUG and 1 or (10 * (lv + 1))
@@ -38,6 +31,9 @@ end
 --- 攻击回血
 --- 需要有生命值的生物
 local function onAttack(power, weapon, attacker, target)
+    if not power.components.ksfun_power:IsEnable() then
+        return
+    end
     if KsFunIsValidVictim(target) then
         local level  = power.components.ksfun_level
         local health = attacker and attacker.components.health or nil
@@ -94,7 +90,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 

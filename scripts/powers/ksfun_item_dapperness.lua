@@ -9,10 +9,11 @@ forgitems["hivehat"]   = 50
 
 
 local function updateDapperness(inst)
+    local data = inst.components.ksfun_power:GetData()
     local equippable = inst.target and inst.target.components.equippable or nil
     local level = inst.components.ksfun_level
-    if equippable and level and inst.origindapperness then
-        equippable.dapperness = inst.origindapperness + DAPPERNESS_RATIO * level.lv
+    if equippable and data then
+        equippable.dapperness = data.dapperness + DAPPERNESS_RATIO * level:GetLevel()
     end
 end
 
@@ -31,11 +32,10 @@ end
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
-    local equippable = item.components.equippable
     inst.target = item
-    if not inst.origindapperness then
-        inst.origindapperness = equippable.dapperness
-    end
+    
+    local equippable = item.components.equippable
+    inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
 
     updateDapperness(inst)
 end
@@ -43,10 +43,12 @@ end
 
 --- 解绑对象
 local function onDetachFunc(inst, item, name)
-    if inst.origindapperness and inst.components.equippable then
-        inst.components.equippable.dapperness = inst.origindapperness
+    if inst.components.equippable then
+        local data = inst.components.ksfun_power:GetData()
+        if data and data.dapperness then
+            inst.components.equippable.dapperness = data.dapperness
+        end
     end
-    inst.origindapperness = nil
     inst.target = nil
 end
 

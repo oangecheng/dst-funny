@@ -69,6 +69,7 @@ local function rewardKsFunItem(player, data)
         for i=1, data.num do
             local ent = SpawnPrefab(item)
             if ent then
+                ent.components.ksfun_item_forever:Enable()
                 ent.components.ksfun_breakable:Enable()
                 ent.components.ksfun_enhantable:Enable()
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())

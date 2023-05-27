@@ -4,7 +4,12 @@ local function addPower(self, name, ent)
             inst = ent,
         }
         ent.persists = false
-        ent.components.ksfun_power:Attach(name, self.inst)
+
+        --- 属性系统才可以绑定
+        if self.enable then
+            ent.components.ksfun_power:Attach(name, self.inst)
+        end
+
         if self.onPowerAddFunc then
             self.onPowerAddFunc(self.inst, name, ent)
         end
@@ -50,6 +55,9 @@ end
 
 function KSFUN_POWERS:SetEnable(enable)
     self.enable = enable
+    for k,v in pairs(self.powers) do
+        v.inst.components.ksfun_power:SetEnable(self.enable)
+    end
 end
 
 

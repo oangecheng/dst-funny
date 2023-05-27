@@ -3,8 +3,12 @@ local KSFUN_POWER = Class(function(self, inst)
     self.inst = inst
     self.target = nil
     self.name = nil
+    self.enable = true
+    -- 这个字段是用来缓存物品原本的属性
+    self.data = nil
 
     self.onAttachFunc = nil
+    self.onEnableChanged = nil
     self.onDetachFunc = nil
     self.onExtendFunc = nil
     self.onGetDescFunc = nil
@@ -33,11 +37,42 @@ function KSFUN_POWER:SetOnGetDescFunc(func)
     self.onGetDescFunc = func
 end
 
+function KSFUN_POWER:SetOnEnableChangedFunc(func)
+    self.onEnableChanged = func
+end
+
+
+function KSFUN_POWER:SetEnable(enable)
+    self.enable = enable
+    if self.onEnableChanged then
+        self.onEnableChanged(self.enable)
+    end
+end
+
+
+function KSFUN_POWER:IsEnable()
+    return self.enable
+end
+
+
+function KSFUN_POWER:GetData()
+    return self.data
+end
+
+
+function KSFUN_POWER:SetData(data)
+    if self.data == nil then
+        self.data = data
+    end
+end
+
 
 --- 绑定到目标
 --- 目标可以是人物，也可以是物品
 --- @param target type inst 
 function KSFUN_POWER:Attach(name, target)
+    -- nil说明没解绑，不允许重新绑定
+    if self.target ~= nil then return end
     self.target = target
     self.name = name
     if self.onAttachFunc then
@@ -49,7 +84,9 @@ end
 --- 解绑目标
 --- 属性系统可以换绑
 --- 如果target为nil，则认为无效，因为还没有绑定过
-function KSFUN_POWER:Deatch()
+function KSFUN_POWER:Detach()
+    -- nil说明没绑定，不允许解绑
+    if self.target == nil then return end
     local temp = self.target
     self.target = nil
     if temp and self.onDetachFunc then
@@ -75,6 +112,18 @@ function KSFUN_POWER:GetDesc()
     else
         return "default"
     end
+end
+
+
+function KSFUN_POWER:OnSave()
+    return {
+        data = self.data
+    }
+end
+
+
+function KSFUN_POWER:OnLoad(d)
+    self.data = d.data or nil
 end
 
 

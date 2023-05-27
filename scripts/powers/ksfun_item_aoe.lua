@@ -65,6 +65,11 @@ end
 --- 攻击回血
 --- 需要有生命值的生物
 local function onAttack(power, weapon, attacker, target)
+    -- 禁用之后失效
+    if not power.components.ksfun_power:IsEnable() then
+        return
+    end
+
     local lv = power.components.ksfun_level:GetLevel()
     -- 初始 50% 范围伤害，满级80%
     -- 初始 1 范围， 满级3范围
@@ -89,13 +94,17 @@ local function onAttachFunc(inst, target, name)
     inst.target = target
 
     local weapon = target.components.weapon
-    if weapon then
-        -- 缓存原函数
+
+    -- 缓存原函数
+    if not inst.ksfunOldOnAttack then
         inst.ksfunOldOnAttack = weapon.onattack
-        weapon:SetOnAttack(function(ent, attacker, victim)
-            onAttack(inst, ent, attacker, victim)
+    end
+
+    if weapon then
+        weapon:SetOnAttack(function(ent, attacker, target)
+            onAttack(inst, ent, attacker, target)
             if inst.ksfunOldOnAttack then
-                inst.ksfunOldOnAttack(ent, attacker, victim)
+                inst.ksfunOldOnAttack(ent, attacker, target)
             end
         end)
     end
@@ -111,7 +120,6 @@ local function onDetachFunc(inst, target, name)
     -- 恢复onAttack函数
     if weapon then
         weapon:SetOnAttack(inst.ksfunOldOnAttack)
-        inst.ksfunOldOnAttack = nil
     end
     inst.target = nil
 end

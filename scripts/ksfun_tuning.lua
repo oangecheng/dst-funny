@@ -13,6 +13,7 @@ KSFUN_TUNING =  {
     },
 
     ITEM_POWER_NAMES = {
+        FOREVER       = "item_forever",
         WATER_PROOFER = "item_waterproofer",
         DAPPERNESS    = "item_dapperness",
         INSULATOR     = "item_insulator",
