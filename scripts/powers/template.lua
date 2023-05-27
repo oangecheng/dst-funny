@@ -57,6 +57,7 @@ local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,
+    onGetDescFunc= nil,
 }
 
 local level = {

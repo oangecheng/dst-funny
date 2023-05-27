@@ -1,14 +1,10 @@
 local function addPower(self, name, ent)
-    print(KSFUN_TUNING.LOG_TAG.."addPower 1")
     if ent.components.ksfun_power then
-        print(KSFUN_TUNING.LOG_TAG.."addPower 2")
         self.powers[name] = {
             inst = ent,
         }
-        print(KSFUN_TUNING.LOG_TAG.."addPower 3")
         ent.persists = false
         ent.components.ksfun_power:Attach(name, self.inst)
-        print(KSFUN_TUNING.LOG_TAG.."addPower 4")
         if self.onPowerAddFunc then
             self.onPowerAddFunc(self.inst, name, ent)
         end
@@ -139,16 +135,30 @@ function KSFUN_POWERS:ResumePower(name)
 end
 
 
+
+local function getTitle(inst)
+    local prefab = inst.prefab
+    local name = STRINGS.NAMES[string.upper(prefab)]
+    local level = inst.components.ksfun_level
+    local lv = level and level:GetLevel() or -1
+    return prefab,name,lv 
+end
+
+
 --- 同步用户数据
 --- power的等级经验
 function KSFUN_POWERS:SyncData()
-    local data = ""
+
+    local prefab,name,lv = getTitle(self.inst)
+    local data = prefab..","..name..","..lv
+
     for k,v in pairs(self.powers) do
         local power = v.inst
-        local lv = power.components.ksfun_level.lv
-        local exp = power.components.ksfun_level.exp
+        local lv   = power.components.ksfun_level:GetLevel()
+        local exp  = power.components.ksfun_level:GetExp()
+        local desc = power.components.ksfun_power:GetDesc()
         -- 名称;等级;经验值;描述
-        local d = k .. "," .. tostring(lv) .. "," .. tostring(exp)
+        local d = k .. "," .. tostring(lv) .. "," .. tostring(exp) .. "," ..desc
         data = data ..";".. d
     end
 
@@ -156,6 +166,9 @@ function KSFUN_POWERS:SyncData()
         self.inst.replica.ksfun_power_system:SyncData(data)
     end
 end
+
+
+
 
 
 function KSFUN_POWERS:OnSave()

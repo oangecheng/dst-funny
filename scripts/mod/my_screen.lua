@@ -22,8 +22,9 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 
 	self.offsetY = 0
 
+	self.titles = {}
 	self.powers = {}
-	self.tasks = {}
+	self.tasks  = {}
 
 	self.pageClose = self.root:AddChild(TextButton())
     self.pageClose:SetText("关闭")
@@ -92,6 +93,10 @@ function KSFUN_PLAYER_PANEL:KsFunHide()
 		v:Kill()
 		self.tasks[k] = nil		
 	end
+	for k,v in pairs(self.titles) do
+		v:Kill()
+		self.titles[k] = nil		
+	end
 	self.tasks = {}
 end
 
@@ -99,23 +104,34 @@ end
 
 function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
+	local title = nil
+
 	local powers = {}
 	if TheWorld.ismastersim then
+
+		local name = STRINGS.NAMES[string.upper(inst.prefab)]
+		local lv = inst.components.ksfun_level and inst.components.ksfun_level:GetLevel() or -1
+		title = {prefab = inst.prefab, name = name, lv = lv}
+
 		local system = inst.components.ksfun_power_system
 		if system ~= nil then
 			local list = system:GetAllPowers()
 			for k,v in pairs(list) do
 				local l = v.components.ksfun_level
-				list[k] = {name = k, lv = l.lv, exp = l.exp}
+				local d = v.components.ksfun_power:GetDesc()
+				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d}
 			end
 		end
 		
 	else
 		local system = inst.replica.ksfun_power_system
 		if system then
+			title  = system:GetTitle()
 			powers = system:GetPowers()
 		end
 	end
+
+	self:AddTitle(title)
 
 	for k,v in pairs(powers) do
 		local name = string.upper("ksfun_power_"..k)
@@ -125,7 +141,9 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 		end
 
 		self.powers[k].title:SetString(name)
-		self.powers[k].desc:SetString("等级: "..v.lv.."  经验: "..v.exp)
+
+		local desc = (v.desc == "default") and "等级: ["..v.lv.."]  经验: ["..v.exp.."]" or v.desc
+		self.powers[k].desc:SetString(desc)
 
 		self.powers[k]:SetHAnchor(0)
 		self.powers[k]:SetVAnchor(0)
@@ -133,6 +151,45 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
 		updateCardOffsetY(self)
 	end
+end
+
+
+
+local function getColor(lv)
+	if lv < 2 then
+		return 1, 1, 1
+	elseif lv < 3 then
+		return 0, 1, 1
+	elseif lv < 4 then
+		return 0, 0, 1
+	elseif lv < 5 then
+		return 160/255, 32/255, 240/255	
+	elseif lv < 6 then
+		return 1, 215/255, 0
+	elseif lv < 7 then
+		return 1, 165/255, 0
+	else
+		return 1, 0, 0
+	end	
+end
+
+
+
+function KSFUN_PLAYER_PANEL:AddTitle(title)
+	local key = title.prefab
+	if key == nil then return end
+
+	local r,g,b = getColor(title.lv)
+
+	self.titles[key] = self.root:AddChild(self:KsFunCard())
+	self.titles[key].title:SetString(title.name)
+	self.titles[key].title:SetColour(r, g, b, 1)
+	self.titles[key]:SetHAnchor(0)
+	self.titles[key]:SetVAnchor(0)
+	self.titles[key]:SetPosition(self.x, self.y + self.offsetY, 0)
+	self.titles[key].bg:SetTint(0, 0, 0, 0.1)
+
+	updateCardOffsetY(self)
 end
 
 

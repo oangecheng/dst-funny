@@ -51,6 +51,11 @@ function KSFUN_LEVEL:GetLevel()
 end
 
 
+function KSFUN_LEVEL:GetExp()
+    return self.exp
+end
+
+
 function KSFUN_LEVEL:SetMax(max)
     self.max = max
     self:SetLevel(math.min(self.max, self.lv))
@@ -103,7 +108,7 @@ function KSFUN_LEVEL:GainExp(exp)
         self:SetLevel(self.lv + delta, true)
     else
         -- 刷新客户端数据
-        inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
+        self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
     end
 
 

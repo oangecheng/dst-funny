@@ -79,6 +79,18 @@ for k,v in pairs(itemsdef.ksfunitems) do
         initLevel(inst)
         initBreakable(inst)
         initEnhantable(inst)
+
+        inst:ListenForEvent("ksfun_level_changed", function(ent, data)
+            inst.components.ksfun_power_system:SyncData()
+        end)
+
+        local oldLoad = inst.OnLoad
+        inst.OnLoad = function(inst, data)
+            inst.components.ksfun_power_system:SyncData()
+            if oldLoad then
+                oldLoad(inst, data)
+            end
+        end
         
     end)
 end    

@@ -52,6 +52,15 @@ local function isFollower(inst, target)
 end
 
 
+local function getAoeProperty(power)
+    local lv = power.components.ksfun_level:GetLevel()
+    -- 初始 50% 范围伤害，满级80%
+    -- 初始 1 范围， 满级3范围
+    local multi = 0.5 + 0.3 * (lv/maxlv)
+    local area = 1 + 2 * (lv/maxlv)
+    return multi, area
+end
+
 
 --- 攻击回血
 --- 需要有生命值的生物
@@ -59,8 +68,7 @@ local function onAttack(power, weapon, attacker, target)
     local lv = power.components.ksfun_level:GetLevel()
     -- 初始 50% 范围伤害，满级80%
     -- 初始 1 范围， 满级3范围
-    local multi = 0.5 + 0.3 * (lv/maxlv)
-    local area = 1 + 2 * (lv/maxlv)
+    local multi, area = getAoeProperty(power)
 
     local combat = attacker.components.combat
     local x,y,z = target.Transform:GetWorldPosition()
@@ -113,11 +121,25 @@ local function onBreakFunc(inst, data)
 end
 
 
+local function onGetDescFunc(inst)
+    local level = inst.components.ksfun_level
+    local multi,area = getAoeProperty(inst)
+    local desc = "[造成范围"..area.."以内"..(multi*100).."%溅射伤害]"
+    if level:IsMax() then
+        return "已满级  "..desc
+    else
+        local lv  = level:GetLevel()
+        local exp = level:GetExp()
+        return "等级: ["..lv.."]  经验: ["..exp.."]  "..desc
+    end
+end
+
 
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,
+    onGetDescFunc= onGetDescFunc
 }
 
 local level = {
