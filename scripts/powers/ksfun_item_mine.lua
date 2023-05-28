@@ -44,6 +44,25 @@ local function onAttachFunc(inst, target, name)
     if target.components.tool == nil then
         target:AddComponent("tool")
     end
+
+    if target.components.finiteuses then
+        target.components.finiteuses:SetConsumption(ACTIONS.MINE, 1)
+    end
+
+    --- 禁用移除tool，无法挖矿
+    inst.components.ksfun_power:SetOnEnableChangedFunc(function(enable)
+        if enable then
+            if target.components.tool == nil then
+                target:AddComponent("tool")
+            end
+            updatPowerStatus(inst)
+        else
+            if target.components.tool ~= nil then
+                target:RemoveComponent("tool")
+            end
+        end
+    end)
+
     -- 15级上限，多升级也没有意义
     inst.components.ksfun_level:SetMax(15)
     updatPowerStatus(inst)
@@ -53,7 +72,6 @@ end
 --- 解绑对象
 local function onDetachFunc(inst, target, name)
     inst.target = nil
-    inst.originSanity = nil
 end
 
 

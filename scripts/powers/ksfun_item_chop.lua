@@ -9,7 +9,7 @@ end
 
 local function updatPowerStatus(inst)
     local level = inst.components.ksfun_level
-    if inst.target then
+    if inst.target and inst.target.components.tool then
         local lv = level:GetLevel()
         local m = math.max(15 - lv, 1)
         inst.target.components.tool:SetAction(ACTIONS.CHOP, 15/m)
@@ -38,6 +38,24 @@ local function onAttachFunc(inst, target, name)
     if target.components.tool == nil then
         target:AddComponent("tool")
     end
+
+    if target.components.finiteuses then
+        target.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
+    end
+
+    inst.components.ksfun_power:SetOnEnableChangedFunc(function(enable)
+        if enable then
+            if target.components.tool == nil then
+                target:AddComponent("tool")
+            end
+            updatPowerStatus(inst)
+        else
+            if target.components.tool ~= nil then
+                target:RemoveComponent("tool")
+            end
+        end
+    end)
+
     -- 15级上限，多升级也没有意义
     inst.components.ksfun_level:SetMax(15)
     updatPowerStatus(inst)
