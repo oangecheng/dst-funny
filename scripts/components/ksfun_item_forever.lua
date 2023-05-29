@@ -40,8 +40,6 @@ end
 
 
 
-
-
 local function onAccept(self, giver, item)
     KsFunLog("onAccept", item.prefab, self.enable)
 
@@ -51,32 +49,16 @@ local function onAccept(self, giver, item)
     local finiteuses = self.inst.components.finiteuses
     local armor = self.inst.components.armor
 
-
+    -- 武器
     if finiteuses then
         local percent = finiteuses:GetPercent() + 0.2
         finiteuses:SetPercent(percent)
-        setItemEnable(self, true)
+    -- 盔甲
     elseif armor then
         local percent = armor:GetPercent() + 0.2
         armor:SetPercent(percent)
-        setItemEnable(self, true)
     end
-
-
-    if self.enable then
-        if self.inst.components.finiteuses then
-            local finiteuses = self.inst.components.finiteuses
-            if item.prefab == itemsdef[1] then
-                local percent = finiteuses:GetPercent() + 0.2
-                KsFunLog("onAccept", percent)
-                finiteuses:SetPercent(percent)
-                setItemEnable(self, true)
-            end
-        elseif self.inst.components.armor then
-
-        end
- 
-    end
+    -- 衣服帽子用针线包吧（虽然修复材料有点廉价），但是不想单独兼容了
 end
 
 
@@ -129,6 +111,16 @@ local FOREVER = Class(function(self, inst)
     self.inst:ListenForEvent("equipped", function(inst, data)
         self.inst.ksfunitemowner = data.owner
     end)
+
+    --- 修改官方函数容易引发bug，所以这里采用耐久小于10%时自动卸下装备的机制，避免物品被移除
+    --- 如果一不小心弄没了，回档吧大宝贝
+    self.inst:ListenForEvent("percentusedchange", function(inst, data)
+        if self.enable and data.percent <= 0.1 and inst.components.equippable then
+            if self.inst.ksfunitemowner then
+                inst.components.equippable:Unequip(self.inst.ksfunitemowner)
+            end
+        end
+    end)
     
 end)
 
@@ -136,26 +128,31 @@ end)
 function FOREVER:Enable()
     self.enable = true
 
-    --- 启用时，物品不会被移除，这里只修改可升级的武器
-    if self.inst.components.finiteuses then
-        self.inst.components.finiteuses:SetOnFinished(function(inst)
-            setItemEnable(self, false)
-        end)
-    end
+    -- 物品耐久为0不消失，不采用这种方式，修改官方api
+    -- --- 启用时，物品不会被移除，这里只修改可升级的武器
+    -- if self.inst.components.finiteuses then
+    --     self.inst.components.finiteuses:SetOnFinished(function(inst)
+    --         setItemEnable(self, false)
+    --     end)
+    -- end
 
-    --- 由于官方机制设定，护甲类型的物品耐久为0会被移除
-    --- 修改官方函数容易引发bug，所以这里采用耐久小于10%时自动卸下装备的机制，避免损坏
-    if self.inst.components.armor then
-        self.inst:ListenForEvent("percentusedchange", function(inst, data)
-            if data.percent <= 0.1 and inst.components.equippable then
-                if self.inst.ksfunitemowner then
-                    inst.components.equippable:Unequip(self.inst.ksfunitemowner)
-                end
-            end
-        end)
-    end
+    -- --- 由于官方机制设定，护甲类型的物品耐久为0会被移除
+    -- --- 修改官方函数容易引发bug，所以这里采用耐久小于10%时自动卸下装备的机制，避免损坏
+    -- if self.inst.components.armor then
+    --     self.inst:ListenForEvent("percentusedchange", function(inst, data)
+    --         if data.percent <= 0.1 and inst.components.equippable then
+    --             if self.inst.ksfunitemowner then
+    --                 inst.components.equippable:Unequip(self.inst.ksfunitemowner)
+    --             end
+    --         end
+    --     end)
+    -- end
 
-
+    -- if self.inst.components.fueled then
+    --     self.inst.components.fueled:SetDepletedFn(function(inst)
+    --         setItemEnable(self, false)
+    --     end)
+    -- end
 end
 
 
@@ -170,9 +167,6 @@ end
 function FOREVER:OnLoad(data)
     self.enable = data.enable
     self.data   = data.data
-    if self.enable then
-        self:Enable()
-    end
 end
 
 
