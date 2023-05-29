@@ -1,6 +1,9 @@
 
 local helper = {}
 
+local critdamage = require("powers/ksfun_common_critdamage")
+
+
 
 
 local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
@@ -34,7 +37,7 @@ end
 
 
 
--------------------------------------------------------------我是分割线-----------------------------------------------------------------
+-------------------------------------------------------------人物属性 我是分割线-----------------------------------------------------------------
 
 
 local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
@@ -53,6 +56,35 @@ helper.MakePlayerPower = function(name)
     local power = playerpowers[name]
     return power and power.data or {}
 end
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------怪物属性 我是分割线-----------------------------------------------------------------
+local MONSTER_NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
+local realdamage = require("ksfun_monster_realdamage")
+
+local monsterpowers = {}
+monsterpowers[MONSTER_NAMES.REAL_DAMAGE] = realdamage
+monsterpowers[MONSTER_NAMES.CRIT_DAMAGE] = critdamage
+
+
+helper.MakeMonsterPower = function(name)
+    local power = monsterpowers[name]
+    return power and power.data or {}
+end
+
+
+
+
+
 
 
 return helper

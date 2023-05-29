@@ -60,4 +60,32 @@ AddPlayerPostInit(function(player)
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
     end)
+
+
+    --- 击杀怪物增加怪物的世界等级
+    player:ListenForEvent("killed", function(inst, data)
+        TheWorld.components.ksfun_world_monster:KillMonster(data.victim.prefab, 1000)
+    end)
+
 end)
+
+
+local monsters = {
+    "spider"
+}
+
+
+for i,v in ipairs(monsters) do
+    AddPrefabPostInit(v, function(inst)
+        inst:AddComponent("ksfun_power_system")
+        local wordmonster = TheWorld.components.ksfun_world_monster
+        if wordmonster then
+            if wordmonster:GetMonsterLevel(v) > 10 then
+                local name = KsFunRandomValueFromKVTable(KSFUN_TUNING.MONSTER_POWER_NAMES)
+                KsFunLog("monster add power", name)
+                inst.components.ksfun_power_system:AddPower(name)
+            end
+        end
+    end)
+end
+

@@ -1,5 +1,11 @@
 
 
+local monsters = {
+    "spider"
+}
+
+
+
 local function nextLvExp(currentlv)
     return (currentlv + 1) * 100
 end
@@ -13,6 +19,8 @@ end)
 
 --- 击杀怪物会提升怪物等级
 function MONSTER:KillMonster(prefab, exp)
+    if not table.contains(monsters, prefab) then return end
+    
     local data = monsterdata[prefab] or {lv = 0, exp = 0}
     data.exp = data.exp + exp
     -- 计算可以升的级数

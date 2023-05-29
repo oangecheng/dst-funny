@@ -103,4 +103,11 @@ for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
 end
 
 
+for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
+    local data = helper.MakeMonsterPower(v)
+    table.insert( powers, MakePower(v, data))
+end
+
+
+
 return unpack(powers)

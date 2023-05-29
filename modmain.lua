@@ -57,6 +57,6 @@ if GLOBAL.TheNet:GetIsServer() then
 
     -- 世界初始化
     AddPrefabPostInit("world", function(inst)
-        inst:AddComponent("ksfun_world_player")
+        inst:AddComponent("ksfun_world_monster")
     end)
 end

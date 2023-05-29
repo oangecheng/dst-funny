@@ -6,14 +6,22 @@ KSFUN_TUNING =  {
     LOG_TAG = "ksfun_log: ",
 
 
+    -- 角色和怪物通用属性
+    COMMON_POWER_NAMES = {
+        CRIT_DAMAGE = "crit_damage",
+    },
+    
+
+    -- 角色属性
     PLAYER_POWER_NAMES = {
-        HEALTH = "player_health",
-        HUNGER = "player_hunger",
-        SANITY = "player_sanity",
+        CRIT_DAMAGE = COMMON_POWER_NAMES.CRIT_DAMAGE,
+        HEALTH      = "player_health",
+        HUNGER      = "player_hunger",
+        SANITY      = "player_sanity",
     },
 
+    -- 物品属性
     ITEM_POWER_NAMES = {
-        FOREVER       = "item_forever",
         WATER_PROOFER = "item_waterproofer",
         DAPPERNESS    = "item_dapperness",
         INSULATOR     = "item_insulator",
@@ -22,6 +30,12 @@ KSFUN_TUNING =  {
         MINE          = "item_mine",
         LIFESTEAL     = "item_lifesteal",
         AOE           = "item_aoe",
+    },
+
+    --- 怪物属性
+    MONSTER_POWER_NAMES = {
+        CRIT_DAMAGE = COMMON_POWER_NAMES.CRIT_DAMAGE,
+        REAL_DAMAGE = "monster_real_damage",
     },
 
 
