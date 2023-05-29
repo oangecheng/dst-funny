@@ -20,14 +20,13 @@ end
 --- 最高20%概率2倍暴击
 local function hookCalcDamage(inst, attacker)
     if attacker.components.combat == nil then return end
-    inst.ksfun_originCalcDamage = target.components.combat.CalcDamage
+    inst.ksfun_originCalcDamage = attacker.components.combat.CalcDamage
     if inst.ksfun_originCalcDamage then
         attacker.components.combat.CalcDamage = function(targ, weapon, mult)
             local hit    = math.random(100) < (KSFUN_TUNING.DEBUG and 100 or 20)
             local lv     = inst.components.ksfun_level:GetLevel()
             local ratio  = (inst.components.ksfun_power:IsEnable() and hit) and (lv/10 + 1) or 1
             local dmg    = inst.ksfun_originCalcDamage(targ, weapon, mult)
-            KsFunLog("crit damage hookCalcDamage", attacker.prefab, dmg, ratio)
             return dmg * ratio
         end
     end
@@ -37,7 +36,7 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
-    setUpMaxLv(10)
+    setUpMaxLv(inst, 10)
     hookCalcDamage(inst, target)
 end
 
@@ -58,7 +57,6 @@ local power = {
 }
 
 local level = {
-    onLvChangeFunc = onLvChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 

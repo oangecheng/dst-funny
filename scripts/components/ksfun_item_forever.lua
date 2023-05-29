@@ -115,13 +115,17 @@ local FOREVER = Class(function(self, inst)
     --- 修改官方函数容易引发bug，所以这里采用耐久小于10%时自动卸下装备的机制，避免物品被移除
     --- 如果一不小心弄没了，回档吧大宝贝
     self.inst:ListenForEvent("percentusedchange", function(inst, data)
-        if self.enable and data.percent <= 0.1 and inst.components.equippable then
-            if self.inst.ksfunitemowner then
-                inst.components.equippable:Unequip(self.inst.ksfunitemowner)
+        if self.enable and data.percent <= 0.05 and inst.components.equippable then
+            local inventory = self.inst.ksfunitemowner and self.inst.ksfunitemowner.components.inventory or nil
+            if inventory then
+                local slot = inventory:IsItemEquipped(inst)
+                if slot then
+                    local item = inventory:Unequip(slot)
+                    inventory:GiveItem(item)
+                end 
             end
         end
     end)
-    
 end)
 
 

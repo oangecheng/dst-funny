@@ -20,11 +20,11 @@ local function onAttackOther(attacker, data)
     local power = attacker.components.ksfun_power_system:GetPower(NAME)
     -- 20% 的概率造成属性等级点的额外真实伤害，不计算护甲
     local hit = math.random(100) < (KSFUN_TUNING.DEBUG and 100 or 20)
-    if hit and power and power:IsEnable() and data.target then
+    if hit and power and power.components.ksfun_power:IsEnable() and data.target then
         local lv = power.components.ksfun_level:GetLevel()
-        KsFunLog("real damage onAttackOther", attacker.prefab, lv)
-        if data.target.components.health then
-            data.target.components.health:DoDelta(-lv)
+        local health = data.target.components.health
+        if health then
+            health:DoDelta(-lv, nil, nil, true, nil, true)
         end
     end
 end
@@ -35,8 +35,8 @@ local function onAttachFunc(inst, target, name)
     inst.target = target
     -- { target = targ, weapon = weapon, projectile = projectile, stimuli = stimuli }
     inst.target:ListenForEvent("onattackother", onAttackOther)
-    -- 最高造成20点真实伤害
-    setUpMaxLv(inst, 20)
+    -- 最高造成10点真实伤害
+    setUpMaxLv(inst, 10)
 end
 
 
@@ -60,7 +60,6 @@ local power = {
 }
 
 local level = {
-    onLvChangeFunc = onLvChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 

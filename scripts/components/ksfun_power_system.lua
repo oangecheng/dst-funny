@@ -6,9 +6,7 @@ local function addPower(self, name, ent)
         ent.persists = false
 
         --- 属性系统才可以绑定
-        if self.enable then
-            ent.components.ksfun_power:Attach(name, self.inst)
-        end
+        ent.components.ksfun_power:Attach(name, self.inst)
 
         if self.onPowerAddFunc then
             self.onPowerAddFunc(self.inst, name, ent)

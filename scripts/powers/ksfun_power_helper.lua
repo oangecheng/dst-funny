@@ -69,7 +69,7 @@ end
 
 -------------------------------------------------------------怪物属性 我是分割线-----------------------------------------------------------------
 local MONSTER_NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
-local realdamage = require("ksfun_monster_realdamage")
+local realdamage = require("powers/ksfun_monster_realdamage")
 
 local monsterpowers = {}
 monsterpowers[MONSTER_NAMES.REAL_DAMAGE] = realdamage

@@ -1,4 +1,7 @@
-
+-- 角色和怪物通用属性
+local COMMON_POWER_NAMES_DEF = {
+    CRIT_DAMAGE = "crit_damage",
+}
 
 KSFUN_TUNING =  {
 
@@ -7,14 +10,12 @@ KSFUN_TUNING =  {
 
 
     -- 角色和怪物通用属性
-    COMMON_POWER_NAMES = {
-        CRIT_DAMAGE = "crit_damage",
-    },
+    COMMON_POWER_NAMES = COMMON_POWER_NAMES_DEF,
     
 
     -- 角色属性
     PLAYER_POWER_NAMES = {
-        CRIT_DAMAGE = COMMON_POWER_NAMES.CRIT_DAMAGE,
+        CRIT_DAMAGE = COMMON_POWER_NAMES_DEF.CRIT_DAMAGE,
         HEALTH      = "player_health",
         HUNGER      = "player_hunger",
         SANITY      = "player_sanity",
@@ -34,7 +35,7 @@ KSFUN_TUNING =  {
 
     --- 怪物属性
     MONSTER_POWER_NAMES = {
-        CRIT_DAMAGE = COMMON_POWER_NAMES.CRIT_DAMAGE,
+        CRIT_DAMAGE = COMMON_POWER_NAMES_DEF.CRIT_DAMAGE,
         REAL_DAMAGE = "monster_real_damage",
     },
 

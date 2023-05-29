@@ -44,7 +44,7 @@ AddPlayerPostInit(function(player)
 
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)
-        local ent = SpawnPrefab("walrushat")
+        local ent = SpawnPrefab("armorwood")
         if ent then
             ent.components.ksfun_item_forever:Enable()
             ent.components.ksfun_breakable:Enable()
@@ -64,6 +64,7 @@ AddPlayerPostInit(function(player)
 
     --- 击杀怪物增加怪物的世界等级
     player:ListenForEvent("killed", function(inst, data)
+        KsFunLog("kill spider")
         TheWorld.components.ksfun_world_monster:KillMonster(data.victim.prefab, 1000)
     end)
 
@@ -82,8 +83,9 @@ for i,v in ipairs(monsters) do
         if wordmonster then
             if wordmonster:GetMonsterLevel(v) > 10 then
                 local name = KsFunRandomValueFromKVTable(KSFUN_TUNING.MONSTER_POWER_NAMES)
-                KsFunLog("monster add power", name)
                 inst.components.ksfun_power_system:AddPower(name)
+                local p = inst.components.ksfun_power_system:GetPower(name)
+                p.components.ksfun_level:SetLevel(20)
             end
         end
     end)

@@ -136,18 +136,21 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 	for k,v in pairs(powers) do
 		local name = string.upper("ksfun_power_"..k)
 		name = STRINGS.NAMES[name]
-		if self.powers[k] == nil then
-			self.powers[k] = self.root:AddChild(self:KsFunCard())
+
+		local key = title.prefab..k
+
+		if self.powers[key] == nil then
+			self.powers[key] = self.root:AddChild(self:KsFunCard())
 		end
 
-		self.powers[k].title:SetString(name)
+		self.powers[key].title:SetString(name)
 
 		local desc = (v.desc == "default") and "等级: ["..v.lv.."]  经验: ["..v.exp.."]" or v.desc
-		self.powers[k].desc:SetString(desc)
+		self.powers[key].desc:SetString(desc)
 
-		self.powers[k]:SetHAnchor(0)
-		self.powers[k]:SetVAnchor(0)
-		self.powers[k]:SetPosition(self.x, self.y + self.offsetY, 0)
+		self.powers[key]:SetHAnchor(0)
+		self.powers[key]:SetVAnchor(0)
+		self.powers[key]:SetPosition(self.x, self.y + self.offsetY, 0)
 
 		updateCardOffsetY(self)
 	end

@@ -21,33 +21,33 @@ end)
 function MONSTER:KillMonster(prefab, exp)
     if not table.contains(monsters, prefab) then return end
     
-    local data = monsterdata[prefab] or {lv = 0, exp = 0}
+    local data = self.monsterdata[prefab] or {lv = 0, exp = 0}
     data.exp = data.exp + exp
     -- 计算可以升的级数
     while data.exp >= nextLvExp(data.lv) do
-        data.exp = data.exp - nextLvExp(self.inst, self.lv)
+        data.exp = data.exp - nextLvExp(data.lv)
         data.lv = data.lv + 1
     end
-    monsterdata[prefab] = data
+    self.monsterdata[prefab] = data
 end
 
 
 
 function MONSTER:GetMonsterLevel(prefab)
-    local data = monsterdata[prefab]
+    local data = self.monsterdata[prefab]
     return data and data.lv or 0
 end
 
 
 function MONSTER:OnSave()
     return {
-        monsterdata = monsterdata
+        monsterdata = self.monsterdata
     }
 end
 
 
 function MONSTER:OnLoad(data)
-    monsterdata = data.monsterdata or {}
+    self.monsterdata = data.monsterdata or {}
 end
 
 
