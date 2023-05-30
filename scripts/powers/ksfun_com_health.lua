@@ -1,5 +1,5 @@
 
-local NAME = KSFUN_TUNING.COMMON_POWER_NAMES
+local NAME = KSFUN_TUNING.COMMON_POWER_NAMES.HEALTH
 
 
 -- 更新角色的血量数据
@@ -9,8 +9,8 @@ local function updateHealthState(inst)
     local data = inst.components.ksfun_power:GetData()
     if target and data then
         local initHealth = data.health or 120
+        local percent = target.components.health:GetPercent()
         target.components.health.maxhealth = initHealth + lv
-        local percent = inst.percent or target.components.health:GetPercent()
         target.components.health:SetPercent(percent)
     end
 end
@@ -30,6 +30,7 @@ end
 --- 人越多经验越低，最低50%
 --- @param killer 击杀者 data 受害者数据集
 local function onKillOther(killer, data)
+    KsFunLog("onKillOther", data.victim.prefab)
     local victim = data.victim
     if victim == nil then return end
     if victim.components.health == nil then return end
@@ -87,6 +88,13 @@ local function onAttach(inst, target, name)
     -- 记录原始数据
     local h = target.components.health
     inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
+
+    -- 初始化的时候修正一下血量百分比
+    if inst.percent then
+        local data = inst.components.ksfun_power:GetData()
+        h.maxhealth = data.health
+        h:SetPercent(inst.percent)
+    end
 
     -- 玩家杀怪可以升级
     if target:HasTag("player") then

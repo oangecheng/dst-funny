@@ -42,8 +42,16 @@ AddPlayerPostInit(function(player)
     player:AddComponent("ksfun_power_system")
     player:AddComponent("ksfun_task_system")
 
+
+
+
     player:ListenForEvent(EVENTS.PLAYER_STATE_CHANGE, onPlayerPowerChange)
     player:ListenForEvent("oneat", function(inst)
+
+        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH)
+        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY)
+        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
+
         local ent = SpawnPrefab("armorwood")
         if ent then
             ent.components.ksfun_item_forever:Enable()

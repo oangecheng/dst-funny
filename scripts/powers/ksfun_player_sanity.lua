@@ -1,4 +1,4 @@
-local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
+local NAME = KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY
 
 
 -- 物品基础经验值定义
@@ -22,11 +22,13 @@ local EXP_MULTI_DEFS = {
 
 
 local function updateSanityStatus(inst)
+    local data = inst.components.ksfun_power:GetData()
+
     local sanity = inst.target and inst.target.components.sanity or nil
     local level = inst.components.ksfun_level
-    if sanity and level and inst.originSanity then
+    if sanity and level and data then
         local percent = sanity:GetPercent()
-        sanity.max = inst.originSanity + level.lv
+        sanity.max = data.sanity + level.lv
         sanity:SetPercent(percent)
     end
 end
@@ -99,11 +101,8 @@ end
 --- @param player 玩家
 --- @param data 物品数据
 local function onBuildItemFunc(player, data)
-    local power = player.components.ksfun_power_system:GetPower(NAMES.SANITY)
-    if power and power.components.ksfun_level then
-        local exp = calcItemExp(data)
-        power.components.ksfun_level:GainExp(exp)
-    end
+    local exp = calcItemExp(data)
+    KsFunPowerGainExp(player, NAME, exp)
 end
 
 
@@ -111,10 +110,17 @@ end
 --- @param player 玩家
 --- @param data 建筑数据
 local function oBuildStructureFunc(player, data)
-    local power = player.components.ksfun_power_system:GetPower(NAMES.SANITY)
-    if power and power.components.ksfun_level then
-        local exp = calcStructureExp(data)
-        power.components.ksfun_level:GainExp(exp)
+    local exp = calcStructureExp(data)
+    KsFunPowerGainExp(player, NAME, exp)
+end
+
+
+local function reset(inst, target)
+    local data = inst.components.ksfun_power:GetData()
+    if target.components.sanity and data then
+        local percent = target.components.sanity:GetPercent()
+        target.components.sanity.max = data.sanity
+        target.components.sanity:SetPercent(percent)
     end
 end
 
@@ -122,9 +128,17 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, player, name)
     inst.target = player
-    if not inst.originSanity then
-        inst.originSanity = player.components.sanity.max
+
+    local sanity = player.components.sanity
+    inst.components.ksfun_power:SetData({sanity = sanity.max})
+
+    --- 修正精神值百分比
+    if inst.percent then
+        local data = inst.components.ksfun_power:GetData()
+        sanity.max = data.sanity
+        sanity:SetPercent(inst.percent)
     end
+
     updateSanityStatus(inst)
     player:ListenForEvent("builditem", onBuildItemFunc)
     player:ListenForEvent("buildstructure", oBuildStructureFunc)
@@ -135,23 +149,36 @@ end
 local function onDetachFunc(inst, player, name)
     player:RemoveEventCallback("builditem", onBuildItemFunc)
     player:RemoveEventCallback("buildstructure", oBuildStructureFunc)
-
-    if player.components.sanity and inst.originSanity then
-        local percent = inst.components.sanity:GetPercent()
-        player.components.sanity.max = inst.originSanity
-        player.components.sanity:SetPercent(percent)
-    end
+    
+    reset(inst, player)
 
     inst.target = nil
-    inst.originSanity = nil
 end
 
+
+local function getPercent(inst)
+    if inst.target then
+        return inst.target.components.sanity:GetPercent()
+    end
+    return nil
+end
+
+
+local function onSave(inst, data)
+    data.percent = getPercent(inst)
+end
+
+local function onLoad(inst, data)
+    inst.percent = data.percent or nil
+end
 
 
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
     onExtendFunc = nil,
+    onLoadFunc   = onLoad,
+    onSaveFunc   = onSave,
 }
 
 local level = {
