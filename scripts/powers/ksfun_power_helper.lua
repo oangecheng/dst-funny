@@ -60,11 +60,13 @@ end
 local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local hunger = require("powers/ksfun_player_hunger")
 local sanity = require("powers/ksfun_player_sanity")
+local pick   = require("powers/ksfun_player_pick")
 
 
 local playerpowers = {}
 playerpowers[PLAYER_NAMES.HUNGER] = hunger
 playerpowers[PLAYER_NAMES.SANITY] = sanity
+playerpowers[PLAYER_NAMES.PICK]   = pick
 
 
 

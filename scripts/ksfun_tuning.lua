@@ -21,6 +21,7 @@ KSFUN_TUNING =  {
         LOCOMOTOR   = COMMON_POWER_NAMES_DEF.LOCOMOTOR,
         HUNGER      = "player_hunger",
         SANITY      = "player_sanity",
+        PICK        = "player_pick",
     },
 
     -- 物品属性

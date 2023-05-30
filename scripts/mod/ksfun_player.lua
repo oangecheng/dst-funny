@@ -51,6 +51,7 @@ AddPlayerPostInit(function(player)
         player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH)
         player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY)
         player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
+        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.PICK)
 
         local ent = SpawnPrefab("armorwood")
         if ent then
