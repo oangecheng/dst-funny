@@ -2,6 +2,7 @@
 local helper = {}
 
 local critdamage = require("powers/ksfun_common_critdamage")
+local health     = require("powers/ksfun_common_health")
 
 
 
@@ -43,7 +44,6 @@ end
 local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local hunger = require("powers/ksfun_hunger")
 local sanity = require("powers/ksfun_sanity")
-local health = require("powers/ksfun_player_health")
 
 
 local playerpowers = {}
@@ -74,6 +74,7 @@ local realdamage = require("powers/ksfun_monster_realdamage")
 local monsterpowers = {}
 monsterpowers[MONSTER_NAMES.REAL_DAMAGE] = realdamage
 monsterpowers[MONSTER_NAMES.CRIT_DAMAGE] = critdamage
+monsterpowers[MONSTER_NAMES.HEALTH]      = health
 
 
 helper.MakeMonsterPower = function(name)

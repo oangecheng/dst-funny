@@ -4,14 +4,15 @@ local POWER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
 -- 更新角色的血量数据
-local function updateHealthState(power, isInit)
-    local lv = power.components.ksfun_level.lv
-    local player = power.target
-    if player and player.components.health then
-        local initHealth = power.originHealth or 120
-        player.components.health.maxhealth = initHealth + lv
-        local percent = power.percent or player.components.health:GetPercent()
-        player.components.health:SetPercent(percent)
+local function updateHealthState(inst)
+    local lv = inst.components.ksfun_level.lv
+    local target = inst.target
+    local data = inst.components.ksfun_power:GetData()
+    if target and data then
+        local initHealth = data.health or 120
+        target.components.health.maxhealth = initHealth + lv
+        local percent = data.percent or target.components.health:GetPercent()
+        target.components.health:SetPercent(percent)
     end
 end
 
@@ -21,14 +22,6 @@ local function onLvChangeFunc(inst, lv, notice)
     updateHealthState(inst, false)
     if notice and inst.target then
         inst.target.components.talker:Say("血量提升！")
-    end
-end
-
---- 用户等级状态变更
---- 通知用户面板刷新状态
-local function onStateChangeFunc(inst)
-    if inst.target then
-        inst.target:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_STATE_CHANGE)
     end
 end
 
@@ -76,35 +69,57 @@ local function nextLvExpFunc(inst, lv)
 end
 
 
+local function reset(inst, target)
+    --- 恢复原始数据
+    local data = inst.components.ksfun_power:GetData()
+    if data then
+        local percent = target.components.health:GetPercent()
+        target.components.health.maxhealth = data.health or 120
+        target.components.health:SetPercent(percent)
+    end
+end
+
+
 --- power 绑定
 --- @param 属性  玩家  属性名称
-local function onAttach(inst, player, name)
+local function onAttach(inst, target, name)
     inst.target = player
 
-    --- 缓存原始血量
-    if not inst.originHealth then
-        inst.originHealth = player.components.health.maxhealth
+    -- 记录原始数据
+    local h = target.components.health
+    inst.components.ksfun_power:SetData({health = h.maxhealth, percent = health:GetPercent()})
+
+    inst.components.ksfun_power:SetOnEnableChangedFunc(function(enable)
+        if enable then 
+            updateHealthState(inst) 
+        else 
+            reset(inst, target)
+        end
+    end)
+
+    -- 玩家杀怪可以升级
+    if target:HasTag("player") then
+        target:ListenForEvent("killed", onKillOther)
     end
 
-    if not inst.percent then
-        inst.percent = player.components.health:GetPercent()
-    end
-
-    inst.onKillOther = onKillOther
     updateHealthState(inst, true)
-    player:ListenForEvent("killed", inst.onKillOther)
 end
 
 
 --- power解绑
 --- 血量回复到初始值
 --- @param 属性 角色 属性名称
-local function onDetach(inst, player, name)
-    player:RemoveEventCallback("killed", inst.onKillOther)
-    if player.components.health and inst.originHealth then
-        local percent = player.components.health:GetPercent()
-        player.components.health.maxhealth = inst.originHealth or 120
-        player.components.health:SetPercent(percent)
+local function onDetach(inst, target, name)
+    if target:HasTag("player") then
+        target:RemoveEventCallback("killed", onKillOther)
+    end
+
+    --- 恢复原始数据
+    local data = inst.components.ksfun_power:GetData()
+    if data then
+        local percent = target.components.health:GetPercent()
+        target.components.health.maxhealth = data.health or 120
+        target.components.health:SetPercent(percent)
     end
     inst.target = nil
 end
@@ -138,7 +153,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc
 }
 
