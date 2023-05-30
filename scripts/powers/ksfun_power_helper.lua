@@ -1,9 +1,25 @@
 
 local helper = {}
 
---- 通用属性，人物和怪物通用
+
+-------------------------------------------------------------怪物和人物公用的属性 我是分割线-----------------------------------------------------------------
 local critdamage = require("powers/ksfun_com_critdamage")
 local health     = require("powers/ksfun_com_health")
+local locomotor  = require("powers/ksfun_com_locomotor")
+
+local COM_NAMES = KSFUN_TUNING.COMMON_POWER_NAMES
+local compowers = {}
+compowers[COM_NAMES.CRIT_DAMAGE] = critdamage
+compowers[COM_NAMES.HEALTH]      = health
+compowers[COM_NAMES.LOCOMOTOR]   = locomotor
+
+
+helper.MakeComPower = function(name)
+    local power = compowers[name]
+    return power and power.data or {}
+end
+
+
 
 
 
@@ -48,8 +64,8 @@ local sanity = require("powers/ksfun_sanity")
 
 local playerpowers = {}
 playerpowers[PLAYER_NAMES.HUNGER] = hunger
-playerpowers[PLAYER_NAMES.HEALTH] = health
 playerpowers[PLAYER_NAMES.SANITY] = sanity
+
 
 
 helper.MakePlayerPower = function(name)
@@ -72,11 +88,9 @@ local iceexplosion = require("powers/ksfun_mon_iceexplosion")
 local sanityaura   = require("powers/ksfun_mon_sanityaura")
 
 local monsterpowers = {}
-monsterpowers[MONSTER_NAMES.REAL_DAMAGE]   = realdamage
-monsterpowers[MONSTER_NAMES.CRIT_DAMAGE]   = critdamage
-monsterpowers[MONSTER_NAMES.HEALTH]        = health
 monsterpowers[MONSTER_NAMES.ICE_EXPLOSION] = iceexplosion
 monsterpowers[MONSTER_NAMES.SANITY_AURA]   = sanityaura
+monsterpowers[MONSTER_NAMES.LOCOMOTOR]     = locomotor
 
 
 helper.MakeMonsterPower = function(name)

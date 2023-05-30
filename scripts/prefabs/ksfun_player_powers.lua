@@ -91,23 +91,26 @@ end
 
 
 local powers = {}
+-- 通用
+for k,v in pairs(KSFUN_TUNING.COMMON_POWER_NAMES) do
+    local data = helper.MakeComPower(v)
+    table.insert( powers, MakePower(v, data))
+end
+-- 物品
 for k,v in pairs(KSFUN_TUNING.ITEM_POWER_NAMES) do
     local data = helper.MakeItemPower(v)
     table.insert( powers, MakePower(v, data))
 end
-
-
+-- 玩家
 for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
     local data = helper.MakePlayerPower(v)
     table.insert( powers, MakePower(v, data))
 end
-
-
+-- 怪物
 for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
     local data = helper.MakeMonsterPower(v)
     table.insert( powers, MakePower(v, data))
 end
-
 
 
 return unpack(powers)
