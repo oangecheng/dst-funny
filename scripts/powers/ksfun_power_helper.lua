@@ -1,12 +1,13 @@
 
 local helper = {}
 
-local critdamage = require("powers/ksfun_common_critdamage")
-local health     = require("powers/ksfun_common_health")
+--- 通用属性，人物和怪物通用
+local critdamage = require("powers/ksfun_com_critdamage")
+local health     = require("powers/ksfun_com_health")
 
 
 
-
+-------------------------------------------------------------物品属性 我是分割线-----------------------------------------------------------------
 local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 
 local waterproofer = require("powers/ksfun_item_waterproofer")
@@ -38,9 +39,8 @@ end
 
 
 
+
 -------------------------------------------------------------人物属性 我是分割线-----------------------------------------------------------------
-
-
 local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local hunger = require("powers/ksfun_hunger")
 local sanity = require("powers/ksfun_sanity")
@@ -65,18 +65,18 @@ end
 
 
 
-
-
 -------------------------------------------------------------怪物属性 我是分割线-----------------------------------------------------------------
 local MONSTER_NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
-local realdamage   = require("powers/ksfun_monster_realdamage")
-local iceexplosion = require("powers/ksfun_monster_iceexplosion")
+local realdamage   = require("powers/ksfun_mon_realdamage")
+local iceexplosion = require("powers/ksfun_mon_iceexplosion")
+local sanityaura   = require("powers/ksfun_mon_sanityaura")
 
 local monsterpowers = {}
 monsterpowers[MONSTER_NAMES.REAL_DAMAGE]   = realdamage
 monsterpowers[MONSTER_NAMES.CRIT_DAMAGE]   = critdamage
 monsterpowers[MONSTER_NAMES.HEALTH]        = health
 monsterpowers[MONSTER_NAMES.ICE_EXPLOSION] = iceexplosion
+monsterpowers[MONSTER_NAMES.SANITY_AURA]   = sanityaura
 
 
 helper.MakeMonsterPower = function(name)

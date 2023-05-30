@@ -39,6 +39,7 @@ KSFUN_TUNING =  {
         HEALTH        = COMMON_POWER_NAMES_DEF.HEALTH,
         REAL_DAMAGE   = "monster_real_damage",
         ICE_EXPLOSION = "monster_ice_explosion",
+        SANITY_AURA   = "monster_sanity_aura",
     },
 
 

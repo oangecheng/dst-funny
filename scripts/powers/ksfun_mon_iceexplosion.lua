@@ -61,7 +61,6 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
-    -- { target = targ, weapon = weapon, projectile = projectile, stimuli = stimuli }
     inst.target:ListenForEvent("death", onDeath)
     -- 最大等级10
     setUpMaxLv(inst, 10)
