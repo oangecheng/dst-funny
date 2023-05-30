@@ -1,5 +1,5 @@
---- 怪物降智光环
-
+--- 怪物降智光环，兼容showme显示
+local delta = TUNING.SANITYAURA_SMALL / 25
 
 local function updatPowerStatus(inst)
     local power = inst.components.ksfun_power
@@ -7,9 +7,14 @@ local function updatPowerStatus(inst)
     if data and inst.target then
         if inst.target.components.sanityaura then
             local lv = inst.components.ksfun_level:GetLevel()
-            inst.target.components.sanityaura.aura = data.aura + lv
+            inst.target.components.sanityaura.aura = data.aura - lv * delta
         end
     end
+end
+
+
+local function onLvChangeFunc(inst, lv, notice)
+    updatPowerStatus(inst)
 end
 
 
@@ -77,6 +82,7 @@ local power = {
 
 local level = {
     nextLvExpFunc = nextLvExpFunc,
+    onLvChangeFunc = onLvChangeFunc,
 }
 
 

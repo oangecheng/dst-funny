@@ -103,13 +103,17 @@ for k,v in pairs(KSFUN_TUNING.ITEM_POWER_NAMES) do
 end
 -- 玩家
 for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
-    local data = helper.MakePlayerPower(v)
-    table.insert( powers, MakePower(v, data))
+    if KSFUN_TUNING.COMMON_POWER_NAMES[k] == nil then 
+        local data = helper.MakePlayerPower(v)
+        table.insert( powers, MakePower(v, data))
+    end
 end
 -- 怪物
 for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
-    local data = helper.MakeMonsterPower(v)
-    table.insert( powers, MakePower(v, data))
+    if KSFUN_TUNING.COMMON_POWER_NAMES[k] == nil then 
+        local data = helper.MakeMonsterPower(v)
+        table.insert( powers, MakePower(v, data))
+    end
 end
 
 

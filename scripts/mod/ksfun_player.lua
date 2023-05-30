@@ -82,10 +82,11 @@ for i,v in ipairs(monsters) do
         local wordmonster = TheWorld.components.ksfun_world_monster
         if wordmonster then
             if wordmonster:GetMonsterLevel(v) > 10 then
-                local name = KsFunRandomValueFromKVTable(KSFUN_TUNING.MONSTER_POWER_NAMES)
+                -- local name = KsFunRandomValueFromKVTable(KSFUN_TUNING.MONSTER_POWER_NAMES)
+                local name = KSFUN_TUNING.MONSTER_POWER_NAMES.LOCOMOTOR
                 inst.components.ksfun_power_system:AddPower(name)
                 local p = inst.components.ksfun_power_system:GetPower(name)
-                p.components.ksfun_level:SetLevel(20)
+                p.components.ksfun_level:SetLevel(100)
             end
         end
     end)

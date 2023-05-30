@@ -35,6 +35,13 @@ local function setUpMaxLv(inst, max)
 end
 
 
+local function reset(inst, target)
+    if target.components.locomotor then
+        target.components.locomotor:RemoveExternalSpeedMultiplier(inst, "ksfun_com_locomotor")
+    end
+end
+
+
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
@@ -53,9 +60,7 @@ end
 
 --- 解绑对象
 local function onDetachFunc(inst, target, name)
-    if target.components.locomote then
-        target.components.locomotor:RemoveExternalSpeedMultiplier(inst)
-    end
+    reset(target)
     inst.target = nil
 end
 

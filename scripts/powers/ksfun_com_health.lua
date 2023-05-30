@@ -1,6 +1,5 @@
-local KSFUN_HEALTH = {}
 
-local POWER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
+local NAME = KSFUN_TUNING.COMMON_POWER_NAMES
 
 
 -- 更新角色的血量数据
@@ -11,7 +10,7 @@ local function updateHealthState(inst)
     if target and data then
         local initHealth = data.health or 120
         target.components.health.maxhealth = initHealth + lv
-        local percent = data.percent or target.components.health:GetPercent()
+        local percent = inst.percent or target.components.health:GetPercent()
         target.components.health:SetPercent(percent)
     end
 end
@@ -39,7 +38,7 @@ local function onKillOther(killer, data)
         local exp = victim.components.health.maxhealth
 
         -- 击杀者能够得到满额的经验
-        KsFunPowerGainExp(killer, POWER_NAMES.HEALTH, exp)
+        KsFunPowerGainExp(killer, NAME, exp)
 
         -- 非击杀者经验值计算
         local x,y,z = victim.Transform:GetWorldPosition()
@@ -51,7 +50,7 @@ local function onKillOther(killer, data)
         for i, player in ipairs(players) do
             -- 击杀者已经给了经验了
             if player ~= killer then
-                KsFunPowerGainExp(player, POWER_NAMES.HEALTH, exp * exp_multi)
+                KsFunPowerGainExp(player, NAME, exp * exp_multi)
             end
         end
     end
@@ -83,19 +82,11 @@ end
 --- power 绑定
 --- @param 属性  玩家  属性名称
 local function onAttach(inst, target, name)
-    inst.target = player
+    inst.target = target
 
     -- 记录原始数据
     local h = target.components.health
-    inst.components.ksfun_power:SetData({health = h.maxhealth, percent = health:GetPercent()})
-
-    inst.components.ksfun_power:SetOnEnableChangedFunc(function(enable)
-        if enable then 
-            updateHealthState(inst) 
-        else 
-            reset(inst, target)
-        end
-    end)
+    inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
 
     -- 玩家杀怪可以升级
     if target:HasTag("player") then
@@ -113,14 +104,8 @@ local function onDetach(inst, target, name)
     if target:HasTag("player") then
         target:RemoveEventCallback("killed", onKillOther)
     end
-
     --- 恢复原始数据
-    local data = inst.components.ksfun_power:GetData()
-    if data then
-        local percent = target.components.health:GetPercent()
-        target.components.health.maxhealth = data.health or 120
-        target.components.health:SetPercent(percent)
-    end
+    reset()
     inst.target = nil
 end
 
@@ -156,10 +141,12 @@ local level = {
     nextLvExpFunc = nextLvExpFunc
 }
 
+local health = {}
 
-KSFUN_HEALTH.data = {
+
+health.data = {
     power = power,
     level = level,
 }
 
-return KSFUN_HEALTH
+return health

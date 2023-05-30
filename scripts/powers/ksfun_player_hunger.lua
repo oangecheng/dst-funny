@@ -43,9 +43,9 @@ local function updateHungerStatus(inst)
     local workmultiplier = player.components.workmultiplier
     if workmultiplier then
         local work_multi = calcWorkMulti(lv)
-        workmultiplier:AddMultiplier(ACTIONS.CHOP, work_multi,   inst)
-        workmultiplier:AddMultiplier(ACTIONS.MINE, work_multi,   inst)
-        workmultiplier:AddMultiplier(ACTIONS.HAMMER, work_multi, inst)
+        workmultiplier:AddMultiplier(ACTIONS.CHOP,   work_multi,   inst)
+        workmultiplier:AddMultiplier(ACTIONS.MINE,   work_multi,   inst)
+        workmultiplier:AddMultiplier(ACTIONS.HAMMER, work_multi,   inst)
     end 
 end
 
