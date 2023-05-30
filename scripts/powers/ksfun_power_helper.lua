@@ -58,8 +58,8 @@ end
 
 -------------------------------------------------------------人物属性 我是分割线-----------------------------------------------------------------
 local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
-local hunger = require("powers/ksfun_hunger")
-local sanity = require("powers/ksfun_sanity")
+local hunger = require("powers/ksfun_player_hunger")
+local sanity = require("powers/ksfun_player_sanity")
 
 
 local playerpowers = {}
