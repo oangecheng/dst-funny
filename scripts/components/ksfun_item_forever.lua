@@ -87,6 +87,13 @@ local function initTrader(self)
 end
 
 
+-- 盔甲消耗的比较快，单独计算，20%以下就自动卸下
+local function getUnequipPercent(inst)
+    if inst.components.armor then return 0.2 end
+    return 0.05 
+end
+
+
 
 local FOREVER = Class(function(self, inst)
     self.inst = inst
@@ -115,7 +122,7 @@ local FOREVER = Class(function(self, inst)
     --- 修改官方函数容易引发bug，所以这里采用耐久小于10%时自动卸下装备的机制，避免物品被移除
     --- 如果一不小心弄没了，回档吧大宝贝
     self.inst:ListenForEvent("percentusedchange", function(inst, data)
-        if self.enable and data.percent <= 0.05 and inst.components.equippable then
+        if self.enable and data.percent <= getUnequipPercent(inst)then
             local inventory = self.inst.ksfunitemowner and self.inst.ksfunitemowner.components.inventory or nil
             if inventory then
                 local slot = inventory:IsItemEquipped(inst)
