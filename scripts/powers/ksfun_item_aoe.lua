@@ -129,17 +129,10 @@ local function onBreakFunc(inst, data)
 end
 
 
-local function onGetDescFunc(inst)
-    local level = inst.components.ksfun_level
+local function onGetDescFunc(inst, target, name)
     local multi,area = getAoeProperty(inst)
-    local desc = "[造成范围"..area.."以内"..(multi*100).."%溅射伤害]"
-    if level:IsMax() then
-        return "已满级  "..desc
-    else
-        local lv  = level:GetLevel()
-        local exp = level:GetExp()
-        return "等级: ["..lv.."]  经验: ["..exp.."]  "..desc
-    end
+    local desc = "造成范围"..area.."以内"..(multi*100).."%溅射伤害"
+    return KsFunGeneratePowerDesc(inst, desc)
 end
 
 

@@ -108,7 +108,7 @@ end
 --- @return string
 function KSFUN_POWER:GetDesc()
     if self.onGetDescFunc and self.target then
-        return self.onGetDescFunc(self.inst)
+        return self.onGetDescFunc(self.inst, self.target, self.name)
     else
         return "default"
     end

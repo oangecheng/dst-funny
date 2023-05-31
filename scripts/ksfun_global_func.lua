@@ -5,6 +5,7 @@ local STRINGS = GLOBAL.STRINGS
 
 --- 查找对应的能力获取经验值
 function KsFunPowerGainExp(inst, name, exp)
+    if exp == 0 then return end
     if inst.components.ksfun_power_system then
         local power = inst.components.ksfun_power_system:GetPower(name)
         if power and power.components.ksfun_level then
@@ -104,6 +105,20 @@ end
 
 
 
+function KsFunGeneratePowerDesc(power, extradesc)
+    local level = inst.components.ksfun_level
+    local extra = extradesc and "["..extradesc.."]" or ""
+    if level:IsMax() then
+        return "已满级  "..extra
+    else
+        local lv  = level:GetLevel()
+        local exp = level:GetExp()
+        return "等级: ["..lv.."]  经验: ["..exp.."]  "..extra
+    end
+end
+
+
+
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
@@ -112,3 +127,4 @@ GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList
 GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunIsValidVictim = KsFunIsValidVictim
+GLOBAL.KsFunGeneratePowerDesc = KsFunGeneratePowerDesc
