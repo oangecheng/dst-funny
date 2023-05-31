@@ -145,7 +145,7 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
 		self.powers[key].title:SetString(name)
 
-		local desc = (v.desc == "default") and "等级: ["..v.lv.."]  经验: ["..v.exp.."]" or v.desc
+		local desc = (v.desc == "default") and KsFunGeneratePowerDefaultDesc(v.lv, v.exp) or v.desc
 		self.powers[key].desc:SetString(desc)
 
 		self.powers[key]:SetHAnchor(0)

@@ -104,27 +104,33 @@ function KsFunIsValidVictim(victim)
 end
 
 
+function KsFunGeneratePowerDefaultDesc(lv, exp)
+    return "Lv=["..lv.."]   ".."Exp=["..exp.."]"
+end
+
 
 function KsFunGeneratePowerDesc(power, extradesc)
-    local level = inst.components.ksfun_level
-    local extra = extradesc and "["..extradesc.."]" or ""
+    local level = power.components.ksfun_level
+    local extra = extradesc and "    "..extradesc.."" or ""
+
     if level:IsMax() then
         return "已满级  "..extra
     else
         local lv  = level:GetLevel()
         local exp = level:GetExp()
-        return "等级: ["..lv.."]  经验: ["..exp.."]  "..extra
+        local def = KsFunGeneratePowerDefaultDesc(lv, exp)
+        return def..extra
     end
 end
 
 
-
+GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
 GLOBAL.KsFunFormatTime = KsFunFormatTime
 GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable
 GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList
 GLOBAL.KsFunRandomPower = KsFunRandomPower
-GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunIsValidVictim = KsFunIsValidVictim
 GLOBAL.KsFunGeneratePowerDesc = KsFunGeneratePowerDesc
+GLOBAL.KsFunGeneratePowerDefaultDesc = KsFunGeneratePowerDefaultDesc

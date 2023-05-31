@@ -87,7 +87,8 @@ end
 
 
 function KSFUN_LEVEL:GainExp(exp)
-    self.exp = self.exp + exp
+    local e = math.floor(exp)
+    self.exp = self.exp + e
 
     local expFun = nil
     if self.nextLvExpFunc then

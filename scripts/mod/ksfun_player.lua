@@ -53,7 +53,7 @@ AddPlayerPostInit(function(player)
         player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
         player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.PICK)
 
-        local ent = SpawnPrefab("armorwood")
+        local ent = SpawnPrefab("spear")
         if ent then
             ent.components.ksfun_item_forever:Enable()
             ent.components.ksfun_breakable:Enable()

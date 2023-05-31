@@ -55,9 +55,9 @@ end
 local function getAoeProperty(power)
     local lv = power.components.ksfun_level:GetLevel()
     -- 初始 50% 范围伤害，满级80%
-    -- 初始 1 范围， 满级3范围
+    -- 初始 1.2 范围， 满级3范围
     local multi = 0.5 + 0.3 * (lv/maxlv)
-    local area = 1 + 2 * (lv/maxlv)
+    local area  = 1.2 + 1.8 * (lv/maxlv)
     return multi, area
 end
 
