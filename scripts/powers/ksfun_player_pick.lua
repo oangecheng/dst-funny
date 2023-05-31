@@ -80,6 +80,11 @@ local function calcPickMulti(power)
 end
 
 
+local function canAddQuickPick(power)
+    local lv =  power.components.ksfun_level:GetLevel()
+    return lv >= (KSFUN_TUNING.DEBUG and 1 or 100) 
+end
+
 
 local function onPickSomeThing(player, data)
     local power = player.components.ksfun_power_system:GetPower(NAME)
@@ -87,6 +92,14 @@ local function onPickSomeThing(player, data)
 
     if not (power and loot and data.object) then 
         return 
+    end
+
+    -- 每次采摘尝试添加快速采集标签
+    -- 这么做的原因是避免和勋章又冲突，勋章每次卸下的时候都会移除这个标签
+    if canAddQuickPick(power) then
+        if not player:HasTag("fastpicker") then
+            player:AddTag("fastpicker")
+        end
     end
 
     --- 单个物品
@@ -143,7 +156,11 @@ end
 
 
 local function onGetDescFunc(inst, target, name)
-    local desc = "采集植物会有意外收获"
+    local desc = "采集"
+    if canAddQuickPick(inst) then
+        desc = desc.."加速，且"
+    end
+    desc = desc.."额外掉落"
     return KsFunGeneratePowerDesc(inst, desc)
 end
 
