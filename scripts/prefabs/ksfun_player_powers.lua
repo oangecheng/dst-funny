@@ -46,15 +46,14 @@ local function MakePower(name, data)
             inst.components.ksfun_level:SetOnStateChangeFunc(data.level.onStateChangeFunc)
             inst.components.ksfun_level:SetNextLvExpFunc(data.level.nextLvExpFunc)
 
+            --- 可突破，用来提升等级上限
             if data.breakable then
                 inst:AddComponent("ksfun_breakable")
-                -- 有突破组件时，需要设置等级的初始上限
-                inst.components.ksfun_level:SetMax(data.breakable.initMaxLv)
                 inst.components.ksfun_breakable:Enable()
                 inst.components.ksfun_breakable:SetOnBreakFunc(data.breakable.onBreakFunc)
             end
 
-            -- 锻造功能依赖等级
+            -- 锻造功能，提升属性值
             if data.forgable then
                 inst:AddComponent("ksfun_forgable")
                 inst.components.ksfun_forgable:SetForgItems(data.forgable.items)

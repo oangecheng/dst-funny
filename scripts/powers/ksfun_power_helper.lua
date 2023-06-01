@@ -6,12 +6,14 @@ local helper = {}
 local critdamage = require("powers/ksfun_com_critdamage")
 local health     = require("powers/ksfun_com_health")
 local locomotor  = require("powers/ksfun_com_locomotor")
+local damage     = require("powers/ksfun_com_damage")
 
 local COM_NAMES = KSFUN_TUNING.COMMON_POWER_NAMES
 local compowers = {}
 compowers[COM_NAMES.CRIT_DAMAGE] = critdamage
 compowers[COM_NAMES.HEALTH]      = health
 compowers[COM_NAMES.LOCOMOTOR]   = locomotor
+compowers[COM_NAMES.DAMAGE]      = damage
 
 
 helper.MakeComPower = function(name)
@@ -29,7 +31,7 @@ local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 local waterproofer = require("powers/ksfun_item_waterproofer")
 local dapperness   = require("powers/ksfun_item_dapperness")
 local insulator    = require("powers/ksfun_item_insulator")
-local damage       = require("powers/ksfun_item_damage")
+local itemdamage   = require("powers/ksfun_item_damage")
 local chop         = require("powers/ksfun_item_chop")
 local mine         = require("powers/ksfun_item_mine")
 local lifesteal    = require("powers/ksfun_item_lifesteal")
@@ -40,7 +42,7 @@ local itempowers = {}
 itempowers[ITEM_NAMES.WATER_PROOFER] = waterproofer
 itempowers[ITEM_NAMES.DAPPERNESS]    = dapperness
 itempowers[ITEM_NAMES.INSULATOR]     = insulator
-itempowers[ITEM_NAMES.DAMAGE]        = damage
+itempowers[ITEM_NAMES.DAMAGE]        = itemdamage
 itempowers[ITEM_NAMES.CHOP]          = chop
 itempowers[ITEM_NAMES.MINE]          = mine
 itempowers[ITEM_NAMES.LIFESTEAL]     = lifesteal

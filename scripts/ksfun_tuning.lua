@@ -3,6 +3,7 @@ local COMMON_POWER_NAMES_DEF = {
     CRIT_DAMAGE = "crit_damage",
     HEALTH      = "health",
     LOCOMOTOR   = "locomotor",
+    DAMAGE      = "damage"
 }
 
 KSFUN_TUNING =  {
@@ -19,6 +20,7 @@ KSFUN_TUNING =  {
         CRIT_DAMAGE = COMMON_POWER_NAMES_DEF.CRIT_DAMAGE,
         HEALTH      = COMMON_POWER_NAMES_DEF.HEALTH,
         LOCOMOTOR   = COMMON_POWER_NAMES_DEF.LOCOMOTOR,
+        DAMAGE      = COMMON_POWER_NAMES_DEF.DAMAGE,
         HUNGER      = "player_hunger",
         SANITY      = "player_sanity",
         PICK        = "player_pick",
@@ -41,6 +43,7 @@ KSFUN_TUNING =  {
         CRIT_DAMAGE   = COMMON_POWER_NAMES_DEF.CRIT_DAMAGE,
         HEALTH        = COMMON_POWER_NAMES_DEF.HEALTH,
         LOCOMOTOR     = COMMON_POWER_NAMES_DEF.LOCOMOTOR,
+        DAMAGE        = COMMON_POWER_NAMES_DEF.DAMAGE,
         REAL_DAMAGE   = "monster_real_damage",
         ICE_EXPLOSION = "monster_ice_explosion",
         SANITY_AURA   = "monster_sanity_aura",
