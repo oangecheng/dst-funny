@@ -47,15 +47,15 @@ local function onAccept(self, giver, item)
     if not isValidItem(self, item) then return end
 
     local finiteuses = self.inst.components.finiteuses
-    local armor = self.inst.components.armor
+    local armor      = self.inst.components.armor
 
     -- 武器
     if finiteuses then
-        local percent = finiteuses:GetPercent() + 0.2
+        local percent = math.max(finiteuses:GetPercent() + 0.2, 1)
         finiteuses:SetPercent(percent)
     -- 盔甲
     elseif armor then
-        local percent = armor:GetPercent() + 0.2
+        local percent = math.max(armor:GetPercent() + 0.2, 1)
         armor:SetPercent(percent)
     end
     -- 衣服帽子用针线包吧（虽然修复材料有点廉价），但是不想单独兼容了

@@ -30,8 +30,8 @@ end
 
 --- 描述
 local function onGetDescFunc(inst, target, name)
-    local mult = 1 + lv/100
-    local desc = "额外造成"..mult.."倍伤害"
+    local mult = 1 + inst.components.ksfun_level:GetLevel()/100
+    local desc = "造成"..mult.."倍伤害"
     return KsFunGeneratePowerDesc(inst, desc)
 end
 
