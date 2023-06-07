@@ -86,3 +86,59 @@ AddPrefabPostInit("berrybush_juicy",function(inst)
 		end
 	end
 end)
+
+
+
+
+
+
+-- 计算施肥倍率
+-- 每10级提升一个倍率，倍率无上限，但是施肥的最大值是 100
+local function calcFertilizeMulti(deployer)
+    if not deployer then return 1 end
+    local farm = deployer.components.ksfun_power_system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.FARM)
+    if farm ~= nil then
+        local lv = farm.components.ksfun_level:GetLevel()
+        return 1 + lv/10
+    end
+    -- default value
+    return 1
+end
+
+-- 根据用户等级计算肥力值的倍率对肥力值进行修改
+-- 并且返回原始的肥力值，如果之前的肥力值不存在，则返回nil
+local function tryModifyNutrients(fertilizer, deployer)
+    if not fertilizer or not deployer then return nil end
+    local cacheValue = fertilizer.nutrients
+    if not cacheValue then return nil end
+
+    local multi = calcFertilizeMulti(deployer)
+    local newValue = {}
+    for i,v in ipairs(cacheValue) do
+        -- 土地肥力值的上限就是100
+        table.insert(newValue, math.min(math.floor(v * multi), 100))
+    end
+    fertilizer.nutrients = newValue
+    return cacheValue
+end
+
+-- hook ondeploy函数
+-- 在回调之前篡改肥力值，回调后恢复
+local function hookOnDeploy(deployable)
+    deployable.OldDeploy = deployable.Deploy
+    function deployable:Deploy(pt, deployer, rot)
+        local inst = self.inst
+        local fertilizer = inst.components.fertilizer
+        local ret = tryModifyNutrients(fertilizer, deployer)
+        local deployed = deployable:OldDeploy(pt, deployer, rot)
+        if ret then
+            inst.components.fertilizer.nutrients = ret
+        end
+		return deployed
+    end
+end
+
+-- 这里不处理植物人吃肥料
+if TheWorld.ismastersim then
+    AddComponentPostInit("deployable", hookOnDeploy)
+end

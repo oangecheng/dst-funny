@@ -24,6 +24,7 @@ KSFUN_TUNING =  {
         HUNGER      = "player_hunger",
         SANITY      = "player_sanity",
         PICK        = "player_pick",
+        FARM        = "player_farm"
     },
 
     -- 物品属性

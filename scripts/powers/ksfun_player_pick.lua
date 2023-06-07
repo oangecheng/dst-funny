@@ -122,6 +122,11 @@ local function onPickSomeThing(player, data)
         return 
     end
 
+    -- 农作物不支持多倍采集，由其他属性支持
+    if data.object:HasTag("farm_plant") then
+        return
+    end
+
     --- 单个物品
     if loot.prefab ~= nil then
         local exp = PICKABLE_DEFS[loot.prefab] or 0

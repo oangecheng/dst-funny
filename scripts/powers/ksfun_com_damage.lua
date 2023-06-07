@@ -15,7 +15,7 @@ end
 --- 升级到下一级所需经验值
 --- 统一替换成 (lv+1) * 10
 local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (self.lv + 1) * 10
+    return KSFUN_TUNING.DEBUG and 1 or (lv + 1) * 10
 end
 
 
@@ -23,7 +23,7 @@ end
 local function onLvChangeFunc(inst, lv, notice)
     updatePowerState(inst)
     if notice and inst.target then
-        inst.target.components.talker:Say("血量提升！")
+        inst.target.components.talker:Say("伤害增强")
     end
 end
 
@@ -38,7 +38,7 @@ end
 
 local function setUpMaxLv(inst, target)
     if inst.components.ksfun_level then
-        local max = target:HasTag("player") and 25 or 50
+        local max = target:HasTag("player") and 25 or 100
         inst.components.ksfun_level:SetMax(max)
     end
 end
