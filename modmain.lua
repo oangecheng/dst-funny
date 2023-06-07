@@ -9,6 +9,7 @@ PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
     "ksfun_melt_stone",
+    "ksfun_task_reel"
 }
 
 Assets = {
@@ -20,6 +21,7 @@ Assets = {
 
 AddReplicableComponent("ksfun_power_system")
 AddReplicableComponent("ksfun_task_system")
+AddReplicableComponent("ksfun_task_demand")
 
 
 local player_panel = require "mod/my_screen"
@@ -33,6 +35,10 @@ end)
 -- 加载各种玩法
 modimport("scripts/mod/ksfun_hook.lua")
 modimport("scripts/widgets/ksfun_containers.lua")
+-- 物品制作
+modimport("main/recipes.lua")
+-- action
+modimport("main/actions.lua")
 
 
 

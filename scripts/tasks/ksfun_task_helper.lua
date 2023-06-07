@@ -31,7 +31,7 @@ local DEMANDS_UTIL = require("tasks/utils/ksfun_demands")
 
 
 -- 普通任务
-local function killDemand(player, task_lv)
+local function killDemand(task_lv)
     local kill_type = KsFunRandomValueFromKVTable(KILL_TYPES)
     return DEMANDS_UTIL.generateDemand(NAMES.KILL, task_lv, kill_type)
 end
@@ -40,7 +40,7 @@ end
 local function createTaskData(player, name)
     local task_lv = math.random(KSFUN_TUNING.TASK_LV_DEFS.MAX)
 
-    local demand = killDemand(player, task_lv)
+    local demand = killDemand( task_lv)
     local reward = REWARDS_UTIL.generateReward(player, task_lv)
     local punish = nil
 
@@ -50,6 +50,13 @@ local function createTaskData(player, name)
         reward = reward,
         punish = nil
     }
+end
+
+
+local function createDemand()
+    local task_lv = math.random(KSFUN_TUNING.TASK_LV_DEFS.MAX)
+    local demand = killDemand(task_lv)
+    return demand
 end
 
 
@@ -75,6 +82,7 @@ local HELPER = {}
 HELPER.createTaskData = createTaskData
 HELPER.createTask = creaetTask
 HELPER.addTask = addTask
+HELPER.createDemand = createDemand
 
 
 return HELPER
