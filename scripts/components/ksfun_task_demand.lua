@@ -9,7 +9,7 @@ end)
 function TASK_DEMAND:SetDemand(demand)
     self.demand = demand
     if self.inst.replica.ksfun_task_demand then
-        self.inst.replica.ksfun_task_demand("击杀1只猪")
+        self.inst.replica.ksfun_task_demand:SyncData("击杀1只猪")
     end
 end
 

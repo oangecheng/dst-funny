@@ -9,13 +9,9 @@ AddClassPostConstruct("widgets/hoverer", function(self)
         end
         if target and target.entity ~= nil then
             if target.prefab ~= nil then
-                if target.prefab == "ndnr_bounty" and target.replica.ndnr_bountytask then
-                    local content = target.replica.ndnr_bountytask:GetContent()
-                    if content then
-                        str = str .. "\n" .. NDNR_BOUNTY_CONTENT .. content
-                    end
-                elseif target.prefab == "gravestone" and target.replica.ndnr_hoverer then
-                    local content = target.replica.ndnr_hoverer:GetContent()
+                if target.prefab == "ksfun_task_reel" and target.replica.ksfun_task_demand then
+                    local content = target.replica.ksfun_task_demand:GetContent()
+                    KsFunLog("hhhhhhhhhhhhhhhhhhhhhh5", content , str)
                     if content then
                         str = str .. "\n" .. content
                     end

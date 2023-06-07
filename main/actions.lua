@@ -1,15 +1,12 @@
 
-STRINGS.ACTIONS.KSFUN_TASK_ACCEPT = {
-    GENERIC = STRINGS.ACTIONS_KSFUN_TASK_ACCEPT_GENERIC_STR,
-    KSFUN_TASK_ACCEPT = STRINGS.ACTIONS_KSFUN_TASK_ACCEPT_STR
-}
+
 
 
 local ksfun_actions = {
-    KSFUN_TASK_ACCEPT = {
-        id = "KSFUN_TASK_ACCEPT",
+    KSFUN_TASK_DEMAND = {
+        id = "KSFUN_TASK_DEMAND",
         strfn = function(act)
-            return "KSFUN_TASK_ACCEPT"
+            return "KSFUN_TASK_DEMAND"
         end,
         fn = function(act)
             local doer = act.doer
@@ -42,12 +39,16 @@ for k, v in pairs(ksfun_actions) do
 end
 
 
+STRINGS.ACTIONS.KSFUN_TASK_DEMAND = {
+    GENERIC = ACTIONS_KSFUN_TASK_DEMAND_GENERIC_STR,
+    KSFUN_TASK_DEMAND = ACTIONS_KSFUN_TASK_DEMAND_STR
+}
 
 
 AddComponentAction("INVENTORY", "ksfun_task_demand", function(inst, doer, actions)
     if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
         and inst:HasTag("ksfun_task") and doer:HasTag("player") and not doer:HasTag("playerghost") then
-        table.insert(actions, ACTIONS.KSFUN_TASK_ACCEPT)
+        table.insert(actions, ACTIONS.KSFUN_TASK_DEMAND)
     end
 end)
 
@@ -56,7 +57,7 @@ end)
 local sgwilsons = {"wilson", "wilson_client"}
 for i, v in ipairs(sgwilsons) do
     local _dolongactions = {
-        ACTIONS.KSFUN_TASK_ACCEPT,
+        ACTIONS.KSFUN_TASK_DEMAND,
     }
     for i1, v1 in ipairs(_dolongactions) do
         AddStategraphActionHandler(v, ActionHandler(v1, function(inst, action)

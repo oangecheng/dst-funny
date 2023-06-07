@@ -2,9 +2,10 @@
 
 local assets =
 {
-    Asset("ANIM", "anim/papyrus.zip"),
+	Asset("ANIM", "anim/ndnr_bounty.zip"),
+    Asset("IMAGE", "images/ksfun_task_reel.tex"),
+    Asset("ATLAS", "images/ksfun_task_reel.xml"),
 }
-
 
 local taskhelper = require("tasks/ksfun_task_helper")
 
@@ -18,8 +19,9 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank("papyrus")
-    inst.AnimState:SetBuild("papyrus")
+
+    inst.AnimState:SetBank("ndnr_bounty")
+    inst.AnimState:SetBuild("ndnr_bounty")
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("ksfun_task")
@@ -48,6 +50,7 @@ local function fn()
     MakeHauntableLaunchAndIgnite(inst)
 
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/ksfun_task_reel.xml"
 
     return inst
 end

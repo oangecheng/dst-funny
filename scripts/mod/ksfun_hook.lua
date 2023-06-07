@@ -125,6 +125,9 @@ end
 -- hook ondeploy函数
 -- 在回调之前篡改肥力值，回调后恢复
 local function hookOnDeploy(deployable)
+    if not TheWorld.ismastersim then
+        return
+    end
     deployable.OldDeploy = deployable.Deploy
     function deployable:Deploy(pt, deployer, rot)
         local inst = self.inst
@@ -139,11 +142,7 @@ local function hookOnDeploy(deployable)
 end
 
 -- 这里不处理植物人吃肥料
-if TheWorld.ismastersim then
-    AddComponentPostInit("deployable", hookOnDeploy)
-end
-
-
+AddComponentPostInit("deployable", hookOnDeploy)
 
 
 --- 鼠标移动到位置上显示任务内容
