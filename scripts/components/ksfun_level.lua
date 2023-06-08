@@ -1,7 +1,7 @@
 
 -- 升级需要多少经验值
 local function defaultExpFunc(inst, lv)
-    return (lv + 1) * 100
+    return KSFUN_TUNING.DEBUG and 1 or (lv + 1) * 10
 end
 
 
@@ -89,13 +89,7 @@ end
 function KSFUN_LEVEL:GainExp(exp)
     local e = math.floor(exp)
     self.exp = self.exp + e
-
-    local expFun = nil
-    if self.nextLvExpFunc then
-        expFun = self.nextLvExpFunc
-    else
-        expFun = defaultExpFunc
-    end
+    local expFun = defaultExpFunc
 
      -- 计算可以升的级数
     local delta = 0
