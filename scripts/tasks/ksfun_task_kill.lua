@@ -1,29 +1,13 @@
 
-local REWARD  = require("tasks/defs/ksfun_reward_items")
-local DEMANDS = require("tasks/utils/ksfun_demands")
-
 local NAME = KSFUN_TUNING.TASK_NAMES.KILL
 local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
-local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 
 
 local function descFunc(inst, player, name, d)
-    local kill_task = inst.components.ksfun_task
-    if kill_task then
-        local kill_demand = kill_task:GetTaskData().demand
-        local victim_name = STRINGS.NAMES[string.upper(kill_demand.data.victim)] or ""
-        if kill_demand.type == KILL_TYPES.NORMAL then
-            return "击杀"..tostring(kill_demand.data.num).."只"..victim_name
-        end
-        if kill_demand.type == KILL_TYPES.TIME_LIMIT then
-            return "在"..kill_demand.data.duration.."秒内击杀"..tostring(kill_demand.data.num).."只"..victim_name
-        end
-        if kill_demand.type == KILL_TYPES.ATTACKED_LIMIT then
-            return "无伤击杀"..tostring(kill_demand.data.num).."只"..victim_name
-        end
-    end
-    return ""
+    local taskdata = inst.components.ksfun_task:GetTaskData()
+    return KsFunGeneratTaskDesc(taskdata)
 end
+
 
 
 local function onKillOther(killer, data)

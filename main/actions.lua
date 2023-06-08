@@ -1,8 +1,25 @@
 
 
 
+local function acceptTask(doer, invobject)
+    local taskdata = invobject.components.ksfun_task_demand:GetDemand()
+    if taskdata then
+        local data  = deepcopy(taskdata)
+        local chain = require("scripts/tasks/ksfun_task_chain")
+        local task  = chain.fillTaskData(doer, data)
+        -- 任务绑定到玩家身上
+        chain.addTask(doer, task)
+        doer.components.talker:Say("接受任务！")
+        -- 移除任务卷轴
+        invobject:DoTaskInTime(0, invobject:Remove())
+    end
+end
+
+
 
 local ksfun_actions = {
+
+    --- 接受任务
     KSFUN_TASK_DEMAND = {
         id = "KSFUN_TASK_DEMAND",
         strfn = function(act)
@@ -11,8 +28,7 @@ local ksfun_actions = {
         fn = function(act)
             local doer = act.doer
             if doer ~= nil and act.invobject ~= nil then
-                act.doer.components.talker:Say("接受任务！")
-                -- act.invobject.components.ndnr_bountytask:Do(act.doer)
+                acceptTask(doer, act.invobject)
                 return true
             end
         end

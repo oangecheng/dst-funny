@@ -7,7 +7,7 @@ local assets =
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
 }
 
-local taskhelper = require("tasks/ksfun_task_helper")
+local taskchain = require("tasks/ksfun_task_helper")
 
 
 local function fn()
@@ -35,8 +35,9 @@ local function fn()
     end
 
     inst:AddComponent("ksfun_task_demand")
-    local demand = taskhelper.createDemand()
-    inst.components.ksfun_task_demand:SetDemand(demand)
+    -- 随机生成一个任务数据
+    local taskdata = taskchain.initTaskData()
+    inst.components.ksfun_task_demand:SetDemand(taskdata)
 
     inst:AddComponent("inspectable")
 

@@ -46,15 +46,6 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 用户等级状态变更
---- 通知用户面板刷新状态
-local function onStateChangeFunc(inst)
-    if inst.target then
-        inst.target:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_STATE_CHANGE)
-    end
-end
-
-
 --- 下一级饱食度所需经验值
 local function nextLvExpFunc(inst, lv)
     return KSFUN_TUNING.DEBUG and 10 or 100 * (lv + 1)
@@ -183,7 +174,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    onStateChangeFunc = onStateChangeFunc,
     nextLvExpFunc = nextLvExpFunc,
 }
 

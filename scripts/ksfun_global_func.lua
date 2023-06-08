@@ -124,6 +124,34 @@ function KsFunGeneratePowerDesc(power, extradesc)
 end
 
 
+
+local function getKillTaskDesc(demand)
+    local victimname = STRINGS.NAMES[string.upper(demand.data.victim)] or nil
+    local num = demand.data.num
+    if victimname then
+        local str = "击杀"..num.."只"..victimname 
+        if     demand.type == KSFUN_TUNING.KILL_TYPES.NORMAL then
+            return str
+        elseif demand.type == KSFUN_TUNING.KILL_TYPES.TIME_LIMIT then
+            local time = demand.data.duration
+            return str.."(限制:"..time.."秒)"
+        elseif demand.type == KSFUN_TUNING.KILL_TYPES.ATTACKED_LIMIT then
+            return str.."(限制:无伤)"
+        end
+    end
+    return nil
+end
+
+
+function KsFunGeneratTaskDesc(taskdata)
+    if taskdata.name == KSFUN_TUNING.TASK_NAMES.KILL then
+        return getKillTaskDesc(taskdata.demand)
+    end
+    return nil
+end
+
+
+
 GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
@@ -134,3 +162,4 @@ GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunIsValidVictim = KsFunIsValidVictim
 GLOBAL.KsFunGeneratePowerDesc = KsFunGeneratePowerDesc
 GLOBAL.KsFunGeneratePowerDefaultDesc = KsFunGeneratePowerDefaultDesc
+GLOBAL.KsFunGeneratTaskDesc = KsFunGeneratTaskDesc
