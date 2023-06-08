@@ -151,9 +151,14 @@ function KsFunGeneratTaskDesc(taskdata)
 end
 
 
-function KsFunShowNotice(msg)
-    local notice = require("widgets/ksfun_notice")
-    notice:ShowNotice(msg)
+function KsFunShowNotice(player, msg)
+	if  player then
+		local medal_tips = SpawnPrefab("medal_tips")
+		medal_tips.Transform:SetPosition(player.Transform:GetWorldPosition())
+		if medal_tips.medal_d_value then
+			medal_tips.medal_d_value:set(msg)
+		end
+	end
 end
 
 

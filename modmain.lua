@@ -9,7 +9,8 @@ PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
     "ksfun_melt_stone",
-    "ksfun_task_reel"
+    "ksfun_task_reel",
+    "medal_tips",
 }
 
 Assets = {
