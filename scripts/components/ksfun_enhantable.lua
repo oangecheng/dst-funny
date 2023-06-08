@@ -18,10 +18,10 @@ end
 
 
 --- 尝试附魔
-function ENHANTABLE:Enhant(item)
+function ENHANTABLE:Enhant(doer, item)
     KsFunLog("enhant start", self.inst.prefab, item.prefab, self.enable)
     if self.enable and self.onEnhantFunc then
-        if self.onEnhantFunc(self.inst, item) then
+        if self.onEnhantFunc(self.inst, doer, item) then
             KsFunLog("enhant success")
             item:DoTaskInTime(0, item:Remove())
             return true

@@ -2,10 +2,10 @@ local ksfunitems_def = require("defs/ksfun_items_def")
 local POWERS = KSFUN_TUNING.ITEM_POWER_NAMES
 
 
-local function handKsFunItem(ksfunitem, material)
+local function handKsFunItem(doer, ksfunitem, material)
     --- 尝试附魔，增加额外属性，例如保暖
     if ksfunitem.components.ksfun_enhantable then
-        if ksfunitem.components.ksfun_enhantable:Enhant(material) then 
+        if ksfunitem.components.ksfun_enhantable:Enhant(doer, material) then 
             return true
         end
     end
@@ -44,9 +44,20 @@ local function onClose(inst, doer)
     local item1 = inst.components.container:GetItemInSlot(1)
     local item2 = inst.components.container:GetItemInSlot(2)
 
+    if item1 and item2 == nil then
+        if item1.prefab == "purplegem" then
+            local task = doer.components.ksfun_task_system:GetTask()
+            if task then
+                task.components.ksfun_task:Lose()
+                item1:DoTaskInTime(0, item1:Remove())
+                return
+            end
+        end
+    end
+
     if item1 and item2 then
         if table.containskey(ksfunitems_def.ksfunitems, item1.prefab) then
-            if handKsFunItem(item1, item2) then
+            if handKsFunItem(doer, item1, item2) then
                 doer.components.talker:Say("强化成功！")
             else
                 doer.components.talker:Say("当前材料无法进行强化！")

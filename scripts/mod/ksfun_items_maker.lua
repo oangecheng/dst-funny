@@ -5,17 +5,18 @@ local itemsdef = require("defs/ksfun_items_def")
 --- @param inst 装备物品
 --- @param item 材料
 --- @return true 成功 false 失败
-local function onEnhantFunc(inst, item)
+local function onEnhantFunc(inst, doer, item)
     KsFunLog("onEnhantFunc", item.prefab)
+
     local items = itemsdef.ksfunitems[inst.prefab].items
     local powernames = itemsdef.ksfunitems[inst.prefab].names
 
     if table.contains(items, item.prefab) then
         local system = inst.components.ksfun_power_system
         local level  = inst.components.ksfun_level
+
         if level and system then
             local powercount = system:GetPowerNum()
-            KsFunLog("onEnhantFunc", powercount, #powernames, level.lv)
             if powercount < #powernames and powercount <= level.lv then
                 local name = KsFunRandomPower(inst, powernames, false)
                 KsFunLog("onEnhantFunc", name)

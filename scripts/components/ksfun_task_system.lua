@@ -34,12 +34,15 @@ end)
 
 
 function KSFUN_TASK_SYSTEM:GetTask(name)
-    local task = self.tasks[name]
-    if task then
-        return task.inst
+    local task = nil
+    if name == nil then
+        if not IsTableEmpty(self.tasks) then
+            task = GetRandomItem(self.tasks)
+        end
     else
-        return nil
+        task = self.tasks[name]
     end
+    return task and task.inst or nil
 end
 
 --- 设置新增属性监听
