@@ -62,10 +62,9 @@ end
 
 
 local chain = {}
-
+chain.addTask = addTask
 chain.initTaskData = initTaskData
 chain.fillTaskData = fillTaskData
-chain.addTask      = addTask
 chain.generateTaskHanlder = generateTaskHanlder
 
 return chain

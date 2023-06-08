@@ -130,12 +130,12 @@ local function getKillTaskDesc(demand)
     local num = demand.data.num
     if victimname then
         local str = "击杀"..num.."只"..victimname 
-        if     demand.type == KSFUN_TUNING.KILL_TYPES.NORMAL then
+        if     demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.NORMAL then
             return str
-        elseif demand.type == KSFUN_TUNING.KILL_TYPES.TIME_LIMIT then
+        elseif demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.TIME_LIMIT then
             local time = demand.data.duration
             return str.."(限制:"..time.."秒)"
-        elseif demand.type == KSFUN_TUNING.KILL_TYPES.ATTACKED_LIMIT then
+        elseif demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.ATTACKED_LIMIT then
             return str.."(限制:无伤)"
         end
     end
@@ -152,8 +152,8 @@ end
 
 
 function KsFunShowNotice(msg)
-    local notice = require("main/ksfun_notice")
-    notice.showNotice(msg)
+    local notice = require("widgets/ksfun_notice")
+    notice:ShowNotice(msg)
 end
 
 

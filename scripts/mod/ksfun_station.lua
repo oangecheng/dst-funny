@@ -58,7 +58,7 @@ local function onClose(inst, doer)
     if item1 and item2 then
         if table.containskey(ksfunitems_def.ksfunitems, item1.prefab) then
             if handKsFunItem(doer, item1, item2) then
-                doer.components.talker:Say("强化成功！")
+                -- doer.components.talker:Say("强化成功！")
             else
                 doer.components.talker:Say("当前材料无法进行强化！")
             end

@@ -168,3 +168,12 @@ AddClassPostConstruct("widgets/hoverer", function(self)
         return old_SetString(text, str)
     end
 end)
+
+
+
+AddPlayerPostInit(function(player)
+    -- player.ksfun_notice_value = net_string(player.GUID, "ksfun_notice_value", "ksfun_itemdirty")
+	-- player:ListenForEvent("ksfun_itemdirty", function(inst)
+    --     KsFunShowNotice(inst.ksfun_notice_value:value())
+    -- end)
+end)

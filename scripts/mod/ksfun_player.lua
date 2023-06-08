@@ -32,7 +32,7 @@ AddPlayerPostInit(function(player)
     player:AddComponent("ksfun_power_system")
     player:AddComponent("ksfun_task_system")
 
-
+    
     -- test code
     player:ListenForEvent("oneat", function(inst)
 
