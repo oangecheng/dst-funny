@@ -151,6 +151,12 @@ function KsFunGeneratTaskDesc(taskdata)
 end
 
 
+function KsFunShowNotice(msg)
+    local notice = require("main/ksfun_notice")
+    notice.showNotice(msg)
+end
+
+
 
 GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
@@ -163,3 +169,4 @@ GLOBAL.KsFunIsValidVictim = KsFunIsValidVictim
 GLOBAL.KsFunGeneratePowerDesc = KsFunGeneratePowerDesc
 GLOBAL.KsFunGeneratePowerDefaultDesc = KsFunGeneratePowerDefaultDesc
 GLOBAL.KsFunGeneratTaskDesc = KsFunGeneratTaskDesc
+GLOBAL.KsFunShowNotice = KsFunShowNotice

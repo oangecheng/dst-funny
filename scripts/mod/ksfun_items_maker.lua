@@ -21,7 +21,12 @@ local function onEnhantFunc(inst, doer, item)
                 local name = KsFunRandomPower(inst, powernames, false)
                 KsFunLog("onEnhantFunc", name)
                 if name ~= nil then
-                    system:AddPower(name)
+                    local ret = system:AddPower(name)
+
+                    -- local name = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
+                    -- local msg  = name.."成功给"..STRINGS.NAMES[string.upper(inst.prefab)].."附加了"..STRINGS.NAMES[string.upper(ret.inst.prefab)].."属性"
+                    KsFunShowNotice("附魔成功")
+
                     return true
                 end
             end
