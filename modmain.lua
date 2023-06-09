@@ -14,8 +14,9 @@ PrefabFiles = {
 }
 
 Assets = {
-    Asset("ATLAS", "images/ksfun_player_panel_bg.xml"),
-    Asset("IMAGE", "images/ksfun_player_panel_bg.tex"),
+    Asset("ANIM" , "anim/ksfun_task_reel.zip"),	
+    Asset("ATLAS", "images/ksfun_task_reel.xml"),
+    Asset("IMAGE", "images/ksfun_task_reel.tex"),
 }
 
 

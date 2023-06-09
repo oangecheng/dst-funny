@@ -2,7 +2,7 @@
 
 local assets =
 {
-	Asset("ANIM", "anim/ndnr_bounty.zip"),
+	Asset("ANIM" , "anim/ksfun_task_reel.zip"),
     Asset("IMAGE", "images/ksfun_task_reel.tex"),
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
 }
@@ -20,8 +20,8 @@ local function fn()
     MakeInventoryPhysics(inst)
 
 
-    inst.AnimState:SetBank("ndnr_bounty")
-    inst.AnimState:SetBuild("ndnr_bounty")
+    inst.AnimState:SetBank("ksfun_task_reel")
+    inst.AnimState:SetBuild("ksfun_task_reel")
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("ksfun_task")
