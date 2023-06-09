@@ -6,6 +6,24 @@ local helper = require("powers/ksfun_power_helper")
 
 local function MakePower(name, data)
 
+    -- 统一绑定target
+    local function onAttachFunc(inst, target, name)
+        inst.target = target
+        if data.power.onAttachFunc then
+            data.power.onAttachFunc(inst, target, name)
+        end
+    end
+
+
+    -- 统一解绑target
+    local function onDetachFunc(inst, target, name)
+        if data.power.onDetachFunc then
+            data.power.onDetachFunc(inst, target, name)
+        end
+        inst.target = nil
+    end
+
+
     local function fn()
         local inst = CreateEntity()
         inst:AddTag("ksfun_power")
@@ -24,17 +42,15 @@ local function MakePower(name, data)
         inst:AddTag("CLASSIFIED")
 
         inst:AddComponent("ksfun_power")
-        inst.components.ksfun_power:SetOnAttachFunc(data.power.onAttachFunc)
-        inst.components.ksfun_power:SetOnDetachFunc(data.power.onDetachFunc)
-        inst.components.ksfun_power:SetOnExtendFunc(data.power.onExtendFunc)
+        inst.components.ksfun_power:SetOnAttachFunc(onAttachFunc)
+        inst.components.ksfun_power:SetOnDetachFunc(onDetachFunc)
         inst.components.ksfun_power:SetOnGetDescFunc(data.power.onGetDescFunc)
         inst.components.ksfun_power.keepondespawn = true
 
 
         inst:ListenForEvent("ksfun_level_changed", function(ent, data)
-            local target = ent.components.ksfun_power.target
-            if target then
-                target.components.ksfun_power_system:SyncData()
+            if inst.target then
+                inst.target.components.ksfun_power_system:SyncData()
             end
         end)
 
