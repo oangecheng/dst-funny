@@ -3,6 +3,13 @@ local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local KSFUN_HUNGER = {}
 
 
+local function getHungerPercent(inst)
+    if inst.target then
+        return inst.target.components.hunger:GetPercent()
+    end
+    return 1
+end
+
 -- 计算饥饿速率
 -- 100级之后每级新增千分之5的饱食度下降，最大不超过50%
 local function calcHungerMulti(lv)
@@ -22,19 +29,18 @@ end
 -- 设置最大饱食度和饱食度的下降速率
 -- 肚子越大，饿的越快
 local function updateHungerStatus(inst)
-    local lv = inst.components.ksfun_level.lv
+    local data = inst.components.ksfun_power:GetData()
     local player = inst.target
-
-    if player and player.components.hunger then
-        player.components.hunger.max = inst.originHunger + lv
-        local percent = player.components.hunger:GetPercent()
+    if player and player.components.hunger and data then
+        local percent = getHungerPercent(inst)
+        player.components.hunger.max = data.maxhunger + inst.components.ksfun_level:GetLevel()
         player.components.hunger:SetPercent(percent)
     end
 
     -- 100级之后每级新增千分之5的饱食度下降
     if lv > 100  then
         local hunger_multi = calcHungerMulti(lv)
-        player.components.hunger.burnratemodifiers:SetModifier(inst, hunger_multi)
+        player.components.hunger.burnratemodifiers:SetModifier("ksfun_power_hunger", hunger_multi)
     end
 
     
@@ -86,9 +92,13 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, player, name)
     inst.target = player
-    if not inst.originHunger then
-        inst.originHunger = player.components.hunger.max
+    inst.components.ksfun_power:SetData({maxhunger = player.components.hunger.max})
+    
+    -- 修正饱食度百分比
+    if inst.percent then
+        player.components.hunger:SetPercent(inst.percent)
     end
+
     updateHungerStatus(inst)
     player:ListenForEvent("oneat", onEat)
 end
@@ -97,15 +107,23 @@ end
 --- 解绑对象
 local function onDetachFunc(inst, player, name)
     player:RemoveEventCallback("oneat", onEat)
+
+    -- 恢复饱食度上限
     local hunger = player.components.hunger
+    local data   = inst.components.ksfun_power:GetData()
+
+
     if hunger then
-        hunger.burnratemodifiers:RemoveModifier(inst)
-        if inst.originHealth then
-            local percent = health:GetPercent()
-            hunger.max = inst.originHealth
-            hunger:SetPercent(percent)
-        end
+        hunger.burnratemodifiers:RemoveModifier("ksfun_power_hunger")
     end
+
+    if hunger and data then
+        local percent = getHungerPercent(inst)
+        hunger.max = data.maxhunger
+        hunger:SetPercent(percent)
+    end
+
+    -- 恢复
     local workmultiplier = player.components.workmultiplier
     if workmultiplier then
         workmultiplier:RemoveMultiplier(ACTIONS.CHOP,   inst)
@@ -114,7 +132,6 @@ local function onDetachFunc(inst, player, name)
     end
 
     inst.target = nil
-    inst.originHealth = nil
 end
 
 
@@ -122,6 +139,12 @@ local power = {
     name = NAMES.HUNGER,
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
+    onSaveFunc   = function(inst, data)
+        data.percent = getHungerPercent(inst)
+    end,
+    onLoadFunc   = function(inst, data)
+        inst.percent = data.percent or 1
+    end
 }
 
 local level = {
