@@ -17,6 +17,10 @@ Assets = {
     Asset("ANIM" , "anim/ksfun_task_reel.zip"),	
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
     Asset("IMAGE", "images/ksfun_task_reel.tex"),
+    
+    Asset("ANIM" , "anim/ksfun_melt_stone.zip"),	
+    Asset("ATLAS", "images/ksfun_melt_stone.xml"),
+    Asset("IMAGE", "images/ksfun_melt_stone.tex"),
 }
 
 
