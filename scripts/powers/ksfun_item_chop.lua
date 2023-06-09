@@ -24,13 +24,6 @@ local function onLvChangeFunc(inst, lv)
     updatPowerStatus(inst)
 end
 
-
---- 下一级饱食度所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or 10
-end
-
-
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
@@ -42,19 +35,6 @@ local function onAttachFunc(inst, target, name)
     if target.components.finiteuses then
         target.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
     end
-
-    inst.components.ksfun_power:SetOnEnableChangedFunc(function(enable)
-        if enable then
-            if target.components.tool == nil then
-                target:AddComponent("tool")
-            end
-            updatPowerStatus(inst)
-        else
-            if target.components.tool ~= nil then
-                target:RemoveComponent("tool")
-            end
-        end
-    end)
 
     -- 15级上限，多升级也没有意义
     inst.components.ksfun_level:SetMax(15)
@@ -68,11 +48,6 @@ local function onDetachFunc(inst, target, name)
 end
 
 
-local function onBreakFunc(inst, data)
-end
-
-
-
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
@@ -81,7 +56,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 

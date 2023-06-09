@@ -21,13 +21,6 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 升级到下一级所需经验值
---- 怪物的等级都是直接设定的，这里实际没啥用
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (self.lv + 1) * 100
-end
-
-
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
         inst.components.ksfun_level:SetMax(max)
@@ -68,11 +61,10 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onLvChangeFunc = onLvChangeFunc,
 }
 
 local level = {
-    nextLvExpFunc = nextLvExpFunc,
+    onLvChangeFunc = onLvChangeFunc,
 }
 
 

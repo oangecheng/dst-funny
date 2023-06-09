@@ -62,25 +62,15 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 下一级饱食度所需经验值
-local function nextLvExpFunc(inst, lv)
-    if KSFUN_TUNING.DEBUG then
-        return 10
-    else
-        return 100 * (lv + 1)
-    end
-end
-
-
 --- 计算食物能够获得的经验值
---- 经验系数 饱食0.2  生命值0.4 精神值0.6
+--- 经验系数 饱食0.2  生命值0.3 精神值0.5
 --- 如果是某一项为负值，此次获得的经验值可能为负数
 local function calcFoodExp(eater, food)
     if food == nil or food.components.edible == nil then return 0 end
     local hunger = food.components.edible:GetHunger(eater)
     local health = food.components.edible:GetHealth(eater)
     local sanity = food.components.edible:GetSanity(eater)
-    return (0.2 * hunger + health * 0.4 + sanity * 0.6) * 20
+    return 0.2 * hunger + health * 0.3 + sanity * 0.5
 end
 
 
@@ -132,12 +122,10 @@ local power = {
     name = NAMES.HUNGER,
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
 }
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 KSFUN_HUNGER.data = {

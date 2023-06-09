@@ -3,8 +3,8 @@ local DAPPERNESS_RATIO = TUNING.DAPPERNESS_MED / 3
 
 
 local forgitems = {}
-forgitems["flowerhat"] = 5
-forgitems["walrushat"] = 20
+forgitems["flowerhat"] = 1
+forgitems["walrushat"] = 10
 forgitems["hivehat"]   = 50
 
 
@@ -21,12 +21,6 @@ end
 --- 升级
 local function onLvChangeFunc(inst, lv, notice)
     updateDapperness(inst)
-end
-
-
---- 下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 10 or (20 + lv * 20)
 end
 
 
@@ -57,13 +51,11 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
 }
 
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 

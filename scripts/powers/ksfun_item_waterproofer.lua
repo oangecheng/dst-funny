@@ -2,7 +2,7 @@
 local KSFUN_WATER_PROOFER = {}
 
 local forgitems = {}
-forgitems["pigskin"] = 20
+forgitems["pigskin"] = 10
 forgitems["tentaclespots"] = 100
 
 
@@ -19,13 +19,6 @@ end
 local function onLvChangeFunc(inst, lv, notice)
     updateWaterproof(inst)
 end
-
-
---- 下一级防水所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 10 or (20 + lv)
-end
-
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
@@ -62,13 +55,11 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
 }
 
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 

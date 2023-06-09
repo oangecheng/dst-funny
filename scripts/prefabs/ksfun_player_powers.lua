@@ -43,8 +43,6 @@ local function MakePower(name, data)
         if data.level then
             inst:AddComponent("ksfun_level")
             inst.components.ksfun_level:SetOnLvChangeFunc(data.level.onLvChangeFunc)
-            inst.components.ksfun_level:SetOnStateChangeFunc(data.level.onStateChangeFunc)
-            inst.components.ksfun_level:SetNextLvExpFunc(data.level.nextLvExpFunc)
 
             --- 可突破，用来提升等级上限
             if data.breakable then

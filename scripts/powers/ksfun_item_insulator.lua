@@ -2,8 +2,8 @@ local NAME = KSFUN_TUNING.ITEM_POWER_NAMES.INSULATOR
 
 local forgitems = {}
 forgitems["trunk_winter"] = 20
-forgitems["trunk_summer"] = 20
-forgitems["silk"] = 1
+forgitems["trunk_summer"] = 10
+forgitems["silk"] = 2
 forgitems["beardhair"] = 5
 
 
@@ -77,11 +77,6 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 下一级保暖隔热所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (lv + 1)
-end
-
 
 --- 绑定对象
 local function onAttachFunc(inst, item, name)
@@ -133,7 +128,6 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
     onLoadFunc   = onLoad,
     onSaveFunc   = onSave,
 }
@@ -141,7 +135,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 

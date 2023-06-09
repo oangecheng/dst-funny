@@ -11,31 +11,6 @@ local EXCLUDE_TAG_DEFS = {
 local maxlv = 10
 
 
-local function updatPowerStatus(inst)
-    
-end
-
-
---- 监听等级提升
---- @param inst power实例
---- @param lv  等级
-local function onLvChangeFunc(inst, lv)
-    updatPowerStatus(inst)
-end
-
-
---- 等级变更，包括经验值
-local function onStateChangeFunc(inst)
-    
-end
-
-
---- 升级到下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (10 * (lv + 1))
-end
-
-
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
         inst.components.ksfun_level:SetMax(max)
@@ -65,10 +40,6 @@ end
 --- 攻击回血
 --- 需要有生命值的生物
 local function onAttack(power, weapon, attacker, target)
-    -- 禁用之后失效
-    if not power.components.ksfun_power:IsEnable() then
-        return
-    end
 
     local lv = power.components.ksfun_level:GetLevel()
     -- 初始 50% 范围伤害，满级80%
@@ -110,7 +81,6 @@ local function onAttachFunc(inst, target, name)
     end
 
     setUpMaxLv(inst, maxlv)
-    -- updatPowerStatus(inst)
 end
 
 
@@ -125,10 +95,6 @@ local function onDetachFunc(inst, target, name)
 end
 
 
-local function onBreakFunc(inst, data)
-end
-
-
 local function onGetDescFunc(inst, target, name)
     local multi,area = getAoeProperty(inst)
     local desc = "造成范围"..area.."以内"..(multi*100).."%溅射伤害"
@@ -139,13 +105,7 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
     onGetDescFunc= onGetDescFunc
-}
-
-local level = {
-    onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 
@@ -153,18 +113,12 @@ local forgable = {
     items = forgitems
 }
 
-local breakable = {
-    initMaxLv = 10,
-    onBreakFunc = onBreakFunc,
-}
-
 local p = {}
 
 p.data = {
     power = power,
-    level = level,
+    level = {},
     forgable = forgable,
-    -- breakable = breakable,
 }
 
 

@@ -3,12 +3,6 @@
 local NAME = KSFUN_TUNING.MONSTER_POWER_NAMES.REAL_DAMAGE
 
 
---- 升级到下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (self.lv + 1) * 100
-end
-
-
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
         inst.components.ksfun_level:SetMax(max)
@@ -55,13 +49,9 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
-    onGetDescFunc= nil,
 }
 
-local level = {
-    nextLvExpFunc = nextLvExpFunc,
-}
+local level = {}
 
 
 local p = {}

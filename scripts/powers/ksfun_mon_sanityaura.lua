@@ -18,31 +18,9 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 升级到下一级所需经验值
---- 怪物的等级都是直接设定的，这里实际没啥用
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (self.lv + 1) * 100
-end
-
-
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
         inst.components.ksfun_level:SetMax(max)
-    end
-end
-
-
---- 死亡时有20%概率造成范围冰冻，冰冻范围和效果受等级影响
---- 冰冻范围 [2, 4]
---- 冰冻效果 [1, 2]
-local function onDeath(inst)
-    local power = inst.components.ksfun_power_system:GetPower(NAME)
-    local hit = math.random(100) < (KSFUN_TUNING.DEBUG and 100 or 20)
-    if hit and power and power.components.ksfun_power:IsEnable() then
-        local lv = power.components.ksfun_level:GetLevel()
-        local area = 2 + 2 * lv/10
-        local coldness = 1 + lv/10
-        doIceExplosion(inst, area, coldness)
     end
 end
 
@@ -81,7 +59,6 @@ local power = {
 }
 
 local level = {
-    nextLvExpFunc = nextLvExpFunc,
     onLvChangeFunc = onLvChangeFunc,
 }
 

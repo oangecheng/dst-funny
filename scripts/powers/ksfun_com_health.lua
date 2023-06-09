@@ -36,12 +36,14 @@ local function onKillOther(killer, data)
     if victim.components.health == nil then return end
 
     if victim.components.freezable or victim:HasTag("monster") then
-        local exp = victim.components.health.maxhealth
+
+        -- 所有经验都是10*lv 因此血量也需要计算为1/10
+        local exp = victim.components.health.maxhealth / 10
 
         -- 击杀者能够得到满额的经验
         KsFunPowerGainExp(killer, NAME, exp)
 
-        -- 非击杀者经验值计算
+        -- 非击杀者经验值计算，范围10以内其他玩家
         local x,y,z = victim.Transform:GetWorldPosition()
         local players = TheSim:FindEntities(x,y,z, 10, {"player"})
         if players == nil then return end
@@ -54,17 +56,6 @@ local function onKillOther(killer, data)
                 KsFunPowerGainExp(player, NAME, exp * exp_multi)
             end
         end
-    end
-end
-
-
---- 获取升到下一级需要的经验
---- @param inst power lv 当前等级
-local function nextLvExpFunc(inst, lv)
-    if KSFUN_TUNING.DEBUG then
-        return 10
-    else
-        return 100 * (lv + 1)
     end
 end
 
@@ -138,7 +129,6 @@ end
 local power = {
     onAttachFunc = onAttach,
     onDetachFunc = onDetach,
-    onExtendFunc = nil,
     onGetDescFunc = nil,
     onLoadFunc   = onLoad,
     onSaveFunc   = onSave,
@@ -146,7 +136,6 @@ local power = {
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc
 }
 
 local health = {}

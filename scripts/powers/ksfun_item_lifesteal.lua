@@ -2,24 +2,6 @@ local forgitems = {}
 forgitems["mosquitosack"] = 2
 
 
-local function updatPowerStatus(inst)
-    
-end
-
-
---- 监听等级提升
---- @param inst power实例
---- @param lv  等级
-local function onLvChangeFunc(inst, lv)
-    updatPowerStatus(inst)
-end
-
-
---- 升级到下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (10 * (lv + 1))
-end
-
 
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
@@ -61,7 +43,6 @@ local function onAttachFunc(inst, target, name)
     end
 
     setUpMaxLv(inst, 5)
-    updatPowerStatus(inst)
 end
 
 

@@ -2,7 +2,7 @@
 local forgitems = {}
 forgitems["houndstooth"] = 1
 forgitems["stinger"] = 1
-forgitems["ruins_bat"] = 10
+forgitems["ruins_bat"] = 100
 
 
 
@@ -14,7 +14,7 @@ local function updatPowerStatus(inst)
         local damage = data.damage or 0
         if inst.target and inst.target.components.weapon then
             local level = inst.components.ksfun_level:GetLevel()
-            inst.target.components.weapon:SetDamage(damage + level)
+            inst.target.components.weapon:SetDamage(damage + level/10)
         end
     end
 end
@@ -25,12 +25,6 @@ end
 --- @param lv  等级
 local function onLvChangeFunc(inst, lv)
     updatPowerStatus(inst)
-end
-
-
---- 下一级饱食度所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or 20 * (lv + 1)
 end
 
 
@@ -65,22 +59,15 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
 }
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 
 local forgable = {
     items = forgitems
-}
-
-local breakable = {
-    initMaxLv = 10,
-    onBreakFunc = onBreakFunc,
 }
 
 local damage = {}
@@ -89,7 +76,6 @@ damage.data = {
     power = power,
     level = level,
     forgable = forgable,
-    -- breakable = breakable,
 }
 
 

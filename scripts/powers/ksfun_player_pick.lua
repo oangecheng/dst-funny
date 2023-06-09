@@ -48,12 +48,6 @@ local function onLvChangeFunc(inst, lv, notice)
 end
 
 
---- 升级到下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (self.lv + 1) * 10
-end
-
-
 -- 设置最大等级
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
@@ -216,7 +210,6 @@ local power = {
 }
 
 local level = {
-    nextLvExpFunc = nextLvExpFunc,
     onLvChangeFunc = onLvChangeFunc,
 }
 

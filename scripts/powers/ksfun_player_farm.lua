@@ -26,12 +26,6 @@ local function calcPickMulti(power)
 end
 
 
---- 升级到下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (1 + lv) * 10
-end
-
-
 --- 计算多倍采集
 local function onPickSomeThing(player, data)
     if data and data.loot then
@@ -91,9 +85,7 @@ local power = {
     onDetachFunc = onDetachFunc,
 }
 
-local level = {
-    nextLvExpFunc = nextLvExpFunc,
-}
+local level = {}
 
 
 local p = {}

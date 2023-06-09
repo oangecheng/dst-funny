@@ -2,9 +2,9 @@ local NAME = KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY
 
 
 -- 物品基础经验值定义
-local ITEM_EXP_DEF = 10
+local ITEM_EXP_DEF = 1
 -- 建筑基础经验值定义
-local STRUCTURE_EXP_DEF = 20
+local STRUCTURE_EXP_DEF = 2
 -- 各科技等级经验值倍率
 --- SCIENCE 1,2,3
 --- MAGIC 6,7,  (SCIENCE最大倍率x2)
@@ -43,12 +43,6 @@ local function onLvChangeFunc(inst, lv, notice)
     if notice and inst.target then
         inst.target.components.talker:Say("脑残值提升！")
     end
-end
-
-
---- 下一级饱食度所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 10 or 100 * (lv + 1)
 end
 
 
@@ -167,14 +161,12 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
     onLoadFunc   = onLoad,
     onSaveFunc   = onSave,
 }
 
 local level = {
     onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 

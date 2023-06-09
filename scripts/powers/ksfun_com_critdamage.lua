@@ -1,6 +1,7 @@
 
 
 local NAME = KSFUN_TUNING.COMMON_POWER_NAMES.CRIT_DAMAGE
+local MAX_LV = 100
 
 
 --- 升级到下一级所需经验值
@@ -25,7 +26,7 @@ local function hookCalcDamage(inst, attacker)
         attacker.components.combat.CalcDamage = function(targ, weapon, mult)
             local hit    = math.random(100) < (KSFUN_TUNING.DEBUG and 100 or 20)
             local lv     = inst.components.ksfun_level:GetLevel()
-            local ratio  = (inst.components.ksfun_power:IsEnable() and hit) and (lv/10 + 1) or 1
+            local ratio  = (inst.components.ksfun_power:IsEnable() and hit) and (lv/MAX_LV + 1) or 1
             local dmg    = inst.ksfun_originCalcDamage(targ, weapon, mult)
             return dmg * ratio
         end
@@ -36,7 +37,7 @@ end
 --- 绑定对象
 local function onAttachFunc(inst, target, name)
     inst.target = target
-    setUpMaxLv(inst, 10)
+    setUpMaxLv(inst, MAX_LV)
     hookCalcDamage(inst, target)
 end
 
@@ -52,12 +53,7 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
     onGetDescFunc= nil,
-}
-
-local level = {
-    nextLvExpFunc = nextLvExpFunc,
 }
 
 
@@ -65,7 +61,7 @@ local p = {}
 
 p.data = {
     power = power,
-    level = level,
+    level = {},
 }
 
 

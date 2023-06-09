@@ -12,12 +12,6 @@ local function updatePowerState(inst)
 end
 
 
---- 升级到下一级所需经验值
---- 统一替换成 (lv+1) * 10
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (lv + 1) * 10
-end
-
 
 --- 攻击伤害加深
 local function onLvChangeFunc(inst, lv, notice)
@@ -67,7 +61,6 @@ local power = {
 }
 
 local level = {
-    nextLvExpFunc  = nextLvExpFunc,
     onLvChangeFunc = onLvChangeFunc,
 }
 

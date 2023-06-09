@@ -8,12 +8,6 @@ local NO_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
 
 
 
---- 升级到下一级所需经验值
-local function nextLvExpFunc(inst, lv)
-    return KSFUN_TUNING.DEBUG and 1 or (self.lv + 1) * 100
-end
-
-
 local function setUpMaxLv(inst, max)
     if inst.components.ksfun_level then
         inst.components.ksfun_level:SetMax(max)
@@ -79,9 +73,7 @@ local power = {
     onDetachFunc = onDetachFunc,
 }
 
-local level = {
-    nextLvExpFunc = nextLvExpFunc,
-}
+local level = {}
 
 
 local p = {}
