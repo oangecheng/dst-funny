@@ -31,9 +31,10 @@ end
 local function updateHungerStatus(inst)
     local data = inst.components.ksfun_power:GetData()
     local player = inst.target
+    local lv = inst.components.ksfun_level:GetLevel()
     if player and player.components.hunger and data then
         local percent = getHungerPercent(inst)
-        player.components.hunger.max = data.maxhunger + inst.components.ksfun_level:GetLevel()
+        player.components.hunger.max = data.maxhunger + lv
         player.components.hunger:SetPercent(percent)
     end
 

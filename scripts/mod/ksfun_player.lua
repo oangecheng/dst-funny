@@ -36,10 +36,10 @@ AddPlayerPostInit(function(player)
     -- test code
     player:ListenForEvent("oneat", function(inst)
 
-        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH)
-        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.SANITY)
-        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
-        player.components.ksfun_power_system:AddPower(KSFUN_TUNING.PLAYER_POWER_NAMES.DAMAGE)
+        for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
+            player.components.ksfun_power_system:AddPower(v)
+        end
+
 
         local ent = SpawnPrefab("spear")
         if ent then
@@ -50,6 +50,7 @@ AddPlayerPostInit(function(player)
                 ent.components.finiteuses:SetPercent(0.01)
             end
             inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
+
         end
         HELPER.addTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
     end)

@@ -12,6 +12,11 @@ function ENHANTABLE:SetOnEnhantFunc(func)
 end
 
 
+function ENHANTABLE:IsEnable()
+    return self.enable
+end
+
+
 function ENHANTABLE:Enable()
     self.enable = true
 end

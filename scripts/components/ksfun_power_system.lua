@@ -145,6 +145,9 @@ end
 local function getTitle(inst)
     local prefab = inst.prefab
     local name = STRINGS.NAMES[string.upper(prefab)]
+    if inst.components.ksfun_enhantable and inst.components.ksfun_enhantable:IsEnable() then
+        name = name.."[可升级]"
+    end
     local level = inst.components.ksfun_level
     local lv = level and level:GetLevel() or -1
     return prefab,name,lv 

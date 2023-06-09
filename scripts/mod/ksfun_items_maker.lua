@@ -17,7 +17,7 @@ local function onEnhantFunc(inst, doer, item)
 
         if level and system then
             local powercount = system:GetPowerNum()
-            if powercount < #powernames and powercount <= level.lv then
+            if powercount < #powernames and powercount < level.lv then
                 local name = KsFunRandomPower(inst, powernames, false)
                 KsFunLog("onEnhantFunc", name)
                 if name ~= nil then

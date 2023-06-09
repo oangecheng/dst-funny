@@ -66,13 +66,9 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
-    onExtendFunc = nil,
 }
 
-local level = {
-    onLvChangeFunc = onLvChangeFunc,
-    nextLvExpFunc = nextLvExpFunc,
-}
+local level = {}
 
 
 local forgable = {
