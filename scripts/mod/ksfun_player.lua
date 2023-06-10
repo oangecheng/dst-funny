@@ -49,6 +49,9 @@ AddPlayerPostInit(function(player)
             if ent.components.finiteuses then
                 ent.components.finiteuses:SetPercent(0.01)
             end
+
+            ent.components.ksfun_power_system:AddPower(KSFUN_TUNING.ITEM_POWER_NAMES.MAXUSES)
+
             inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
 
         end

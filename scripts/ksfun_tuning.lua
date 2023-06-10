@@ -37,6 +37,7 @@ KSFUN_TUNING =  {
         MINE          = "item_mine",
         LIFESTEAL     = "item_lifesteal",
         AOE           = "item_aoe",
+        MAXUSES       = "item_maxuses"
     },
 
     --- 怪物属性
