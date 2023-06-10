@@ -5,6 +5,9 @@ modimport("scripts/strings_c.lua")
 modimport("scripts/ksfun_global_func.lua")
 
 
+GLOBAL.AddPlayerPostInit = AddPrefabPostInit
+
+
 PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
@@ -45,6 +48,7 @@ modimport("scripts/widgets/ksfun_containers.lua")
 modimport("main/recipes.lua")
 -- action
 modimport("main/actions.lua")
+
 
 
 

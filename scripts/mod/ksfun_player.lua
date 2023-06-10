@@ -4,6 +4,9 @@ local EVENTS = KSFUN_TUNING.EVENTS
 
 local HELPER = require("tasks/ksfun_task_helper")
 
+local ITEMS_DEF = require "defs/ksfun_items_def"
+
+
 
 --- 角色属性变化, 等级，经验值这些
 --- 用来更新面板数据
@@ -50,7 +53,10 @@ AddPlayerPostInit(function(player)
                 ent.components.finiteuses:SetPercent(0.01)
             end
 
-            ent.components.ksfun_power_system:AddPower(KSFUN_TUNING.ITEM_POWER_NAMES.MAXUSES)
+            for i,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
+                ent.components.ksfun_power_system:AddPower(v)
+            end
+
 
             inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
 

@@ -62,6 +62,12 @@ function KSFUN_LEVEL:SetMax(max)
 end
 
 
+function KSFUN_LEVEL:GetMax()
+    return self.max
+end
+
+
+
 function KSFUN_LEVEL:UpMax(v)
     self.max = self.max + v or 1
 end

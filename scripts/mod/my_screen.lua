@@ -131,7 +131,10 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 		end
 	end
 
-	self:AddTitle(title)
+	if title then
+		self:AddTitle(title)
+	end
+
 
 	for k,v in pairs(powers) do
 		local name = string.upper("ksfun_power_"..k)

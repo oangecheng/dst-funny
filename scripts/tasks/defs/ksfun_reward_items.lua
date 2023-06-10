@@ -102,7 +102,7 @@ local function randomNormalItem(player, task_lv)
     local item_lv = math.random(r) 
     item_lv = math.max(item_lv, item_max_lv)
 
-    local items = NORMAL_ITMES[item_lv] 
+    local items = items[item_lv] 
     local index = math.random(#items)
     local name = items[index]
     local num = randomItemNum(task_lv, item_lv)

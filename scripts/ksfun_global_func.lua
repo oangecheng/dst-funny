@@ -57,6 +57,18 @@ function KsFunLog(info, v1, v2, v3)
 end
 
 
+
+function KsFunGetAoeProperty(aoepower)
+    local level = aoepower.components.ksfun_level
+    -- 初始 50% 范围伤害，满级80%
+    -- 初始 1.2 范围， 满级3范围
+    local percent = level:GetLevel() / level:GetMax()
+    local multi = 0.5 + 0.3 * percent
+    local area  = 1.2 + 1.8 * percent
+    return multi, area
+end
+
+
 function KsFunRandomPower(inst, powers, existed)
     local temp = {}
 
@@ -175,3 +187,4 @@ GLOBAL.KsFunGeneratePowerDesc = KsFunGeneratePowerDesc
 GLOBAL.KsFunGeneratePowerDefaultDesc = KsFunGeneratePowerDefaultDesc
 GLOBAL.KsFunGeneratTaskDesc = KsFunGeneratTaskDesc
 GLOBAL.KsFunShowNotice = KsFunShowNotice
+GLOBAL.KsFunGetAoeProperty = KsFunGetAoeProperty

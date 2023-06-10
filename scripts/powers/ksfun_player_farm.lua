@@ -34,7 +34,7 @@ local function onPickSomeThing(player, data)
             local prefab = data.loot[1] and data.loot[1].prefab--获取采摘的预置物名
             -- 采摘巨大作物即可获得经验
             if prefab and string.find(prefab, "oversized") then
-                KsFunPowerGainExp(player, name, 10)
+                KsFunPowerGainExp(player, NAME, 10)
             end
 
             local lootdropper = data.object.components.lootdropper
@@ -55,7 +55,7 @@ local function onPickSomeThing(player, data)
          
                  -- 给予玩家物品
                 for _, item in ipairs(extraloot) do
-                    player.compowers.inventory:GiveItem(item, nil, player:GetPosition())
+                    player.components.inventory:GiveItem(item, nil, player:GetPosition())
                 end 
             end
         end

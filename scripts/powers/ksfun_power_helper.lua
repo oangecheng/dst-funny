@@ -34,8 +34,7 @@ local insulator    = require("powers/ksfun_item_insulator")
 local itemdamage   = require("powers/ksfun_item_damage")
 local chop         = require("powers/ksfun_item_chop")
 local mine         = require("powers/ksfun_item_mine")
-local lifesteal    = require("powers/ksfun_item_lifesteal")
-local aoe          = require("powers/ksfun_item_aoe")
+local itempowersdef   = require("powers/ksfun_item_powers")
 local maxuses      = require("powers/ksfun_item_maxuses")
 
 
@@ -47,8 +46,8 @@ itempowers[ITEM_NAMES.INSULATOR]     = insulator
 itempowers[ITEM_NAMES.DAMAGE]        = itemdamage
 itempowers[ITEM_NAMES.CHOP]          = chop
 itempowers[ITEM_NAMES.MINE]          = mine
-itempowers[ITEM_NAMES.LIFESTEAL]     = lifesteal
-itempowers[ITEM_NAMES.AOE]           = aoe
+itempowers[ITEM_NAMES.LIFESTEAL]     = itempowersdef.lifesteal
+itempowers[ITEM_NAMES.AOE]           = itempowersdef.aoe
 itempowers[ITEM_NAMES.MAXUSES]       = maxuses
 
 

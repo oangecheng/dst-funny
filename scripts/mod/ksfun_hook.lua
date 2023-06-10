@@ -1,3 +1,5 @@
+
+----------------------------------------------------------------------饱食度对移速的hook--------------------------------------------------------------------------------------------------
 local HOOK_SPEED_LEVEL = 100
 
 
@@ -72,24 +74,10 @@ end
 AddComponentPostInit("locomotor", hookCarryHeavySpeed)
 
 
---多汁浆果采集是掉落
-AddPrefabPostInit("berrybush_juicy",function(inst)
-	if GLOBAL.TheWorld.ismastersim then
-		if inst.components.pickable then
-			local oldpickfn=inst.components.pickable.onpickedfn
-			inst.components.pickable.onpickedfn=function(inst, picker, loot)
-				picker:PushEvent("ksfun_picksomething", { object = inst, prefab = "berries_juicy", num = 3})
-				if oldpickfn then
-					oldpickfn(inst, picker, loot)
-				end
-			end
-		end
-	end
-end)
 
 
 
-
+----------------------------------------------------------------------肥力hook--------------------------------------------------------------------------------------------------
 
 
 -- 计算施肥倍率
@@ -171,9 +159,127 @@ end)
 
 
 
-AddPlayerPostInit(function(player)
-    -- player.ksfun_notice_value = net_string(player.GUID, "ksfun_notice_value", "ksfun_itemdirty")
-	-- player:ListenForEvent("ksfun_itemdirty", function(inst)
-    --     KsFunShowNotice(inst.ksfun_notice_value:value())
-    -- end)
+
+
+--------------------------------------------------攻击属性hook-----------------------------------------------------------
+---- 吸血
+---- 溅射
+
+local ITEMS_DEF = require "defs/ksfun_items_def"
+local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
+
+
+local EXCLUDE_TAG_DEFS = {
+	"INLIMBO",
+	"companion", 
+	"wall",
+	"abigail", 
+}
+
+
+
+-- 判断是否为仆从
+local function isFollower(inst, target)
+    if inst.components.leader ~= nil then
+        return inst.components.leader:IsFollower(target)
+    end
+    return false
+end
+
+
+
+--- aoe伤害处理
+local function doAoeAttack(aoepower, weapon, attacker, target)
+    local lv = aoepower.components.ksfun_level:GetLevel()
+    -- 初始 50% 范围伤害，满级80%
+    -- 初始 1.2 范围， 满级3范围
+    local multi, area = KsFunGetAoeProperty(aoepower)
+
+    local combat = attacker.components.combat
+    local x,y,z = target.Transform:GetWorldPosition()
+
+    local ents = TheSim:FindEntities(x, y, z, area, { "_combat" }, EXCLUDE_TAG_DEFS)
+    for i, ent in ipairs(ents) do
+        if ent ~= target and ent ~= attacker and combat:IsValidTarget(ent) and (not isFollower(attacker, ent)) then
+            attacker:PushEvent("onareaattackother", { target = ent, weapon = weapon, stimuli = nil })
+            local damage = combat:CalcDamage(ent, weapon, 1) * multi
+            ent.components.combat:GetAttacked(attacker, damage, weapon, nil)
+        end
+    end
+end
+
+
+
+--- 吸血攻击
+local function doLifestealAttack(lifesteal, attacker, victim)
+    if KsFunIsValidVictim(victim) then
+        local level  = lifesteal.components.ksfun_level
+        local health = attacker and attacker.components.health or nil
+        if level and health then
+            health:DoDelta(level:GetLevel(), false, "ksfun_item_lifesteal")
+        end
+    end
+end
+
+
+
+local function onAttack(inst, attacker, victim)
+    local system = inst.components.ksfun_power_system
+    if system == nil then return end
+
+    -- 吸血
+    local lifesteal = system:GetPower(ITEM_NAMES.LIFESTEAL)
+    if lifesteal then
+       doLifestealAttack(lifesteal, attacker, victim)
+    end
+
+    -- 溅射
+    local aoe = system:GetPower(ITEM_NAMES.AOE)
+    if aoe then
+        doAoeAttack(aoe, inst, attacker, victim)
+    end
+
+end
+
+
+local function hookAttackFunc(inst)
+    if not TheWorld.ismastersim then return end
+    local weapon = inst.components.weapon
+    if weapon then
+        weapon.ksfunOldOnAttack = weapon.onattack
+        weapon:SetOnAttack(function(ent, attacker, victim)
+            -- 执行mod攻击函数
+            onAttack(ent, attacker, victim)
+            -- 执行原始函数
+            if weapon.ksfunOldOnAttack then
+                weapon.ksfunOldOnAttack(ent, attacker, victim)
+            end
+        end)
+    end
+end
+
+
+for i,v in ipairs(ITEMS_DEF.weapon) do
+    AddPrefabPostInit(v, hookAttackFunc)
+end
+
+
+
+
+
+-----------------------------------------------------------------其他逻辑处理--------------------------------------------------------------------------------------
+
+--多汁浆果采集是掉落
+AddPrefabPostInit("berrybush_juicy",function(inst)
+	if GLOBAL.TheWorld.ismastersim then
+		if inst.components.pickable then
+			local oldpickfn=inst.components.pickable.onpickedfn
+			inst.components.pickable.onpickedfn=function(inst, picker, loot)
+				picker:PushEvent("ksfun_picksomething", { object = inst, prefab = "berries_juicy", num = 3})
+				if oldpickfn then
+					oldpickfn(inst, picker, loot)
+				end
+			end
+		end
+	end
 end)
