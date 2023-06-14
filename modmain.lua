@@ -14,6 +14,7 @@ PrefabFiles = {
     "ksfun_melt_stone",
     "ksfun_task_reel",
     "medal_tips",
+    "ksfun_power_gems"
 }
 
 Assets = {
@@ -24,6 +25,10 @@ Assets = {
     Asset("ANIM" , "anim/ksfun_melt_stone.zip"),	
     Asset("ATLAS", "images/ksfun_melt_stone.xml"),
     Asset("IMAGE", "images/ksfun_melt_stone.tex"),
+
+    Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
+    Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_item_maxuses.xml"),
+    Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_item_maxuses.tex"),
 }
 
 
