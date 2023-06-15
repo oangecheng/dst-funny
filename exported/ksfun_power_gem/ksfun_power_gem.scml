@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spriter_data scml_version="1.0" generator="BrashMonkey Spriter" generator_version="b5">
     <folder id="0" name="low">
-        <file id="0" name="low/kfun_gem_maxuses.png" width="300" height="300" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="0" name="low/kfun_gem_maxuses.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="1" name="low/ksfun_gem_waterproof.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="2" name="low/ksfun_gem_mine.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="3" name="low/ksfun_gem_lifesteal.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="4" name="low/ksfun_gem_insulator.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="5" name="low/ksfun_gem_dapperness.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="6" name="low/ksfun_gem_damage_low.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="7" name="low/ksfun_gem_chop.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
     </folder>
     <entity id="0" name="ksfun_power_gem">
         <animation id="0" name="item_maxuses" length="200">
             <mainline>
                 <key id="0">
-                    <object_ref id="0" name="kfun_gem_maxuses" folder="0" file="0" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="360" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                    <object_ref id="0" name="kfun_gem_maxuses" folder="0" file="0" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
                 </key>
                 <key id="1" time="100">
                     <object_ref id="0" timeline="0" key="1" z_index="0"/>
@@ -18,13 +25,176 @@
             </mainline>
             <timeline id="0" name="kfun_gem_maxuses">
                 <key id="0" spin="0">
-                    <object folder="0" file="0"/>
+                    <object folder="0" file="0" angle="0"/>
                 </key>
                 <key id="1" time="100" spin="0">
-                    <object folder="0" file="0"/>
+                    <object folder="0" file="0" angle="0"/>
                 </key>
                 <key id="2" time="200" spin="0">
-                    <object folder="0" file="0"/>
+                    <object folder="0" file="0" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="1" name="item_waterproofer" length="200">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="ksfun_gem_waterproof" folder="0" file="1" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="100">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_waterproof">
+                <key id="0" spin="0">
+                    <object folder="0" file="1" angle="0"/>
+                </key>
+                <key id="1" time="100" spin="0">
+                    <object folder="0" file="1" angle="0"/>
+                </key>
+                <key id="2" time="200" spin="0">
+                    <object folder="0" file="1" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="2" name="item_mine" length="200">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="ksfun_gem_mine" folder="0" file="2" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="100">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_mine">
+                <key id="0" spin="0">
+                    <object folder="0" file="2" angle="0"/>
+                </key>
+                <key id="1" time="100" spin="0">
+                    <object folder="0" file="2" angle="0"/>
+                </key>
+                <key id="2" time="200" spin="0">
+                    <object folder="0" file="2" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="3" name="item_lifesteal" length="200">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="ksfun_gem_lifesteal" folder="0" file="3" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="100">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_lifesteal">
+                <key id="0" spin="0">
+                    <object folder="0" file="3" angle="0"/>
+                </key>
+                <key id="1" time="100" spin="0">
+                    <object folder="0" file="3" angle="0"/>
+                </key>
+                <key id="2" time="200" spin="0">
+                    <object folder="0" file="3" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="4" name="item_insulator" length="200">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="ksfun_gem_insulator" folder="0" file="4" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1.1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="100">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_insulator">
+                <key id="0" spin="0">
+                    <object folder="0" file="4" angle="0" scale_x="1.1"/>
+                </key>
+                <key id="1" time="100" spin="0">
+                    <object folder="0" file="4" angle="0" scale_x="1.1"/>
+                </key>
+                <key id="2" time="200" spin="0">
+                    <object folder="0" file="4" angle="0" scale_x="1.1"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="5" name="item_dapperness" length="200">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="ksfun_gem_dapperness" folder="0" file="5" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="100">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_dapperness">
+                <key id="0" spin="0">
+                    <object folder="0" file="5" angle="0"/>
+                </key>
+                <key id="1" time="100" spin="0">
+                    <object folder="0" file="5" angle="0"/>
+                </key>
+                <key id="2" time="200" spin="0">
+                    <object folder="0" file="5" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="6" name="item_damage" length="200">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="ksfun_gem_damage_low" folder="0" file="6" abs_x="0" abs_y="0" abs_pivot_x="0.5" abs_pivot_y="0.5" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="100">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_damage_low">
+                <key id="0" spin="0">
+                    <object folder="0" file="6" angle="0"/>
+                </key>
+                <key id="1" time="100" spin="0">
+                    <object folder="0" file="6" angle="0"/>
+                </key>
+                <key id="2" time="200" spin="0">
+                    <object folder="0" file="6" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="7" name="item_chop" length="200">
+            <mainline>
+                <key id="0"/>
+                <key id="1" time="137">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="2" time="200">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="ksfun_gem_chop">
+                <key id="0" time="137" spin="0">
+                    <object folder="0" file="7"/>
+                </key>
+                <key id="1" time="200" spin="0">
+                    <object folder="0" file="7"/>
                 </key>
             </timeline>
         </animation>

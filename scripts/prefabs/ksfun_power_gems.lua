@@ -9,12 +9,13 @@ local assets = {
 local prefix = "ksfun_power_gem_"
 
 
-for k,v in ipairs(ITEM_POWER_NAMES) do
+for k,v in pairs(ITEM_POWER_NAMES) do
     if v ~= ITEM_POWER_NAMES.AOE then
-        table.insert( assets, Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_"..v..".tex"))
-        table.insert( assets, Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_"..v..".xml"))
+        table.insert( assets, Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_"..v..".xml"))
+        table.insert( assets, Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_"..v..".tex"))
     end
 end
+
 
 
 local function MakePowerGem(name, lv)
@@ -27,8 +28,8 @@ local function MakePowerGem(name, lv)
     
         MakeInventoryPhysics(inst)
     
-        inst.AnimState:SetBank(prefix)
-        inst.AnimState:SetBuild(prefix)
+        inst.AnimState:SetBank("ksfun_power_gem")
+        inst.AnimState:SetBuild("ksfun_power_gem")
         inst.AnimState:PlayAnimation(name)
     
         inst.entity:SetPristine()
@@ -38,6 +39,8 @@ local function MakePowerGem(name, lv)
         end
     
         inst:AddComponent("inspectable")
+        local desc = STRINGS.NAMES[string.upper("ksfun_power_"..name)]
+        inst.components.inspectable:SetDescription("可以给装备附加"..desc)
 
         -- 添加等级组件
         if lv ~= nil then
@@ -50,23 +53,21 @@ local function MakePowerGem(name, lv)
         inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
     
         inst:AddComponent("inventoryitem")
-        inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_power_gem_item_maxuses.xml"
+        inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_power_gem_"..name..".xml"
     
         return inst
     end
 
-    return Prefab("ksfun_power_gem_item_maxuses", fn, assets)
+    return Prefab(prefix..name, fn, assets)
 end
 
 
 local gems = {}
-for k,v in ipairs(ITEM_POWER_NAMES) do
+for k,v in pairs(ITEM_POWER_NAMES) do
     if v ~= ITEM_POWER_NAMES.AOE then
-        table.insert( gems, MakePowerGem(v))
+        table.insert(gems, MakePowerGem(v))
     end
 end
-
-
 return unpack(gems)
 
 

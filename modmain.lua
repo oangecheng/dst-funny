@@ -31,6 +31,14 @@ Assets = {
     Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_item_maxuses.tex"),
 }
 
+local ITEM_POWER_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
+for k,v in pairs(ITEM_POWER_NAMES) do
+    if v ~= ITEM_POWER_NAMES.AOE then
+        table.insert(Assets, Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_"..v..".xml"))
+        table.insert(Assets, Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_"..v..".tex"))
+    end
+end
+
 
 
 AddReplicableComponent("ksfun_power_system")
