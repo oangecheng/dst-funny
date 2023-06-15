@@ -1,15 +1,23 @@
+local ITEM_POWER_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 
 
 local assets = {
     Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
-    Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_item_maxuses.xml"),
-    Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_item_maxuses.tex"),
 }
 
-local name_prefix = "ksfun_melt_stone_"
+--- 属性宝石前缀
+local prefix = "ksfun_power_gem_"
 
 
-local function makeMeltStone(name, lv)
+for k,v in ipairs(ITEM_POWER_NAMES) do
+    if v ~= ITEM_POWER_NAMES.AOE then
+        table.insert( assets, Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_"..v..".tex"))
+        table.insert( assets, Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_"..v..".xml"))
+    end
+end
+
+
+local function MakePowerGem(name, lv)
     local function fn()
         local inst = CreateEntity()
     
@@ -19,9 +27,9 @@ local function makeMeltStone(name, lv)
     
         MakeInventoryPhysics(inst)
     
-        inst.AnimState:SetBank("ksfun_power_gem")
-        inst.AnimState:SetBuild("ksfun_power_gem")
-        inst.AnimState:PlayAnimation("item_maxuses")
+        inst.AnimState:SetBank(prefix)
+        inst.AnimState:SetBuild(prefix)
+        inst.AnimState:PlayAnimation(name)
     
         inst.entity:SetPristine()
     
@@ -30,9 +38,13 @@ local function makeMeltStone(name, lv)
         end
     
         inst:AddComponent("inspectable")
-        -- --- 设置等级
-        -- inst:AddComponent("ksfun_level")
-        -- inst.components.ksfun_level:SetLevel(lv)
+
+        -- 添加等级组件
+        if lv ~= nil then
+            inst:AddComponent("ksfun_level")
+            inst.components.ksfun_level:SetLevel(lv)
+        end
+
 
         inst:AddComponent("stackable")
         inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
@@ -47,7 +59,15 @@ local function makeMeltStone(name, lv)
 end
 
 
-return makeMeltStone()
+local gems = {}
+for k,v in ipairs(ITEM_POWER_NAMES) do
+    if v ~= ITEM_POWER_NAMES.AOE then
+        table.insert( gems, MakePowerGem(v))
+    end
+end
+
+
+return unpack(gems)
 
 
 
