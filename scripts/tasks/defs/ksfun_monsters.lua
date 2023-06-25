@@ -1,9 +1,4 @@
 
-local MOOSE = "MOOSE"
-if STRINGS.NAMES[MOOSE] == nil then
-    STRINGS.NAMES[MOOSE] = "麋鹿鹅" 
-end
-
 
 local LV_DEFS = KSFUN_TUNING.TASK_LV_DEFS
 

@@ -1,6 +1,8 @@
-STRINGS.NAMES.TEST = "测试"         
-STRINGS.RECIPE_DESC.TEST = "测试"
-STRINGS.CHARACTERS.GENERIC.TEST= "测试"  
+
+local MOOSE = "MOOSE"
+if STRINGS.NAMES[MOOSE] == nil then
+    STRINGS.NAMES[MOOSE] = "麋鹿鹅" 
+end
 
 
 STRINGS.NAMES.KSFUN_TASK_REEL = "任务卷轴"         

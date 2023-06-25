@@ -31,7 +31,7 @@ local function rewardPowerLv(player, data)
         if power then
             power.components.ksfun_level:Up(data.num)
             -- xx(属性)获得xx经验奖励
-            local str = STRINGS.KSFUN_TASK_WIN..","..KsFunGetPowerNameStr(powername)..STRINGS.KSFUN_REWARD_LV
+            local str = STRINGS.KSFUN_TASK_WIN..","..KsFunGetPowerNameStr(powername)..STRINGS.KSFUN_REWARD_LV..data.num
             if player.components.talker then
                 player.components.talker:Say(str)
             end
@@ -48,7 +48,7 @@ local function rewardPowerExp(player, data)
     KsFunLog("rewardPowerExp", powername)
     KsFunPowerGainExp(player, powername, data.num)
     -- xx(属性)获得xx经验奖励
-    local str = STRINGS.KSFUN_TASK_WIN..","..KsFunGetPowerNameStr(powername)..STRINGS.KSFUN_REWARD_EXP
+    local str = STRINGS.KSFUN_TASK_WIN..","..KsFunGetPowerNameStr(powername)..STRINGS.KSFUN_REWARD_EXP..data.num
     if player.components.talker then
         player.components.talker:Say(str)
     end

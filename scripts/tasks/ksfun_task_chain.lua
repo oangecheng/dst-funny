@@ -1,9 +1,24 @@
+-- 以击杀任务为例子
+-- 任务的数据结构
+--  {
+--     name = "kill",
+--     tasklv = 10,
+--     demand = {
+--         kill_type = 1,
+--         data = {
+--             victim = "pigman",
+--             lv = 100,
+--             num = 2,
+--             duration = 100
+--         }
+--     }
+--  }
+
 
 local NAMES = KSFUN_TUNING.TASK_NAMES
 
 local rewards = require("tasks/utils/ksfun_rewards")
 local demands = require("tasks/utils/ksfun_demands")
-
 
 --- 初始化任务数据
 --- 这个步骤只生成了任务的要求
