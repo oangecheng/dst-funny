@@ -21,9 +21,12 @@ local itemsdef = {
     gems = {}
 }
 
+itemsdef.enhantitems = {}
+
 -- 属性宝石
 for k,v in pairs(NAMES) do
     table.insert(itemsdef.gems, "ksfun_power_gem_"..v)
+    itemsdef.enhantitems[v] = "ksfun_power_gem_"..v 
 end
 
 
@@ -33,14 +36,19 @@ local ksfunitems = {}
 --- 定义可升级物品的配置
 --- @param list 可以升级的物品列表
 --- @param powernames 物品能够获取哪些能力
---- @param enhantitems 附魔需要的材料，现在统一使用的彩虹宝石
---- 附魔材料后面可以按照不同的属性定义不同的材料，比如锋锐需要犀牛角
-local function initKsFunItems(list, powernames, enhantitems)
+local function initKsFunItems(list, powernames)
     for i, v in ipairs(list) do
         ksfunitems[v] = {
             names = powernames,
-            items = enhantitems,
         }
+    end
+end
+
+
+local function initKsFunPowerEnhantItems()
+    itemsdef.enhantitems = {}
+    for i,v in ipairs(NAMES) do
+        itemsdef.enhantitems[v] = "ksfun_power_gem_"..v 
     end
 end
 
@@ -68,11 +76,11 @@ local armornames = {
 }
 
 ---武器拥有，加攻，砍树，挖矿，生命窃取
-initKsFunItems(itemsdef.weapon, weaponnames,  {"opalpreciousgem"})
+initKsFunItems(itemsdef.weapon, weaponnames)
 ---帽子拥有，保暖，防水，恢复精神
-initKsFunItems(itemsdef.hat, hatnames, {"opalpreciousgem"})
----帽子拥有，保暖，防水，恢复精神
-initKsFunItems(itemsdef.armor, armornames, {"opalpreciousgem"})
+initKsFunItems(itemsdef.hat, hatnames)
+---护甲拥有，保暖，防水，恢复精神
+initKsFunItems(itemsdef.armor, armornames)
 
 
 itemsdef.ksfunitems = ksfunitems

@@ -8,10 +8,10 @@ local itemsdef = require("defs/ksfun_items_def")
 local function onEnhantFunc(inst, doer, item)
     KsFunLog("onEnhantFunc", item.prefab)
 
-    local items = itemsdef.ksfunitems[inst.prefab].items
+    local enhantitem = itemsdef.enhantitems[inst.prefab]
     local powernames = itemsdef.ksfunitems[inst.prefab].names
 
-    if table.contains(items, item.prefab) then
+    if enhantitem == item.prefab then
         local system = inst.components.ksfun_power_system
         local level  = inst.components.ksfun_level
 
@@ -47,9 +47,11 @@ end
 
 
 
+--- 物品等级突破，这里突破之后等级也随之提升一级
 local function onBreakFunc(inst, item)
     KsFunLog("onBreakFunc", item.prefab)
-    local items = {"goldnugget"}
+    -- 彩虹宝石可以提升物品的等级上限
+    local items = {"opalpreciousgem"}
     if table.contains(items, item.prefab) then
         local level  = inst.components.ksfun_level
         if level then
