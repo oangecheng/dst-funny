@@ -1,8 +1,13 @@
 
 local KSFUN_ITEM_TYPES = KSFUN_TUNING.KSFUN_ITEM_TYPES
-local ksfun_items = require("defs/ksfun_items_def")
+local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
+
+local ksfun_rewards = {}
 
 
+
+
+--------------------------------------------- 普通物品相关奖励 ---------------------------------------------------------------------
 local item1 = {
     "goldnugget", -- 金块
     "charcoal", -- 木炭
@@ -32,7 +37,6 @@ local item3 = {
     "purplegem", -- 紫宝石
     "moonrocknugget", -- 月石
 }
-
 
 
 local item4 = {
@@ -96,7 +100,7 @@ end
 --- 随机生成一些物品
 --- @param task_lv 任务难度等级
 --- @return 名称，等级，数量，类型
-local function randomNormalItem(player, task_lv)
+ksfun_rewards.randomNormalItem = function(player, task_lv)
 
     local r = task_lv or item_max_lv
     local item_lv = math.random(r) 
@@ -107,7 +111,7 @@ local function randomNormalItem(player, task_lv)
     local name = items[index]
     local num = randomItemNum(task_lv, item_lv)
     return {
-        type = KSFUN_TUNING.TASK_REWARD_TYPES.ITEM,
+        type = REWARD_TYPES.ITEM,
         data = {
             item = name,
             num = num,
@@ -115,8 +119,15 @@ local function randomNormalItem(player, task_lv)
     }
 end
 
---- 随机获取一个熔炼相关物品
-local function randomKsFunItem(player, task_lv)
+
+
+
+
+--------------------------------------------- 特殊物品奖励 ---------------------------------------------------------------------
+local ksfun_items = require("defs/ksfun_items_def")
+
+--- 随机获取一个特殊物品奖励
+ksfun_rewards.randomKsFunItem = function(player, task_lv)
     local itemtype = GetRandomItem(KSFUN_ITEM_TYPES)
 
     local list = nil
@@ -140,7 +151,7 @@ local function randomKsFunItem(player, task_lv)
 
     return {
         -- 主类别
-        type = KSFUN_TUNING.TASK_REWARD_TYPES.KSFUN_ITEM,
+        type = REWARD_TYPES.KSFUN_ITEM,
         data = {
             item = name,
             num = num,
@@ -153,10 +164,66 @@ end
 
 
 
-local reward_items = {}
-
-reward_items.randomNormalItem = randomNormalItem
-reward_items.randomKsFunItem = randomKsFunItem
+--------------------------------------------- 属性相关奖励 ---------------------------------------------------------------------
+local POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
-return reward_items
+--- 随机给予一个数据奖励
+--- @param player 角色
+--- @param task_lv 等级
+--- data = {power = a}
+ksfun_rewards.randomNewPower = function(player, task_lv)
+    local power = KsFunRandomPower(player, POWERS, false)
+    if power then
+        return {
+            type = REWARD_TYPES.PLAYER_POWER,
+            data = {
+                power = power
+            }
+        }
+    end
+    return nil
+end
+
+
+--- 随机查找一个存在的属性给予等级奖励
+--- @param player 角色
+--- @param task_lv 等级
+--- data = {power = a, num = b}
+ksfun_rewards.randomPowerLv = function(player, task_lv)
+    local power = KsFunRandomPower(player, POWERS, true)
+    local lv = math.random(3)
+    if power then
+        return {
+            type = REWARD_TYPES.PLAYER_POWER_LV,
+            data = {
+                power = power,
+                num = lv,
+            }
+        }
+    end
+    return nil
+end
+
+
+--- 随机一个属性给予一定的经验值奖励
+--- @param player 角色
+--- @param task_lv 等级
+--- data = {power = a, num = b}
+ksfun_rewards.randomPowerExp = function(player, task_lv)
+    local power = KsFunRandomPower(player, POWERS, true)
+    local exp = math.random(task_lv) * 10
+    if power then
+        return {
+            type = REWARD_TYPES.PLAYER_POWER_EXP,
+            data = {
+                power = power,
+                num = exp,
+            }
+        }
+    end
+    return nil
+end
+
+
+return ksfun_rewards

@@ -1,8 +1,4 @@
 
-
-local LV_DEFS = KSFUN_TUNING.TASK_LV_DEFS
-
-
 local MONSTER_LV1 = {
     "butterfly",
     "killerbee",
@@ -121,10 +117,8 @@ end
 --- 生成一个随机的目标等级的怪物
 --- @param moster_lv 怪物等级，无就随机等级
 --- @return 怪物代码 名称/等级/数量
-local function randomMonster(task_lv)
-    local lv = task_lv and task_lv or math.random(6)
-    lv = math.max(1, lv)
-    lv = math.min(6, lv)
+local function randomMonster()
+    local lv = math.random(6)
     local monsters = MONSTER_DEFS[lv] 
     local index = math.random(#monsters)
     local name = monsters[index]

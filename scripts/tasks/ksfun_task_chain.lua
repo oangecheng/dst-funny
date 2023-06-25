@@ -17,8 +17,7 @@
 
 local NAMES = KSFUN_TUNING.TASK_NAMES
 
-local rewards = require("tasks/utils/ksfun_rewards")
-local demands = require("tasks/utils/ksfun_demands")
+local tasksdef = require("tasks/defs/ksfun_tasks_def")
 
 --- 初始化任务数据
 --- 这个步骤只生成了任务的要求
@@ -26,10 +25,13 @@ local demands = require("tasks/utils/ksfun_demands")
 --- @return 任务数据
 local function initTaskData()
     local data = {}
-    data.name = KSFUN_TUNING.DEBUG and NAMES.KILL or KsFunRandomValueFromKVTable(NAMES)
-    data.tasklv = math.random(KSFUN_TUNING.TASK_LV_DEFS.MAX)
-    local demand = demands.generateDemand(data.name, data.tasklv)
-    data.demand = demand
+    -- 随机任务类型
+    data.name = GetRandomItem(NAMES)
+    -- 生成任务要求
+    local demand = tasksdef.generateDemand(data.name)
+    -- 计算任务等级
+    data.tasklv  = demand.diffculty
+    data.demand  = demand
     return data
 end
 
@@ -40,7 +42,7 @@ end
 --- @param data   已经包含任务要求的数据
 --- @return 任务数据
 local function fillTaskData(player, data)
-    local reward =  rewards.generateReward(player, data.tasklv)
+    local reward =  tasksdef.randomReward(player, data.tasklv)
     data.reward = reward
     return data
 end
@@ -58,6 +60,7 @@ end
 local kill    = require("tasks/ksfun_task_kill")
 local reward  = require("tasks/ksfun_task_reward")
 local punish  = require("tasks/ksfun_task_punish")
+
 local handlers = {
     [NAMES.KILL] = kill,
 }
