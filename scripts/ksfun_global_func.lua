@@ -175,6 +175,14 @@ end
 
 
 
+--- 获取属性的显示名称
+--- 例如攻击增强..
+GLOBAL.KsFunGetPowerNameStr = function(powername)
+    return STRINGS.NAMES(string.upper(powername))
+end
+
+
+
 GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
 GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
