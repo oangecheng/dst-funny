@@ -10,10 +10,8 @@ local prefix = "ksfun_power_gem_"
 
 
 for k,v in pairs(ITEM_POWER_NAMES) do
-    if v ~= ITEM_POWER_NAMES.AOE then
-        table.insert( assets, Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_"..v..".xml"))
-        table.insert( assets, Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_"..v..".tex"))
-    end
+    table.insert( assets, Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_"..v..".xml"))
+    table.insert( assets, Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_"..v..".tex"))
 end
 
 
@@ -64,9 +62,7 @@ end
 
 local gems = {}
 for k,v in pairs(ITEM_POWER_NAMES) do
-    if v ~= ITEM_POWER_NAMES.AOE then
-        table.insert(gems, MakePowerGem(v))
-    end
+    table.insert(gems, MakePowerGem(v))
 end
 return unpack(gems)
 

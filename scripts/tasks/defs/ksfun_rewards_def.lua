@@ -84,7 +84,7 @@ local item_max_lv = #items
 --- 随机生成物品数量
 --- 例如任务等级为 6 物品等级为 6, 那么最多生成 2^(6-5) = 2个，  最少生成 6-5 = 1 个
 --- 例如任务等级为 7 物品等级为 6, 那么最多生成 2^(6-6) = 1个，  最少生成 6-5 = 1 个， 等级附加1个，总共2个
-local function randomItemNum(task_lv, item_lv)
+local function randomItemNum(lv, item_lv)
     local max_lv = item_max_lv
     local num = 2
     local m =  math.max(max_lv - item_lv, 0)
@@ -92,24 +92,25 @@ local function randomItemNum(task_lv, item_lv)
     local min = math.min(max_lv - item_lv, max)
     min = math.max(min, 1)
     -- 任务等级附加
-    local extra = math.max(task_lv - item_lv, 0)
+    local extra = math.max(lv - item_lv, 0)
     return math.random(min, max) + extra
 end
 
 
 --- 随机生成一些物品
---- @param task_lv 任务难度等级
+--- @param tasklv 任务难度等级
 --- @return 名称，等级，数量，类型
-ksfun_rewards.randomNormalItem = function(player, task_lv)
+ksfun_rewards.randomNormalItem = function(player, tasklv)
 
-    local r = task_lv or item_max_lv
-    local item_lv = math.random(r) 
-    item_lv = math.max(item_lv, item_max_lv)
+    local lv = math.floor(tasklv/10 + 0.5)
+    local item_lv = math.random(lv) 
+    item_lv = math.min(item_lv, item_max_lv)
 
     local items = items[item_lv] 
     local index = math.random(#items)
-    local name = items[index]
-    local num = randomItemNum(task_lv, item_lv)
+
+    local name = items[item_lv]
+    local num = randomItemNum(lv, item_lv)
     return {
         type = REWARD_TYPES.ITEM,
         data = {
@@ -145,9 +146,8 @@ ksfun_rewards.randomKsFunItem = function(player, task_lv)
     -- 随机一个物品
     local name = list[math.random(#list)]
     -- 随机一个等级
-    local lv = 1
-    local temp = math.random(math.max(1, task_lv - 2))
-    lv = math.min(temp, 3) 
+    local temp = math.random(2)
+    local lv = math.max(temp, 1) 
 
     return {
         -- 主类别

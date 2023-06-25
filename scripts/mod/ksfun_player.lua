@@ -2,8 +2,6 @@
 local DEFAULT_MAX_HEALTH = 120
 local EVENTS = KSFUN_TUNING.EVENTS
 
-local HELPER = require("tasks/ksfun_task_helper")
-
 local ITEMS_DEF = require "defs/ksfun_items_def"
 
 
@@ -53,15 +51,14 @@ AddPlayerPostInit(function(player)
                 ent.components.finiteuses:SetPercent(0.01)
             end
 
-            for i,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
-                ent.components.ksfun_power_system:AddPower(v)
-            end
+            -- for i,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
+            --     ent.components.ksfun_power_system:AddPower(v)
+            -- end
 
 
             inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
 
         end
-        HELPER.addTask(inst, KSFUN_TUNING.TASK_NAMES.KILL)
     end)
 
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)

@@ -7,34 +7,28 @@ local itemsdef = require("defs/ksfun_items_def")
 --- @return true 成功 false 失败
 local function onEnhantFunc(inst, doer, item)
     KsFunLog("onEnhantFunc", item.prefab)
-
-    local enhantitem = itemsdef.enhantitems[inst.prefab]
+    local enhantname = itemsdef.enhantitems[item.prefab]
     local powernames = itemsdef.ksfunitems[inst.prefab].names
 
-    if enhantitem == item.prefab then
+    if enhantname and table.contains(powernames, enhantname) then
         local system = inst.components.ksfun_power_system
         local level  = inst.components.ksfun_level
-
-        if level and system then
+        if system and level then
             local powercount = system:GetPowerNum()
-            if powercount < #powernames and powercount < level.lv then
-                local name = KsFunRandomPower(inst, powernames, false)
-                KsFunLog("onEnhantFunc", name)
-                if name ~= nil then
-                    local ret = system:AddPower(name)
-                    local name = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
-                    local msg  = name.."成功给"..STRINGS.NAMES[string.upper(inst.prefab)].."附加了"..STRINGS.NAMES[string.upper(ret.prefab)].."属性"
-                    KsFunShowNotice(doer, msg)
-                    if doer.components.talker then
-                        doer.components.talker:Say(msg)
-                    end
-
-                    return true
+            KsFunLog("onEnhantFunc", powercount, level:GetLevel())
+            local existed = system:GetPower(enhantname)
+            if (not existed) and powercount <= level:GetLevel() then
+                local ret = system:AddPower(enhantname)
+                local name = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
+                local msg  = name.."成功给"..STRINGS.NAMES[string.upper(inst.prefab)].."附加了"..STRINGS.NAMES[string.upper(ret.prefab)].."属性"
+                KsFunShowNotice(doer, msg)
+                if doer.components.talker then
+                    doer.components.talker:Say(msg)
                 end
+                return true
             end
         end
     end
-
     return false
 end
 

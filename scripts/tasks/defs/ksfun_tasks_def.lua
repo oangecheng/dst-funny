@@ -52,11 +52,11 @@ local reward_special = {
 }
 
 -- 任务等级越高，越容易获得特殊奖励
--- 最高等级的任务有50%的概率获得特殊奖励
+-- 最高等级的任务有40%的概率获得特殊奖励
 tasks_def.randomReward = function(player, tasklv)
     KsFunLog("randomReward", tasklv)
     local s = tasklv
-    local v = KSFUN_TUNING.DEBUG and 0 or math.random(512)
+    local v = KSFUN_TUNING.DEBUG and 0 or math.random(200)
 
     local reward = nil
     if s>v then

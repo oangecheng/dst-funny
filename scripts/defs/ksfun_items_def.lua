@@ -27,7 +27,7 @@ itemsdef.enhantitems = {}
 -- 属性宝石
 for k,v in pairs(NAMES) do
     table.insert(itemsdef.gems, "ksfun_power_gem_"..v)
-    itemsdef.enhantitems[v] = "ksfun_power_gem_"..v 
+    itemsdef.enhantitems["ksfun_power_gem_"..v] = v
 end
 
 

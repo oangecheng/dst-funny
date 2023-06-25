@@ -106,7 +106,7 @@ end
 
 
 function KSFUN_POWERS:GetPowerNum()
-    return #self.powers
+    return GetTableSize(self.powers)
 end
 
 
