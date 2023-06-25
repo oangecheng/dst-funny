@@ -8,6 +8,7 @@ local itemsdef = {
         "spear_wathgrithr", -- 战斗长矛
         "ruins_bat", -- 铥矿棒，可升级的铥矿棒
         "nightsword", -- 暗影剑
+        "glasscutter", -- 玻璃刀
     },
     hat = {
         "eyebrellahat",

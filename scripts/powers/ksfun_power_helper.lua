@@ -31,24 +31,19 @@ local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 local waterproofer = require("powers/ksfun_item_waterproofer")
 local dapperness   = require("powers/ksfun_item_dapperness")
 local insulator    = require("powers/ksfun_item_insulator")
-local itemdamage   = require("powers/ksfun_item_damage")
-local chop         = require("powers/ksfun_item_chop")
-local mine         = require("powers/ksfun_item_mine")
-local itempowersdef   = require("powers/ksfun_item_powers")
-local maxuses      = require("powers/ksfun_item_maxuses")
-
+local itempowersdef= require("powers/ksfun_item_powers")
 
 
 local itempowers = {}
 itempowers[ITEM_NAMES.WATER_PROOFER] = waterproofer
 itempowers[ITEM_NAMES.DAPPERNESS]    = dapperness
 itempowers[ITEM_NAMES.INSULATOR]     = insulator
-itempowers[ITEM_NAMES.DAMAGE]        = itemdamage
-itempowers[ITEM_NAMES.CHOP]          = chop
-itempowers[ITEM_NAMES.MINE]          = mine
+itempowers[ITEM_NAMES.DAMAGE]        = itempowersdef.damage
+itempowers[ITEM_NAMES.CHOP]          = itempowersdef.chop
+itempowers[ITEM_NAMES.MINE]          = itempowersdef.mine
 itempowers[ITEM_NAMES.LIFESTEAL]     = itempowersdef.lifesteal
 itempowers[ITEM_NAMES.AOE]           = itempowersdef.aoe
-itempowers[ITEM_NAMES.MAXUSES]       = maxuses
+itempowers[ITEM_NAMES.MAXUSES]       = itempowersdef.maxuses
 
 
 helper.MakeItemPower = function(name)
