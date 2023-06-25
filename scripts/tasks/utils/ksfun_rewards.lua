@@ -32,10 +32,10 @@ end
 
 
 -- 任务等级越高，越容易获得特殊奖励
--- 最高等级的任务有10%的概率获得特殊奖励
+-- 最高等级的任务有50%的概率获得特殊奖励
 local function random(player, task_lv)
     local s = 2^task_lv
-    local max = 2^TASK_LV_DEFS.MAX * 10
+    local max = 2^TASK_LV_DEFS.MAX * 2
     local v = KSFUN_TUNING.DEBUG and 0 or math.random(max)
 
     local reward = nil

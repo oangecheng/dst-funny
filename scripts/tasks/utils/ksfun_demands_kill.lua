@@ -1,9 +1,6 @@
 
 
 local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
-local DIFFICULTY_MULTI = {
-    NORMAL = 2, TIME_LIMIT = 4, ATTACKED_LIMIT = 8, MAX = 8,
-}
 
 local MONSTER = require "tasks/defs/ksfun_monsters"
 
@@ -14,39 +11,44 @@ local function calcDifficulty(lv, num)
 end
 
 
-local function default(kill_type, task_lv, difficulty_multi)
+local function default(kill_type, task_lv)
     local victim, lv, num = MONSTER.randomMonster(task_lv)
     return {
         type = kill_type,
+        duration = 0,
+        diffculty = 0, -- 难度系数评估
         data = {
             victim = victim,
             lv = lv,
             num = num,
-            duration = 0
         }
     }
 end
 
 
+-- 普通任务，不限制时间
 local function normal(task_lv)
-    return default(KILL_TYPES.NORMAL, task_lv, DIFFICULTY_MULTI.NORMAL)
+    return default(KILL_TYPES.NORMAL, task_lv)
 end
 
 
-
+-- 限时任务
 local function timeLimit(task_lv)
-    local ret = default(KILL_TYPES.TIME_LIMIT, task_lv, DIFFICULTY_MULTI.TIME_LIMIT)
+    local ret = default(KILL_TYPES.TIME_LIMIT, task_lv)
     local data = ret.data
     --- 计算时长，6级任务，需要的时间为 2^6 * 30s = 8天
     local time = calcDifficulty(data.lv, data.num) * KSFUN_TUNING.TIME_SEG
-    data.duration = time
+    ret.duration = time
+    ret.diffculty = 2
     return ret
 end
 
 
-
+-- 无伤任务
 local function attackedLimit(task_lv)
-    return default(KILL_TYPES.ATTACKED_LIMIT, task_lv, DIFFICULTY_MULTI.ATTACKED_LIMIT)
+    local ret = default(KILL_TYPES.ATTACKED_LIMIT, task_lv)
+    ret.diffculty = 4
+    return ret
 end
 
 

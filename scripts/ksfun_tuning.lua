@@ -8,7 +8,7 @@ local COMMON_POWER_NAMES_DEF = {
 
 KSFUN_TUNING =  {
 
-    DEBUG = true,
+    DEBUG = false,
     LOG_TAG = "ksfun_log: ",
 
 
@@ -49,11 +49,6 @@ KSFUN_TUNING =  {
         REAL_DAMAGE   = "monster_real_damage",
         ICE_EXPLOSION = "monster_ice_explosion",
         SANITY_AURA   = "monster_sanity_aura",
-    },
-
-
-    ITEM_QUALITY = {
-        WHITE = 1, GREEN = 2, BLUE = 3, GOLD = 4, ORANGE = 5, RED = 6, MAX = 6,
     },
 
 

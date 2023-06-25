@@ -145,7 +145,7 @@ local function getKillTaskDesc(demand)
         if     demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.NORMAL then
             return str
         elseif demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.TIME_LIMIT then
-            local time = demand.data.duration
+            local time = demand.duration
             return str.."(限制:"..time.."秒)"
         elseif demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.ATTACKED_LIMIT then
             return str.."(限制:无伤)"
