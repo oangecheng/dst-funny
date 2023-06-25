@@ -188,6 +188,40 @@ local damage = {
 
 
 
+------ 移速
+local speedmax = 50
+local function updateSpeedStatus(inst, l, n)
+    local d = inst.components.ksfun_power:GetData()
+    local speed = d and d.speed or 1
+    local lv = inst.components.ksfun_level:GetLevel()
+    if inst.target.components.equippable ~= nil then
+        inst.target.components.equippable.walkspeedmult = speed + lv / 100
+    end
+end
+
+local speed = {
+    onAttachFunc = function(inst, target, name)
+        if target.components.equippable then
+            inst.components.ksfun_power:SetData({speed = target.components.equippable:GetWalkSpeedMult()})
+            inst.components.ksfun_level:SetMax(speedmax)
+            updateSpeedStatus(inst)
+        end
+    end,
+    level = {
+        onLvChangeFunc = updateSpeedStatus
+    },
+    -- 海象牙/步行手杖
+    forgable = {
+        items = {
+            ["walrus_tusk"] = 100,
+            ["cane"] = 150,
+        }
+    }
+}
+
+
+
+
 local item = {
     
 }
@@ -199,6 +233,7 @@ item.mine      = { data = mine }
 item.chop      = { data = chop }
 item.maxuses   = { data = maxuses }
 item.damage    = { data = damage }
+item.speed     = { data = speed }
 
 
 return item

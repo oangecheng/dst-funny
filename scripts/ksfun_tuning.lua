@@ -32,12 +32,14 @@ KSFUN_TUNING =  {
         WATER_PROOFER = "item_waterproofer",
         DAPPERNESS    = "item_dapperness",
         INSULATOR     = "item_insulator",
+        
         DAMAGE        = "item_damage",
         CHOP          = "item_chop",
         MINE          = "item_mine",
         LIFESTEAL     = "item_lifesteal",
         AOE           = "item_aoe",
-        MAXUSES       = "item_maxuses"
+        MAXUSES       = "item_maxuses",
+        -- SPEED         = "item_speed",
     },
 
     --- 怪物属性
