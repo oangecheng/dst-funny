@@ -20,7 +20,13 @@ local itemsdef = {
         "armorwood",
         "armorruins",
     },
+    gems = {}
 }
+
+-- 属性宝石
+for k,v in pairs(NAMES) do
+    table.insert(itemsdef.gems, "ksfun_power_gem_"..v)
+end
 
 
 

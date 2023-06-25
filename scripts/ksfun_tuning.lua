@@ -98,17 +98,12 @@ KSFUN_TUNING =  {
         WEAPON = 1,
         HAT    = 2,
         ARMOR  = 3,
-        MELT   = 4,
+        GEM    = 4,
     },
 
     EVENTS = {
         TASK_FINISH = "ksfun_task_finish",
         PLAYER_PANEL = "ksfun_player_refresh_panel",
     },
-
-
-    TAGS = {
-        "ksfun_melt_material",       --熔炼材料
-    }
 
 }

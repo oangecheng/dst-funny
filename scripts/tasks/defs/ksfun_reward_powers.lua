@@ -82,7 +82,7 @@ end
 --- data = {power = a, num = b}
 reward_powers.randomPowerExp = function(player, task_lv)
     local power = randomPower(player, true)
-    local exp = math.random(task_lv) * 500
+    local exp = math.random(task_lv) * 10
     if power then
         return {
             type = REWARD_TYPES.PLAYER_POWER_EXP,

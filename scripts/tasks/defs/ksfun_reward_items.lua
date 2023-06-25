@@ -117,39 +117,26 @@ end
 
 --- 随机获取一个熔炼相关物品
 local function randomKsFunItem(player, task_lv)
-    local item_type = KsFunRandomValueFromKVTable(KSFUN_ITEM_TYPES)
+    local itemtype = GetRandomItem(KSFUN_ITEM_TYPES)
 
     local list = nil
     local num = 1
-    if item_type == KSFUN_ITEM_TYPES.WEAPON then
+    if itemtype == KSFUN_ITEM_TYPES.WEAPON then
         list =  ksfun_items.weapon
-    elseif item_type == KSFUN_ITEM_TYPES.HAT then
+    elseif itemtype == KSFUN_ITEM_TYPES.HAT then
         list = ksfun_items.hat
-    elseif item_type == KSFUN_ITEM_TYPES.ARMOR then
+    elseif itemtype == KSFUN_ITEM_TYPES.ARMOR then
         list = ksfun_items.armor
-    else
-        -- list = ksfun_items.melt
-        -- -- 熔炼物品1-2个
-        -- num = math.random(2)
-        list = ksfun_items.weapon
+    elseif itemtype == KSFUN_ITEM_TYPES.GEM then
+        list = ksfun_items.gems
     end
     
     -- 随机一个物品
-    local name = KsFunRandomValueFromList(list)
+    local name = list[math.random(#list)]
     -- 随机一个等级
     local lv = 1
-    
-    --- 熔炼物品单独处理
-    if item_type == KSFUN_ITEM_TYPES.MELT then
-        local seg = 10 / task_lv
-        lv = math.random(task_lv) * seg
-        lv = math.ceil(lv)
-        lv = math.min(10, lv)
-        name = "ksfun_melt_stone_"..tostring(lv)
-    else
-        local temp = math.random(math.max(1, task_lv - 2))
-        lv = math.min(temp, 3) 
-    end
+    local temp = math.random(math.max(1, task_lv - 2))
+    lv = math.min(temp, 3) 
 
     return {
         -- 主类别
@@ -158,7 +145,7 @@ local function randomKsFunItem(player, task_lv)
             item = name,
             num = num,
             -- 次类别
-            type = item_type,
+            type = itemtype,
             lv = lv,
         }   
     }
