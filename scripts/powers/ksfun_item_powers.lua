@@ -204,42 +204,6 @@ local damage = {
 
 
 
------- 移速 ----------------------------------------------------------------------------------------
-local speedmax = 50
-local function updateSpeedStatus(inst, l, n)
-    local d = inst.components.ksfun_power:GetData()
-    local speed = d and d.speed or 1
-    local lv = inst.components.ksfun_level:GetLevel()
-    if inst.target.components.equippable ~= nil then
-        inst.target.components.equippable.walkspeedmult = speed + lv / 100
-    end
-end
-
-local speed = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.equippable then
-                inst.components.ksfun_power:SetData({speed = target.components.equippable:GetWalkSpeedMult()})
-                inst.components.ksfun_level:SetMax(speedmax)
-                updateSpeedStatus(inst)
-            end
-        end
-    },
-    level = {
-        onLvChangeFunc = updateSpeedStatus
-    },
-    -- 海象牙/步行手杖
-    forgable = {
-        items = {
-            ["walrus_tusk"] = 100,
-            ["cane"] = 150,
-        }
-    }
-}
-
-
-
-
 
 ----- 保暖/隔热属性 ----------------------------------------------------------------------------------------
 local function updateInsulatorStatus(inst, l, n)
@@ -405,6 +369,79 @@ local waterproofer = {
 
 
 
+
+------ 移速 ----------------------------------------------------------------------------------------
+local speedmax = 50
+local function updateSpeedStatus(inst, l, n)
+    local d = inst.components.ksfun_power:GetData()
+    local speed = d and d.speed or 1
+    local lv = inst.components.ksfun_level:GetLevel()
+    if inst.target.components.equippable ~= nil then
+        inst.target.components.equippable.walkspeedmult = speed + lv / 100
+    end
+end
+
+local speed = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            if target.components.equippable then
+                inst.components.ksfun_power:SetData({speed = target.components.equippable:GetWalkSpeedMult()})
+                inst.components.ksfun_level:SetMax(speedmax)
+                updateSpeedStatus(inst)
+            end
+        end
+    },
+    level = {
+        onLvChangeFunc = updateSpeedStatus
+    },
+    -- 海象牙/步行手杖
+    forgable = {
+        items = {
+            ["walrus_tusk"] = 100,
+            ["cane"] = 150,
+        }
+    }
+}
+
+
+
+
+
+------ 护甲防护 ----------------------------------------------------------------------------------------
+local function updateAbsorbStatus(inst)
+    local armor = inst.target.components.armor
+    local data  = inst.components.ksfun_power:GetData()
+    local lv    = inst.components.ksfun_level:GetLevel()
+    if armor and data then
+        local p = data.absorb
+        armor:SetAbsorption(p + lv * 0.01)
+    end
+end
+
+local absorb = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            local absorb = target.components.armor.absorb_percent 
+            inst.components.ksfun_power:SetData( {absorb = absorb} )
+            -- 防御最高提升到90%
+            local max = math.floor(math.max(0.9 - absorb, 0))
+            inst.components.ksfun_level:SetMax(max)
+            updateAbsorbStatus(inst)
+        end
+    },
+    level = {
+        onLvChangeFunc = updateAbsorbStatus
+    },
+    forgable = {
+        items = {
+            ["steelwool"] = 10, -- 钢丝绒
+        }
+    }
+}
+
+
+
+
 local item = {
     
 }
@@ -420,7 +457,9 @@ item.mine         = { data = mine }
 item.chop         = { data = chop }
 item.maxuses      = { data = maxuses }
 item.damage       = { data = damage }
+
 item.speed        = { data = speed }
+item.absorb       = { data = absorb }
 
 
 return item
