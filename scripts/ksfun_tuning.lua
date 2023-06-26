@@ -8,6 +8,9 @@ local COMMON_POWER_NAMES_DEF = {
 
 KSFUN_TUNING =  {
 
+    -- 难度配置，0为默认
+    DIFFCULTY = 0,
+
     DEBUG = false,
     LOG_TAG = "ksfun_log: ",
 
@@ -39,7 +42,8 @@ KSFUN_TUNING =  {
         LIFESTEAL     = "item_lifesteal",
         AOE           = "item_aoe",
         MAXUSES       = "item_maxuses",
-        -- SPEED         = "item_speed",
+        SPEED         = "item_speed",
+        ABSORB        = "item_absorb"
     },
 
     --- 怪物属性
@@ -51,6 +55,7 @@ KSFUN_TUNING =  {
         REAL_DAMAGE   = "monster_real_damage",
         ICE_EXPLOSION = "monster_ice_explosion",
         SANITY_AURA   = "monster_sanity_aura",
+        ABSORB        = "monster_absorb",
     },
 
 

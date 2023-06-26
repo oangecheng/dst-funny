@@ -81,14 +81,12 @@ end
 
 -------------------------------------------------------------怪物属性 我是分割线-----------------------------------------------------------------
 local MONSTER_NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
-local realdamage   = require("powers/ksfun_mon_realdamage")
-local iceexplosion = require("powers/ksfun_mon_iceexplosion")
-local sanityaura   = require("powers/ksfun_mon_sanityaura")
-
+local monsterpowersdef = require("powers/ksfun_mon_powers")
 local monsterpowers = {}
-monsterpowers[MONSTER_NAMES.ICE_EXPLOSION] = iceexplosion
-monsterpowers[MONSTER_NAMES.SANITY_AURA]   = sanityaura
-monsterpowers[MONSTER_NAMES.LOCOMOTOR]     = locomotor
+monsterpowers[MONSTER_NAMES.ICE_EXPLOSION] = monsterpowersdef.iceexplosion
+monsterpowers[MONSTER_NAMES.SANITY_AURA]   = monsterpowersdef.sanityaura
+monsterpowers[MONSTER_NAMES.REAL_DAMAGE]   = monsterpowersdef.realdamage
+monsterpowers[MONSTER_NAMES.ABSORB]        = monsterpowersdef.absorb
 
 
 helper.MakeMonsterPower = function(name)
