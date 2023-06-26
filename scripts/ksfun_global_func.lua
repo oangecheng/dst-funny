@@ -182,6 +182,36 @@ GLOBAL.KsFunGetPowerNameStr = function(powername)
 end
 
 
+--- 添加可交易组件
+GLOBAL.KsFunAddTrader = function(inst, testfunc, acceptfunc)
+    if inst.components.trader == nil then
+        inst:AddComponent("trader")
+    end
+    local trader = inst.components.trader
+
+    local oldTradeTest = trader.abletoaccepttest
+    trader:SetAbleToAcceptTest(function(inst, item, giver)
+        if testfunc(inst, item, giver) then
+            return true
+        end
+        if oldTradeTest and oldTradeTest(inst, item, giver) then
+            return true
+        end
+        return false
+    end)
+
+    local oldaccept = trader.onaccept
+    trader.onaccept = function(inst, giver, item)
+        acceptfunc(inst, item, giver)
+        if oldaccept ~= nil then
+            oldaccept(inst, giver, item)
+        end
+        giver.SoundEmitter:PlaySound("dontstarve/common/telebase_gemplace")
+    end
+end
+
+
+
 
 GLOBAL.KsFunLog = KsFunLog
 GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp

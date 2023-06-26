@@ -200,13 +200,15 @@ local function updateSpeedStatus(inst, l, n)
 end
 
 local speed = {
-    onAttachFunc = function(inst, target, name)
-        if target.components.equippable then
-            inst.components.ksfun_power:SetData({speed = target.components.equippable:GetWalkSpeedMult()})
-            inst.components.ksfun_level:SetMax(speedmax)
-            updateSpeedStatus(inst)
+    power = {
+        onAttachFunc = function(inst, target, name)
+            if target.components.equippable then
+                inst.components.ksfun_power:SetData({speed = target.components.equippable:GetWalkSpeedMult()})
+                inst.components.ksfun_level:SetMax(speedmax)
+                updateSpeedStatus(inst)
+            end
         end
-    end,
+    },
     level = {
         onLvChangeFunc = updateSpeedStatus
     },
@@ -222,18 +224,187 @@ local speed = {
 
 
 
+
+----- 保暖/隔热属性 ----------------------------------------------------------------------------------------
+local function updateInsulatorStatus(inst, l, n)
+    local insulator = inst.target and inst.target.components.insulator or nil
+    local lv    = inst.components.ksfun_level:GetLevel()
+    local data  = inst.components.ksfun_power:GetData()
+    if insulator and data then
+        insulator:SetInsulation(data.insulation + lv)
+        local type = inst.type or data.type or insulator.type
+        if type == SEASONS.SUMMER then
+            insulator:SetSummer()
+        elseif type  == SEASONS.WINTER then
+            insulator:SetWinter()
+        end
+    end
+end
+
+
+local function changeInsulatorType(inst, target)
+    -- 月圆之夜给予一个彩虹宝石可以获得切换模式的能力
+    local function testfunc(t, item, giver)
+        if not inst.switch then
+            return TheWorld.state.isfullmoon and item.prefab == "opalpreciousgem"
+        else
+            if inst.type == SEASONS.SUMMER then
+                return item.prefab == "redgem"
+            elseif inst.type == SEASONS.WINTER then
+                return item.prefab == "bluegem"
+            end
+        end
+        return false
+    end
+
+    local function acceptfunc(t, item, giver)
+        if item.prefab == "opalpreciousgem" then
+            inst.switch = true
+        elseif item.prefab == "redgem" then
+            inst.type = SEASONS.WINTER
+            updateInsulatorStatus(inst)
+        elseif item.prefab == "bluegem" then
+            inst.type = SEASONS.SUMMER
+            updateInsulatorStatus(inst)
+        end
+    end
+
+    KsFunAddTrader(target, testfunc, acceptfunc)
+end
+
+
+local insulator = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            if target.components.insulator == nil then
+                item:AddComponent("insulator")
+            end
+            local ins, t = item.components.insulator:GetInsulation()
+            inst.components.ksfun_power:SetData({insulation = ins, type = t})
+            if not inst.type then inst.type = t end
+            changeInsulatorType(inst, target)
+            updateInsulatorStatus(inst)
+        end,
+
+        onSaveFunc = function(inst, data)
+            data.type = inst.type or nil
+            data.switch = inst.switch or false
+        end,
+
+        onLoadFunc = function(inst, data)
+            inst.type = data.type or nil
+            inst.switch = data.switch or false
+        end
+    },
+
+    level = {
+        onLvChangeFunc = updateInsulatorStatus
+    },
+
+    forgable = {
+        items = {
+            ["trunk_winter"] = 100, -- 冬日象鼻
+            ["trunk_summer"] = 80, -- 夏日象鼻
+            ["silk"] = 2, -- 蜘蛛网
+            ["beardhair"] = 5, -- 胡须
+            ["goose_feather"] = 10 -- 鹅毛
+        }
+    }
+}
+
+
+
+
+----- 精神恢复 ----------------------------------------------------------------------------------------
+local function updateDappernessStatus(inst)
+    local data = inst.components.ksfun_power:GetData()
+    local equippable = inst.target and inst.target.components.equippable or nil
+    local level = inst.components.ksfun_level
+    if equippable and data then
+        equippable.dapperness = data.dapperness + DAPPERNESS_RATIO * level:GetLevel()
+    end
+end
+
+local dapperness = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            local equippable = target.components.equippable
+            inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
+            updateDapperness(inst)
+        end
+    },
+    level = {
+        onLvChangeFunc = updateDappernessStatus
+    },
+    forgable = {
+        items = {
+            ["spiderhat"] = 2,
+            ["walrushat"] = 20,
+            ["hivehat"]   = 50
+        }
+    }
+}
+
+
+
+
+
+----- 防水 ----------------------------------------------------------------------------------------
+local function updateWaterproofStatus(inst)
+    local waterproofer = inst.target.components.waterproofer
+    local data = inst.components.ksfun_power:GetData()
+    local lv   = inst.components.ksfun_level:GetLevel()
+    if waterproofer and data then
+        waterproofer:SetEffectiveness(data.effectiveness + lv * 0.01)
+    end
+end
+
+local waterproofer = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            -- 没有防水组件，添加
+            if item.components.waterproofer == nil then
+                target:AddComponent("waterproofer")
+                target.components.waterproofer:SetEffectiveness(0)
+            end
+            local effect = target.components.waterproofer:GetEffectiveness()
+            inst.components.ksfun_power:SetData({effectiveness = effect})
+            -- 计算最大等级，眼球伞的最大等级就是0，也就是不需要升级的
+            -- 眼球伞应该没办法添加防水属性，后面看下怎么加酸雨防护，暂时保留
+            local max = math.floor((1 - effect) / 0.01)
+            inst.components.ksfun_level:SetMax(max)
+            updateWaterproofStatus(inst)
+        end
+    },
+    level = {
+        onLvChangeFunc = updateWaterproofStatus
+    },
+    forgable = {
+        items = {
+            ["pigskin"] = 20,
+            ["tentaclespots"] = 100
+        }
+    }
+}
+
+
+
 local item = {
     
 }
 
 
-item.lifesteal = { data = lifesteal }
-item.aoe       = { data = aoe }
-item.mine      = { data = mine }
-item.chop      = { data = chop }
-item.maxuses   = { data = maxuses }
-item.damage    = { data = damage }
-item.speed     = { data = speed }
+item.insulator    = { data = insulator }
+item.waterproofer = { data = waterproofer }
+item.dapperness   = { data = dapperness }
+
+item.lifesteal    = { data = lifesteal }
+item.aoe          = { data = aoe }
+item.mine         = { data = mine }
+item.chop         = { data = chop }
+item.maxuses      = { data = maxuses }
+item.damage       = { data = damage }
+item.speed        = { data = speed }
 
 
 return item

@@ -28,16 +28,12 @@ end
 -------------------------------------------------------------物品属性 我是分割线-----------------------------------------------------------------
 local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 
-local waterproofer = require("powers/ksfun_item_waterproofer")
-local dapperness   = require("powers/ksfun_item_dapperness")
-local insulator    = require("powers/ksfun_item_insulator")
 local itempowersdef= require("powers/ksfun_item_powers")
 
-
 local itempowers = {}
-itempowers[ITEM_NAMES.WATER_PROOFER] = waterproofer
-itempowers[ITEM_NAMES.DAPPERNESS]    = dapperness
-itempowers[ITEM_NAMES.INSULATOR]     = insulator
+itempowers[ITEM_NAMES.WATER_PROOFER] = itempowersdef.waterproofer
+itempowers[ITEM_NAMES.DAPPERNESS]    = itempowersdef.dapperness
+itempowers[ITEM_NAMES.INSULATOR]     = itempowersdef.insulator
 itempowers[ITEM_NAMES.DAMAGE]        = itempowersdef.damage
 itempowers[ITEM_NAMES.CHOP]          = itempowersdef.chop
 itempowers[ITEM_NAMES.MINE]          = itempowersdef.mine
