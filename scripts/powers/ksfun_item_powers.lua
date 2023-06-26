@@ -257,9 +257,9 @@ local insulator = {
     power = {
         onAttachFunc = function(inst, target, name)
             if target.components.insulator == nil then
-                item:AddComponent("insulator")
+                target:AddComponent("insulator")
             end
-            local ins, t = item.components.insulator:GetInsulation()
+            local ins, t = target.components.insulator:GetInsulation()
             inst.components.ksfun_power:SetData({insulation = ins, type = t})
             if not inst.type then inst.type = t end
             changeInsulatorType(inst, target)
@@ -296,6 +296,7 @@ local insulator = {
 
 
 ----- 精神恢复 ----------------------------------------------------------------------------------------
+local DAPPERNESS_RATIO = TUNING.DAPPERNESS_MED / 3
 local function updateDappernessStatus(inst)
     local data = inst.components.ksfun_power:GetData()
     local equippable = inst.target and inst.target.components.equippable or nil
@@ -310,7 +311,7 @@ local dapperness = {
         onAttachFunc = function(inst, target, name)
             local equippable = target.components.equippable
             inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
-            updateDapperness(inst)
+            updateDappernessStatus(inst)
         end
     },
     level = {
@@ -343,7 +344,7 @@ local waterproofer = {
     power = {
         onAttachFunc = function(inst, target, name)
             -- 没有防水组件，添加
-            if item.components.waterproofer == nil then
+            if target.components.waterproofer == nil then
                 target:AddComponent("waterproofer")
                 target.components.waterproofer:SetEffectiveness(0)
             end
@@ -424,7 +425,8 @@ local absorb = {
             local absorb = target.components.armor.absorb_percent 
             inst.components.ksfun_power:SetData( {absorb = absorb} )
             -- 防御最高提升到90%
-            local max = math.floor(math.max(0.9 - absorb, 0))
+            local max = math.floor(math.max(0.9 - absorb, 0)/0.01 + 0.5)
+            KsFunLog("setabsorb", absorb, max)
             inst.components.ksfun_level:SetMax(max)
             updateAbsorbStatus(inst)
         end

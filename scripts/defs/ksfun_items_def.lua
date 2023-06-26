@@ -62,6 +62,7 @@ local weaponnames = {
     NAMES.LIFESTEAL,
     NAMES.AOE,
     NAMES.MAXUSES,
+    NAMES.SPEED,
 }
 
 local hatnames = {
@@ -75,6 +76,7 @@ local armornames = {
     NAMES.WATER_PROOFER, 
     NAMES.INSULATOR,
     NAMES.MAXUSES,
+    NAMES.ABSORB,
 }
 
 ---武器拥有，加攻，砍树，挖矿，生命窃取

@@ -42,7 +42,7 @@ AddPlayerPostInit(function(player)
         end
 
 
-        local ent = SpawnPrefab("spear")
+        local ent = SpawnPrefab("armorwood")
         if ent then
             ent.components.ksfun_item_forever:Enable()
             ent.components.ksfun_breakable:Enable()
@@ -85,13 +85,12 @@ for i,v in ipairs(monsters) do
         inst:AddComponent("ksfun_power_system")
         local wordmonster = TheWorld.components.ksfun_world_monster
         if wordmonster then
-            if wordmonster:GetMonsterLevel(v) > 10 then
                 -- local name = KsFunRandomValueFromKVTable(KSFUN_TUNING.MONSTER_POWER_NAMES)
-                local name = KSFUN_TUNING.MONSTER_POWER_NAMES.LOCOMOTOR
-                inst.components.ksfun_power_system:AddPower(name)
-                local p = inst.components.ksfun_power_system:GetPower(name)
-                p.components.ksfun_level:SetLevel(100)
-            end
+                for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
+                    inst.components.ksfun_power_system:AddPower(v)
+                    local p = inst.components.ksfun_power_system:GetPower(v)
+                    p.components.ksfun_level:SetLevel(100)
+                end
         end
     end)
 end

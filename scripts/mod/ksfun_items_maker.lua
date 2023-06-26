@@ -20,7 +20,7 @@ local function onEnhantFunc(inst, doer, item)
             if (not existed) and powercount <= level:GetLevel() then
                 local ret = system:AddPower(enhantname)
                 local name = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
-                local msg  = name.."成功给"..STRINGS.NAMES[string.upper(inst.prefab)].."附加了"..STRINGS.NAMES[string.upper(ret.prefab)].."属性"
+                local msg  = name.."成功给"..STRINGS.NAMES[string.upper(inst.prefab)].."附加了"..STRINGS.NAMES[string.upper(ret.prefab)]
                 KsFunShowNotice(doer, msg)
                 if doer.components.talker then
                     doer.components.talker:Say(msg)

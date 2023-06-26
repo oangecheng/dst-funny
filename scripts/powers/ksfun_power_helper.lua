@@ -40,6 +40,8 @@ itempowers[ITEM_NAMES.MINE]          = itempowersdef.mine
 itempowers[ITEM_NAMES.LIFESTEAL]     = itempowersdef.lifesteal
 itempowers[ITEM_NAMES.AOE]           = itempowersdef.aoe
 itempowers[ITEM_NAMES.MAXUSES]       = itempowersdef.maxuses
+itempowers[ITEM_NAMES.SPEED]         = itempowersdef.speed
+itempowers[ITEM_NAMES.ABSORB]        = itempowersdef.absorb
 
 
 helper.MakeItemPower = function(name)
