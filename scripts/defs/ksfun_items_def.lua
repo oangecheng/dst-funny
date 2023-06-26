@@ -74,6 +74,7 @@ local armornames = {
     NAMES.DAPPERNESS, 
     NAMES.WATER_PROOFER, 
     NAMES.INSULATOR,
+    NAMES.MAXUSES,
 }
 
 ---武器拥有，加攻，砍树，挖矿，生命窃取
