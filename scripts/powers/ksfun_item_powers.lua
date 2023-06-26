@@ -112,21 +112,37 @@ local chop = {
 ----- 最大使用次数 ----------------------------------------------------------------------------------------
 local function updateMaxusesStatus(inst, l, n)
     local data = inst.components.ksfun_power:GetData()
-    local finiteuses = inst.target and inst.target.components.finiteuses or nil
+    local lv = inst.components.ksfun_level:GetLevel()
+
+    -- 武器每次提升100的耐久
+    local finiteuses = inst.target.components.finiteuses
     if finiteuses and data then
-        local lv = inst.components.ksfun_level:GetLevel()
         local percent = finiteuses:GetPercent()
-        finiteuses:SetMaxUses(data.maxuses * (lv + 1))
+        finiteuses:SetMaxUses(data.maxuses + lv * 100)
         finiteuses:SetPercent(percent)
+    end
+
+    -- 护甲每次提升200的耐久
+    local armor = inst.target.components.armor
+    if armor and data then
+        local percent = armor:GetPercent()
+        armor.maxcondition = data.maxuses + lv * 200
+        armor:SetPercent(percent)
     end
 end
 
 local maxuses = {
     power = {
         onAttachFunc = function(inst, target, name)
+            -- 护甲类型
+            if target.components.armor then
+                inst.components.ksfun_power:SetData( {maxuses = target.components.armor.maxcondition })
+            end
+            -- 使用次数
             if target.components.finiteuses then
                 inst.components.ksfun_power:SetData({maxuses = target.components.finiteuses.total})
             end
+
             updateMaxusesStatus(inst)
         end,
 
