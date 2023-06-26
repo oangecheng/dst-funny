@@ -1,6 +1,6 @@
 
 
------- 吸血属性
+------ 吸血属性 ----------------------------------------------------------------------------------------
 local lifestealmax = 5
 
 local lifesteal = {
@@ -18,7 +18,7 @@ local lifesteal = {
 
 
 
-------- 溅射伤害
+------- 溅射伤害 ----------------------------------------------------------------------------------------
 local aoemax = 10
 
 local function onGetAoeDescFunc( inst, target, name )
@@ -43,7 +43,7 @@ local aoe = {
 
 
 
------ 挖矿
+----- 挖矿 ----------------------------------------------------------------------------------------
 local minemax = 10
 local function updateMineStatus(inst, l, n)
     local lv = inst.components.ksfun_level:GetLevel()
@@ -76,7 +76,7 @@ local mine = {
 
 
 
------ 伐木
+----- 伐木 ----------------------------------------------------------------------------------------
 local chopmax = 15
 local function updateChopStatus(inst, l, n)
     local lv = inst.components.ksfun_level:GetLevel()
@@ -109,7 +109,7 @@ local chop = {
 
 
 
------ 最大使用次数
+----- 最大使用次数 ----------------------------------------------------------------------------------------
 local function updateMaxusesStatus(inst, l, n)
     local data = inst.components.ksfun_power:GetData()
     local finiteuses = inst.target and inst.target.components.finiteuses or nil
@@ -146,7 +146,7 @@ local maxuses = {
 
 
 
------ 武器基础伤害
+----- 武器基础伤害 ----------------------------------------------------------------------------------------
 local function updateDamageStatus(inst, l, n)
     local power = inst.components.ksfun_power
     local data  = power:GetData()
@@ -188,7 +188,7 @@ local damage = {
 
 
 
------- 移速
+------ 移速 ----------------------------------------------------------------------------------------
 local speedmax = 50
 local function updateSpeedStatus(inst, l, n)
     local d = inst.components.ksfun_power:GetData()
