@@ -89,6 +89,10 @@ monsterpowers[MONSTER_NAMES.ICE_EXPLOSION] = monsterpowersdef.iceexplosion
 monsterpowers[MONSTER_NAMES.SANITY_AURA]   = monsterpowersdef.sanityaura
 monsterpowers[MONSTER_NAMES.REAL_DAMAGE]   = monsterpowersdef.realdamage
 monsterpowers[MONSTER_NAMES.ABSORB]        = monsterpowersdef.absorb
+monsterpowers[MONSTER_NAMES.CRIT_DAMAGE]   = monsterpowersdef.critdamage
+monsterpowers[MONSTER_NAMES.DAMAGE]        = monsterpowersdef.damage
+monsterpowers[MONSTER_NAMES.HEALTH]        = monsterpowersdef.health
+monsterpowers[MONSTER_NAMES.LOCOMOTOR]     = monsterpowersdef.locomotor
 
 
 helper.MakeMonsterPower = function(name)

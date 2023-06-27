@@ -48,10 +48,10 @@ KSFUN_TUNING =  {
 
     --- 怪物属性
     MONSTER_POWER_NAMES = {
-        CRIT_DAMAGE   = COMMON_POWER_NAMES_DEF.CRIT_DAMAGE,
-        HEALTH        = COMMON_POWER_NAMES_DEF.HEALTH,
-        LOCOMOTOR     = COMMON_POWER_NAMES_DEF.LOCOMOTOR,
-        DAMAGE        = COMMON_POWER_NAMES_DEF.DAMAGE,
+        CRIT_DAMAGE   = "monster_critdamage",
+        HEALTH        = "monster_health",
+        LOCOMOTOR     = "monster_locomotor",
+        DAMAGE        = "monster_damage",
         REAL_DAMAGE   = "monster_real_damage",
         ICE_EXPLOSION = "monster_ice_explosion",
         SANITY_AURA   = "monster_sanity_aura",

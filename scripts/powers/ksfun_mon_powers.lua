@@ -3,7 +3,7 @@ local monsterpowers = {}
 
 
 --- 计算属性等级上限，四舍五入
-local function calcPowerMax(defaultlv)
+local function calcPowerLvWidthDiffculty(defaultlv)
     return math.floor((1 + KSFUN_TUNING.DIFFCULTY) * defaultlv + 0.5) 
 end
 
@@ -20,7 +20,7 @@ end
 --- @param defaultlv 默认的上限
 --- @param max 部分属性需要有限制，超过上限会出现问题
 local function setPowerMaxLv(inst, defaultlv, max)
-    local lv =  calcPowerMax(defaultlv)
+    local lv =  calcPowerLvWidthDiffculty(defaultlv)
     lv = max and math.min(lv, max) or lv
     inst.components.ksfun_level:SetMax(lv)
 end
@@ -176,12 +176,131 @@ local realdamage = {
 
 
 
+------ 怪物伤害倍率 ----------------------------------------------------------------------------------------
+local function updateDamageStatus(inst)
+    local combat = inst.target and inst.target.components.combat
+    if combat then
+        local lv = inst.components.ksfun_level:GetLevel()
+        combat.externaldamagetakenmultipliers:SetModifier("ksfun_monster_damage", 1 + lv /100)
+    end
+end
+
+local damage = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            -- 默认最大2倍攻击，最大3倍攻击
+            setPowerMaxLv(inst, 100, 200)
+            updateDamageStatus(inst)
+        end,
+    },
+    level = {
+        onLvChangeFunc = updateDamageStatus
+    },
+}
+
+
+
+
+
+
+
+------ 怪物移动速度 ----------------------------------------------------------------------------------------
+local function updateLocomotorStatus(inst)
+    if inst.target and inst.target.components.locomotor then
+        local lv = inst.components.ksfun_level:GetLevel()
+        local mult = 1 + lv / 100
+        inst.target.components.locomotor:SetExternalSpeedMultiplier(inst, "ksfun_monster_locomotor", mult)
+    end
+end
+
+local locomotor = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            -- 默认最大1.5倍移速，最高2倍移速
+            setPowerMaxLv(inst, 50, 100)
+            updateLocomotorStatus(inst)
+        end,
+    },
+    level = {
+        onLvChangeFunc = updateLocomotorStatus
+    },
+}
+
+
+
+
+
+------ 怪物暴击 ----------------------------------------------------------------------------------------
+local critdamage = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            setPowerMaxLv(inst, 100, 200)
+            KsFunHookCaclDamage(inst, attacker)
+        end
+    },
+    level = {},
+}
+
+
+
+
+
+------ 怪物血量提升 ----------------------------------------------------------------------------------------
+-- 按照百分比提升
+local function updateHealthStatus(inst)
+    local lv = inst.components.ksfun_level.lv
+    local health = inst.target.components.health
+    local data = inst.components.ksfun_power:GetData()
+    if health and data then
+        local percent = health:GetPercent()
+        health:SetMaxHealth(math.floor(data.health * (1 + lv * 0.01) + 0.5))
+        health:SetPercent(percent)
+    end
+end
+
+local health = {
+    power = {
+        onAttachFunc = function(inst, target, name)
+            local h = target.components.health
+            -- 记录原始数据
+            inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
+            if inst.percent then
+                local data = inst.components.ksfun_power:GetData()
+                h:SetMaxHealth(data.health)
+                h:SetPercent(inst.percent)
+            end
+            updateHealthStatus(inst)
+        end,
+
+        onLoadFunc = function(inst, data)
+            inst.percent = data.percent or nil
+        end,
+
+        onSaveFunc = function(inst, data)
+            data.percent = inst.target.components.health:GetPercent()
+        end
+
+    },
+    level = {
+        onLvChangeFunc = updateHealthStatus
+    }
+}
+
+
+
+
+
+
 
 
 monsterpowers.absorb       = { data = absorb } 
 monsterpowers.iceexplosion = { data = iceexplosion }
 monsterpowers.sanityaura   = { data = sanityaura }
 monsterpowers.realdamage   = { data = realdamage }
+monsterpowers.damage       = { data = damage }
+monsterpowers.locomotor    = { data = locomotor }
+monsterpowers.critdamage   = { data = critdamage }
+monsterpowers.health       = { data = health }
 
 
 return monsterpowers
