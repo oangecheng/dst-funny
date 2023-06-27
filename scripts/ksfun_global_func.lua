@@ -212,12 +212,12 @@ end
 
 
 
-GLOBAL.KsFunHookCaclDamage = function(inst, attacker)
+GLOBAL.KsFunHookCaclDamage = function(inst, attacker, canhitfunc)
     if attacker.components.combat == nil then return end
     inst.ksfun_originCalcDamage = attacker.components.combat.CalcDamage
     if inst.ksfun_originCalcDamage then
         attacker.components.combat.CalcDamage = function(targ, weapon, mult)
-            local hit    = canHit(0.2)
+            local hit    = canhitfunc(0.2)
             local lv     = inst.components.ksfun_level:GetLevel()
             local ratio  = hit and (lv/100 + 1) or 1
             local dmg    = inst.ksfun_originCalcDamage(targ, weapon, mult)

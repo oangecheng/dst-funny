@@ -1,10 +1,4 @@
--- 角色和怪物通用属性
-local COMMON_POWER_NAMES_DEF = {
-    CRIT_DAMAGE = "crit_damage",
-    HEALTH      = "health",
-    LOCOMOTOR   = "locomotor",
-    DAMAGE      = "damage"
-}
+
 
 KSFUN_TUNING =  {
 
@@ -12,20 +6,18 @@ KSFUN_TUNING =  {
     DIFFCULTY = 0,
 
     DEBUG = true,
-    LOG_TAG = "ksfun_log: ",
-
-
-    -- 角色和怪物通用属性
-    COMMON_POWER_NAMES = COMMON_POWER_NAMES_DEF,      
+    LOG_TAG = "ksfun_log: ",  
 
     -- 角色属性
     PLAYER_POWER_NAMES = {
-        CRIT_DAMAGE = COMMON_POWER_NAMES_DEF.CRIT_DAMAGE,
-        HEALTH      = COMMON_POWER_NAMES_DEF.HEALTH,
-        LOCOMOTOR   = COMMON_POWER_NAMES_DEF.LOCOMOTOR,
-        DAMAGE      = COMMON_POWER_NAMES_DEF.DAMAGE,
+        CRIT_DAMAGE = "player_critdamage",
+        LOCOMOTOR   = "player_locomotor",
+        DAMAGE      = "player_damage",
+
+        HEALTH      = "player_health",
         HUNGER      = "player_hunger",
         SANITY      = "player_sanity",
+
         PICK        = "player_pick",
         FARM        = "player_farm"
     },

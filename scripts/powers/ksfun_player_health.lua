@@ -1,5 +1,5 @@
 
-local NAME = KSFUN_TUNING.COMMON_POWER_NAMES.HEALTH
+local NAME = KSFUN_TUNING.PLAYER_POWER_NAMES.HEALTH
 
 
 -- 更新角色的血量数据
@@ -88,9 +88,7 @@ local function onAttach(inst, target, name)
     end
 
     -- 玩家杀怪可以升级
-    if target:HasTag("player") then
-        target:ListenForEvent("killed", onKillOther)
-    end
+    target:ListenForEvent("killed", onKillOther)
 
     updateHealthState(inst, true)
 end
@@ -100,9 +98,7 @@ end
 --- 血量回复到初始值
 --- @param 属性 角色 属性名称
 local function onDetach(inst, target, name)
-    if target:HasTag("player") then
-        target:RemoveEventCallback("killed", onKillOther)
-    end
+    target:RemoveEventCallback("killed", onKillOther)
     --- 恢复原始数据
     reset()
     inst.target = nil

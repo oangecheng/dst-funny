@@ -2,29 +2,6 @@
 local helper = {}
 
 
--------------------------------------------------------------怪物和人物公用的属性 我是分割线-----------------------------------------------------------------
-local critdamage = require("powers/ksfun_com_critdamage")
-local health     = require("powers/ksfun_com_health")
-local locomotor  = require("powers/ksfun_com_locomotor")
-local damage     = require("powers/ksfun_com_damage")
-
-local COM_NAMES = KSFUN_TUNING.COMMON_POWER_NAMES
-local compowers = {}
-compowers[COM_NAMES.CRIT_DAMAGE] = critdamage
-compowers[COM_NAMES.HEALTH]      = health
-compowers[COM_NAMES.LOCOMOTOR]   = locomotor
-compowers[COM_NAMES.DAMAGE]      = damage
-
-
-helper.MakeComPower = function(name)
-    local power = compowers[name]
-    return power and power.data or {}
-end
-
-
-
-
-
 -------------------------------------------------------------物品属性 我是分割线-----------------------------------------------------------------
 local ITEM_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
 
@@ -59,13 +36,21 @@ local hunger = require("powers/ksfun_player_hunger")
 local sanity = require("powers/ksfun_player_sanity")
 local pick   = require("powers/ksfun_player_pick")
 local farm   = require("powers/ksfun_player_farm")
+local health = require("powers/ksfun_player_health")
+--- 人物其他属性，比较复杂的属性单独用一个文件写
+local pdefs  = require("powers/ksfun_player_powers")
 
 
 local playerpowers = {}
-playerpowers[PLAYER_NAMES.HUNGER] = hunger
-playerpowers[PLAYER_NAMES.SANITY] = sanity
-playerpowers[PLAYER_NAMES.PICK]   = pick
-playerpowers[PLAYER_NAMES.FARM]   = farm
+playerpowers[PLAYER_NAMES.HUNGER]      = hunger
+playerpowers[PLAYER_NAMES.SANITY]      = sanity
+playerpowers[PLAYER_NAMES.HEALTH]      = health
+playerpowers[PLAYER_NAMES.PICK]        = pick
+playerpowers[PLAYER_NAMES.FARM]        = farm
+playerpowers[PLAYER_NAMES.CRIT_DAMAGE] = pdefs.critdamage
+playerpowers[PLAYER_NAMES.LOCOMOTOR]   = pdefs.locomotor
+playerpowers[PLAYER_NAMES.DAMAGE]      = pdefs.damage
+
 
 
 helper.MakePlayerPower = function(name)
