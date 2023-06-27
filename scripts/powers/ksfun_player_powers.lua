@@ -66,7 +66,7 @@ local critdamage = {
     power = {
         onAttachFunc = function(inst, target, name)
             inst.components.ksfun_level:SetMax(100)
-            KsFunHookCaclDamage(inst, attacker, canHit)
+            KsFunHookCaclDamage(inst, target, canHit)
         end
     },
     level = {},

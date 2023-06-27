@@ -69,6 +69,17 @@ local MONSTER_LV6 = {
 local MOSTER = {}
 
 
+local MONSTER_DEFS = {
+    [1] = MONSTER_LV1,
+    [2] = MONSTER_LV2,
+    [3] = MONSTER_LV3,
+    [4] = MONSTER_LV4,
+    [5] = MONSTER_LV5,
+    [6] = MONSTER_LV6,
+}
+
+
+
 local function randomMonsterNum(monster_lv)
     local num = 1
     if monster_lv > 3 then

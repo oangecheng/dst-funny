@@ -22,7 +22,7 @@ end
 
 local function reinforceMonster(inst, limit, exclude)
     local worldmonster = TheWorld.components.ksfun_world_monster
-    local lv = wordmonster and wordmonster:GetMonsterLevel(inst.prefab)
+    local lv = worldmonster and worldmonster:GetMonsterLevel(inst.prefab)
     if lv and lv > 10 then
         --- 10%概率附加属性
         if not isHit(lv/100) then return end
@@ -43,9 +43,9 @@ local function reinforceMonster(inst, limit, exclude)
         -- 随机取几个属性
         local powers = PickSome(num, powernames)
         for i,v in ipairs(powers) do
-            local ent = inst.component.ksfun_power_system:AddPower(v)
+            local ent = inst.components.ksfun_power_system:AddPower(v)
             if ent then
-                local powerlv = math.random(lv)
+                local powerlv = KSFUN_TUNING.DEBUG and 100 or math.random(lv)
                 ent.components.ksfun_level:SetLevel(powerlv)
             end
         end
@@ -58,6 +58,7 @@ end
 local function onMonsterDeath(inst)
     local exp = monsters[inst.prefab].exp
     TheWorld.components.ksfun_world_monster:GainMonsterExp(inst.prefab, exp)
+    TheNet:Announce("怪物等级提升了！")
 end
 
 
