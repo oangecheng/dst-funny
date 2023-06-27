@@ -175,12 +175,7 @@ end
 
 
 local function onGetDescFunc(inst, target, name)
-    local desc = "采集"
-    if canAddQuickPick(inst) then
-        desc = desc.."加速，"
-    end
-    desc = desc.."额外掉落"
-    return KsFunGeneratePowerDesc(inst, desc)
+    return KsFunGeneratePowerDesc(inst, STRINGS.KSFUN_POWER_DESC_PICK)
 end
 
 

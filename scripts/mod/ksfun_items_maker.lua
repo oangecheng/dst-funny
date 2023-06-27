@@ -15,17 +15,30 @@ local function onEnhantFunc(inst, doer, item)
         local level  = inst.components.ksfun_level
         if system and level then
             local powercount = system:GetPowerNum()
-            KsFunLog("onEnhantFunc", powercount, level:GetLevel())
             local existed = system:GetPower(enhantname)
-            if (not existed) and powercount <= level:GetLevel() then
-                local ret = system:AddPower(enhantname)
-                local name = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
-                local msg  = name.."成功给"..STRINGS.NAMES[string.upper(inst.prefab)].."附加了"..STRINGS.NAMES[string.upper(ret.prefab)]
-                KsFunShowNotice(doer, msg)
+
+            if existed then
                 if doer.components.talker then
-                    doer.components.talker:Say(msg)
+                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_1)
                 end
-                return true
+            -- 判定，装备1级只能附加一个属性，2级2个 ...
+            elseif powercount >= level:GetLevel() then
+                if doer.components.talker then
+                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
+                end
+            else
+                 -- 显示提示
+                 local ret = system:AddPower(enhantname)
+                 local username = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
+                 local instname = STRINGS.NAMES[string.upper(inst.prefab)]
+                 local pname    = STRINGS.NAMES[string.upper(ret.prefab)]
+                 local msg  = string.format(STRINGS.KSFUN_ENHANT_SUCCESS, username, instname, pname)
+                 KsFunShowNotice(doer, msg)
+ 
+                 if doer.components.talker then
+                     doer.components.talker:Say(msg)
+                 end
+                 return true
             end
         end
     end

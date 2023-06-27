@@ -39,7 +39,8 @@ local function timeLimit()
     ret.diffculty = ret.diffculty + 10
     --- 计算时长，6级任务，需要的时间为 (6*10 + 10) / 10 = 7天
     --- 最少有一天的时间
-    ret.duration = math.max(ret.diffculty / 10 * KSFUN_TUNING.TIME_TOTAL_DAY, KSFUN_TUNING.TIME_TOTAL_DAY)
+    local seg = KSFUN_TUNING.TIME_SEG * 16
+    ret.duration = math.max(ret.diffculty / 10 * seg, seg)
     return ret
 end
 

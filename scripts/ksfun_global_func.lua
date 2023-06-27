@@ -117,7 +117,7 @@ end
 
 
 function KsFunGeneratePowerDefaultDesc(lv, exp)
-    return "Lv=["..lv.."]   ".."Exp=["..exp.."]"
+    return "LV=["..lv.."]   ".."EXP=["..exp.."]"
 end
 
 
@@ -126,7 +126,7 @@ function KsFunGeneratePowerDesc(power, extradesc)
     local extra = extradesc and "    "..extradesc.."" or ""
 
     if level:IsMax() then
-        return "已满级  "..extra
+        return STRINGS.KSFUN_LV_MAX.."  "..extra
     else
         local lv  = level:GetLevel()
         local exp = level:GetExp()
@@ -138,17 +138,25 @@ end
 
 
 local function getKillTaskDesc(demand)
-    local victimname = STRINGS.NAMES[string.upper(demand.data.victim)] or nil
+    -- 先从自定义的名称里面拿，有些怪物的名称是一样的，所以要区分一下
+    local victimname = STRINGS.KSFUN_NAMES[demand.data.victim]
+    if victimname == nil then
+        victimname = STRINGS.NAMES[string.upper(demand.data.victim)] or nil
+    end
+
     local num = demand.data.num
+    local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
     if victimname then
-        local str = "击杀"..num.."只"..victimname 
-        if     demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.NORMAL then
+        local str = string.format(STRINGS.KSFUN_TASK_KILL_DESC, tostring(num), tostring(victimname))
+        -- 击杀1只蜘蛛
+        if demand.type == KILL_TYPES.NORMAL then
             return str
-        elseif demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.TIME_LIMIT then
-            local time = demand.duration
-            return str.."(限制:"..time.."秒)"
-        elseif demand.type == KSFUN_TUNING.TASK_DEMAND_TYPES.KILL.ATTACKED_LIMIT then
-            return str.."(限制:无伤)"
+        -- 击杀1只蜘蛛(限制:480秒)
+        elseif demand.type == KILL_TYPES.TIME_LIMIT then
+            return str..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
+        -- 击杀1只蜘蛛(限制:无伤)
+        elseif demand.type == KILL_TYPES.ATTACKED_LIMIT then
+            return str..STRINGS.KSFUN_TASK_NO_HURT
         end
     end
     return nil
@@ -217,7 +225,7 @@ GLOBAL.KsFunHookCaclDamage = function(inst, attacker, canhitfunc)
     inst.ksfun_originCalcDamage = attacker.components.combat.CalcDamage
     if inst.ksfun_originCalcDamage then
         attacker.components.combat.CalcDamage = function(targ, weapon, mult)
-            local hit    = canhitfunc(0.2)
+            local hit    = canhitfunc and canhitfunc(0.2) or 0.2
             local lv     = inst.components.ksfun_level:GetLevel()
             local ratio  = hit and (lv/100 + 1) or 1
             local dmg    = inst.ksfun_originCalcDamage(targ, weapon, mult)

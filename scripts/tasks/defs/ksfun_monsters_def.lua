@@ -66,36 +66,6 @@ local MONSTER_LV6 = {
 }
 
 
-local function monsterCheck(monsters)
-    local indexs = {}
-    for i,v in ipairs(monsters) do
-        if STRINGS.NAMES[string.upper(v)] == nil then
-            table.insert(indexs, i)
-        end
-    end
-    for i,v in ipairs(indexs) do
-        table.remove(monsters, i)
-    end
-end
-
-
-monsterCheck(MONSTER_LV1)
-monsterCheck(MONSTER_LV2)
-monsterCheck(MONSTER_LV3)
-monsterCheck(MONSTER_LV4)
-monsterCheck(MONSTER_LV5)
-monsterCheck(MONSTER_LV6)
-
-
-local MONSTER_DEFS = {}
-MONSTER_DEFS[1] = MONSTER_LV1
-MONSTER_DEFS[2] = MONSTER_LV2
-MONSTER_DEFS[3] = MONSTER_LV3
-MONSTER_DEFS[4] = MONSTER_LV4
-MONSTER_DEFS[5] = MONSTER_LV5
-MONSTER_DEFS[6] = MONSTER_LV6
-
-
 local MOSTER = {}
 
 

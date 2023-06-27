@@ -40,8 +40,8 @@ end
 --- @param notice 是否需要说话
 local function onLvChangeFunc(inst, lv, notice)
     updateSanityStatus(inst)
-    if notice and inst.target then
-        inst.target.components.talker:Say("脑残值提升！")
+    if inst.target.components.talker then
+        inst.target.components.talker:Say(STRINGS.KSFUN_LV_UP_SANITY)
     end
 end
 
