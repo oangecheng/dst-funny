@@ -73,12 +73,16 @@ end)
 
 
 if GLOBAL.TheNet:GetIsServer() then
-    modimport("scripts/mod/ksfun_station.lua")
-    modimport("scripts/mod/ksfun_player.lua")
-    modimport("scripts/mod/ksfun_items_maker.lua")
 
     -- 世界初始化
     AddPrefabPostInit("world", function(inst)
         inst:AddComponent("ksfun_world_monster")
     end)
+
+    modimport("scripts/mod/ksfun_station.lua")
+    modimport("scripts/mod/ksfun_player.lua")
+    modimport("scripts/mod/ksfun_items_maker.lua")
+    modimport("scripts/mod/ksfun_monsters_reinforce.lua")
+
+
 end

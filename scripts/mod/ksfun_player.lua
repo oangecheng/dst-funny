@@ -42,7 +42,7 @@ AddPlayerPostInit(function(player)
         end
 
 
-        local ent = SpawnPrefab("armorwood")
+        local ent = SpawnPrefab("spear")
         if ent then
             ent.components.ksfun_item_forever:Enable()
             ent.components.ksfun_breakable:Enable()
@@ -51,9 +51,9 @@ AddPlayerPostInit(function(player)
                 ent.components.finiteuses:SetPercent(0.01)
             end
 
-            -- for i,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
-            --     ent.components.ksfun_power_system:AddPower(v)
-            -- end
+            for i,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
+                ent.components.ksfun_power_system:AddPower(v)
+            end
 
 
             inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
@@ -64,34 +64,5 @@ AddPlayerPostInit(function(player)
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
     end)
-
-
-    --- 击杀怪物增加怪物的世界等级
-    player:ListenForEvent("killed", function(inst, data)
-        KsFunLog("kill spider")
-        TheWorld.components.ksfun_world_monster:KillMonster(data.victim.prefab, 1000)
-    end)
-
 end)
-
-
-local monsters = {
-    "spider"
-}
-
-
-for i,v in ipairs(monsters) do
-    AddPrefabPostInit(v, function(inst)
-        inst:AddComponent("ksfun_power_system")
-        local wordmonster = TheWorld.components.ksfun_world_monster
-        if wordmonster then
-                -- local name = KsFunRandomValueFromKVTable(KSFUN_TUNING.MONSTER_POWER_NAMES)
-                for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
-                    inst.components.ksfun_power_system:AddPower(v)
-                    local p = inst.components.ksfun_power_system:GetPower(v)
-                    p.components.ksfun_level:SetLevel(100)
-                end
-        end
-    end)
-end
 
