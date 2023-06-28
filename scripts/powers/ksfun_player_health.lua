@@ -19,9 +19,7 @@ end
 --- 生命上限提升时
 local function onLvChangeFunc(inst, lv, notice)
     updateHealthState(inst, false)
-    if inst.target.components.talker then
-        inst.target.components.talker:Say(STRINGS.KSFUN_LV_UP_HEALTH)
-    end
+    KsFunSayPowerNotice(inst.target, inst.prefab)
 end
 
 

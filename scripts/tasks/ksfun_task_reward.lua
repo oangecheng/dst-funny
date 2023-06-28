@@ -8,12 +8,11 @@ local KSFUN_ITEM_TYPES = REWARD_TYPES.KSFUN_ITEM_TYPES
 --- @param 奖励的具体data
 local function rewardPower(player, data)
     local powername = data and data.power or nil
-
     -- 属性奖励有提示
     local power = KsFunGetPowerNameStr(powername)
-    KsFunShowNotice(player.name..STRINGS.KSFUN_GAIN..power..STRINGS.KSFUN_REWARD)
+    local msg = string.format(STRINGS.KSFUN_TASK_REWARD_POWER, player.name, power)
+    KsFunShowNotice(msg)
 
-    KsFunLog("rewardPower", powername)
     if powername then
         player.components.ksfun_power_system:AddPower(powername)
     end
@@ -30,10 +29,10 @@ local function rewardPowerLv(player, data)
         local power = player.components.ksfun_power_system:GetPower(powername)
         if power then
             power.components.ksfun_level:Up(data.num)
-            -- xx(属性)获得xx经验奖励
-            local str = STRINGS.KSFUN_TASK_WIN..","..KsFunGetPowerNameStr(powername)..STRINGS.KSFUN_REWARD_LV..data.num
             if player.components.talker then
-                player.components.talker:Say(str)
+                local power = KsFunGetPowerNameStr(powername)
+                local msg = string.format(STRINGS.KSFUN_TASK_REWARD_POWER_LV, power, tostring(data.num))
+                player.components.talker:Say(msg)
             end
         end
     end
@@ -47,10 +46,10 @@ local function rewardPowerExp(player, data)
     local powername = data and data.power or nil
     KsFunLog("rewardPowerExp", powername)
     KsFunPowerGainExp(player, powername, data.num)
-    -- xx(属性)获得xx经验奖励
-    local str = STRINGS.KSFUN_TASK_WIN..","..KsFunGetPowerNameStr(powername)..STRINGS.KSFUN_REWARD_EXP..data.num
     if player.components.talker then
-        player.components.talker:Say(str)
+        local power = KsFunGetPowerNameStr(powername)
+        local msg = string.format(STRINGS.KSFUN_TASK_REWARD_POWER_EXP, power, tostring(data.num))
+        player.components.talker:Say(msg)
     end
 end
 
@@ -64,13 +63,17 @@ local function rewardNomralItem(player, data)
             local ent = SpawnPrefab(item)
             if ent then
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())
-                if player.components.talker then
-                    player.components.talker:Say(STRINGS.KSFUN_TASK_WIN..","..STRINGS.KSFUN_GAIN..STRINGS.KSFUN_REWARD)
-                end
             end
+        end
+
+        if player.components.talker then
+            local itemname = STRINGS.NAMES[string.upper(item)].."x"..data.num
+            local msg = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM_2, itemname)
+            player.components.talker:Say(msg)
         end
     end
 end
+
 
 
 --- 特殊物品奖励
@@ -78,7 +81,6 @@ end
 local function rewardKsFunItem(player, data)
     local item = data and data.item or nil
     KsFunLog("rewardKsFunItem", item, data.num, data.lv)
-
 
     if item then
         for i=1, data.num do
@@ -89,15 +91,17 @@ local function rewardKsFunItem(player, data)
                     ent.components.ksfun_breakable:Enable()
                     ent.components.ksfun_enhantable:Enable()
                 end
-
-                local notice = player.name..STRINGS.KSFUN_REWARD_ITEM
-                KsFunShowNotice(notice)
             
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())
             end
         end
+
+        local itemname = KsFunGetPrefabName(item)
+        local notice = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM, player.name, itemname, tostring(data.num))
+        KsFunShowNotice(notice)
     end
 end
+
 
 
 local function onWinFunc(inst, player, name, task)

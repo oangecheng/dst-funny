@@ -40,9 +40,7 @@ end
 --- @param notice 是否需要说话
 local function onLvChangeFunc(inst, lv, notice)
     updateSanityStatus(inst)
-    if inst.target.components.talker then
-        inst.target.components.talker:Say(STRINGS.KSFUN_LV_UP_SANITY)
-    end
+    KsFunSayPowerNotice(inst.target, inst.prefab)
 end
 
 

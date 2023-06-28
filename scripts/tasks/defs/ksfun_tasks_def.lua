@@ -43,6 +43,7 @@ local rewardsfunc = {
 
 }
 
+
 --- 特殊类型奖励
 local reward_special = {
     REWARD_TYPES.PLAYER_POWER,
@@ -50,6 +51,7 @@ local reward_special = {
     REWARD_TYPES.PLAYER_POWER_EXP,
     REWARD_TYPES.KSFUN_ITEM,
 }
+
 
 -- 任务等级越高，越容易获得特殊奖励
 -- 最高等级的任务有40%的概率获得特殊奖励
@@ -62,7 +64,7 @@ tasks_def.randomReward = function(player, tasklv)
     if s>v then
         -- 循环3次查找,找到一个就可以
         for i=1,3 do
-            local rewardtype = KsFunRandomValueFromList(reward_special)
+            local rewardtype = GetRandomItem(reward_special)
             KsFunLog("random special reward", rewardtype)
             local func = rewardsfunc[rewardtype]
             if func then

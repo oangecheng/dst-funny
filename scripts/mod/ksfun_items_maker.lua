@@ -33,7 +33,7 @@ local function onEnhantFunc(inst, doer, item)
                  local instname = STRINGS.NAMES[string.upper(inst.prefab)]
                  local pname    = STRINGS.NAMES[string.upper(ret.prefab)]
                  local msg  = string.format(STRINGS.KSFUN_ENHANT_SUCCESS, username, instname, pname)
-                 KsFunShowNotice(doer, msg)
+                 KsFunShowNotice(msg)
  
                  if doer.components.talker then
                      doer.components.talker:Say(msg)

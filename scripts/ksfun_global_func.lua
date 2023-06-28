@@ -3,8 +3,63 @@ local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
 
 
+--- 日志
+local LOG_TAG = "KsFunLog: "
+GLOBAL.KsFunLog  = function(info, v1, v2, v3)
+    print(LOG_TAG..info.." "..tostring(v1 or "").." "..tostring(v2 or "").." "..tostring(v3 or ""))
+end
+
+
+--- 获取物品名称
+--- 有自定义名称的，修改一下
+--- @param prefab 物品代码
+GLOBAL.KsFunGetPrefabName = function(prefab)
+    local name = STRINGS.KSFUN_NAMES[prefab]
+    return name or STRINGS.NAMES[string.upper(prefab)]
+end
+
+
+
+--- 获取属性的显示名称
+--- 例如攻击增强..
+--- @param powername 不带前缀的属性名称
+GLOBAL.KsFunGetPowerNameStr = function(powername)
+    return KsFunGetPrefabName("ksfun_power_"..powername) or ""
+end
+
+
+
+--- 获取属性的描述性文字
+GLOBAL.KsFunGetPowerDescStr = function(powerprefab)
+    return STRINGS.KSFUN_POWER_DESC[string.upper(powerprefab)] or ""
+end
+
+
+
+
+--- 全局提示
+--- @param msg 消息
+GLOBAL.KsFunShowNotice = function(msg)
+	TheNet:Announce(msg)
+end
+
+
+
+--- 角色升级时提示一下
+GLOBAL.KsFunSayPowerNotice = function(doer, powerprefab)
+    if doer.components.talker then
+        local name = KsFunGetPrefabName(powerprefab)
+        local msg  = string.format(STRINGS.KSFUN_POWER_LEVEL_UP_NOTICE, name)
+        doer.components.talker:Say(msg)
+    end
+end
+
+
+
 --- 查找对应的能力获取经验值
-function KsFunPowerGainExp(inst, name, exp)
+--- @param name 属性名称，不包含前缀
+--- @param exp 经验
+GLOBAL.KsFunPowerGainExp = function(inst, name, exp)
     if exp == 0 then return end
     if inst.components.ksfun_power_system then
         local power = inst.components.ksfun_power_system:GetPower(name)
@@ -12,48 +67,6 @@ function KsFunPowerGainExp(inst, name, exp)
             power.components.ksfun_level:GainExp(exp)
         end
     end
-end
-
-
-function KsFunRemoveTargetFromTable(list, target)
-    for k, v in pairs(list) do
-        if v == target then
-            list[k] = nil
-            return v
-        end
-    end
-end
-
-
-function KsFunRandomValueFromKVTable(target)
-    local values = {}
-    for k,v in pairs(target) do
-        table.insert(values, v)
-    end
-    local index = math.random(#values)
-    return values[index]
-end
-
-
-function KsFunRandomValueFromList(target)
-    local index = math.random(#target)
-    return target[index]
-end
-
-
-function KsFunFormatTime(time)
-    if time < 0 then return "--:--" end
-	local min = math.floor(time/60)
-    local sec = math.floor(time%60)
-    if min < 10 then min = "0"..min end
-    if sec < 10 then sec = "0"..sec end
-    return min .. ":" .. sec
-end
-
-
-local LOG_TAG = "KsFunLog: "
-function KsFunLog(info, v1, v2, v3)
-    print(LOG_TAG..info.." "..tostring(v1).." "..tostring(v2).." "..tostring(v3))
 end
 
 
@@ -101,7 +114,8 @@ end
 
 
 
-function KsFunIsValidVictim(victim)
+
+GLOBAL.KsFunIsValidVictim = function(victim)
     return victim ~= nil
         and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
                 victim:HasTag("veggie") or
@@ -116,17 +130,21 @@ function KsFunIsValidVictim(victim)
 end
 
 
-function KsFunGeneratePowerDefaultDesc(lv, exp)
+
+
+GLOBAL.KsFunGeneratePowerDefaultDesc = function(lv, exp)
     return "LV=["..lv.."]   ".."EXP=["..exp.."]"
 end
 
 
-function KsFunGeneratePowerDesc(power, extradesc)
+
+
+GLOBAL.KsFunGetPowerDesc = function(power, extradesc)
     local level = power.components.ksfun_level
     local extra = extradesc and "    "..extradesc.."" or ""
 
     if level:IsMax() then
-        return STRINGS.KSFUN_LV_MAX.."  "..extra
+        return STRINGS.KSFUN_POWER_LEVEL_MAX.."  "..extra
     else
         local lv  = level:GetLevel()
         local exp = level:GetExp()
@@ -137,33 +155,30 @@ end
 
 
 
-local function getKillTaskDesc(demand)
-    -- 先从自定义的名称里面拿，有些怪物的名称是一样的，所以要区分一下
-    local victimname = STRINGS.KSFUN_NAMES[demand.data.victim]
-    if victimname == nil then
-        victimname = STRINGS.NAMES[string.upper(demand.data.victim)] or nil
-    end
-
-    local num = demand.data.num
-    local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
-    if victimname then
-        local str = string.format(STRINGS.KSFUN_TASK_KILL_DESC, tostring(num), tostring(victimname))
-        -- 击杀1只蜘蛛
-        if demand.type == KILL_TYPES.NORMAL then
-            return str
-        -- 击杀1只蜘蛛(限制:480秒)
-        elseif demand.type == KILL_TYPES.TIME_LIMIT then
-            return str..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
-        -- 击杀1只蜘蛛(限制:无伤)
-        elseif demand.type == KILL_TYPES.ATTACKED_LIMIT then
-            return str..STRINGS.KSFUN_TASK_NO_HURT
-        end
-    end
-    return nil
-end
 
 
 function KsFunGeneratTaskDesc(taskdata)
+    local function getKillTaskDesc(demand)
+        -- 先从自定义的名称里面拿，有些怪物的名称是一样的，所以要区分一下
+        local victimname = KsFunGetPrefabName(demand.data.victim)
+        local num = demand.data.num
+        local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
+        if victimname then
+            local str = string.format(STRINGS.KSFUN_TASK_KILL_DESC, tostring(num), tostring(victimname))
+            -- 击杀1只蜘蛛
+            if demand.type == KILL_TYPES.NORMAL then
+                return str
+            -- 击杀1只蜘蛛(限制:480秒)
+            elseif demand.type == KILL_TYPES.TIME_LIMIT then
+                return str..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
+            -- 击杀1只蜘蛛(限制:无伤)
+            elseif demand.type == KILL_TYPES.ATTACKED_LIMIT then
+                return str..STRINGS.KSFUN_TASK_NO_HURT
+            end
+        end
+        return nil
+    end
+
     if taskdata.name == KSFUN_TUNING.TASK_NAMES.KILL then
         return getKillTaskDesc(taskdata.demand)
     end
@@ -171,23 +186,6 @@ function KsFunGeneratTaskDesc(taskdata)
 end
 
 
-function KsFunShowNotice(player, msg)
-	if  player then
-		local medal_tips = SpawnPrefab("medal_tips")
-		medal_tips.Transform:SetPosition(player.Transform:GetWorldPosition())
-		if medal_tips.medal_d_value then
-			medal_tips.medal_d_value:set(msg)
-		end
-	end
-end
-
-
-
---- 获取属性的显示名称
---- 例如攻击增强..
-GLOBAL.KsFunGetPowerNameStr = function(powername)
-    return STRINGS.NAMES[string.upper("ksfun_power_"..powername)]
-end
 
 
 --- 添加可交易组件
@@ -236,16 +234,7 @@ end
 
 
 
-GLOBAL.KsFunLog = KsFunLog
-GLOBAL.KsFunPowerGainExp = KsFunPowerGainExp
-GLOBAL.KsFunRemoveTargetFromTable = KsFunRemoveTargetFromTable
-GLOBAL.KsFunFormatTime = KsFunFormatTime
-GLOBAL.KsFunRandomValueFromKVTable = KsFunRandomValueFromKVTable
-GLOBAL.KsFunRandomValueFromList = KsFunRandomValueFromList
+GLOBAL.KsFunFormatTime  = KsFunFormatTime
 GLOBAL.KsFunRandomPower = KsFunRandomPower
-GLOBAL.KsFunIsValidVictim = KsFunIsValidVictim
-GLOBAL.KsFunGeneratePowerDesc = KsFunGeneratePowerDesc
-GLOBAL.KsFunGeneratePowerDefaultDesc = KsFunGeneratePowerDefaultDesc
 GLOBAL.KsFunGeneratTaskDesc = KsFunGeneratTaskDesc
-GLOBAL.KsFunShowNotice = KsFunShowNotice
 GLOBAL.KsFunGetAoeProperty = KsFunGetAoeProperty

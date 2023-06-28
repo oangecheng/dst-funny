@@ -175,7 +175,7 @@ end
 
 
 local function onGetDescFunc(inst, target, name)
-    return KsFunGeneratePowerDesc(inst, STRINGS.KSFUN_POWER_DESC_PICK)
+    return KsFunGetPowerDesc(inst, KsFunGetPowerDescStr(inst.prefab))
 end
 
 

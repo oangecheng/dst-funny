@@ -23,8 +23,8 @@ local aoemax = 10
 
 local function onGetAoeDescFunc( inst, target, name )
     local multi,area = KsFunGetAoeProperty(inst)
-    local desc = "造成范围"..area.."以内"..(multi*100).."%溅射伤害"
-    return KsFunGeneratePowerDesc(inst, desc)
+    local desc = string.format(STRINGS.KSFUN_POWER_DESC[string.upper(inst.prefab)], tostring(area), (multi*100).."%")
+    return KsFunGetPowerDesc(inst, desc)
 end
 
 local aoe = {
