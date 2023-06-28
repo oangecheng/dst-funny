@@ -54,6 +54,13 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/ksfun_task_reel.xml"
 
+    -- 任务卷轴2分钟之后自动移除
+    inst:AddComponent("timer")
+    inst.components.timer:StartTimer("ksfun_task_reel", 120, true)
+    inst:ListenForEvent("timerdone", function(inst, data)
+        inst:DoTaskInTime(0, inst:Remove())
+    end)
+
     return inst
 end
 
