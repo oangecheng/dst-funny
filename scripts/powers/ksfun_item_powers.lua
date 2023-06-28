@@ -1,3 +1,9 @@
+--- 不需要format的属性描述可以使用这个
+local function getPowerDesc(inst)
+    local extra = KsFunGetPowerDescExtra(inst.prefab)
+    return KsFunGetPowerDesc(inst, extra)
+end
+
 
 
 ------ 吸血属性 ----------------------------------------------------------------------------------------
@@ -8,6 +14,8 @@ local lifesteal = {
         onAttachFunc = function(inst, target, name)
             inst.components.ksfun_level:SetMax(lifestealmax)
         end,
+        
+        onGetDescFunc = getPowerDesc,
     },
     level = {},
     -- 可升级
@@ -60,7 +68,10 @@ local mine = {
             end
             inst.components.ksfun_level:SetMax(minemax)
             updateMineStatus(inst) 
-        end,  
+        end,
+
+        onGetDescFunc = getPowerDesc,
+  
     },
     level = {
         onLvChangeFunc = updateMineStatus
@@ -93,7 +104,10 @@ local chop = {
             end
             inst.components.ksfun_level:SetMax(chopmax)
             updateChopStatus(inst) 
-        end,  
+        end,
+        
+        onGetDescFunc = getPowerDesc,
+        
     },
     level = {
         onLvChangeFunc = updateChopStatus
@@ -146,6 +160,7 @@ local maxuses = {
             updateMaxusesStatus(inst)
         end,
 
+        onGetDescFunc = getPowerDesc,
 
     },
     level = {
@@ -185,6 +200,7 @@ local damage = {
             updateDamageStatus(inst)
         end,
 
+        onGetDescFunc = getPowerDesc,
 
     },
     level = {
@@ -266,6 +282,8 @@ local insulator = {
             updateInsulatorStatus(inst)
         end,
 
+        onGetDescFunc = getPowerDesc,
+
         onSaveFunc = function(inst, data)
             data.type = inst.type or nil
             data.switch = inst.switch or false
@@ -312,7 +330,10 @@ local dapperness = {
             local equippable = target.components.equippable
             inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
             updateDappernessStatus(inst)
-        end
+        end,
+
+        onGetDescFunc = getPowerDesc,
+
     },
     level = {
         onLvChangeFunc = updateDappernessStatus
@@ -355,7 +376,10 @@ local waterproofer = {
             local max = math.floor((1 - effect) / 0.01)
             inst.components.ksfun_level:SetMax(max)
             updateWaterproofStatus(inst)
-        end
+        end,
+
+        onGetDescFunc = getPowerDesc,
+
     },
     level = {
         onLvChangeFunc = updateWaterproofStatus
@@ -390,7 +414,10 @@ local speed = {
                 inst.components.ksfun_level:SetMax(speedmax)
                 updateSpeedStatus(inst)
             end
-        end
+        end,
+
+        onGetDescFunc = getPowerDesc,
+
     },
     level = {
         onLvChangeFunc = updateSpeedStatus
@@ -429,7 +456,10 @@ local absorb = {
             KsFunLog("setabsorb", absorb, max)
             inst.components.ksfun_level:SetMax(max)
             updateAbsorbStatus(inst)
-        end
+        end,
+
+        onGetDescFunc = getPowerDesc,
+
     },
     level = {
         onLvChangeFunc = updateAbsorbStatus

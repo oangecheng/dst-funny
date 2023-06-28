@@ -30,7 +30,7 @@ end
 
 
 --- 获取属性的描述性文字
-GLOBAL.KsFunGetPowerDescStr = function(powerprefab)
+GLOBAL.KsFunGetPowerDescExtra = function(powerprefab)
     return STRINGS.KSFUN_POWER_DESC[string.upper(powerprefab)] or ""
 end
 

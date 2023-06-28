@@ -97,9 +97,8 @@ STRINGS.NAMES.KSFUN_POWER_MONSTER_ABSORB        = "防御强化"
 --- 属性描述，先简单点，后面再完善描述
 STRINGS.KSFUN_POWER_DESC = {
     KSFUN_POWER_ITEM_WATERPROOFER = "增强装备防水能力",
-    KSFUN_POWER_ITEM_AOE          = "造成%s范围%s溅射伤害",
     KSFUN_POWER_ITEM_DAPPERNESS   = "提升角色精神值回复速度",
-    KSFUN_POWER_ITEM_INSULATOR    = "增强装备保暖/隔热能力(%s)",
+    KSFUN_POWER_ITEM_INSULATOR    = "增强装备保暖/隔热能力",
     KSFUN_POWER_ITEM_DAMAGE       = "增强武器的攻击",
     KSFUN_POWER_ITEM_CHOP         = "武器可伐木,效率提升",
     KSFUN_POWER_ITEM_MINE         = "武器可挖矿,效率提升",

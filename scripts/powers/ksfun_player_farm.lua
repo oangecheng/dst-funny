@@ -83,6 +83,10 @@ end
 local power = {
     onAttachFunc = onAttachFunc,
     onDetachFunc = onDetachFunc,
+    onGetDescFunc = function(inst, t, n)
+        local extra = KsFunGetPowerDescExtra(inst.prefab)
+        return KsFunGetPowerDesc(inst, extra)
+    end,
 }
 
 local level = {}

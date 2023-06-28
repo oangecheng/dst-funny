@@ -143,7 +143,13 @@ local power = {
     end,
     onLoadFunc   = function(inst, data)
         inst.percent = data.percent or 1
-    end
+    end,
+
+    onGetDescFunc = function(inst, t, n)
+        local extra = KsFunGetPowerDescExtra(inst.prefab)
+        return KsFunGetPowerDesc(inst, extra)
+    end,
+    
 }
 
 local level = {

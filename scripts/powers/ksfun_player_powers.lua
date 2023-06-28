@@ -1,6 +1,13 @@
 local playerpowers = {}
 
 
+--- 不需要format的属性描述可以使用这个
+local function getPowerDesc(inst)
+    local extra = KsFunGetPowerDescExtra(inst.prefab)
+    return KsFunGetPowerDesc(inst, extra)
+end
+
+
 local function canHit(defaultratio)
     local r =  KSFUN_TUNING.DEBUG and 1 or defaultratio
     return math.random(100) < r * 100
@@ -23,6 +30,8 @@ local damage = {
             inst.components.ksfun_level:SetMax(50)
             updateDamageStatus(inst)
         end,
+
+        onGetDescFunc = getPowerDesc,
     },
     level = {
         onLvChangeFunc = updateDamageStatus
@@ -50,6 +59,9 @@ local locomotor = {
             inst.components.ksfun_level:SetMax(50)
             updateLocomotorStatus(inst)
         end,
+
+        onGetDescFunc = getPowerDesc,
+
     },
     level = {
         onLvChangeFunc = updateLocomotorStatus
@@ -67,7 +79,10 @@ local critdamage = {
         onAttachFunc = function(inst, target, name)
             inst.components.ksfun_level:SetMax(100)
             KsFunHookCaclDamage(inst, target, canHit)
-        end
+        end,
+
+        onGetDescFunc = getPowerDesc,
+
     },
     level = {},
 }

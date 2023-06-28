@@ -175,7 +175,7 @@ end
 
 
 local function onGetDescFunc(inst, target, name)
-    return KsFunGetPowerDesc(inst, KsFunGetPowerDescStr(inst.prefab))
+    return KsFunGetPowerDesc(inst, KsFunGetPowerDescExtra(inst.prefab))
 end
 
 
