@@ -7,10 +7,7 @@ local function addPower(self, name, ent)
 
         --- 属性系统才可以绑定
         ent.components.ksfun_power:Attach(name, self.inst)
-
-        if self.onPowerAddFunc then
-            self.onPowerAddFunc(self.inst, name, ent)
-        end
+        self.inst:PushEvent(KSFUN_TUNING.EVENTS.POWER_ATTACH, { name = name, power = ent })
     else
         ent:Remove()
     end
@@ -22,9 +19,6 @@ local KSFUN_POWERS = Class(function(self, inst)
     self.inst = inst
     self.enable = true
     self.powers = {}
-
-    self.onPowerAddFunc = nil
-    self.onPowerRemoveFunc = nil
 end)
 
 
@@ -37,49 +31,24 @@ function KSFUN_POWERS:GetPower(name)
     end
 end
 
---- 设置新增属性监听
---- 一般用来刷新数据
-function KSFUN_POWERS:SetOnPowerAddFunc(func)
-    self.onPowerAddFunc = func
-end
-
-
---- 设置属性移除监听
---- 一般用来刷新显示
-function KSFUN_POWERS:SetOnPowerRemoveFunc(func)
-    self.onPowerRemoveFunc = func
-end
-
-
-function KSFUN_POWERS:SetEnable(enable)
-    self.enable = enable
-    for k,v in pairs(self.powers) do
-        v.inst.components.ksfun_power:SetEnable(self.enable)
-    end
-end
-
-
-function KSFUN_POWERS:IsEnable()
-    return self.enable
-end
-
 
 --- 新增一个属性
 --- 对于一个inst，同一种属性只能添加一次，多次添加无效，会回调 OnExtend
 --- 对于临时power可以延长时间
 --- @param name 属性名称
-function KSFUN_POWERS:AddPower(name)
-    local power = self.powers[name]
+--- @param p 属性实体，这个一般只有在发生属性迁移的时候才会传参
+function KSFUN_POWERS:AddPower(name, p)
+    local existed = self.powers[name]
     local ret = nil
-    if power == nil then
-        local ent = SpawnPrefab("ksfun_power_"..name)
+    if existed == nil then
+        local ent = p and p or SpawnPrefab("ksfun_power_"..name)
         if ent then
             addPower(self, name, ent)
         end
         ret = ent
     else
-        power.inst.components.ksfun_power:Extend()
-        ret =  power.inst
+        existed.inst.components.ksfun_power:Extend()
+        ret = existed.inst
     end
     self:SyncData()
     return ret
@@ -105,11 +74,14 @@ function KSFUN_POWERS:RemovePower(name)
 end
 
 
+--- 获取当前属性的数量
 function KSFUN_POWERS:GetPowerNum()
     return GetTableSize(self.powers)
 end
 
 
+
+--- 获取当前的属性列表
 function KSFUN_POWERS:GetAllPowers()
     local list = {}
     for k,v in pairs(self.powers) do

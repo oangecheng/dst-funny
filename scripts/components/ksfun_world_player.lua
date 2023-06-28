@@ -1,59 +1,82 @@
 -- 数据缓存
--- player_status 缓存格式 { user1 = {ksfun_hunger = 1, ksfun_health = 1}}
-
-local function recovery_player_status(data, src, player)
-    if player == nil or player.userid == nil then return end
-    local player_status = data.player_status[player.userid]
-    if player_status == nil then return end
-
-    if player.components.ksfun_hunger ~= nil then
-        player.components.ksfun_hunger:SetLevel(player_status.ksfun_hunger or 0, false)
-    end
-    if player.components.ksfun_health ~= nil then
-        player.components.ksfun_health:SetLevel(player_status.ksfun_health or 0, false)
-    end
-    if player.components.ksfun_sanity ~= nil then
-        player.components.ksfun_sanity:SetLevel(player_status.ksfun_sanity or 0, false)
-    end 
-end
 
 
 
+local KSFUN_WORLD_PLAYERS = Class(function(self, inst)
+    self.inst = inst
+    self.playerdatas = {}
+    
+    inst:ListenForEvent("ms_playerdespawnanddelete", function(inst, player)
+        KsFunShowNotice("哈哈哈断开连接了")
+        self:CachePlayerStatus(player)
+    end)
 
-local KsFun_Data = Class(
-    function(self, inst)
-        self.inst = inst
-        self.data = {
-            player_status = {}
-        }
-
-        -- 玩家切换角色的时候，恢复之前缓存的等级
-        inst:ListenForEvent("ms_newplayerspawned", function(src, player)
-            recovery_player_status(self.data, src, player)
-        end)
+    inst:ListenForEvent("ms_newplayerspawned", function(inst, player)
+        KsFunShowNotice("哈哈哈重新进入了")
+        self:RecoverPlayerStatus(player)
+    end)
 end)
 
 
--- 缓存人物的状态
--- 这里不做持久化保存，仅支持角色切换时保留角色的一些属性状态
--- 如果用户在切换角色的时候离开游戏，会导致角色的属性被重置
-function KsFun_Data:CachePlayerStatus(player)
-    if player == nil or player.userid == nil then return end
 
-    local userid = player.userid
-    local player_status = self.data.player_status
-    player_status[userid] = {}
 
-    -- 缓存用户等级等级
-    if player.components.ksfun_hunger ~= nil then
-        player_status[userid].ksfun_hunger = player.components.ksfun_hunger.level
-    end
-    if player.components.ksfun_health ~= nil then
-        player_status[userid].ksfun_health = player.components.ksfun_health.level
-    end 
-    if player.components.ksfun_sanity ~= nil then
-        player_status[userid].ksfun_sanity = player.components.ksfun_sanity.level
-    end    
+function KSFUN_WORLD_PLAYERS:CachePlayerStatus(player)
+    local data = self.playerdatas[player.userid] or {}
+    data.powers = player.components.ksfun_power_system:GetAllPowers()
+    self.playerdatas[key] = userdata
 end
 
-return KsFun_Data
+
+
+function KSFUN_WORLD_PLAYERS:RecoverPlayerStatus(player)
+    local data = self.playerdatas[player.userid]
+    if data and data.powers then
+        for k,v in pairs(data.powers) do
+            v.components.ksfun_power:Deatch()
+            player.components.ksfun_power_system:AddPower(k, v)
+        end
+    end
+end
+
+
+
+function KSFUN_WORLD_PLAYERS:OnSave()
+    if next(self.playerdatas) == nil then return end
+    local data = {}
+    -- k用户id, v每个角色的数据
+    for k, v in pairs(self.playerdatas) do
+
+        if next(v.powers) then
+            local powers = {}
+            for k1, v1 in pairs(v.powers) do
+                local saved = v1:GetSaveRecord()
+                powers[k1] = saved
+            end
+            data[k] = { powers = powers}
+        end
+
+    end
+    return data
+end
+
+
+
+function KSFUN_WORLD_PLAYERS:OnLoad(data)
+    if data ~= nil and next(data) then
+        for k, v in pairs(data) do
+            if next(v.powers) then
+                local powers = {}
+                for k1, v1 in pairs(v.powers) do
+                    local ent = SpawnSaveRecord(v1)
+                    if ent then
+                        powers[k1] = ent
+                    end
+                end
+                self.playerdatas[v] = { powers = powers}
+            end
+        end
+    end
+end
+
+
+return KSFUN_WORLD_PLAYERS

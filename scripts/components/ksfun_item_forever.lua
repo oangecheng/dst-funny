@@ -12,23 +12,6 @@ local function isValidItem(self, item)
 end
 
 
-local function setItemEnable(self, enable)
-    local weapon = self.inst.components.weapon
-    if weapon then
-        if enable then
-            weapon:SetDamage(self.data.damage)
-        else
-            weapon:SetDamage(0)
-        end
-    end
-
-    local system = self.inst.components.ksfun_power_system
-    if system then
-        system:SetEnable(enable)
-    end
-end
-
-
 local function traderTest(self, item, giver)
     if self.enable then
         if isValidItem(self, item) then
@@ -138,32 +121,6 @@ end)
 
 function FOREVER:Enable()
     self.enable = true
-
-    -- 物品耐久为0不消失，不采用这种方式，修改官方api
-    -- --- 启用时，物品不会被移除，这里只修改可升级的武器
-    -- if self.inst.components.finiteuses then
-    --     self.inst.components.finiteuses:SetOnFinished(function(inst)
-    --         setItemEnable(self, false)
-    --     end)
-    -- end
-
-    -- --- 由于官方机制设定，护甲类型的物品耐久为0会被移除
-    -- --- 修改官方函数容易引发bug，所以这里采用耐久小于10%时自动卸下装备的机制，避免损坏
-    -- if self.inst.components.armor then
-    --     self.inst:ListenForEvent("percentusedchange", function(inst, data)
-    --         if data.percent <= 0.1 and inst.components.equippable then
-    --             if self.inst.ksfunitemowner then
-    --                 inst.components.equippable:Unequip(self.inst.ksfunitemowner)
-    --             end
-    --         end
-    --     end)
-    -- end
-
-    -- if self.inst.components.fueled then
-    --     self.inst.components.fueled:SetDepletedFn(function(inst)
-    --         setItemEnable(self, false)
-    --     end)
-    -- end
 end
 
 

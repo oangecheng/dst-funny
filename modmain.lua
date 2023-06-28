@@ -20,10 +20,7 @@ Assets = {
     Asset("ANIM" , "anim/ksfun_task_reel.zip"),	
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
     Asset("IMAGE", "images/ksfun_task_reel.tex"),
-
     Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
-    Asset("ATLAS", "images/inventoryitems/ksfun_power_gem_item_maxuses.xml"),
-    Asset("IMAGE", "images/inventoryitems/ksfun_power_gem_item_maxuses.tex"),
 }
 
 local ITEM_POWER_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
@@ -77,10 +74,11 @@ if GLOBAL.TheNet:GetIsServer() then
     -- 世界初始化
     AddPrefabPostInit("world", function(inst)
         inst:AddComponent("ksfun_world_monster")
+        inst:AddComponent("ksfun_world_player")
     end)
 
     modimport("scripts/mod/ksfun_station.lua")
-    modimport("scripts/mod/ksfun_player.lua")
+    modimport("scripts/mod/ksfun_player_init.lua")
     modimport("scripts/mod/ksfun_items_maker.lua")
     modimport("scripts/mod/ksfun_monsters_reinforce.lua")
 
