@@ -45,6 +45,16 @@ function KSFUN_TASK_SYSTEM:GetTask(name)
     return task and task.inst or nil
 end
 
+
+
+
+function KSFUN_TASK_SYSTEM:GetTaskNum()
+    return GetTableSize(self.tasks)
+end
+
+
+
+
 --- 设置新增属性监听
 --- 一般用来刷新数据
 function KSFUN_TASK_SYSTEM:SetOnTaskAddFunc(func)

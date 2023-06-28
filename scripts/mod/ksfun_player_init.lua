@@ -39,6 +39,15 @@ AddPlayerPostInit(function(player)
 
     initPlayerProperty(player)
 
+    
+    -- 每天开始给个任务卷轴
+    player:WatchWorldState("cycles", function(inst)
+        if player.components.ksfun_task_system:GetTaskNum() < 1 then
+            local ent = SpawnPrefab("ksfun_task_reel")
+            inst.components.inventory:GiveItem(ent, nil, inst:GetPosition())
+        end
+    end)
+
     -- 任务结束，从任务列表当中移除
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
