@@ -38,7 +38,7 @@ AddReplicableComponent("ksfun_task_demand")
 
 local player_panel = require "mod/my_screen"
 AddClassPostConstruct("widgets/controls", function(self, owner)
-	owner.player_panel = self:AddChild(player_panel(self.owner))--说明页图标
+	owner.player_panel = self:AddChild(player_panel(self.owner))
     owner.player_panel:Hide()
     owner.player_panel_showing = false
 end)

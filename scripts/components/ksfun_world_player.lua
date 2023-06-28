@@ -23,7 +23,10 @@ end)
 function KSFUN_WORLD_PLAYERS:CachePlayerStatus(player)
     local data = self.playerdatas[player.userid] or {}
     data.powers = player.components.ksfun_power_system:GetAllPowers()
-    self.playerdatas[key] = userdata
+    for k,v in pairs(data.powers) do
+        v.components.ksfun_power:Detach()
+    end
+    self.playerdatas[player.userid] = data
 end
 
 
@@ -32,7 +35,6 @@ function KSFUN_WORLD_PLAYERS:RecoverPlayerStatus(player)
     local data = self.playerdatas[player.userid]
     if data and data.powers then
         for k,v in pairs(data.powers) do
-            v.components.ksfun_power:Deatch()
             player.components.ksfun_power_system:AddPower(k, v)
         end
     end

@@ -194,7 +194,6 @@ end
 local function onDetachFunc(inst, target, name)
     target:RemoveEventCallback("picksomething", onPickSomeThing)
     target:RemoveEventCallback("ksfun_picksomething", onPickSomeThing)
-    inst.target = nil
 end
 
 

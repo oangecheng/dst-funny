@@ -1,7 +1,6 @@
 
 local function onPowerWithLevelDirty(self, inst)
     local data = self._itempowers:value()
-    print("onPowerWithLevelDirty ".. data)
     if data then
         local d1 = string.split(data, ";")
 
@@ -20,7 +19,7 @@ local function onPowerWithLevelDirty(self, inst)
                 end
             else
                 --- 属性数据
-                if #d2 == 4 then
+                if GetTableSize(d2) == 4 then
                     local name = d2[1]
                     local lv   = tonumber(d2[2])
                     local exp  = tonumber(d2[3])
@@ -33,10 +32,6 @@ local function onPowerWithLevelDirty(self, inst)
                     }
                 end
             end
-        end
-
-        for k,v in pairs(self.title) do
-            KsFunLog("onPowerWithLevelDirty ", v)
         end
 
         if self.inst then

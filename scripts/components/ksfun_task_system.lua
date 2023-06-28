@@ -46,6 +46,15 @@ function KSFUN_TASK_SYSTEM:GetTask(name)
 end
 
 
+function KSFUN_TASK_SYSTEM:GetAllTasks()
+    local tasks = {}
+    for k, v in pairs(self.tasks) do
+        tasks[k] = v.inst
+    end
+    return tasks
+end
+
+
 
 
 function KSFUN_TASK_SYSTEM:GetTaskNum()

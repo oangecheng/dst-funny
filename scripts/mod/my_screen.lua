@@ -201,9 +201,22 @@ end
 
 
 function KSFUN_PLAYER_PANEL:AddTaskCards()
-	local system = self.owner.replica.ksfun_task_system
+	local tasks = {}
 
-	local tasks = system:GetTasks()
+	if TheWorld.ismastersim then
+		local system = self.owner.components.ksfun_task_system
+		local temp = system:GetAllTasks()
+		for k,v in pairs(temp) do
+			tasks[k] = v:GetDesc()
+		end
+	else
+		local system = self.owner.replica.ksfun_task_system
+		if system then
+			tasks = system:GetTasks()
+		end
+	end
+
+
 	if tasks then
 		for k,v in pairs(tasks) do
 			local name = string.upper("ksfun_task_"..k)

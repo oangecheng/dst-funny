@@ -135,7 +135,6 @@ local function onDetachFunc(inst, player, name)
     
     reset(inst, player)
 
-    inst.target = nil
 end
 
 

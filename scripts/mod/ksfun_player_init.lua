@@ -17,7 +17,7 @@ local function testFunc(inst)
     for i,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
         ent.components.ksfun_power_system:AddPower(v)
     end
-    inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
+    inst.components.inventory:GiveItem(ent, nil, inst:GetPosition())
 end
 
 
@@ -34,10 +34,14 @@ end
 
 
 AddPlayerPostInit(function(player)
+
+    KsFunLog("player init", player.prefab)
+
     player:AddComponent("ksfun_power_system")
     player:AddComponent("ksfun_task_system")
 
     initPlayerProperty(player)
+
 
     
     -- 每天开始给个任务卷轴

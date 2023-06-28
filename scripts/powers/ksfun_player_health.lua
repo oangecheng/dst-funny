@@ -97,9 +97,6 @@ end
 --- @param 属性 角色 属性名称
 local function onDetach(inst, target, name)
     target:RemoveEventCallback("killed", onKillOther)
-    --- 恢复原始数据
-    reset()
-    inst.target = nil
 end
 
 

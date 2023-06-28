@@ -28,7 +28,8 @@ local function MakePower(name, data)
 
     local function onGetDescFunc(inst, target, name)
         local func = data.power and data.power.onGetDescFunc or data.ondesc  
-        return func and func(inst, target, name) or nil
+        local str = func and func(inst, target, name) or "default"
+        return str
     end
 
 

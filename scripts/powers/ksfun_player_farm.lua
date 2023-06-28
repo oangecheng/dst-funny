@@ -76,7 +76,6 @@ end
 --- 解绑对象
 local function onDetachFunc(inst, target, name)
     target:RemoveEventCallback("picksomething", onPickSomeThing)
-    inst.target = nil
 end
 
 
