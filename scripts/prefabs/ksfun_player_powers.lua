@@ -9,18 +9,50 @@ local function MakePower(name, data)
     -- 统一绑定target
     local function onAttachFunc(inst, target, name)
         inst.target = target
-        if data.power.onAttachFunc then
-            data.power.onAttachFunc(inst, target, name)
+        local func = data.power and data.power.onAttachFunc or data.onattach  
+        if func then 
+            func(inst, target, name) 
         end
     end
 
 
     -- 统一解绑target
     local function onDetachFunc(inst, target, name)
-        if data.power.onDetachFunc then
-            data.power.onDetachFunc(inst, target, name)
+        local func = data.power and data.power.onDetachFunc or data.ondetach  
+        if func then 
+            func(inst, target, name) 
         end
         inst.target = nil
+    end
+
+
+    local function onGetDescFunc(inst, target, name)
+        local func = data.power and data.power.onGetDescFunc or data.ondesc  
+        return func and func(inst, target, name) or nil
+    end
+
+
+    local function onLvChangeFunc(inst, t, n)
+        local func = data.level and data.level.onLvChangeFunc or data.onstatechange
+        if func then
+            func(inst, t, n)
+        end  
+    end
+
+
+    local function onLoadFunc(inst, d)
+        local func = data.power and data.power.onLoadFunc or data.onload
+        if func then 
+            func(inst, d) 
+        end
+    end
+
+
+    local function onSaveFunc(inst, d)
+        local func = data.power and data.power.onSaveFunc or data.onsave
+        if func then 
+            func(inst, d) 
+        end
     end
 
 
@@ -44,7 +76,7 @@ local function MakePower(name, data)
         inst:AddComponent("ksfun_power")
         inst.components.ksfun_power:SetOnAttachFunc(onAttachFunc)
         inst.components.ksfun_power:SetOnDetachFunc(onDetachFunc)
-        inst.components.ksfun_power:SetOnGetDescFunc(data.power.onGetDescFunc)
+        inst.components.ksfun_power:SetOnGetDescFunc(onGetDescFunc)
         inst.components.ksfun_power.keepondespawn = true
 
 
@@ -54,24 +86,14 @@ local function MakePower(name, data)
             end
         end)
 
+        inst:AddComponent("ksfun_level")
+        inst.components.ksfun_level:SetOnLvChangeFunc(onLvChangeFunc)
 
-        -- 可升级的
-        if data.level then
-            inst:AddComponent("ksfun_level")
-            inst.components.ksfun_level:SetOnLvChangeFunc(data.level.onLvChangeFunc)
 
-            --- 可突破，用来提升等级上限
-            if data.breakable then
-                inst:AddComponent("ksfun_breakable")
-                inst.components.ksfun_breakable:Enable()
-                inst.components.ksfun_breakable:SetOnBreakFunc(data.breakable.onBreakFunc)
-            end
-
-            -- 锻造功能，提升属性值
-            if data.forgable then
-                inst:AddComponent("ksfun_forgable")
-                inst.components.ksfun_forgable:SetForgItems(data.forgable.items)
-            end
+        -- 锻造功能，提升属性值
+        if data.forgable then
+            inst:AddComponent("ksfun_forgable")
+            inst.components.ksfun_forgable:SetForgItems(data.forgable.items)
         end
 
 
@@ -83,17 +105,8 @@ local function MakePower(name, data)
             end)
         end
 
-        inst.OnLoad = function(inst, d)
-            if data.power.onLoadFunc then
-                data.power.onLoadFunc(inst, d)
-            end
-        end
-
-        inst.OnSave = function(inst, d)
-            if data.power.onSaveFunc then
-                data.power.onSaveFunc(inst, d)
-            end
-        end
+        inst.OnLoad = onLoadFunc
+        inst.OnSave = onSaveFunc
 
         return inst
     end
