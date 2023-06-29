@@ -66,7 +66,7 @@ end
 
 
 function KSFUN_TASK_SYSTEM:CanAddTaskByName(name)
-    return self.powers[name] == nil
+    return self.tasks[name] == nil
 end
 
 

@@ -32,21 +32,15 @@ end
 
 -------------------------------------------------------------人物属性 我是分割线-----------------------------------------------------------------
 local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
-local hunger = require("powers/ksfun_player_hunger")
-local sanity = require("powers/ksfun_player_sanity")
-local pick   = require("powers/ksfun_player_pick")
-local farm   = require("powers/ksfun_player_farm")
-local health = require("powers/ksfun_player_health")
---- 人物其他属性，比较复杂的属性单独用一个文件写
 local pdefs  = require("powers/ksfun_player_powers")
 
 
 local playerpowers = {}
-playerpowers[PLAYER_NAMES.HUNGER]      = hunger
-playerpowers[PLAYER_NAMES.SANITY]      = sanity
-playerpowers[PLAYER_NAMES.HEALTH]      = health
-playerpowers[PLAYER_NAMES.PICK]        = pick
-playerpowers[PLAYER_NAMES.FARM]        = farm
+playerpowers[PLAYER_NAMES.HUNGER]      = pdefs.hunger
+playerpowers[PLAYER_NAMES.SANITY]      = pdefs.sanity
+playerpowers[PLAYER_NAMES.HEALTH]      = pdefs.health
+playerpowers[PLAYER_NAMES.PICK]        = pdefs.pick
+playerpowers[PLAYER_NAMES.FARM]        = pdefs.farm
 playerpowers[PLAYER_NAMES.CRIT_DAMAGE] = pdefs.critdamage
 playerpowers[PLAYER_NAMES.LOCOMOTOR]   = pdefs.locomotor
 playerpowers[PLAYER_NAMES.DAMAGE]      = pdefs.damage

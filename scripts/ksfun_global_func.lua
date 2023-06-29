@@ -256,7 +256,7 @@ GLOBAL.KsFunBindTaskReel = function(inst, player, data)
     -- 有提示
     if msg then
         if player.components.talker then
-            player.components.talker:Say(STRINGS.KSFUN_TASK_LIMIT_NAME)
+            player.components.talker:Say(msg)
         end
         return
     end
