@@ -56,7 +56,7 @@ local function fn()
 
     -- 任务卷轴2分钟之后自动移除
     inst:AddComponent("timer")
-    inst.components.timer:StartTimer("ksfun_task_reel", 120)
+    inst.components.timer:StartTimer("ksfun_task_reel_timer", 120)
     inst:ListenForEvent("timerdone", function(inst, data)
         inst:DoTaskInTime(0, inst:Remove())
     end)
