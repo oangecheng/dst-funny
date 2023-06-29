@@ -48,14 +48,6 @@ local function fillTaskData(player, data)
 end
 
 
---- 给角色绑定任务
-local function addTask(player, data)
-    if data and data.name and player.components.ksfun_task_system then
-        player.components.ksfun_task_system:AddTask(data.name, data)
-    end
-end
-
-
 
 local kill    = require("tasks/ksfun_task_kill")
 local reward  = require("tasks/ksfun_task_reward")
@@ -80,7 +72,6 @@ end
 
 
 local chain = {}
-chain.addTask = addTask
 chain.initTaskData = initTaskData
 chain.fillTaskData = fillTaskData
 chain.generateTaskHanlder = generateTaskHanlder

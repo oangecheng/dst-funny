@@ -45,8 +45,9 @@ AddPlayerPostInit(function(player)
 
     
     -- 每天开始给个任务卷轴
+    -- 如果任务列表的任务没有到达上限的话
     player:WatchWorldState("cycles", function(inst)
-        if player.components.ksfun_task_system:GetTaskNum() < 1 then
+        if player.components.ksfun_task_system:CanAddMoreTask() then
             local ent = SpawnPrefab("ksfun_task_reel")
             inst.components.inventory:GiveItem(ent, nil, inst:GetPosition())
         end

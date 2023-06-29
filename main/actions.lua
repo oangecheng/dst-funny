@@ -7,11 +7,7 @@ local function acceptTask(doer, invobject)
         local data  = deepcopy(taskdata)
         local chain = require("tasks/ksfun_task_chain")
         local task  = chain.fillTaskData(doer, data)
-        -- 任务绑定到玩家身上
-        chain.addTask(doer, task)
-        doer.components.talker:Say("接受任务！")
-        -- 移除任务卷轴
-        invobject:DoTaskInTime(0, invobject:Remove())
+        KsFunBindTaskReel(invobject, doer, data)
     end
 end
 

@@ -234,6 +234,38 @@ end
 
 
 
+--- 绑定任务卷轴
+GLOBAL.KsFunBindTaskReel = function(inst, player, data)
+    local system = player.components.ksfun_task_system
+
+    local msg    = nil
+    if not (data and data.name and data.demand) then
+        msg = "invalid"
+    elseif not system:CanAddMoreTask() then
+        msg = STRINGS.KSFUN_TASK_LIMIT_NUM
+    elseif not system:CanAddTaskByName(data.name) then
+        msg = STRINGS.KSFUN_TASK_LIMIT_NAME
+    end
+
+    -- 非法卷轴直接移除吧
+    if msg == "invalid" then
+        inst:DoTaskInTime(0, inst:Remove())
+        return
+    end
+
+    -- 有提示
+    if msg then
+        if player.components.talker then
+            player.components.talker:Say(STRINGS.KSFUN_TASK_LIMIT_NAME)
+        end
+        return
+    end
+    -- 绑定之后移除物品
+    system:AddTask(data.name, data)
+    inst:DoTaskInTime(0, inst:Remove())
+end
+
+
 GLOBAL.KsFunFormatTime  = KsFunFormatTime
 GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunGeneratTaskDesc = KsFunGeneratTaskDesc

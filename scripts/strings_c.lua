@@ -140,8 +140,11 @@ STRINGS.KSFUN_REINFORCE_INVALID_TARGET  = "当前装备无法进行强化!"
 
 -------------------------------------------------------------------------- 任务相关字符串----------------------------------------------------------------------------------
 STRINGS.NAMES.KSFUN_TASK_KILL = "击杀任务"
-STRINGS.KSFUN_TASK_WIN  = "任务成功"
-STRINGS.KSFUN_TASK_LOSE = "任务失败"
+STRINGS.KSFUN_TASK_WIN        = "任务成功"
+STRINGS.KSFUN_TASK_LOSE       = "任务失败"
+STRINGS.KSFUN_TASK_ACCEPT     = "接受任务"
+STRINGS.KSFUN_TASK_LIMIT_NUM  = "任务数量已达上限"
+STRINGS.KSFUN_TASK_LIMIT_NAME = "同类型任务只能接受一个"
 
 
 STRINGS.KSFUN_TASK_KILL_DESC  = "击杀 %s 只 %s"

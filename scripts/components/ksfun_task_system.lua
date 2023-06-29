@@ -1,15 +1,11 @@
 local MAX_TASK_NUM = 1
-local MAX_TASK_NUM_SAME_TIME = 1
-
 
 
 local function addTask(self, name, ent, data)
-    KsFunLog("system addTask 1", name, data)
     if ent.components.ksfun_task then
         self.tasks[name] = {
             inst = ent,
         }
-        KsFunLog("system addTask 2", name, data)
         ent.persists = false
         -- init函数会有去重逻辑，只有首次生成任务时才有意义
         ent.components.ksfun_task:Init(data)
@@ -63,6 +59,17 @@ end
 
 
 
+function KSFUN_TASK_SYSTEM:CanAddMoreTask()
+    return GetTableSize(self.tasks) < MAX_TASK_NUM
+end
+
+
+
+function KSFUN_TASK_SYSTEM:CanAddTaskByName(name)
+    return self.powers[name] == nil
+end
+
+
 
 --- 设置新增属性监听
 --- 一般用来刷新数据
@@ -91,18 +98,14 @@ end
 --- 新增一个属性
 --- @param name type=string
 function KSFUN_TASK_SYSTEM:AddTask(name, data)
-    KsFunLog("system AddTask 1", name, data)
-
-    -- 超过最大数量时，不能再新增任务
-    if #self.tasks >= MAX_TASK_NUM then
-        print(KSFUN_TUNING.LOG_TAG.."cant add task because limit")
+    
+    if not (self:CanAddMoreTask() and self:CanAddTaskByName(name)) then
         return nil
     end
 
     local task = self.tasks[name]
     local ret = nil
     if task == nil then
-        KsFunLog("system AddTask 2", name, data)
         local prefab = "ksfun_task_"..name
         local ent = SpawnPrefab(prefab)
         if ent then
@@ -112,7 +115,6 @@ function KSFUN_TASK_SYSTEM:AddTask(name, data)
     else
         ret = task.inst
     end
-    KsFunLog("system AddTask 3", name, data)
     self:SyncData()
     return ret
 end
