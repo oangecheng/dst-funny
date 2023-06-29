@@ -12,7 +12,6 @@ PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
     "ksfun_task_reel",
-    "medal_tips",
     "ksfun_power_gems"
 }
 
