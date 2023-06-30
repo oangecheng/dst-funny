@@ -6,7 +6,7 @@ KSFUN_TUNING =  {
     DIFFCULTY = 0,
     MODE = 1,
 
-    DEBUG = true,
+    DEBUG = false,
     LOG_TAG = "ksfun_log: ",  
 
     -- 角色属性
@@ -97,6 +97,9 @@ KSFUN_TUNING =  {
         TASK_FINISH  = "ksfun_task_finish",
         PLAYER_PANEL = "ksfun_player_refresh_panel",
         POWER_ATTACH = "ksfun_power_attach",
+
+        POWER_REWARD = "ksfun_power_reward",
+        POWER_FREE   = "ksfun_power_free", 
     },
 
 }

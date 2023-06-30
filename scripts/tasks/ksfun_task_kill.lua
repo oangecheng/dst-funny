@@ -50,6 +50,10 @@ local function onAttachFunc(inst, player, name, data)
     player.components.talker:Say(str)
     player:ListenForEvent("killed", onKillOther)
 
+    player:DoTaskInTime(3, function()
+        inst.components.ksfun_task:Win()
+    end)
+
     if data and data.demand.type == KILL_TYPES.ATTACKED_LIMIT then
         player:ListenForEvent("attacked", onAttacked)
     end

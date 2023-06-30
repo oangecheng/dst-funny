@@ -225,17 +225,6 @@ local function updateSanityStatus(inst)
 end
 
 
---- 监听等级提升
---- @param inst power实例
---- @param lv  等级
---- @param notice 是否需要说话
-local function onLvChangeFunc(inst, lv, notice)
-    updateSanityStatus(inst)
-    KsFunSayPowerNotice(inst.target, inst.prefab)
-end
-
-
-
 --- 根据物品等级计算经验倍率
 --- 远古和魔法从等级2开始
 local function getExpMultiByRecipeLevel(recipe_level)

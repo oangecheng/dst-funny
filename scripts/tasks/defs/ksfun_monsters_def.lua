@@ -61,6 +61,10 @@ local MONSTER_LV6 = {
     "toadstool", -- 蛤蟆
     "beequeen", -- 蜂后
     "klaus", -- 克劳斯
+}
+
+
+local MONSTER_LV7 = {
     "crab_king", -- 帝王蟹
     "alterguardian_phase3", -- 天体英雄3阶
 }
@@ -76,6 +80,7 @@ local MONSTER_DEFS = {
     [4] = MONSTER_LV4,
     [5] = MONSTER_LV5,
     [6] = MONSTER_LV6,
+    [7] = MONSTER_LV7,
 }
 
 
@@ -99,7 +104,7 @@ end
 --- @param moster_lv 怪物等级，无就随机等级
 --- @return 怪物代码 名称/等级/数量
 local function randomMonster()
-    local lv = math.random(6)
+    local lv = math.random(7)
     local monsters = MONSTER_DEFS[lv] 
     local index = math.random(#monsters)
     local name = monsters[index]

@@ -32,6 +32,10 @@ end
 
 
 function KSFUN_LEVEL:SetLevel(lv, notice)
+    if lv == self.lv then
+        return
+    end
+
     if lv < self.max then
         self.lv = lv
     else

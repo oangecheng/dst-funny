@@ -79,6 +79,11 @@ if GLOBAL.TheNet:GetIsServer() then
     AddPrefabPostInit("world", function(inst)
         inst:AddComponent("ksfun_world_monster")
         inst:AddComponent("ksfun_world_player")
+        inst:AddComponent("ksfun_world_data")
+
+        inst:ListenForEvent(KSFUN_TUNING.EVENTS.POWER_REWARD, function(inst, data)
+            inst.components.ksfun_world_data:AddWorldPowerCount(data.name)
+        end)
     end)
 
     modimport("scripts/mod/ksfun_station.lua")

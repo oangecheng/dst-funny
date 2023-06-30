@@ -272,7 +272,7 @@ end
 GLOBAL.KsFunGetCanRewardPower = function(player)
     local temp = {}
     -- 随机排序
-    local world = TheWorld.components.ksfun_world_player
+    local worlddata = TheWorld.components.ksfun_world_data
     for k, v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
         if KSFUN_TUNING.MODE == 0 then
             -- 未拥有该属性
@@ -281,7 +281,9 @@ GLOBAL.KsFunGetCanRewardPower = function(player)
             end
         else
             -- 没有人获得过属性
-            if world:GetWorldPowerCount(v) < 1 then
+            local worldcount = worlddata:GetWorldPowerCount(v)
+            KsFunLog("KsFunGetCanRewardPower", worldcount)
+            if worldcount < 1 then
                 table.insert(temp, v)
             end
         end

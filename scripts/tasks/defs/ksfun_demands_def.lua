@@ -9,8 +9,10 @@ local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
 local MONSTER = require "tasks/defs/ksfun_monsters_def"
 
 local function default(kill_type)
+
+    -- 任务难度系数
     local function calcDifficulty(lv, num)
-        return lv * 10 + 2 * num
+        return num > 1 and lv + 1 or lv
     end
 
     local victim, lv, num = MONSTER.randomMonster()
@@ -36,11 +38,11 @@ end
 -- 限时任务
 local function timeLimit()
     local ret = default(KILL_TYPES.TIME_LIMIT)
-    ret.diffculty = ret.diffculty + 10
+    ret.diffculty = ret.diffculty + 1
     --- 计算时长，6级任务，需要的时间为 (6*10 + 10) / 10 = 7天
     --- 最少有一天的时间
-    local seg = KSFUN_TUNING.TIME_SEG * 16
-    ret.duration = math.max(ret.diffculty / 10 * seg, seg)
+    local seg = KSFUN_TUNING.TIME_SEG * 8
+    ret.duration = math.max(seg * ret.diffculty, seg)
     return ret
 end
 
@@ -48,7 +50,7 @@ end
 -- 无伤任务
 local function attackedLimit()
     local ret = default(KILL_TYPES.ATTACKED_LIMIT)
-    ret.diffculty = ret.diffculty + 20
+    ret.diffculty = ret.diffculty + 2
     return ret
 end
 

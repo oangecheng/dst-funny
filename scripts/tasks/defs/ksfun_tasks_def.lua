@@ -53,15 +53,27 @@ local reward_special = {
 }
 
 
--- 任务等级越高，越容易获得特殊奖励
--- 最高等级的任务有40%的概率获得特殊奖励
+--- 任务等级越高，越容易获得特殊奖励
+--- 任务等级最高基准为10，也就是高级任务有25%概率获得特殊奖励
 tasks_def.randomReward = function(player, tasklv)
     KsFunLog("randomReward", tasklv)
-    local s = tasklv
-    local v = KSFUN_TUNING.DEBUG and 0 or math.random(200)
+
+    --- 任务奖励和难度绑定
+    local function getRatio()
+        if KSFUN_TUNING.DIFFCULTY > 0 then
+            return tasklv * 0.5
+        elseif KSFUN_TUNING.DIFFCULTY < 0 then
+            return tasklv * 2
+        else
+            return tasklv
+        end
+    end
+
+    local r = getRatio()
+    local v = KSFUN_TUNING.DEBUG and 1 or r/40
 
     local reward = nil
-    if s>v then
+    if math.random() < v then
 
         local rewardpower = math.random() < 0.5
 
@@ -75,7 +87,7 @@ tasks_def.randomReward = function(player, tasklv)
             if not reward then
                 local rewardlv = math.random() < 0.5
                 local f2 = nil
-                if rewarlv then
+                if rewardlv then
                     f2 = rewardsfunc[REWARD_TYPES.PLAYER_POWER_LV]
                 else
                     f2 = rewardsfunc[REWARD_TYPES.PLAYER_POWER_EXP]
@@ -88,7 +100,8 @@ tasks_def.randomReward = function(player, tasklv)
 
         -- 还是没有命中，尝试分配特殊装备
         if not reward then
-            reward = rewardsfunc[REWARD_TYPES.KSFUN_ITEM]
+            local f3 = rewardsfunc[REWARD_TYPES.KSFUN_ITEM]
+            reward = f3(player, tasklv)
         end
 
         if reward then

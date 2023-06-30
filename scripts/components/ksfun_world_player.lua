@@ -5,7 +5,6 @@
 local KSFUN_WORLD_PLAYERS = Class(function(self, inst)
     self.inst = inst
     self.playerdatas = {}
-    self.powerdatas = {}
     
     inst:ListenForEvent("ms_playerdespawnanddelete", function(inst, player)
         KsFunLog("player exist")
@@ -44,30 +43,8 @@ end
 
 
 
---- 属性计数器+1
-function KSFUN_WORLD_PLAYERS:AddWorldPowerCount(name)
-    local data = self.powerdatas[name] or {}
-    local count = data.count or 0
-    data.count = count + 1
-    self.powerdatas[name] = data
-end
-
-
---- 获取属性计数器 
-function KSFUN_WORLD_PLAYERS:GetWorldPowerCount(name)
-    local data = self.powerdatas[name]
-    if data then
-        return data.count or 0
-    else
-        return 0
-    end
-end
-
-
-
 function KSFUN_WORLD_PLAYERS:OnSave()
     if next(self.playerdatas) == nil then return end
-    local data = {}
     -- k用户id, v每个角色的数据
     for k, v in pairs(self.playerdatas) do
 
@@ -88,6 +65,7 @@ end
 
 function KSFUN_WORLD_PLAYERS:OnLoad(data)
     if data ~= nil and next(data) then
+        -- 角色属性恢复
         for k, v in pairs(data) do
             if next(v.powers) then
                 local powers = {}
