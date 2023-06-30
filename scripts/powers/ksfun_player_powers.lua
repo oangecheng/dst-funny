@@ -549,6 +549,61 @@ local farm = {
 
 
 
+---------------------------------------------------------------------------------------------- 击杀掉落 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local function killItemDrop(inst, data)
+    local victim = data.victim
+   
+    if victim.components.freezable or victim:HasTag("monster") then
+        local dropper = victim.components.lootdropper
+        if dropper == nil then
+            return
+        end
+
+        local power = inst.components.ksfun_power_system:GetPower(NAMES.KILL_DROP)
+        if power == nil then
+            return
+        end
+        local lv = power.components.ksfun_level:GetLevel()
+        -- 双倍掉落初始10%，满级100%
+        local ratio = (lv + 10) / 100
+        local rd = math.random()
+
+        -- 三倍掉落概率更低，为两倍概率的1/5
+        if rd < ratio / 5 then 
+            dropper:DropLoot()
+            dropper:DropLoot()
+        elseif rd < ratio then
+            dropper:DropLoot() 
+        end
+
+        -- 击杀大于血量1000的怪物能够升级属性
+        if victim.components.health then
+            local max = victim.components.health.maxhealth
+            if max >= 1000 then
+                KsFunPowerGainExp(inst, NAMES.KILL_DROP, max/100)
+            end 
+        end
+    end
+end
+
+
+local killdrop = {
+    onattach = function(inst, target, name)
+        inst.components.ksfun_level:SetMax(100)
+        target:ListenForEvent("killed", killItemDrop)
+    end,
+
+    onstatechange = function(inst)
+        KsFunSayPowerNotice(inst.target, inst.prefab)
+    end,
+
+    ondesc = getPowerDesc,
+}
+
+
+
+
+
 
 
 
@@ -635,6 +690,7 @@ playerpowers.hunger       = { data = hunger }
 playerpowers.sanity       = { data = sanity }
 playerpowers.pick         = { data = pick }
 playerpowers.farm         = { data = farm }
+playerpowers.killdrop     = { data = killdrop }
 playerpowers.damage       = { data = damage }
 playerpowers.locomotor    = { data = locomotor }
 playerpowers.critdamage   = { data = critdamage }

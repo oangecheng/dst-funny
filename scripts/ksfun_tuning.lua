@@ -10,16 +10,18 @@ KSFUN_TUNING =  {
 
     -- 角色属性
     PLAYER_POWER_NAMES = {
-        CRIT_DAMAGE = "player_critdamage",
-        LOCOMOTOR   = "player_locomotor",
-        DAMAGE      = "player_damage",
 
-        HEALTH      = "player_health",
-        HUNGER      = "player_hunger",
-        SANITY      = "player_sanity",
+        HEALTH        = "player_health",
+        HUNGER        = "player_hunger",
+        SANITY        = "player_sanity",
 
-        PICK        = "player_pick",
-        FARM        = "player_farm"
+        CRIT_DAMAGE   = "player_critdamage",
+        LOCOMOTOR     = "player_locomotor",
+        DAMAGE        = "player_damage",
+
+        PICK          = "player_pick",
+        FARM          = "player_farm",
+        KILL_DROP     = "player_killdrop",
     },
 
     -- 物品属性

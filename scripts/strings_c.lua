@@ -82,6 +82,7 @@ STRINGS.NAMES.KSFUN_POWER_PLAYER_HUNGER         = "大胃王"
 STRINGS.NAMES.KSFUN_POWER_PLAYER_SANITY         = "基建狂魔"
 STRINGS.NAMES.KSFUN_POWER_PLAYER_PICK           = "园艺大师"
 STRINGS.NAMES.KSFUN_POWER_PLAYER_FARM           = "当代神农"
+STRINGS.NAMES.KSFUN_POWER_PLAYER_KILLDROP       = "怪物猎人"
 
 
 --- 怪物属性，可以不显示名称，预留
@@ -117,6 +118,7 @@ STRINGS.KSFUN_POWER_DESC = {
     KSFUN_POWER_PLAYER_SANITY     = "提升角色精神值上限",
     KSFUN_POWER_PLAYER_PICK       = "采集加速/倍率获取",
     KSFUN_POWER_PLAYER_FARM       = "倍率采集农作物/施肥提效",
+    KSFUN_POWER_PLAYER_KILLDROP   = "击杀额外掉落物品",
 }
 
 

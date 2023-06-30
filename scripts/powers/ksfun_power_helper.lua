@@ -35,15 +35,18 @@ local PLAYER_NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local pdefs  = require("powers/ksfun_player_powers")
 
 
-local playerpowers = {}
-playerpowers[PLAYER_NAMES.HUNGER]      = pdefs.hunger
-playerpowers[PLAYER_NAMES.SANITY]      = pdefs.sanity
-playerpowers[PLAYER_NAMES.HEALTH]      = pdefs.health
-playerpowers[PLAYER_NAMES.PICK]        = pdefs.pick
-playerpowers[PLAYER_NAMES.FARM]        = pdefs.farm
-playerpowers[PLAYER_NAMES.CRIT_DAMAGE] = pdefs.critdamage
-playerpowers[PLAYER_NAMES.LOCOMOTOR]   = pdefs.locomotor
-playerpowers[PLAYER_NAMES.DAMAGE]      = pdefs.damage
+local playerpowers = {
+    [PLAYER_NAMES.HUNGER]      = pdefs.hunger,
+    [PLAYER_NAMES.SANITY]      = pdefs.sanity,
+    [PLAYER_NAMES.HEALTH]      = pdefs.health,
+    [PLAYER_NAMES.PICK]        = pdefs.pick,
+    [PLAYER_NAMES.FARM]        = pdefs.farm,
+    [PLAYER_NAMES.KILL_DROP]   = pdefs.killdrop,
+    [PLAYER_NAMES.CRIT_DAMAGE] = pdefs.critdamage,
+    [PLAYER_NAMES.LOCOMOTOR]   = pdefs.locomotor,
+    [PLAYER_NAMES.DAMAGE]      = pdefs.damage,
+}
+
 
 
 
