@@ -266,6 +266,37 @@ GLOBAL.KsFunBindTaskReel = function(inst, player, data)
 end
 
 
+
+--- 获取可以给予玩家奖励的属性
+--- @param player 玩家
+GLOBAL.KsFunGetCanRewardPower = function(player)
+    local temp = {}
+    -- 随机排序
+    local world = TheWorld.components.ksfun_world_player
+    for k, v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
+        if KSFUN_TUNING.MODE == 0 then
+            -- 未拥有该属性
+            if player.components.ksfun_power_system:GetPower(v) == nil then
+                table.insert(temp, v)
+            end
+        else
+            -- 没有人获得过属性
+            if world:GetWorldPowerCount(v) < 1 then
+                table.insert(temp, v)
+            end
+        end
+    end
+    
+    if #temp > 0 then
+        return GetRandomItem(temp)
+    else
+        return nil
+    end
+    
+end
+
+
+
 GLOBAL.KsFunFormatTime  = KsFunFormatTime
 GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunGeneratTaskDesc = KsFunGeneratTaskDesc

@@ -5,21 +5,22 @@
 local KSFUN_WORLD_PLAYERS = Class(function(self, inst)
     self.inst = inst
     self.playerdatas = {}
+    self.powerdatas = {}
     
     inst:ListenForEvent("ms_playerdespawnanddelete", function(inst, player)
-        KsFunShowNotice("哈哈哈断开连接了")
+        KsFunLog("player exist")
         self:CachePlayerStatus(player)
     end)
 
     inst:ListenForEvent("ms_newplayerspawned", function(inst, player)
-        KsFunShowNotice("哈哈哈重新进入了")
+        KsFunLog("player enter")
         self:RecoverPlayerStatus(player)
     end)
 end)
 
 
 
-
+--- 缓存用户的数据
 function KSFUN_WORLD_PLAYERS:CachePlayerStatus(player)
     local data = self.playerdatas[player.userid] or {}
     data.powers = player.components.ksfun_power_system:GetAllPowers()
@@ -30,13 +31,35 @@ function KSFUN_WORLD_PLAYERS:CachePlayerStatus(player)
 end
 
 
-
+--- 恢复用户的数据
+--- 换人可以保留属性
 function KSFUN_WORLD_PLAYERS:RecoverPlayerStatus(player)
     local data = self.playerdatas[player.userid]
     if data and data.powers then
         for k,v in pairs(data.powers) do
             player.components.ksfun_power_system:AddPower(k, v)
         end
+    end
+end
+
+
+
+--- 属性计数器+1
+function KSFUN_WORLD_PLAYERS:AddWorldPowerCount(name)
+    local data = self.powerdatas[name] or {}
+    local count = data.count or 0
+    data.count = count + 1
+    self.powerdatas[name] = data
+end
+
+
+--- 获取属性计数器 
+function KSFUN_WORLD_PLAYERS:GetWorldPowerCount(name)
+    local data = self.powerdatas[name]
+    if data then
+        return data.count or 0
+    else
+        return 0
     end
 end
 

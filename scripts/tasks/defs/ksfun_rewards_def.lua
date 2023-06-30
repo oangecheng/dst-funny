@@ -173,12 +173,12 @@ local POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 --- @param task_lv 等级
 --- data = {power = a}
 ksfun_rewards.randomNewPower = function(player, task_lv)
-    local power = KsFunRandomPower(player, POWERS, false)
-    if power then
+    local name = KsFunGetCanRewardPower(player)
+    if name then
         return {
             type = REWARD_TYPES.PLAYER_POWER,
             data = {
-                power = power
+                power = name
             }
         }
     end

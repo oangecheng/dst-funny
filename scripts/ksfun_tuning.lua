@@ -4,6 +4,7 @@ KSFUN_TUNING =  {
 
     -- 难度配置，0为默认
     DIFFCULTY = 0,
+    MODE = 1,
 
     DEBUG = true,
     LOG_TAG = "ksfun_log: ",  

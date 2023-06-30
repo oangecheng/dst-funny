@@ -62,25 +62,44 @@ tasks_def.randomReward = function(player, tasklv)
 
     local reward = nil
     if s>v then
-        -- 循环3次查找,找到一个就可以
-        for i=1,3 do
-            local rewardtype = GetRandomItem(reward_special)
-            KsFunLog("random special reward", rewardtype)
-            local func = rewardsfunc[rewardtype]
-            if func then
-                local r = func(player, tasklv)
-                if r then
-                    return r
+
+        local rewardpower = math.random() < 0.5
+
+        --- 50%概率分配属性相关奖励
+        if rewardpower then
+            -- 优先分配属性奖励，再分配属性等级或者经验
+            local f1 = rewardsfunc[REWARD_TYPES.PLAYER_POWER]
+            reward = f1(player, tasklv)
+
+            -- 没命中，再去分配经验或者等级
+            if not reward then
+                local rewardlv = math.random() < 0.5
+                local f2 = nil
+                if rewarlv then
+                    f2 = rewardsfunc[REWARD_TYPES.PLAYER_POWER_LV]
+                else
+                    f2 = rewardsfunc[REWARD_TYPES.PLAYER_POWER_EXP]
+                end
+                if f2 then
+                    reward = f2(player, tasklv)
                 end
             end
         end
+
+        -- 还是没有命中，尝试分配特殊装备
+        if not reward then
+            reward = rewardsfunc[REWARD_TYPES.KSFUN_ITEM]
+        end
+
+        if reward then
+            return reward
+        end
     end
 
+    --- 兜底奖励，各种普通物品
     local func = rewardsfunc[REWARD_TYPES.ITEM]
     return func(player, tasklv)
 end
-
-
 
 
 

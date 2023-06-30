@@ -34,5 +34,33 @@ all_clients_require_mod = true
 -- 饥荒api版本，固定填10
 api_version = 10
 
+
+
 -- mod的配置项，后面介绍
-configuration_options = {}
+configuration_options = {
+
+    -- 难度配置，支持3种难度
+	{
+		name  = "diffculty",
+		label = ch and "难度" or "diffculty",
+		options = {
+			{description = ch and "简单" or "easy",    data = -0.5},
+			{description = ch and "默认" or "default", data = 0   },
+            {description = ch and "困难" or "hard",    data = 0.5 },
+		},
+		default = 0,
+	},
+
+    -- 玩法模式设置
+    -- 默认竞争模式，角色和物品属性有获取次数限制
+    -- 娱乐模式没有限制
+    {
+        name  = "mode",
+        label = ch and "模式" or "mode",
+        options = {
+            { description = ch and "娱乐" or "entertainment", data = 0 },
+            { description = ch and "竞争" or "competition",   data = 1 },
+        },
+        default = 1
+    },
+}

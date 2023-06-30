@@ -5,7 +5,12 @@ modimport("scripts/strings_c.lua")
 modimport("scripts/ksfun_global_func.lua")
 
 
-GLOBAL.AddPlayerPostInit = AddPrefabPostInit
+---- mode配置
+local diffculty = GetModConfigData("diffculty")
+KSFUN_TUNING.DIFFCULTY = diffculty or 0
+local mode = GetModConfigData("mode")
+KSFUN_TUNING.MODE = mode or 1 
+
 
 
 PrefabFiles = {
