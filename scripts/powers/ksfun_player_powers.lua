@@ -162,6 +162,20 @@ local function onEat(eater, data)
 end
 
 
+
+local function onHungerPercentChange(inst, data)
+    local max = 1
+    if data.newpercent and data.newpercent >= 0.75 then
+        local powerhunger = inst.components.ksfun_power_system:GetPower(NAMES.HUNGER)
+        if powerhunger then
+            local lv  = powerhunger.components.ksfun_level:GetLevel()
+            max = 1 + 0.006 * math.min(50, lv) 
+        end
+    end
+    inst.AnimState:SetScale(max, max, max)
+end
+
+
 local hunger = {
     onattach = function(inst, target, name)
         local h = target.components.hunger
@@ -170,8 +184,10 @@ local hunger = {
         if inst.percent then
             h:SetPercent(inst.percent)
         end
+
         updateHungerStatus(inst)
         target:ListenForEvent("oneat", onEat)
+        target:ListenForEvent("hungerdelta", onHungerPercentChange)
     end,
 
     onstatechange = function(inst)

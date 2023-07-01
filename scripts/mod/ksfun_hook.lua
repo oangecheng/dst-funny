@@ -71,7 +71,8 @@ local function hookCarryHeavySpeed(self)
 	end
 end
 
-AddComponentPostInit("locomotor", hookCarryHeavySpeed)
+-- 不添加这个属性，更换成其他的了
+-- AddComponentPostInit("locomotor", hookCarryHeavySpeed)
 
 
 
