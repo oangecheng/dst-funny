@@ -35,9 +35,13 @@ local function MakePower(name, data)
 
     local function onLvChangeFunc(inst, t, n)
         local func = data.level and data.level.onLvChangeFunc or data.onstatechange
-        if func then
+        KsFunLog("onLvChangeFunc", name, t)
+        if t < 0 then
+            -- <0 属性失效，移除 
+            inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
+        elseif func then
             func(inst, t, n)
-        end  
+        end             
     end
 
 

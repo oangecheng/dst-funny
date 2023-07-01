@@ -90,6 +90,14 @@ function KSFUN_LEVEL:Up(v)
 end
 
 
+--- <0降低 or >0提升等级
+function KSFUN_LEVEL:DoDelta(delta)
+    if delta ~= 0 then
+        self:SetLevel(self.lv + delta)
+    end
+end
+
+
 --- 获取剩余可升级次数
 function KSFUN_LEVEL:GetLeftUpCount()
     return self.max - self.lv

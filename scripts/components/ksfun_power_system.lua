@@ -19,6 +19,8 @@ local KSFUN_POWERS = Class(function(self, inst)
     self.inst = inst
     self.enable = true
     self.powers = {}
+    self.ongain = nil
+    self.onlost = nil
 end)
 
 
@@ -44,6 +46,9 @@ function KSFUN_POWERS:AddPower(name, p)
         local ent = p and p or SpawnPrefab("ksfun_power_"..name)
         if ent then
             addPower(self, name, ent)
+            if self.ongain then
+                self.ongain(self.inst, { name = name } )
+            end
         end
         ret = ent
     else
@@ -61,16 +66,24 @@ function KSFUN_POWERS:RemovePower(name)
     local power = self.powers[name]
     if power ~= nil then
         self.powers[name] = nil
-        if self.onPowerRemoveFunc then
-            self.onPowerRemoveFunc(self.inst, name, power.inst)
-        end
-        if power.inst.components.ksfun_power then
-            power.inst.components.ksfun_power:Deatch()
-        else
-            power.inst:Remove()
+        power.inst.components.ksfun_power:Detach()
+        if self.onlost then
+            self.onlost(self.inst, { name = name } )
         end
         self:SyncData()
+        self.inst:DoTaskInTime(0.1, power.inst:Remove()) 
     end
+end
+
+
+
+function KSFUN_POWERS:SetOnGainPowerFunc(func)
+    self.ongain = func
+end
+
+
+function KSFUN_POWERS:SetOnLostPowerFunc(func)
+    self.onlost = func
 end
 
 
@@ -80,6 +93,14 @@ function KSFUN_POWERS:GetPowerNum()
 end
 
 
+function KSFUN_POWERS:GetPowerNames()
+    local list = {}
+    for k,v in pairs(self.powers) do
+        table.insert(list, k)
+    end
+    return list
+end
+
 
 --- 获取当前的属性列表
 function KSFUN_POWERS:GetAllPowers()
@@ -88,28 +109,6 @@ function KSFUN_POWERS:GetAllPowers()
         list[k] = v.inst
     end
     return list
-end
-
-
---- 暂停属性作用 
-function KSFUN_POWERS:PausePower(name)
-    local power = self.powers[name]
-    if power then
-        if power.inst.components.ksfun_power then
-            power.inst.components.ksfun_power:Deatch()
-        end
-    end
-end
-
-
---- 恢复属性
-function KSFUN_POWERS:ResumePower(name)
-    local power = self.powers[name]
-    if power then
-        if power.inst.components.ksfun_power then
-            power.inst.components.ksfun_power:Attach(name, self.inst)
-        end
-    end
 end
 
 
@@ -142,7 +141,6 @@ function KSFUN_POWERS:SyncData()
         local d = k .. "," .. tostring(lv) .. "," .. tostring(exp) .. "," ..desc
         data = data ..";".. d
     end
-
     if data ~= "" and self.inst.replica.ksfun_power_system then
         self.inst.replica.ksfun_power_system:SyncData(data)
     end

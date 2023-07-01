@@ -2,6 +2,7 @@
 local function onPowerWithLevelDirty(self, inst)
     local data = self._itempowers:value()
     if data then
+        self.powers = {}
         local d1 = string.split(data, ";")
 
         for i1,v1 in pairs(d1) do

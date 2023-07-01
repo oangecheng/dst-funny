@@ -13,6 +13,16 @@ function WORLD_DATA:AddWorldPowerCount(name)
 end
 
 
+--- 属性计数器-1
+function WORLD_DATA:RemoveWorldPowerCount(name)
+    local data = self.powerdatas[name]
+    if data then
+        local count = data.count or 0
+        data.count = math.max(0, count-1)
+    end
+end
+
+
 --- 获取属性计数器 
 function WORLD_DATA:GetWorldPowerCount(name)
     local data = self.powerdatas[name]

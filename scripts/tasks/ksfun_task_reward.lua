@@ -3,13 +3,6 @@ local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
 local KSFUN_ITEM_TYPES = REWARD_TYPES.KSFUN_ITEM_TYPES
 
 
---- 增加属性计数器
-local function onNewPowerReward(name)
-    TheWorld:PushEvent(KSFUN_TUNING.EVENTS.POWER_REWARD, { name = name})
-end
-
-
-
 --- 属性奖励
 --- @param player 玩家
 --- @param 奖励的具体data
@@ -23,7 +16,6 @@ local function rewardPower(player, data)
     if powername then
         local system = player.components.ksfun_power_system
         if system:GetPower(powername) == nil then
-            onNewPowerReward(powername)
             system:AddPower(powername)
         end 
     end
