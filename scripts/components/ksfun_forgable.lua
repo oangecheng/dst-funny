@@ -1,5 +1,5 @@
 
-local function forg(self, item)
+local function forg(self, doer, item)
     -- 没有升级组件，强化失效
     KsFunLog("forg", item.prefab)
     local ksfunlv = self.inst.components.ksfun_level
@@ -13,10 +13,7 @@ local function forg(self, item)
     for i = 1, count do
         if not ksfunlv:IsMax() then
             left = left - 1
-            local r = math.random(100)
-            if self.ratio * 100 > r then
-                ksfunlv:GainExp(exp)
-            end
+            ksfunlv:GainExp(exp)
         end
     end
     
@@ -33,50 +30,38 @@ end
 local KSFUN_FORGABLE = Class(function(self, inst)
     self.inst = inst
     self.items = {}
-    self.ratio = 1
 
-    --- 锻造成功
-    self.onForgFunc = nil
-    self.onFailFunc = nil
+    self.onforgtest = nil
+    self.onforgsuccess = nil
 end)
-
-
-function KSFUN_FORGABLE:SetSuccessRatio(ratio)
-    self.ratio = ratio
-end
-
-
-function KSFUN_FORGABLE:SetOnForgFunc(func)
-    self.onForgFunc = func
-end
-
-
-function KSFUN_FORGABLE:SetOnFailFunc(func)
-    self.onFailFunc = func
-end
 
 
 --- 尝试锻造，支持批量
 --- @param item 物品inst
-function KSFUN_FORGABLE:Forg(item)
+function KSFUN_FORGABLE:Forg(doer, item)
     if self:IsForgItem(item.prefab) then
-        forg(self, item)
-        return true
+        -- 如果有前置判断，先判断能否进行升级
+        if self.onforgtest == nil or self.onforgtest(doer, item) then
+            forg(self, doer, item)
+            -- 通知锻造成功
+            if self.onforgsuccess then
+                self.onforgsuccess(doer, item)
+            end
+            return true
+        end
     end
     return false
 end
 
 
---- 添加强化材料
---- @param itemprefab 物品代码
---- @param exp 物品经验值
---- items = {name = exp}
-function KSFUN_FORGABLE:AddForgItem(itemprefab, exp)
-    if not table.containskey(self.items, itemprefab) then
-        self[itemprefab] = exp
-    end
+function KSFUN_FORGABLE:SetOnForgTestFunc(func)
+    self.onforgtest = func
 end
 
+
+function KSFUN_FORGABLE:SetOnForgSuccessFunc(func)
+    self.onforgsuccess = func
+end
 
 function KSFUN_FORGABLE:SetForgItems(itemprefabs)
     self.items = itemprefabs
@@ -91,14 +76,12 @@ end
 function KSFUN_FORGABLE:OnSave()
     return { 
         items  = self.items,
-        ratio  = self.ratio,
      }
 end
 
 
 function KSFUN_FORGABLE:OnLoad(data)
     self.items = data.items or {}
-    self.ratio = data.ratio or 1
 end
 
 
