@@ -46,6 +46,7 @@ end
 function KSFUN_WORLD_PLAYERS:OnSave()
     if next(self.playerdatas) == nil then return end
     -- k用户id, v每个角色的数据
+    local data = {}
     for k, v in pairs(self.playerdatas) do
 
         if next(v.powers) then

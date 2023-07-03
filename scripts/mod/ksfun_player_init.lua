@@ -66,7 +66,9 @@ local function initTaskSystem(player)
     player:WatchWorldState("cycles", function(inst)
         if player.components.ksfun_task_system:CanAddMoreTask() then
             local ent = SpawnPrefab("ksfun_task_reel")
-            inst.components.inventory:GiveItem(ent, nil, player:GetPosition())
+            if ent then
+                player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+            end
         end
     end)
 end

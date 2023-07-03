@@ -1,7 +1,6 @@
 
 local function forg(self, doer, item)
     -- 没有升级组件，强化失效
-    KsFunLog("forg", item.prefab)
     local ksfunlv = self.inst.components.ksfun_level
     if ksfunlv == nil then return end
 
@@ -46,7 +45,7 @@ function KSFUN_FORGABLE:Forg(doer, ksfunitem, item)
             forg(self, doer, item)
             -- 通知锻造成功
             if self.onsuccess then
-                self.onsuccess(doer, data)
+                self.onsuccess(self.inst, data)
             end
             return true
         end

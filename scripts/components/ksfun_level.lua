@@ -33,13 +33,14 @@ function KSFUN_LEVEL:SetLevel(lv, notice)
     end
 
     local originlv = self.lv
-    if lv > self.max then self.exp = 0 end
-    self.lv = math.max(lv, self.max)
+    if lv >= self.max then self.exp = 0 end
+    self.lv = math.min(lv, self.max)
     local delta = self.lv - originlv
 
     if self.onLvChangeFunc then
         self.onLvChangeFunc(self.inst, { delta = delta, lv = self.lv })
     end
+    KsFunLog("SetLevel", delta)
     self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
 end
 
@@ -104,22 +105,16 @@ function KSFUN_LEVEL:GainExp(exp)
     local expFun = defaultExpFunc
 
      -- 计算可以升的级数
-    local delta = 0
-    while self.exp >= expFun(self.inst, self.lv) do
-        self.exp = self.exp - expFun(self.inst, self.lv)
-        delta = delta + 1
-        self.lv = self.lv + 1
+    local lv = self.lv
+    while self.exp >= expFun(self.inst, lv) do
+        self.exp = self.exp - expFun(self.inst, lv)
+        lv = lv + 1
     end
  
      -- 大于0表示可以升级，触发升级逻辑
-    if delta > 0 then
-        self:SetLevel(self.lv, true)
-    else
-        -- 刷新客户端数据
-        self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
-    end
-
-
+    self:SetLevel(lv)
+    -- 刷新客户端数据
+    self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
 end
 
 
