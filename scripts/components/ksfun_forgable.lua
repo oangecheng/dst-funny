@@ -31,21 +31,22 @@ local KSFUN_FORGABLE = Class(function(self, inst)
     self.inst = inst
     self.items = {}
 
-    self.onforgtest = nil
-    self.onforgsuccess = nil
+    self.ontest = nil
+    self.onsuccess = nil
 end)
 
 
 --- 尝试锻造，支持批量
 --- @param item 物品inst
-function KSFUN_FORGABLE:Forg(doer, item)
+function KSFUN_FORGABLE:Forg(doer, ksfunitem, item)
     if self:IsForgItem(item.prefab) then
         -- 如果有前置判断，先判断能否进行升级
-        if self.onforgtest == nil or self.onforgtest(doer, item) then
+        local data = {doer = doer, ksfunitem = ksfunitem, item = item}
+        if self.ontest == nil or self.ontest(self.inst, data) then
             forg(self, doer, item)
             -- 通知锻造成功
-            if self.onforgsuccess then
-                self.onforgsuccess(doer, item)
+            if self.onsuccess then
+                self.onsuccess(doer, data)
             end
             return true
         end
@@ -54,13 +55,13 @@ function KSFUN_FORGABLE:Forg(doer, item)
 end
 
 
-function KSFUN_FORGABLE:SetOnForgTestFunc(func)
-    self.onforgtest = func
+function KSFUN_FORGABLE:SetOnTestFunc(func)
+    self.ontest = func
 end
 
 
-function KSFUN_FORGABLE:SetOnForgSuccessFunc(func)
-    self.onforgsuccess = func
+function KSFUN_FORGABLE:SetOnSuccessFunc(func)
+    self.onsuccess = func
 end
 
 function KSFUN_FORGABLE:SetForgItems(itemprefabs)

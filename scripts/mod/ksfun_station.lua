@@ -22,7 +22,7 @@ local function handKsFunItem(doer, ksfunitem, material)
         local powers = system:GetAllPowers()
         for k, v in pairs(powers) do
             local forgable = v.components.ksfun_forgable
-            if forgable and forgable:Forg(doer, material) then
+            if forgable and forgable:Forg(doer, ksfunitem, material) then
                 return true
             end
         end

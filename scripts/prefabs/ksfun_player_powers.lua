@@ -33,14 +33,13 @@ local function MakePower(name, data)
     end
 
 
-    local function onLvChangeFunc(inst, t, n)
+    local function onLvChangeFunc(inst, data)
         local func = data.level and data.level.onLvChangeFunc or data.onstatechange
-        KsFunLog("onLvChangeFunc", name, t)
-        if t < 0 then
+        if data.lv < 0 then
             -- <0 属性失效，移除 
             inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
         elseif func then
-            func(inst, t, n)
+            func(inst, data)
         end             
     end
 
@@ -99,6 +98,10 @@ local function MakePower(name, data)
         if data.forgable then
             inst:AddComponent("ksfun_forgable")
             inst.components.ksfun_forgable:SetForgItems(data.forgable.items)
+            inst.components.ksfun_forgable:SetOnSuccessFunc(data.forgable.onsuccess)
+            if data.forgable.ontest then
+                inst.components.ksfun_forgable:SetOnTestFunc(data.forgable.ontest)
+            end
         end
 
 

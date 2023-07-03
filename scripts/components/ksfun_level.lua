@@ -13,7 +13,6 @@ local KSFUN_LEVEL = Class(function(self, inst)
     self.max = 10000
 
     self.onLvChangeFunc = nil
-    self.onStateChangeFunc = nil
     self.nextLvExpFunc = nil
 end)
 
@@ -22,9 +21,6 @@ function KSFUN_LEVEL:SetOnLvChangeFunc(func)
     self.onLvChangeFunc = func
 end
 
-function KSFUN_LEVEL:SetOnStateChangeFunc(func)
-    self.onStateChangeFunc = func
-end
 
 function KSFUN_LEVEL:SetNextLvExpFunc(func)
     self.nextLvExpFunc = func
@@ -36,15 +32,13 @@ function KSFUN_LEVEL:SetLevel(lv, notice)
         return
     end
 
-    if lv < self.max then
-        self.lv = lv
-    else
-        self.lv = self.max
-        self.exp = 0
-    end
+    local originlv = self.lv
+    if lv > self.max then self.exp = 0 end
+    self.lv = math.max(lv, self.max)
+    local delta = self.lv - originlv
 
     if self.onLvChangeFunc then
-        self.onLvChangeFunc(self.inst, self.lv, notice)
+        self.onLvChangeFunc(self.inst, { delta = delta, lv = self.lv })
     end
     self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
 end

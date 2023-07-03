@@ -92,6 +92,8 @@ function KSFUN_POWER:Detach()
     if temp and self.onDetachFunc then
         self.onDetachFunc(self.inst, temp, self.name)
     end
+    -- 缓存的数据要清理掉
+    self.data = nil
 end
 
 

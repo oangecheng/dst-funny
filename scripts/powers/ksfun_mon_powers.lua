@@ -40,16 +40,12 @@ local function updateAbsorbStatus(inst)
 end
 
 local absorb = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            -- 最多减伤30%，最高难度50%
-            setPowerMaxLv(inst, 30, 50)
-            updateAbsorbStatus(inst)
-        end
-    },
-    level = {
-        onLvChangeFunc = updateAbsorbStatus
-    }
+    onattach = function(inst)
+        -- 最多减伤30%，最高难度50%
+        setPowerMaxLv(inst, 30, 50)
+        updateAbsorbStatus(inst)
+    end,
+    onstatechange = updateAbsorbStatus
 }
 
 
@@ -96,15 +92,12 @@ end
 
 
 local iceexplosion = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.prefab ~= "icehound" then
-                target:ListenForEvent("death", onDeath)
-                setPowerMaxLv(inst, 10, 20)
-            end
+    onattach = function(inst, target)
+        if target.prefab ~= "icehound" then
+            target:ListenForEvent("death", onDeath)
+            setPowerMaxLv(inst, 10, 20)
         end
-    },
-    level = {}
+    end,
 }
 
 
@@ -128,20 +121,16 @@ local function updateSanityauraStatus(inst)
 end
 
 local sanityaura = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.sanityaura == nil then
-                target:AddComponent("sanityaura")
-            end
-            inst.components.ksfun_power:SetData( {aura = target.components.sanityaura.aura} )
-            -- 最高不超过巨鹿
-            setPowerMaxLv(inst, 50, 100)
-            updateSanityauraStatus(inst)
+    onattach = function(inst, target, name)
+        if target.components.sanityaura == nil then
+            target:AddComponent("sanityaura")
         end
-    },
-    level = {
-        onLvChangeFunc = updateSanityauraStatus
-    }
+        inst.components.ksfun_power:SetData( {aura = target.components.sanityaura.aura} )
+        -- 最高不超过巨鹿
+        setPowerMaxLv(inst, 50, 100)
+        updateSanityauraStatus(inst)
+    end,
+    onstatechange = updateSanityauraStatus
 }
 
 
@@ -163,13 +152,10 @@ local function realdamageAttack(attacker, data)
 end
 
 local realdamage = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            setPowerMaxLv(inst, 20, 50)
-            inst.target:ListenForEvent("onattackother", realdamageAttack)
-        end
-    },
-    level = {}
+    onattach = function(inst, target)
+        setPowerMaxLv(inst, 20, 50)
+        target:ListenForEvent("onattackother", realdamageAttack)
+    end,
 }
 
 
@@ -186,16 +172,12 @@ local function updateDamageStatus(inst)
 end
 
 local damage = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            -- 默认最大2倍攻击，最大3倍攻击
-            setPowerMaxLv(inst, 100, 200)
-            updateDamageStatus(inst)
-        end,
-    },
-    level = {
-        onLvChangeFunc = updateDamageStatus
-    },
+    onattach = function(inst)
+        -- 默认最大2倍攻击，最大3倍攻击
+        setPowerMaxLv(inst, 100, 200)
+        updateDamageStatus(inst)
+    end,
+    onstatechange = updateDamageStatus,
 }
 
 
@@ -214,16 +196,12 @@ local function updateLocomotorStatus(inst)
 end
 
 local locomotor = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            -- 默认最大1.5倍移速，最高2倍移速
-            setPowerMaxLv(inst, 50, 100)
-            updateLocomotorStatus(inst)
-        end,
-    },
-    level = {
-        onLvChangeFunc = updateLocomotorStatus
-    },
+    onattach = function(inst)
+        -- 默认最大1.5倍移速，最高2倍移速
+        setPowerMaxLv(inst, 50, 100)
+        updateLocomotorStatus(inst)
+    end,
+    onstatechange = updateLocomotorStatus,
 }
 
 
@@ -232,13 +210,10 @@ local locomotor = {
 
 ------ 怪物暴击 ----------------------------------------------------------------------------------------
 local critdamage = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            setPowerMaxLv(inst, 100, 200)
-            KsFunHookCaclDamage(inst, target, canHit)
-        end
-    },
-    level = {},
+    onattach = function(inst, target)
+        setPowerMaxLv(inst, 100, 200)
+        KsFunHookCaclDamage(inst, target, canHit)
+    end,
 }
 
 
@@ -259,31 +234,24 @@ local function updateHealthStatus(inst)
 end
 
 local health = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            local h = target.components.health
-            -- 记录原始数据
-            inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
-            if inst.percent then
-                local data = inst.components.ksfun_power:GetData()
-                h:SetMaxHealth(data.health)
-                h:SetPercent(inst.percent)
-            end
-            updateHealthStatus(inst)
-        end,
-
-        onLoadFunc = function(inst, data)
-            inst.percent = data.percent or nil
-        end,
-
-        onSaveFunc = function(inst, data)
-            data.percent = inst.target.components.health:GetPercent()
+    onattach = function(inst, target, name)
+        local h = target.components.health
+        -- 记录原始数据
+        inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
+        if inst.percent then
+            local data = inst.components.ksfun_power:GetData()
+            h:SetMaxHealth(data.health)
+            h:SetPercent(inst.percent)
         end
-
-    },
-    level = {
-        onLvChangeFunc = updateHealthStatus
-    }
+        updateHealthStatus(inst)
+    end,
+    onstatechange = updateHealthStatus,
+    onload = function(inst, data)
+        inst.percent = data.percent or nil
+    end,
+    onsave = function(inst, data)
+        data.percent = inst.target.components.health:GetPercent()
+    end
 }
 
 

@@ -1,7 +1,18 @@
 --- 不需要format的属性描述可以使用这个
+local NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
+
 local function getPowerDesc(inst)
     local extra = KsFunGetPowerDescExtra(inst.prefab)
     return KsFunGetPowerDesc(inst, extra)
+end
+
+
+local function onForgSuccess(inst, data)
+    local doername  = data.doer.name
+    local item      = KsFunGetPrefabName(data.item.prefab)
+    local powername = KsFunGetPrefabName(inst.prefab)
+    local msg = string.format(STRINGS.KSFUN_FORG_SUCCESS_NOTICE, doername, item, powername)
+    KsFunShowNotice(msg)
 end
 
 
@@ -10,18 +21,14 @@ end
 local lifestealmax = 5
 
 local lifesteal = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            inst.components.ksfun_level:SetMax(lifestealmax)
-        end,
-        
-        onGetDescFunc = getPowerDesc,
-    },
-    level = {},
-    -- 可升级
+    onattach = function(inst)
+        inst.components.ksfun_level:SetMax(lifestealmax)
+    end,
+    ondesc = getPowerDesc,
     forgable = {
-        items = {["mosquitosack"] = 2}
-    }
+        items     = {["mosquitosack"] = 2},
+        onsuccess = onForgSuccess,
+    },
 }
 
 
@@ -36,16 +43,13 @@ local function onGetAoeDescFunc( inst, target, name )
 end
 
 local aoe = {
-    power = {
-        onAttachFunc  = function(inst, target, name)
-            inst.components.ksfun_level:SetMax(aoemax)
-        end,
-        onGetDescFunc = onGetAoeDescFunc
-    },
-    level = {},
-    -- 可升级
+    onattach = function(inst)
+        inst.components.ksfun_level:SetMax(aoemax)
+    end,
+    ondesc   = onGetAoeDescFunc,
     forgable = {
-        items = {["minotaurhorn"] = 5}
+        onsuccess = onForgSuccess,
+        items     = {["minotaurhorn"] = 5}, --犀牛角
     }
 }
 
@@ -53,7 +57,7 @@ local aoe = {
 
 ----- 挖矿 ----------------------------------------------------------------------------------------
 local minemax = 10
-local function updateMineStatus(inst, l, n)
+local function updateMineStatus(inst)
     local lv = inst.components.ksfun_level:GetLevel()
     local m = math.max(minemax - lv, 1)
     inst.target.components.finiteuses:SetConsumption(ACTIONS.MINE, math.max(1, lv))
@@ -61,27 +65,17 @@ local function updateMineStatus(inst, l, n)
 end
 
 local mine = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.tool == nil then 
-                target:AddComponent("tool") 
-            end
-            inst.components.ksfun_level:SetMax(minemax)
-            updateMineStatus(inst) 
-        end,
-
-        onGetDescFunc = getPowerDesc,
-  
-    },
-    level = {
-        onLvChangeFunc = updateMineStatus
-    },
+    onattach = function(inst, target)
+        if target.components.tool == nil then target:AddComponent("tool") end
+        inst.components.ksfun_level:SetMax(minemax)
+        updateMineStatus(inst)  
+    end,
+    ondesc = getPowerDesc,
+    onstatechange = updateMineStatus,
     -- 使用大理石或者硝石进行升级
     forgable = {
-        items = {
-            ["marble"] = 1,
-            ["nitre"]  = 1,
-        }
+        items = { ["marble"] = 1, ["nitre"]  = 1,},
+        onsuccess = onForgSuccess,
     }
 }
 
@@ -97,26 +91,17 @@ local function updateChopStatus(inst, l, n)
 end
 
 local chop = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.tool == nil then 
-                target:AddComponent("tool") 
-            end
-            inst.components.ksfun_level:SetMax(chopmax)
-            updateChopStatus(inst) 
-        end,
-        
-        onGetDescFunc = getPowerDesc,
-        
-    },
-    level = {
-        onLvChangeFunc = updateChopStatus
-    },
+    onattach = function(inst, target)
+        if target.components.tool == nil then target:AddComponent("tool") end
+        inst.components.ksfun_level:SetMax(chopmax)
+        updateChopStatus(inst)  
+    end,
+    ondesc = getPowerDesc,
+    onstatechange = updateChopStatus,
     -- 使用活木升级
     forgable = {
-        items = {
-            ["livinglog"] = 1,
-        }
+        items = { ["livinglog"] = 1,},
+        onsuccess = onForgSuccess,
     }
 }
 
@@ -124,7 +109,7 @@ local chop = {
 
 
 ----- 最大使用次数 ----------------------------------------------------------------------------------------
-local function updateMaxusesStatus(inst, l, n)
+local function updateMaxusesStatus(inst)
     local data = inst.components.ksfun_power:GetData()
     local lv = inst.components.ksfun_level:GetLevel()
 
@@ -146,31 +131,20 @@ local function updateMaxusesStatus(inst, l, n)
 end
 
 local maxuses = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            -- 护甲类型
-            if target.components.armor then
-                inst.components.ksfun_power:SetData( {maxuses = target.components.armor.maxcondition })
-            end
-            -- 使用次数
-            if target.components.finiteuses then
-                inst.components.ksfun_power:SetData({maxuses = target.components.finiteuses.total})
-            end
-
-            updateMaxusesStatus(inst)
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-    },
-    level = {
-        onLvChangeFunc = updateMaxusesStatus
-    },
-    -- 使用活木升级
+    onattach = function(inst, target)
+        if target.components.armor then
+            inst.components.ksfun_power:SetData({ maxuses = target.components.armor.maxcondition })
+        end
+        if target.components.finiteuses then
+            inst.components.ksfun_power:SetData({ maxuses = target.components.finiteuses.total })
+        end
+        updateMaxusesStatus(inst)
+    end,
+    onstatechange = updateMaxusesStatus,
+    ondesc = getPowerDesc,
     forgable = {
-        items = {
-            ["dragon_scales"] = 10,
-        }
+        items = {["dragon_scales"] = 10,}, -- 龙鳞提升耐久
+        onsuccess = onForgSuccess,
     }
 }
 
@@ -191,23 +165,18 @@ local function updateDamageStatus(inst, l, n)
 end
 
 local damage = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.weapon then
-                local d = target.components.weapon.damage
-                inst.components.ksfun_power:SetData({ damage = d})
-            end
+    onattach = function(inst, target)
+        if target.components.weapon then
+            local d = target.components.weapon.damage
+            inst.components.ksfun_power:SetData({ damage = d})
             updateDamageStatus(inst)
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-    },
-    level = {
-        onLvChangeFunc = updateDamageStatus
-    },
-    -- 铥矿棒/狗牙/蜂刺升级
+        end
+    end,
+    onstatechange = updateDamageStatus,
+    ondesc = getPowerDesc,
     forgable = {
+        onsuccess = onForgSuccess,
+        -- 铥矿棒/狗牙/蜂刺升级
         items = {
             ["ruins_bat"]   = 100,
             ["tentaclespike"] = 10,
@@ -270,36 +239,28 @@ end
 
 
 local insulator = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.insulator == nil then
-                target:AddComponent("insulator")
-            end
-            local ins, t = target.components.insulator:GetInsulation()
-            inst.components.ksfun_power:SetData({insulation = ins, type = t})
-            if not inst.type then inst.type = t end
-            changeInsulatorType(inst, target)
-            updateInsulatorStatus(inst)
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-        onSaveFunc = function(inst, data)
-            data.type = inst.type or nil
-            data.switch = inst.switch or false
-        end,
-
-        onLoadFunc = function(inst, data)
-            inst.type = data.type or nil
-            inst.switch = data.switch or false
+    onattach = function(inst, target)
+        if target.components.insulator == nil then
+            target:AddComponent("insulator")
         end
-    },
-
-    level = {
-        onLvChangeFunc = updateInsulatorStatus
-    },
-
+        local ins, t = target.components.insulator:GetInsulation()
+        inst.components.ksfun_power:SetData({insulation = ins, type = t})
+        if not inst.type then inst.type = t end
+        changeInsulatorType(inst, target)
+        updateInsulatorStatus(inst)
+    end,
+    ondesc = getPowerDesc,
+    onstatechange = updateInsulatorStatus,
+    onsave = function(inst, data)
+        data.type = inst.type or nil
+        data.switch = inst.switch or false
+    end,
+    onload = function(inst, data)
+        inst.type = data.type or nil
+        inst.switch = data.switch or false
+    end,
     forgable = {
+        onsuccess = onForgSuccess,
         items = {
             ["trunk_winter"] = 100, -- 冬日象鼻
             ["trunk_summer"] = 80, -- 夏日象鼻
@@ -307,7 +268,7 @@ local insulator = {
             ["beardhair"] = 5, -- 胡须
             ["goose_feather"] = 10 -- 鹅毛
         }
-    }
+    },
 }
 
 
@@ -325,24 +286,19 @@ local function updateDappernessStatus(inst)
 end
 
 local dapperness = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            local equippable = target.components.equippable
-            inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
-            updateDappernessStatus(inst)
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-    },
-    level = {
-        onLvChangeFunc = updateDappernessStatus
-    },
+    onattach = function(inst, target)
+        local equippable = target.components.equippable
+        inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
+        updateDappernessStatus(inst)
+    end,
+    onstatechange = updateDappernessStatus,
+    ondesc = getPowerDesc,
     forgable = {
+        onsuccess = onForgSuccess,
         items = {
-            ["spiderhat"] = 2,
-            ["walrushat"] = 20,
-            ["hivehat"]   = 50
+            ["spiderhat"] = 2, -- 蜘蛛帽
+            ["walrushat"] = 20, -- 海象帽
+            ["hivehat"]   = 50,
         }
     }
 }
@@ -362,34 +318,29 @@ local function updateWaterproofStatus(inst)
 end
 
 local waterproofer = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            -- 没有防水组件，添加
-            if target.components.waterproofer == nil then
-                target:AddComponent("waterproofer")
-                target.components.waterproofer:SetEffectiveness(0)
-            end
-            local effect = target.components.waterproofer:GetEffectiveness()
-            inst.components.ksfun_power:SetData({effectiveness = effect})
-            -- 计算最大等级，眼球伞的最大等级就是0，也就是不需要升级的
-            -- 眼球伞应该没办法添加防水属性，后面看下怎么加酸雨防护，暂时保留
-            local max = math.floor((1 - effect) / 0.01)
-            inst.components.ksfun_level:SetMax(max)
-            updateWaterproofStatus(inst)
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-    },
-    level = {
-        onLvChangeFunc = updateWaterproofStatus
-    },
+    onattach = function(inst, target)
+        -- 没有防水组件，添加
+        if target.components.waterproofer == nil then
+            target:AddComponent("waterproofer")
+            target.components.waterproofer:SetEffectiveness(0)
+        end
+        local effect = target.components.waterproofer:GetEffectiveness()
+        inst.components.ksfun_power:SetData({effectiveness = effect})
+        -- 计算最大等级，眼球伞的最大等级就是0，也就是不需要升级的
+        -- 眼球伞应该没办法添加防水属性，后面看下怎么加酸雨防护，暂时保留
+        local max = math.floor((1 - effect) / 0.01)
+        inst.components.ksfun_level:SetMax(max)
+        updateWaterproofStatus(inst)
+    end,
+    onstatechange = updateWaterproofStatus,
+    ondesc = getPowerDesc,
     forgable = {
+        onsuccess = onForgSuccess,
         items = {
             ["pigskin"] = 20,
             ["tentaclespots"] = 100
         }
-    }
+    },
 }
 
 
@@ -407,28 +358,22 @@ local function updateSpeedStatus(inst, l, n)
 end
 
 local speed = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            if target.components.equippable then
-                inst.components.ksfun_power:SetData({speed = target.components.equippable:GetWalkSpeedMult()})
-                inst.components.ksfun_level:SetMax(speedmax)
-                updateSpeedStatus(inst)
-            end
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-    },
-    level = {
-        onLvChangeFunc = updateSpeedStatus
-    },
+    onattach = function(inst, target)
+        local equippable = target.components.equippable
+        inst.components.ksfun_power:SetData({speed = equippable:GetWalkSpeedMult()})
+        inst.components.ksfun_level:SetMax(speedmax)
+        updateSpeedStatus(inst)
+    end,
+    onstatechange = updateSpeedStatus,
+    ondesc = getPowerDesc,
     -- 海象牙/步行手杖
     forgable = {
+        onsuccess = onForgSuccess,
         items = {
             ["walrus_tusk"] = 100,
             ["cane"] = 150,
         }
-    }
+    }    
 }
 
 
@@ -447,24 +392,17 @@ local function updateAbsorbStatus(inst)
 end
 
 local absorb = {
-    power = {
-        onAttachFunc = function(inst, target, name)
-            local absorb = target.components.armor.absorb_percent 
-            inst.components.ksfun_power:SetData( {absorb = absorb} )
-            -- 防御最高提升到90%
-            local max = math.floor(math.max(0.9 - absorb, 0)/0.01 + 0.5)
-            KsFunLog("setabsorb", absorb, max)
-            inst.components.ksfun_level:SetMax(max)
-            updateAbsorbStatus(inst)
-        end,
-
-        onGetDescFunc = getPowerDesc,
-
-    },
-    level = {
-        onLvChangeFunc = updateAbsorbStatus
-    },
+    onattach = function(inst, target)
+        local absorb = target.components.armor.absorb_percent 
+        inst.components.ksfun_power:SetData( {absorb = absorb} )
+        local max = math.floor(math.max(0.9 - absorb, 0)/0.01 + 0.5)
+        inst.components.ksfun_level:SetMax(max)
+        updateAbsorbStatus(inst)
+    end,
+    onstatechange = updateAbsorbStatus,
+    ondesc = getPowerDesc,
     forgable = {
+        onsuccess = onForgSuccess,
         items = {
             ["steelwool"] = 10, -- 钢丝绒
         }
