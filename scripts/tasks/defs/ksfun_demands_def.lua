@@ -70,6 +70,31 @@ end
 
 
 --------------------------------------------- 采集任务定义---------------------------------------------------------------------
+-- 可多倍采集的物品定义
+local PICKABLE_DEFS = {
+    ["cutgrass"] = 1,         -- 草
+    ["twigs"] = 1,            -- 树枝
+    ["petals"] = 1,           -- 花瓣
+    ["lightbulb"] = 1,        -- 荧光果
+    ["wormlight_lesser"] = 2, -- 小型发光浆果
+    ["cutreeds"] = 2,         -- 芦苇
+    ["kelp"] = 2,             -- 海带
+    ["carrot"] = 2,           -- 胡萝卜
+    ["berries"] = 2,          -- 浆果
+    ["berries_juicy"] = 2,    -- 多汁浆果
+    ["red_cap"] = 2,          -- 红蘑菇
+    ["green_cap"] = 2,
+    ["blue_cap"] = 2,
+    ["foliage"] = 2,         -- 蕨叶
+    ["cactus_meat"] = 2,     -- 仙人掌肉
+    ["cutlichen"] = 2,       -- 苔藓
+    ["cactus_flower"] = 3,   -- 仙人掌花
+    ["petals_evil"] = 3,     -- 恶魔花瓣
+    ["wormlight"] = 3,       -- 发光浆果
+}
+
+
+
 
 
 
