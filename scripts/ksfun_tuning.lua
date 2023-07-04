@@ -61,7 +61,7 @@ KSFUN_TUNING =  {
 
     TASK_NAMES = {
         KILL = "kill",
-        PICK = "pick",
+        -- PICK = "pick",
     },
 
     --- 任务需求的类型
