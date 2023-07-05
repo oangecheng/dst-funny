@@ -78,6 +78,10 @@ local kill = {
 
 
 
+
+
+
+
 -------------------------------------------------------------------------------------------采集任务完成判定-------------------------------------------------------------------------------------------
 local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK_TYPES
 
@@ -117,9 +121,58 @@ local pick = {
 
 
 
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------钓鱼任务完成判定-------------------------------------------------------------------------------------------
+local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH_TYPES
+
+local function onFishSuccess(inst, data)
+    local task = inst.components.ksfun_task_system:GetTask(NAMES.FISH)
+    local demand = task and task.components.ksfun_task:GetDemand() or nil
+    if demand then
+        local delta = 0
+        if demand.type == FISH_TYPES.FISH_LIMIT then
+            if data.fish and data.fish.prefab == demand.data.fish then
+                delta = 1
+            end
+        elseif demand.type == FISH_TYPES.POND_LIMIT then
+            if data.pond and data.pond.prefab == demand.data.pond then
+                delta = 1
+            end
+        else
+            delta = 1
+        end
+        demand.data.num = demand.data.num - delta
+        if demand.data.num < 1 then
+            task:Win()
+        end
+    end
+end
+
+local fish = {
+    onattach = function(inst, player)
+        player:ListenForEvent(KSFUN_EVENTS.FISH_SUCCESS, onFishSuccess)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback(KSFUN_EVENTS.FISH_SUCCESS, onFishSuccess)
+    end,
+    ondesc = descFunc
+}
+
+
+
+
+
+
 local judge = {
     [NAMES.KILL] = kill,
     [NAMES.PICK] = pick,
+    [NAMES.FISH] = fish,
 }
 
 

@@ -198,12 +198,45 @@ local function getPickTaskDesc(demand)
 end
 
 
+
+local function getFishTaskDesc(demand)
+    local name = nil
+    local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
+    local fishtype  = demand.type
+
+    if fishtype == TYPES.FISH_LIMIT then
+        name = KsFunGetPrefabName(demand.data.fish)
+    else
+        name = STRINGS.KSFUN_TASK_FISH
+    end
+
+    if name == nil then
+        return nil
+    end
+
+    local num = tostring(demand.data.num)
+    local base = string.format(STRINGS.KSFUN_TASK_FISH_DESC , num, name)
+    
+    if fishtype == TYPES.POND_LIMIT then
+        local pondname = KsFunGetPrefabName(demand.data.pond)
+        return base..string.format(STRINGS.KSFUN_TASK_LIMIT, pondname)
+    elseif fishtype == TYPES.TIME_LIMIT then
+        return base..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
+    end
+    return base
+end
+
+
+
 GLOBAL.KsFunGetTaskDesc = function(taskdata)
-    local name = taskdata.name
+    local demand = taskdata.demand
+    local name   = taskdata.name
     if name == KSFUN_TUNING.TASK_NAMES.KILL then
-        return getKillTaskDesc(taskdata.demand)
+        return getKillTaskDesc(demand)
     elseif name == KSFUN_TUNING.TASK_NAMES.PICK then
-        return getPickTaskDesc(taskdata.demand)
+        return getPickTaskDesc(demand)
+    elseif name == KSFUN_TUNING.TASK_NAMES.FISH then
+        return getFishTaskDesc(demand)
     end
     return nil
 end

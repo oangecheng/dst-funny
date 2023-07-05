@@ -151,6 +151,9 @@ STRINGS.KSFUN_FORG_SUCCESS_NOTICE = "%s使用%s成功强化了%s"
 
 -------------------------------------------------------------------------- 任务相关字符串----------------------------------------------------------------------------------
 STRINGS.NAMES.KSFUN_TASK_KILL = "击杀任务"
+STRINGS.NAMES.KSFUN_TASK_PICK = "采集任务"
+STRINGS.NAMES.KSFUN_TASK_KILL = "钓鱼任务"
+
 STRINGS.KSFUN_TASK_WIN        = "任务成功"
 STRINGS.KSFUN_TASK_LOSE       = "任务失败"
 STRINGS.KSFUN_TASK_ACCEPT     = "接受任务"
@@ -160,9 +163,13 @@ STRINGS.KSFUN_TASK_LIMIT_NAME = "同类型任务只能接受一个"
 
 STRINGS.KSFUN_TASK_KILL_DESC  = "击杀 %s 只 %s"
 STRINGS.KSFUN_TASK_PICK_DESC  = "采集 %s 个 %s"
-STRINGS.KSFUN_TASK_TIME_LIMIT = "(限制: %s 秒)"
+STRINGS.KSFUN_TASK_FISH_DESC  = "钓 %s 条 %s"
+STRINGS.KSFUN_TASK_FISH       = "任意的鱼" 
+
+STRINGS.KSFUN_TASK_TIME_LIMIT = "(限制: %s秒)"
 STRINGS.KSFUN_TASK_NO_HURT    = "(限制: 无伤)"
-STRINGS.KSFUN_TASK_FULL_MOON  = "(限制: 满月)" 
+STRINGS.KSFUN_TASK_FULL_MOON  = "(限制: 满月)"
+STRINGS.KSFUN_TASK_LIMIT      = "(限制: %s)" 
 
 
 

@@ -268,6 +268,41 @@ end
 
 
 
+
+
+-----------------------------------------------------------------一些组件的hook-------------------------------------------------------------------------------------
+--修改海钓竿组件
+AddComponentPostInit("oceanfishingrod", function(self)
+	local oldCatchFish = self.CatchFish
+	self.CatchFish = function(self)
+		if self.target ~= nil and self.target.components.oceanfishable ~= nil then
+			self.fisher:PushEvent(KSFUN_EVENTS.FISH_SUCCESS, { fish = self.target, isocean = true } )
+		end
+		if oldCatchFish then
+			oldCatchFish(self)
+		end
+	end
+end)
+
+
+--修改普通鱼竿组件
+AddComponentPostInit("fishingrod", function(fishingrod)
+	local oldCollect=fishingrod.Collect
+	fishingrod.Collect=function(self)
+		if self.caughtfish and self.fisherman and self.target then
+			self.fisherman:PushEvent(KSFUN_EVENTS.FISH_SUCCESS, {fish = self.caughtfish, pond = self.target} )
+		end
+		if oldCollect then
+			oldCollect(self)
+		end
+	end
+end)
+
+
+
+
+
+
 -----------------------------------------------------------------其他逻辑处理--------------------------------------------------------------------------------------
 
 --多汁浆果采集是掉落

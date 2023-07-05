@@ -1,6 +1,6 @@
 
 local daytime = KSFUN_TUNING.TIME_SEG * 16
-
+local prefabsdef = require("defs/ksfun_prefabs_def")
 
 
 --------------------------------------------- 击杀任务定义---------------------------------------------------------------------
@@ -73,7 +73,7 @@ local kill = {
 
 --------------------------------------------- 采集任务定义---------------------------------------------------------------------
 local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
-local pickables = require("defs/ksfun_prefabs_def").taskpickable
+local pickables  = prefabsdef.taskpickable
 
 local function calcPickItemsNum()
     local num = math.random(20) + 10
@@ -125,9 +125,87 @@ local pick = {
 
 
 
+
+
+
+
+
+
+--------------------------------------------- 钓鱼任务定义---------------------------------------------------------------------
+local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
+local fishes     = prefabsdef.fishes
+
+local function calcFishNum()
+    local n = math.random(8) + 2 
+    return KSFUN_TUNING.DEBUG and 1 or n
+end
+
+--- 计算钓鱼任务难度
+local function calcFishDifficulty(fishtype, lv, num)
+    local base = lv + (num > 5 and 2 or 1)
+    if fishtype == FISH_TYPES.TIME_LIMIT then
+        return base + 1
+    elseif fishtype == FISH_TYPES.POND_LIMIT then
+        return base + 1
+    elseif fishtype == FISH_TYPES.FISH_LIMIT then
+        return base + 2    
+    end
+    return base
+end
+
+local function generateFishDemand(fishtype)
+
+    local num = calcFishNum()
+    local diffculty = calcFishDifficulty()
+    local duration = 0
+    if fishtype == FISH_TYPES.TIME_LIMIT then
+        duration  = math.random(2) * daytime
+    end
+
+    local fish = nil
+    local lv = 0
+    local pond = nil
+
+    if fishtype == FISH_TYPES.FISH_LIMIT then
+        fish = GetRandomItem(table.getkeys(fishes))
+        lv   = fishes[fish]
+    elseif fishtype == FISH_TYPES.POND_LIMIT then
+        pond = GetRandomItem(prefabsdef.ponds)
+    end
+    
+    return {
+        type = fishtype,
+        duration = duration,
+        diffculty = diffculty,
+        data = {
+            num = num,
+            fish = fish,
+            pond = pond,
+        }
+    }
+
+end
+
+
+local fish = {
+    random = function()
+        local fishtype = GetRandomItem(FISH_TYPES)
+        return generateFishDemand(fishtype)
+    end
+}
+
+
+
+
+
+
+
+
 local demands = {
     [NAMES.KILL] = kill,
     [NAMES.PICK] = pick,
+    [NAMES.FISH] = fish,
+
 }
 
 

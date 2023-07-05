@@ -52,9 +52,50 @@ local extra = {
 local pickabledefs = MergeMaps(taskpicklist, extra)
 
 
+
+
+local fishes = {
+    ["oceanfish_small_1_inv"]  = 1,
+    ["oceanfish_small_2_inv"]  = 1,
+    ["oceanfish_small_3_inv"]  = 1,
+    ["oceanfish_small_4_inv"]  = 1,
+    ["oceanfish_small_5_inv"]  = 1,
+    ["oceanfish_small_6_inv"]  = 1,
+    ["oceanfish_small_7_inv"]  = 3,
+    ["oceanfish_small_8_inv"]  = 3,
+    ["oceanfish_small_9_inv"]  = 3,
+
+    ["oceanfish_medium_1_inv"] = 2,
+    ["oceanfish_medium_2_inv"] = 2,
+    ["oceanfish_medium_3_inv"] = 2,
+    ["oceanfish_medium_4_inv"] = 2,
+    ["oceanfish_medium_5_inv"] = 2,
+    ["oceanfish_medium_6_inv"] = 3,
+    ["oceanfish_medium_7_inv"] = 3,
+    ["oceanfish_medium_8_inv"] = 3,
+
+    ["wobster_moonglass"]      = 3,
+    ["wobster_sheller"]        = 3,
+    ["fish"]                   = 1,
+    ["eel"]                    = 2,
+}
+
+
+local ponds = {
+    "pond", "pond_cave", "pond_mos", "oasis_lake"
+}
+
+
+
+
+
+
+
 local prefabs = {
-    pickable = pickabledefs,
+    pickable     = pickabledefs,
     taskpickable = taskpicklist,
+    fishes       = fishes,
+    ponds        = ponds,
 }
 
 return prefabs

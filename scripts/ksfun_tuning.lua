@@ -76,6 +76,12 @@ KSFUN_TUNING =  {
             NORMAL         = 1,
             TIME_LIMIT     = 2,
             FULL_MOON      = 3,
+        },
+        FISH = {
+            NORMAL         = 1,
+            TIME_LIMIT     = 2,
+            POND_LIMIT     = 3,
+            FISH_LIMIT     = 4,
         }
     },
 
@@ -111,5 +117,6 @@ KSFUN_TUNING =  {
 
 
 KSFUN_EVENTS = {
-    POWER_REMOVE   = "ksfun_power_remove", 
+    POWER_REMOVE   = "ksfun_power_remove",
+    FISH_SUCCESS   = "ksfun_fish_success", 
 }
