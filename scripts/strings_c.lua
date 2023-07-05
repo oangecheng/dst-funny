@@ -7,10 +7,16 @@ end
 
 -- 特殊名称处理
 STRINGS.KSFUN_NAMES = {
-    ["koalefant_summer"] = STRINGS.NAMES[string.upper("koalefant_summer")].."(夏)",
-    ["koalefant_winter"] = STRINGS.NAMES[string.upper("koalefant_summer")].."(冬)",
-    ["leif_sparse"]      = STRINGS.NAMES[string.upper("leif_sparse")].."(常青)",
-    ["moose"]            = "麋鹿鹅",
+    ["koalefant_summer"]   = STRINGS.NAMES[string.upper("koalefant_summer")].."(夏)",
+    ["koalefant_winter"]   = STRINGS.NAMES[string.upper("koalefant_summer")].."(冬)",
+    ["leif_sparse"]        = STRINGS.NAMES[string.upper("leif_sparse")].."(常青)",
+    ["cactus"]             = STRINGS.NAMES[string.upper("cactus")].."(球形)",
+    ["oasis_cactus"]       = STRINGS.NAMES[string.upper("cactus")].."(叶形)",
+    ["berrybush2"]         = STRINGS.NAMES[string.upper("berrybush2")].."(多叶)", -- 浆果丛2
+    ["flower_cave"]        = STRINGS.NAMES[string.upper("flower_cave")].."(1果)",
+    ["flower_cave_double"] = STRINGS.NAMES[string.upper("flower_cave_double")].."(2果)", 
+    ["flower_cave_triple"] = STRINGS.NAMES[string.upper("flower_cave_triple")].."(3果)",
+    ["moose"]              = "麋鹿鹅",
 }
 
 

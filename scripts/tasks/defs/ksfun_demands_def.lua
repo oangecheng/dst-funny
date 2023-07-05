@@ -73,7 +73,7 @@ local kill = {
 
 --------------------------------------------- 采集任务定义---------------------------------------------------------------------
 local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
-local pickables = require("defs/ksfun_prefabs_def")
+local pickables = require("defs/ksfun_prefabs_def").taskpickable
 
 local function calcPickItemsNum()
     local num = math.random(20) + 10

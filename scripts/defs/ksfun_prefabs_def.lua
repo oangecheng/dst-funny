@@ -1,7 +1,7 @@
 
 
 
-local pickabledefs = {
+local taskpicklist = {
     ["grass"] = 1,   -- 草
     ["sapling"] = 1,  -- 树枝
     ["flower"] = 1, -- 花
@@ -30,14 +30,16 @@ local pickabledefs = {
     ["succulent_plant"] = 2, -- 多肉植物
     ["bullkelp_plant"] = 2, -- 公牛海带
     ["wormlight_plant"] = 2, -- 荧光植物
-    ["stalker_berry"] = 2, -- 神秘植物
-    ["stalker_bulb"] = 2, -- 荧光果1，编织者召唤的
-    ["stalker_bulb_double"] = 2, -- 荧光果2，编织者召唤的
     ["stalker_fern"] = 2, -- 蕨类植物
     ["rock_avocado_bush"] = 2, -- 石果树
     ["oceanvine"] = 2, -- 苔藓藤条
     ["bananabush"] = 2, -- 香蕉丛
+}
 
+local extra = {
+    ["stalker_berry"] = 2, -- 神秘植物
+    ["stalker_bulb"] = 2, -- 荧光果1，编织者召唤的
+    ["stalker_bulb_double"] = 2, -- 荧光果2，编织者召唤的
     ["rosebush"] = 2, -- 棱镜蔷薇花
     ["orchidbush"] = 2, -- 棱镜兰草花
     ["lilybush"] = 2, -- 棱镜蹄莲花
@@ -46,7 +48,13 @@ local pickabledefs = {
 }
 
 
+-- 可以额外采集的
+local pickabledefs = MergeMaps(taskpicklist, extra)
+
 
 local prefabs = {
-    pickable = pickabledefs
+    pickable = pickabledefs,
+    taskpickable = taskpicklist,
 }
+
+return prefabs
