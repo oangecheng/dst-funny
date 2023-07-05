@@ -156,7 +156,6 @@ end
 local function generateFishDemand(fishtype)
 
     local num = calcFishNum()
-    local diffculty = calcFishDifficulty()
     local duration = 0
     if fishtype == FISH_TYPES.TIME_LIMIT then
         duration  = math.random(2) * daytime
@@ -172,6 +171,8 @@ local function generateFishDemand(fishtype)
     elseif fishtype == FISH_TYPES.POND_LIMIT then
         pond = GetRandomItem(prefabsdef.ponds)
     end
+
+    local diffculty = calcFishDifficulty(fishtype, lv, num)
     
     return {
         type = fishtype,
@@ -199,7 +200,7 @@ local fish = {
 
 
 
-
+local NAMES = KSFUN_TUNING.TASK_NAMES
 
 local demands = {
     [NAMES.KILL] = kill,

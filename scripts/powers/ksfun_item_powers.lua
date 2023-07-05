@@ -60,8 +60,9 @@ local minemax = 10
 local function updateMineStatus(inst)
     local lv = inst.components.ksfun_level:GetLevel()
     local m = math.max(minemax - lv, 1)
-    inst.target.components.finiteuses:SetConsumption(ACTIONS.MINE, math.max(1, lv))
-    inst.target.components.tool:SetAction(ACTIONS.MINE, minemax/m)
+    inst.target.components.finiteuses:SetConsumption(ACTIONS.MINE, 1)
+    local multi = math.floor(minemax/m + 0.5)
+    inst.target.components.tool:SetAction(ACTIONS.MINE, multi)
 end
 
 local mine = {
@@ -83,11 +84,12 @@ local mine = {
 
 ----- 伐木 ----------------------------------------------------------------------------------------
 local chopmax = 15
-local function updateChopStatus(inst, l, n)
+local function updateChopStatus(inst)
     local lv = inst.components.ksfun_level:GetLevel()
     local m = math.max(chopmax - lv, 1)
-    inst.target.components.finiteuses:SetConsumption(ACTIONS.CHOP, math.max(1, lv))
-    inst.target.components.tool:SetAction(ACTIONS.CHOP, chopmax/m)
+    inst.target.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
+    local multi = math.floor(chopmax/m + 0.5)
+    inst.target.components.tool:SetAction(ACTIONS.CHOP, multi)
 end
 
 local chop = {
@@ -111,7 +113,7 @@ local chop = {
 ----- 最大使用次数 ----------------------------------------------------------------------------------------
 local function updateMaxusesStatus(inst)
     local data = inst.components.ksfun_power:GetData()
-    local lv = inst.components.ksfun_level:GetLevel()
+    local lv   = inst.components.ksfun_level:GetLevel()
 
     -- 武器每次提升100的耐久
     local finiteuses = inst.target.components.finiteuses

@@ -83,7 +83,7 @@ local kill = {
 
 
 -------------------------------------------------------------------------------------------采集任务完成判定-------------------------------------------------------------------------------------------
-local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK_TYPES
+local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
 
 local function onPickSomeThing(inst, data)
     local task   = inst.components.ksfun_task_system:GetTask(NAMES.PICK)
@@ -101,7 +101,7 @@ local function onPickSomeThing(inst, data)
             end
             demand.data.num = demand.data.num - delta
             if demand.data.num < 1 then
-                task:Win()
+                task.components.ksfun_task:Win()
             end
         end
     end
@@ -129,7 +129,7 @@ local pick = {
 
 
 -------------------------------------------------------------------------------------------钓鱼任务完成判定-------------------------------------------------------------------------------------------
-local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH_TYPES
+local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
 
 local function onFishSuccess(inst, data)
     local task = inst.components.ksfun_task_system:GetTask(NAMES.FISH)
@@ -149,7 +149,7 @@ local function onFishSuccess(inst, data)
         end
         demand.data.num = demand.data.num - delta
         if demand.data.num < 1 then
-            task:Win()
+            task.components.ksfun_task:Win()
         end
     end
 end

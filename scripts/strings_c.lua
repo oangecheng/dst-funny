@@ -12,10 +12,12 @@ STRINGS.KSFUN_NAMES = {
     ["leif_sparse"]        = STRINGS.NAMES[string.upper("leif_sparse")].."(常青)",
     ["cactus"]             = STRINGS.NAMES[string.upper("cactus")].."(球形)",
     ["oasis_cactus"]       = STRINGS.NAMES[string.upper("cactus")].."(叶形)",
-    ["berrybush2"]         = STRINGS.NAMES[string.upper("berrybush2")].."(多叶)", -- 浆果丛2
+    ["berrybush2"]         = STRINGS.NAMES[string.upper("berrybush")].."(多叶)", -- 浆果丛2
     ["flower_cave"]        = STRINGS.NAMES[string.upper("flower_cave")].."(1果)",
-    ["flower_cave_double"] = STRINGS.NAMES[string.upper("flower_cave_double")].."(2果)", 
-    ["flower_cave_triple"] = STRINGS.NAMES[string.upper("flower_cave_triple")].."(3果)",
+    ["flower_cave_double"] = STRINGS.NAMES[string.upper("flower_cave")].."(2果)", 
+    ["flower_cave_triple"] = STRINGS.NAMES[string.upper("flower_cave")].."(3果)",
+    ["pond_cave"]          = STRINGS.NAMES[string.upper("pond")].."(洞穴)",
+    ["pond_mos"]           = STRINGS.NAMES[string.upper("pond")].."(蚊子)",
     ["moose"]              = "麋鹿鹅",
 }
 
@@ -152,7 +154,7 @@ STRINGS.KSFUN_FORG_SUCCESS_NOTICE = "%s使用%s成功强化了%s"
 -------------------------------------------------------------------------- 任务相关字符串----------------------------------------------------------------------------------
 STRINGS.NAMES.KSFUN_TASK_KILL = "击杀任务"
 STRINGS.NAMES.KSFUN_TASK_PICK = "采集任务"
-STRINGS.NAMES.KSFUN_TASK_KILL = "钓鱼任务"
+STRINGS.NAMES.KSFUN_TASK_FISH = "钓鱼任务"
 
 STRINGS.KSFUN_TASK_WIN        = "任务成功"
 STRINGS.KSFUN_TASK_LOSE       = "任务失败"

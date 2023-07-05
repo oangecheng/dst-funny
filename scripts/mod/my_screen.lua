@@ -17,7 +17,7 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 	self.owner = owner
 	self.root = self:AddChild(Widget("ROOT"))
 	
-	self.y = 500
+	self.y = 800
 	self.x = 500
 
 	self.offsetY = 0

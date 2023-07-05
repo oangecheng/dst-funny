@@ -6,17 +6,20 @@ local helper = {}
 local TASK_NAMES = KSFUN_TUNING.TASK_NAMES
 --- 要求定义
 local demands = require("tasks/defs/ksfun_demands_def")
-helper.randomDemand = function()
+
+local function randomDemand()
     local name = GetRandomItem(TASK_NAMES)
-    local d = demands[name]
-    return d.random()
+    local d = demands[name].random()
+    return name, d
 end
 
 
 
+
 helper.randomTaskData = function()
-    local demand = helper.randomDemand()
+    local name,demand = randomDemand()
     local task = {}
+    task.name     = name
     task.tasklv   = demand.diffculty
     task.duration = demand.duration
     task.demand   = demand

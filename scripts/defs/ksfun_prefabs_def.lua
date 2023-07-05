@@ -82,7 +82,7 @@ local fishes = {
 
 
 local ponds = {
-    "pond", "pond_cave", "pond_mos", "oasis_lake"
+    "pond", "pond_cave", "pond_mos", "oasislake"
 }
 
 
