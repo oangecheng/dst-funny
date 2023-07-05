@@ -107,8 +107,7 @@ end
 
 
 
-local function onWinFunc(inst, player, name, task)
-    KsFunLog("onTaskWin", name)
+local function onWinFunc(inst, player, task)
     local reward = task and task.reward or nil
     --- 根据奖励的不同进行分发
     if reward then

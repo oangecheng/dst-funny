@@ -1,5 +1,4 @@
 
-local ksfun_demands = {}
 local daytime = KSFUN_TUNING.TIME_SEG * 16
 
 
@@ -54,17 +53,18 @@ local function attackedLimit()
     return ret
 end
 
-
-ksfun_demands.randomKill = function()
-    local type = GetRandomItem(KILL_TYPES)
-    if type == KILL_TYPES.TIME_LIMIT then
-        return timeLimit()
-    elseif type == KILL_TYPES.ATTACKED_LIMIT then
-        return attackedLimit()
-    else
-        return normal()
+local kill = {
+    random = function()
+        local type = GetRandomItem(KILL_TYPES)
+        if type == KILL_TYPES.TIME_LIMIT then
+            return timeLimit()
+        elseif type == KILL_TYPES.ATTACKED_LIMIT then
+            return attackedLimit()
+        else
+            return normal()
+        end
     end
-end
+}
 
 
 
@@ -125,5 +125,10 @@ local pick = {
 
 
 
+local demands = {
+    [NAMES.KILL] = kill,
+    [NAMES.PICK] = pick,
+}
 
-return ksfun_demands
+
+return demands

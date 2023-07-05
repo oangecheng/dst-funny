@@ -14,7 +14,7 @@ end
 function TASK_DEMAND:SetDemand(demand)
     if demand == nil then return end
     self.demand = demand
-    local desc = KsFunGeneratTaskDesc(self.demand)
+    local desc = KsFunGetTaskDesc(self.demand)
     -- 任务显示有问题，移除这个任务卷轴
     if desc == nil then
         KsFunLog("SetDemand fail", self.demand.name)

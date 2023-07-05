@@ -153,8 +153,12 @@ STRINGS.KSFUN_TASK_LIMIT_NAME = "同类型任务只能接受一个"
 
 
 STRINGS.KSFUN_TASK_KILL_DESC  = "击杀 %s 只 %s"
+STRINGS.KSFUN_TASK_PICK_DESC  = "采集 %s 个 %s"
 STRINGS.KSFUN_TASK_TIME_LIMIT = "(限制: %s 秒)"
 STRINGS.KSFUN_TASK_NO_HURT    = "(限制: 无伤)"
+STRINGS.KSFUN_TASK_FULL_MOON  = "(限制: 满月)" 
+
+
 
 STRINGS.KSFUN_TASK_REWARD_POWER     = "%s完成了任务,获得了 [%s] 属性奖励" 
 STRINGS.KSFUN_TASK_REWARD_ITEM      = "%s完成了任务,获得了 [%s]x%s"

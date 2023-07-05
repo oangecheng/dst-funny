@@ -5,8 +5,6 @@ local function acceptTask(doer, invobject)
     local taskdata = invobject.components.ksfun_task_demand:GetDemand()
     if taskdata then
         local data  = deepcopy(taskdata)
-        local chain = require("tasks/ksfun_task_chain")
-        local task  = chain.fillTaskData(doer, data)
         KsFunBindTaskReel(invobject, doer, data)
     end
 end

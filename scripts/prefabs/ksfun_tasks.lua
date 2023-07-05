@@ -1,42 +1,43 @@
-local taskchain = require("tasks/ksfun_task_chain")
+local taskhelper = require("tasks/ksfun_task_helper")
 
 
 
 local function MakeTask(taskname)
 
     -- 生成任务
-    local taskhandler = taskchain.generateTaskHanlder(taskname)
+    local taskhandler = taskhelper.getTaskHandler(taskname)
 
     -- 任务结束发送通知
-    local function finishTask(inst, player, name)
+    local function finishTask(inst, player)
+        local name = inst.components.ksfun_task:GetName()
         player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name})
     end
 
     --- 重新启用timer
-    local function onAttachFunc(inst, player, name, data)
-        taskhandler.onAttachFunc(inst, player, name, data)
+    local function onAttachFunc(inst, player, data)
+        taskhandler.onAttachFunc(inst, player, data)
         inst.components.timer:ResumeTimer("ksfun_task_over")
     end
 
     --- 移除timer
-    local function onDetachFunc(inst, player, name, data)
-        taskhandler.onDetachFunc(inst, player, name, data)
+    local function onDetachFunc(inst, player, data)
+        taskhandler.onDetachFunc(inst, player, data)
         inst.components.timer:StopTimer("ksfun_task_over")
         inst:DoTaskInTime(0, inst:Remove())
     end
 
     --- 任务成功回调
-    local function onWinFunc(inst, player, name, data)
-        taskhandler.onWinFunc(inst, player, name, data)
+    local function onWinFunc(inst, player, data)
+        taskhandler.onWinFunc(inst, player, data)
         inst.components.timer:StopTimer("ksfun_task_over")
-        finishTask(inst, player, name)
+        finishTask(inst, player)
     end
 
     --- 任务失败回调
-    local function onLoseFunc(inst, player, name, data)
-        taskhandler.onLoseFunc(inst, player, name, data)
+    local function onLoseFunc(inst, player, data)
+        taskhandler.onLoseFunc(inst, player, data)
         inst.components.timer:StopTimer("ksfun_task_over")
-        finishTask(inst, player, name)
+        finishTask(inst, player)
     end
 
 

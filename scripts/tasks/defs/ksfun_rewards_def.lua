@@ -215,4 +215,16 @@ ksfun_rewards.randomPowerExp = function(player, task_lv)
 end
 
 
-return ksfun_rewards
+
+
+local rewardsfunc = {
+    [REWARD_TYPES.PLAYER_POWER]     = ksfun_rewards.randomNewPower,
+    [REWARD_TYPES.PLAYER_POWER_LV]  = ksfun_rewards.randomPowerLv,
+    [REWARD_TYPES.PLAYER_POWER_EXP] = ksfun_rewards.randomPowerExp,
+    [REWARD_TYPES.ITEM]             = ksfun_rewards.randomNormalItem,
+    [REWARD_TYPES.KSFUN_ITEM]       = ksfun_rewards.randomKsFunItem,
+
+}
+
+
+return rewardsfunc

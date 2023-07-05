@@ -1,5 +1,5 @@
 
-local function onLoseFunc(inst, player, name)
+local function onLoseFunc(inst, player, taskdata)
     player.components.talker:Say("任务失败")
 end
 

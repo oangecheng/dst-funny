@@ -1,7 +1,7 @@
 
 local function notify(self, func)
     if func and self.player and self.task_data then
-        func(self.inst, self.player, self.name, self.task_data)
+        func(self.inst, self.player, self.task_data)
     end
 end
 
@@ -31,6 +31,14 @@ end)
 
 function KSFUN_TASK:GetTaskData()
     return self.task_data
+end
+
+function KSFUN_TASK:GetDemand()
+    return self.task_data.demand
+end
+
+function KSFUN_TASK:GetName()
+    return self.name
 end
 
 
