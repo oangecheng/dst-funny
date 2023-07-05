@@ -61,19 +61,21 @@ KSFUN_TUNING =  {
 
     TASK_NAMES = {
         KILL = "kill",
-        -- PICK = "pick",
+        PICK = "pick",
     },
 
     --- 任务需求的类型
     TASK_DEMAND_TYPES = {
         --- 击杀类型
         KILL = {
-            NORMAL = 1,
-            TIME_LIMIT = 2,
+            NORMAL         = 1,
+            TIME_LIMIT     = 2,
             ATTACKED_LIMIT = 3,
         },
         PICK = {
-            NORMAL = 1,
+            NORMAL         = 1,
+            TIME_LIMIT     = 2,
+            FULL_MOON      = 3,
         }
     },
 

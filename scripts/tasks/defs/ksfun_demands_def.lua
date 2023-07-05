@@ -1,6 +1,6 @@
 
 local ksfun_demands = {}
-
+local daytime = KSFUN_TUNING.TIME_SEG * 16
 
 
 
@@ -69,32 +69,58 @@ end
 
 
 
+
+
 --------------------------------------------- 采集任务定义---------------------------------------------------------------------
--- 可多倍采集的物品定义
-local PICKABLE_DEFS = {
-    ["cutgrass"] = 1,         -- 草
-    ["twigs"] = 1,            -- 树枝
-    ["petals"] = 1,           -- 花瓣
-    ["lightbulb"] = 1,        -- 荧光果
-    ["wormlight_lesser"] = 2, -- 小型发光浆果
-    ["cutreeds"] = 2,         -- 芦苇
-    ["kelp"] = 2,             -- 海带
-    ["carrot"] = 2,           -- 胡萝卜
-    ["berries"] = 2,          -- 浆果
-    ["berries_juicy"] = 2,    -- 多汁浆果
-    ["red_cap"] = 2,          -- 红蘑菇
-    ["green_cap"] = 2,
-    ["blue_cap"] = 2,
-    ["foliage"] = 2,         -- 蕨叶
-    ["cactus_meat"] = 2,     -- 仙人掌肉
-    ["cutlichen"] = 2,       -- 苔藓
-    ["cactus_flower"] = 3,   -- 仙人掌花
-    ["petals_evil"] = 3,     -- 恶魔花瓣
-    ["wormlight"] = 3,       -- 发光浆果
+local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
+local pickables = require("defs/ksfun_prefabs_def")
+
+local function calcPickItemsNum()
+    local num = math.random(20) + 10
+    return KSFUN_TUNING.DEBUG and 1 or num
+end
+
+--- 计算采集任务难度
+local function calcPickDifficulty(type, lv, num)
+    local base = lv + (num > 20 and 2 or 1)
+    if type == PICK_TYPES.TIME_LIMIT then
+        return base + 1
+    elseif type == PICK_TYPES.FULL_MOON then
+        return base + 2    
+    end
+    return base
+end
+
+
+local function generatePickDemand(picktype)
+    local prefab = GetRandomItem(table.getkeys(pickables))
+    local lv     = pickables[prefab]
+    local num    = calcPickItemsNum()
+
+    local diffculty = calcPickDifficulty(picktype, lv, num)
+    local duration = 0
+    if picktype == PICK_TYPES.TIME_LIMIT then
+        duration  = math.random(2) * daytime
+    end
+
+    return {
+        type      = picktype,
+        duration  = duration,
+        diffculty = diffculty,
+        data = {
+            target = prefab,
+            lv = lv,
+            num = num,
+        }
+    }
+end
+
+local pick = {
+    random = function()
+        local picktype = GetRandomItem(PICK_TYPES)
+        return generatePickDemand(picktype)
+    end
 }
-
-
-
 
 
 
