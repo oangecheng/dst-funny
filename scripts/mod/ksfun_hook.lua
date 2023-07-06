@@ -270,9 +270,9 @@ end
 --- 处理暴击
 AddComponentPostInit("combat", function(self)
     local oldCaclDamage = self.CalcDamage
-    self.CalcDamage = function(target, weapon, multiplier)
+    self.CalcDamage = function(self, target, weapon, multiplier)
         -- 计算原始伤害
-        local damage = oldCaclDamage(target, weapon, multiplier)
+        local damage = oldCaclDamage(self, target, weapon, multiplier)
         local system = self.inst.components.ksfun_power_system
         if system == nil then
             return damage
@@ -340,7 +340,7 @@ end)
 --修改烹饪组件,在锅中收获自己做的料理的时候提升勋章
 AddComponentPostInit("stewer", function(self)
 	local oldHarvest = self.Harvest
-	self.Harvest = function(self,harvester)
+	self.Harvest = function(self, harvester)
 		if self.done and harvester ~= nil and self.chef_id == harvester.userid and self.product then
 			harvester:PushEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, { food = self.product })
 		end

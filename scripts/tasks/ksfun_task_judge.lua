@@ -172,13 +172,14 @@ local COOK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
 
 
 local function onHarvestSelfFood(inst, data)
+    KsFunLog("onHarvestSelfFood", data.food)
     local task   = inst.components.ksfun_task_system:GetTask(NAMES.COOK)
     local demand = task and task.components.ksfun_task:GetDemand() or nil
     if demand then
         local cooktype = demand.type
         local delta = 0
         if cooktype == COOK_TYPES.FOOD_LIMIT then
-            if data.food.prefab == demand.data.food then
+            if data.food == demand.data.food then
                 delta = 1
             end
         else
@@ -198,7 +199,7 @@ local cook = {
     ondetach = function(inst, player)
         player:RemoveEventCallback(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestSelfFood)
     end,
-    ondesc = getPowerDesc
+    ondesc = descFunc
 }
 
 

@@ -2,23 +2,6 @@
 
 
 
-GLOBAL.KsFunGetPowerDesc = function(power, extradesc)
-    local level = power.components.ksfun_level
-    local extra = extradesc and "    "..extradesc.."" or ""
-
-    if level:IsMax() then
-        return STRINGS.KSFUN_POWER_LEVEL_MAX.."  "..extra
-    else
-        local lv  = level:GetLevel()
-        local exp = level:GetExp()
-        local def = KsFunGeneratePowerDefaultDesc(lv, exp)
-        return def..extra
-    end
-end
-
-
-
-
 local function getKillTaskDesc(demand)
     -- 先从自定义的名称里面拿，有些怪物的名称是一样的，所以要区分一下
     local victimname = KsFunGetPrefabName(demand.data.victim)
@@ -47,7 +30,7 @@ local function getPickTaskDesc(demand)
         return nil 
     end
 
-    local num   = tostring(demand.data.num)
+    local num = tostring(demand.data.num)
     local picktype  = demand.type
     local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
     
@@ -93,9 +76,10 @@ end
 
 
 local function getCookTaskDesc(demand)
+    KsFunLog("getCookTaskDesc", demand.type)
     local name = nil
     local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
-    local cooktype  = demand.type
+    local cooktype = demand.type
 
     if cooktype == TYPES.FOOD_LIMIT then
         name = KsFunGetPrefabName(demand.data.food)
