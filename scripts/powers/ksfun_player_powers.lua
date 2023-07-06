@@ -13,8 +13,7 @@ end
 
 
 local function canHit(defaultratio)
-    local r =  KSFUN_TUNING.DEBUG and 1 or defaultratio
-    return math.random(100) < r * 100
+    return KsFunCanHit(true, defaultratio)
 end
 
 
@@ -701,11 +700,6 @@ local locomotor = {
 local critdamage = {
     onattach = function(inst, target)
         inst.components.ksfun_level:SetMax(100)
-        KsFunHookCaclDamage(inst, target, canHit)
-    end,
-
-    ondetach = function(inst, target)
-        KsFunRecoverCaclDamage(inst, target)
     end,
 
     onstatechange = function(inst)

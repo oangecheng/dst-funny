@@ -183,29 +183,6 @@ end
 
 
 
-GLOBAL.KsFunHookCaclDamage = function(inst, attacker, canhitfunc)
-    if attacker.components.combat == nil then return end
-    attacker.ksfun_originCalcDamage = attacker.components.combat.CalcDamage
-    if attacker.ksfun_originCalcDamage then
-        attacker.components.combat.CalcDamage = function(targ, weapon, mult)
-            local hit    = canhitfunc and canhitfunc(0.2) or 0.2
-            local lv     = inst.components.ksfun_level:GetLevel()
-            local ratio  = hit and (lv/100 + 1) or 1
-            local dmg    = attacker.ksfun_originCalcDamage(targ, weapon, mult)
-            return dmg * ratio
-        end
-    end
-end
-
-
-GLOBAL.KsFunRecoverCaclDamage = function(inst, attacker)
-    if attacker.ksfun_originCalcDamage then
-        attacker.components.combat.CalcDamage = attacker.ksfun_originCalcDamage
-    end
-end
-
-
-
 --- 绑定任务卷轴
 GLOBAL.KsFunBindTaskReel = function(inst, player, data)
     local system = player.components.ksfun_task_system
@@ -267,6 +244,17 @@ GLOBAL.KsFunGetCanRewardPower = function(player)
         return nil
     end
     
+end
+
+
+
+--- 计算攻击命中概率
+--- @param isplayer 是否是玩家
+--- @param defaultratio 默认概率，怪物会有难度加成
+GLOBAL.KsFunCanHit = function(isplayer, defaultratio)
+    if KSFUN_TUNING.DEBUG then return 1 end
+    local r = isplayer and defaultratio or (1 + KSFUN_TUNING.DIFFCULTY) * defaultratio
+    return math.random(100) < r * 100
 end
 
 

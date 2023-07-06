@@ -266,6 +266,43 @@ end
 
 
 
+--- hook combat 组件
+--- 处理暴击
+AddComponentPostInit("combat", function(self)
+    local oldCaclDamage = self.CalcDamage
+    self.CalcDamage = function(target, weapon, multiplier)
+        -- 计算原始伤害
+        local damage = oldCaclDamage(target, weapon, multiplier)
+        local system = self.inst.components.ksfun_power_system
+        if system == nil then
+            return damage
+        end
+
+        local power = nil
+        local crit  = false
+        if self.inst:HasTag("player") then
+            power = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.CRIT_DAMAGE)
+            if power then
+                crit  = KsFunCanHit(true, 0.2) 
+            end
+        else
+            power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
+            if power then
+                crit  = KsFunCanHit(false, 0.2) 
+            end
+        end
+
+        -- 暴击命中
+        if crit then
+            local lv  = power.components.ksfun_level:GetLevel()
+            damage = damage * (0.01 * lv + 1)               
+        end
+
+        return damage
+    end
+end)
+
+
 
 
 

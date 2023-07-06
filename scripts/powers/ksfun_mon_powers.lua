@@ -10,8 +10,7 @@ end
 
 --- 计算怪物特殊攻击命中概率
 local function canHit(defaultratio)
-    local r =  KSFUN_TUNING.DEBUG and 1 or (1 + KSFUN_TUNING.DIFFCULTY) * defaultratio
-    return math.random(100) < r * 100
+    return KsFunCanHit(false, defaultratio)
 end
 
 
@@ -212,7 +211,6 @@ local locomotor = {
 local critdamage = {
     onattach = function(inst, target)
         setPowerMaxLv(inst, 100, 200)
-        KsFunHookCaclDamage(inst, target, canHit)
     end,
 }
 
