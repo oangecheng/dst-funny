@@ -128,3 +128,10 @@ KSFUN_EVENTS = {
     FISH_SUCCESS      = "ksfun_fish_success", 
     HARVEST_SELF_FOOD = "ksfun_harvest_self_food",
 }
+
+
+--- 惩罚类型定义
+KSFUN_PUNISHES = {
+    POWER_LV_LOSE  = 1,
+    POWER_EXP_LOSE = 2,
+}
