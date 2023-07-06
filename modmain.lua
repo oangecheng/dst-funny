@@ -1,8 +1,9 @@
 GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) end})
 
 require("ksfun_tuning")
-modimport("scripts/strings_c.lua")
-modimport("scripts/ksfun_global_func.lua")
+modimport("scripts/util/strings_c.lua")
+modimport("scripts/util/ksfun_global_func.lua")
+modimport("scripts/util/ksfun_util.lua")
 
 
 ---- mode配置
