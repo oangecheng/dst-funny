@@ -63,6 +63,7 @@ KSFUN_TUNING =  {
         KILL = "kill",
         PICK = "pick",
         FISH = "fish",
+        COOK = "cook",
     },
 
     --- 任务需求的类型
@@ -83,6 +84,11 @@ KSFUN_TUNING =  {
             TIME_LIMIT     = 2,
             POND_LIMIT     = 3,
             FISH_LIMIT     = 4,
+        },
+        COOK = {
+            NORMAL         = 1,
+            TIME_LIMIT     = 2,
+            FOOD_LIMIT     = 3,
         }
     },
 
@@ -118,6 +124,7 @@ KSFUN_TUNING =  {
 
 
 KSFUN_EVENTS = {
-    POWER_REMOVE   = "ksfun_power_remove",
-    FISH_SUCCESS   = "ksfun_fish_success", 
+    POWER_REMOVE      = "ksfun_power_remove",
+    FISH_SUCCESS      = "ksfun_fish_success", 
+    HARVEST_SELF_FOOD = "ksfun_harvest_self_food",
 }

@@ -228,15 +228,46 @@ end
 
 
 
+
+local function getCookTaskDesc(demand)
+    local name = nil
+    local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
+    local cooktype  = demand.type
+
+    if cooktype == TYPES.FOOD_LIMIT then
+        name = KsFunGetPrefabName(demand.data.food)
+    else
+        name = STRINGS.KSFUN_TASK_FOOD
+    end
+
+    if name == nil then
+        return nil
+    end
+
+    local num  = tostring(demand.data.num)
+    local base = string.format(STRINGS.KSFUN_TASK_COOK_DESC , num, name)
+    
+    if cooktype == TYPES.TIME_LIMIT then
+        return base..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
+    end
+    return base
+end
+
+
+
+
 GLOBAL.KsFunGetTaskDesc = function(taskdata)
+    local NAMES  = KSFUN_TUNING.TASK_NAMES
     local demand = taskdata.demand
     local name   = taskdata.name
-    if name == KSFUN_TUNING.TASK_NAMES.KILL then
+    if name == NAMES.KILL then
         return getKillTaskDesc(demand)
-    elseif name == KSFUN_TUNING.TASK_NAMES.PICK then
+    elseif name == NAMES.PICK then
         return getPickTaskDesc(demand)
-    elseif name == KSFUN_TUNING.TASK_NAMES.FISH then
+    elseif name == NAMES.FISH then
         return getFishTaskDesc(demand)
+    elseif name == NAMES.COOK then
+        return getCookTaskDesc(demand)
     end
     return nil
 end

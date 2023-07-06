@@ -167,12 +167,48 @@ local fish = {
 
 
 
+-------------------------------------------------------------------------------------------烹调任务完成判定-------------------------------------------------------------------------------------------
+local COOK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
+
+
+local function onHarvestSelfFood(inst, data)
+    local task   = inst.components.ksfun_task_system:GetTask(NAMES.COOK)
+    local demand = task and task.components.ksfun_task:GetDemand() or nil
+    if demand then
+        local cooktype = demand.type
+        local delta = 0
+        if cooktype == COOK_TYPES.FOOD_LIMIT then
+            if data.food.prefab == demand.data.food then
+                delta = 1
+            end
+        else
+            delta = 1
+        end
+        demand.data.num = demand.data.num - delta
+        if demand.data.num < 1 then
+            task.components.ksfun_task:Win()
+        end
+    end 
+end
+
+local cook = {
+    onattach = function(inst, player)
+        player:ListenForEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestSelfFood)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestSelfFood)
+    end,
+    ondesc = getPowerDesc
+}
+
+
 
 
 local judge = {
     [NAMES.KILL] = kill,
     [NAMES.PICK] = pick,
     [NAMES.FISH] = fish,
+    [NAMES.COOK] = cook,
 }
 
 

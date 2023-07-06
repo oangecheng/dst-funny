@@ -87,6 +87,24 @@ local ponds = {
 
 
 
+local foods = {
+    ["turkeydinner"]  = 1,  -- 火鸡正餐
+    ["unagi"]         = 1,  -- 鳗鱼料理
+    ["flowersalad"]   = 1,  -- 花沙拉
+    ["honeyham"]      = 1,  -- 蜜汁火腿
+    ["fishsticks"]    = 1,  -- 炸鱼排
+
+    ["jellybean"]     = 2,  -- 糖豆
+    ["lobsterbisque"] = 2,  -- 龙虾汤
+    ["moqueca"]       = 2,  -- 海鲜杂烩
+    ["surfnturf"]     = 2,  -- 海鲜牛排
+    ["waffles"]       = 2,  -- 华夫饼
+
+    ["voltgoatjelly"] = 3,  -- 伏特羊角冻
+    ["bonesoup"]      = 3,  -- 骨头汤
+    ["lobsterdinner"] = 3,  -- 龙虾正餐
+}
+
 
 
 
@@ -96,6 +114,7 @@ local prefabs = {
     taskpickable = taskpicklist,
     fishes       = fishes,
     ponds        = ponds,
+    foods        = foods,
 }
 
 return prefabs

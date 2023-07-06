@@ -287,14 +287,27 @@ end)
 
 --修改普通鱼竿组件
 AddComponentPostInit("fishingrod", function(fishingrod)
-	local oldCollect=fishingrod.Collect
-	fishingrod.Collect=function(self)
+	local oldCollect = fishingrod.Collect
+	fishingrod.Collect = function(self)
 		if self.caughtfish and self.fisherman and self.target then
 			self.fisherman:PushEvent(KSFUN_EVENTS.FISH_SUCCESS, {fish = self.caughtfish, pond = self.target} )
 		end
 		if oldCollect then
 			oldCollect(self)
 		end
+	end
+end)
+
+
+
+--修改烹饪组件,在锅中收获自己做的料理的时候提升勋章
+AddComponentPostInit("stewer", function(self)
+	local oldHarvest = self.Harvest
+	self.Harvest = function(self,harvester)
+		if self.done and harvester ~= nil and self.chef_id == harvester.userid and self.product then
+			harvester:PushEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, { food = self.product })
+		end
+		return oldHarvest and oldHarvest(self,harvester) or nil
 	end
 end)
 

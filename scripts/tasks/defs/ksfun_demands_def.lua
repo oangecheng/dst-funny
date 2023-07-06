@@ -200,12 +200,76 @@ local fish = {
 
 
 
+
+
+--------------------------------------------- 烹饪任务定义---------------------------------------------------------------------
+local COOK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
+
+local function calcCookNum()
+    return KSFUN_TUNING.DEBUG and 1 or math.random(7) + 3
+end
+
+local function calcCookDiffculty(cooktype, lv, num)
+    local base = (lv or 0) + (num > 5 and 2 or 1)
+    if cooktype == COOK_TYPES.TIME_LIMIT then
+        return base + 1
+    elseif cooktype == COOK_TYPES.FOOD_LIMIT then
+        return base + 1
+    end
+    return base
+end
+
+local function generateCookDemand(cooktype)
+    local food = nil
+    local num  = calcCookNum()
+    local duration = 0
+    local lv = 0
+
+    if cooktype == COOK_TYPES.TIME_LIMIT then
+        duration = math.random(2) * daytime
+    elseif cooktype == COOK_TYPES.FOOD_LIMIT then
+        food = GetRandomItem(table.getkeys(prefabsdef.foods))
+        lv   = prefabsdef.foods[food]
+    end
+
+    local diffculty = calcCookDiffculty(cooktype, lv, num)
+
+    return {
+        type = cooktype,
+        duration = duration,
+        diffculty = diffculty,
+        data = {
+            num  = num,
+            food = food,
+        }
+    }
+
+end
+
+local cook = {
+    random = function()
+        local cooktype = GetRandomItem(COOK_TYPES)
+        return generateCookDemand(cooktype)
+    end,
+}
+
+
+
+
+
+
+
+
+
+
+
 local NAMES = KSFUN_TUNING.TASK_NAMES
 
 local demands = {
     [NAMES.KILL] = kill,
     [NAMES.PICK] = pick,
     [NAMES.FISH] = fish,
+    [NAMES.COOK] = cook,
 
 }
 
