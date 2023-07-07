@@ -36,13 +36,21 @@ end
 
 local function initPowerSystem(player)
     player:AddComponent("ksfun_power_system")
+
+    local function istemp(p)
+        return p.components.ksfun_power:IsTemp()
+    end
     
     local system = player.components.ksfun_power_system
     system:SetOnGainPowerFunc(function(inst, data)
+        -- 临时属性不统计
+        if istemp(data.power) then return end
         TheWorld.components.ksfun_world_data:AddWorldPowerCount(data.name)
     end)
 
     system:SetOnLostPowerFunc(function(inst, data)
+        -- 临时属性不统计
+        if istemp(data.power) then return end
         TheWorld.components.ksfun_world_data:RemoveWorldPowerCount(data.name)
         local msg = string.format(STRINGS.KSFUN_POWER_LOST_PLAYER, inst.name, KsFunGetPowerNameStr(data.name))
         KsFunShowNotice(msg)
@@ -88,7 +96,7 @@ local function testFunc(inst, data)
         return
     end
 
-    for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
+    for k,v in pairs(KSFUN_TUNING.NEGA_POWER_NAMES) do
         local ent = inst.components.ksfun_power_system:AddPower(v)
     end
     local ent = SpawnPrefab("spear")

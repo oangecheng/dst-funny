@@ -60,6 +60,15 @@ local function MakePower(name, data)
     end
 
 
+    local function onExtendFunc(inst, target, name)
+        local timer = inst.components.timer
+        if timer and data.duration then
+            timer:StopTimer("ksfun_power_over")
+            timer:StartTimer("ksfun_power_over", data.duration)
+        end
+    end
+
+
     local function fn()
         local inst = CreateEntity()
         inst:AddTag("ksfun_power")
@@ -77,11 +86,12 @@ local function MakePower(name, data)
 
         inst:AddTag("CLASSIFIED")
 
-        inst:AddComponent("ksfun_power")
-        inst.components.ksfun_power:SetOnAttachFunc(onAttachFunc)
-        inst.components.ksfun_power:SetOnDetachFunc(onDetachFunc)
-        inst.components.ksfun_power:SetOnGetDescFunc(onGetDescFunc)
-        inst.components.ksfun_power.keepondespawn = true
+        local power = inst:AddComponent("ksfun_power")
+        power:SetOnAttachFunc(onAttachFunc)
+        power:SetOnDetachFunc(onDetachFunc)
+        power:SetOnExtendFunc(onExtendFunc)
+        power:SetOnGetDescFunc(onGetDescFunc)
+        power.keepondespawn = true
 
 
         inst:ListenForEvent("ksfun_level_changed", function(ent, data)
@@ -107,6 +117,7 @@ local function MakePower(name, data)
 
         -- 添加临时属性
         if data.duration and data.duration > 0 then
+            inst.components.ksfun_power:SetTemp()
             inst:AddComponent("timer")
             inst.components.timer:StartTimer("ksfun_power_over", data.duration)
             inst:ListenForEvent("timerdone", function(inst, data)
@@ -141,6 +152,12 @@ end
 for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
     local data = helper.MakeMonsterPower(v)
     table.insert( powers, MakePower(v, data))
+end
+
+-- 负面属性
+for k,v in pairs(KSFUN_TUNING.NEGA_POWER_NAMES) do
+    local data = helper.MakeNegaPower(v)
+    table.insert(powers, MakePower(v, data))
 end
 
 

@@ -88,4 +88,13 @@ end
 
 
 
+-------------------------------------------------------------负面属性 我是分割线-----------------------------------------------------------------
+local negapowers = require("powers/ksfun_nega_powers")
+helper.MakeNegaPower = function(name)
+    return negapowers[name] or {}
+end
+
+
+
+
 return helper

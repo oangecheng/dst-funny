@@ -6,6 +6,7 @@ local KSFUN_POWER = Class(function(self, inst)
     self.enable = true
     -- 这个字段是用来缓存物品原本的属性
     self.data = nil
+    self.istemp = false
 
     self.onAttachFunc = nil
     self.onEnableChanged = nil
@@ -50,6 +51,16 @@ function KSFUN_POWER:SetEnable(enable)
 end
 
 
+function KSFUN_POWER:SetTemp()
+    self.istemp = true
+end
+
+
+function KSFUN_POWER:IsTemp()
+    return self.istemp
+end
+
+
 function KSFUN_POWER:IsEnable()
     return self.enable
 end
@@ -64,6 +75,11 @@ function KSFUN_POWER:SetData(data)
     if self.data == nil then
         self.data = data
     end
+end
+
+
+function KSFUN_POWER:GetName()
+    return self.name
 end
 
 
@@ -119,13 +135,15 @@ end
 
 function KSFUN_POWER:OnSave()
     return {
-        data = self.data
+        data = self.data,
+        istemp = self.istemp,
     }
 end
 
 
 function KSFUN_POWER:OnLoad(d)
     self.data = d.data or nil
+    self.istemp = d.istemp
 end
 
 

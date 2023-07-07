@@ -54,6 +54,12 @@ KSFUN_TUNING =  {
     },
 
 
+    NEGA_POWER_NAMES = {
+        DIARRHEA      = "nega_diarrhea",
+        UNLUCKY       = "nega_unlucky",
+    },
+
+
     TIME_SEG = TUNING.SEG_TIME,
     TOTAL_DAY_TIME = TUNING.TOTAL_DAY_TIME,
 

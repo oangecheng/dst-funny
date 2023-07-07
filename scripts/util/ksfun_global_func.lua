@@ -273,6 +273,7 @@ GLOBAL.KsFunSpawnHostileMonster = function(player, monstername, num)
         local mon = SpawnPrefab(monstername)
         if mon then
             local x,y,z = player.Transform:GetWorldPosition()
+            if x == nil then break end
             local r  = math.random(6)
             local dx = math.random(r)
             local dz = math.random(r)

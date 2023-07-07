@@ -47,7 +47,7 @@ function KSFUN_POWERS:AddPower(name, p)
         if ent then
             addPower(self, name, ent)
             if self.ongain then
-                self.ongain(self.inst, { name = name } )
+                self.ongain(self.inst, { name = name, power = ent } )
             end
         end
         ret = ent
@@ -68,7 +68,7 @@ function KSFUN_POWERS:RemovePower(name)
         self.powers[name] = nil
         power.inst.components.ksfun_power:Detach()
         if self.onlost then
-            self.onlost(self.inst, { name = name } )
+            self.onlost(self.inst, { name = name, power = power.inst } )
         end
         self:SyncData()
         self.inst:DoTaskInTime(0.1, power.inst:Remove()) 
@@ -89,24 +89,28 @@ end
 
 --- 获取当前属性的数量
 function KSFUN_POWERS:GetPowerNum()
-    return GetTableSize(self.powers)
+    local powers = self:GetAllPowers()
+    return GetTableSize(powers)
 end
 
 
 function KSFUN_POWERS:GetPowerNames()
     local list = {}
-    for k,v in pairs(self.powers) do
+    local powers = self:GetAllPowers()
+    for k,v in pairs(powers) do
         table.insert(list, k)
     end
     return list
 end
 
 
---- 获取当前的属性列表
+--- 获取当前的属性列表, 非临时属性
 function KSFUN_POWERS:GetAllPowers()
     local list = {}
     for k,v in pairs(self.powers) do
-        list[k] = v.inst
+        if not v.inst.components.ksfun_power:IsTemp() then
+            list[k] = v.inst
+        end
     end
     return list
 end
@@ -130,16 +134,16 @@ end
 function KSFUN_POWERS:SyncData()
 
     local prefab,name,lv = getTitle(self.inst)
-    local data = prefab..","..name..","..lv
+    local data = prefab.."|"..name.."|"..lv
 
-    for k,v in pairs(self.powers) do
-        local power = v.inst
+    local powers = self:GetAllPowers()
+    for k, power in pairs(powers) do
         local lv   = power.components.ksfun_level:GetLevel()
         local exp  = power.components.ksfun_level:GetExp()
         local desc = power.components.ksfun_power:GetDesc()
         -- 名称;等级;经验值;描述
-        local d = k .. "," .. tostring(lv) .. "," .. tostring(exp) .. "," ..desc
-        data = data ..";".. d
+        local d = k .. "|" .. tostring(lv) .. "|" .. tostring(exp) .. "|" ..desc
+        data = data .."#".. d
     end
     if data ~= "" and self.inst.replica.ksfun_power_system then
         self.inst.replica.ksfun_power_system:SyncData(data)
