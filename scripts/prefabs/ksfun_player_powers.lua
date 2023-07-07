@@ -108,8 +108,10 @@ local function MakePower(name, data)
         -- 添加临时属性
         if data.duration and data.duration > 0 then
             inst:AddComponent("timer")
-            inst.components.timer:StartTimer("powerover", data.duration)
+            inst.components.timer:StartTimer("ksfun_power_over", data.duration)
             inst:ListenForEvent("timerdone", function(inst, data)
+                local name = inst.components.ksfun_power:GetName()
+                inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
             end)
         end
 

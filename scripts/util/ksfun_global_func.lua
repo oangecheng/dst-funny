@@ -271,7 +271,7 @@ GLOBAL.KsFunSpawnHostileMonster = function(player, monstername, num)
     for i=1, count do
         local mon = SpawnPrefab(monstername)
         if mon then
-            local x,y,z = player:GetWorldPosition()
+            local x,y,z = player.Transform:GetWorldPosition()
             local r  = math.random(6)
             local dx = math.random(r)
             local dz = math.random(r)
