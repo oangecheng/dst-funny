@@ -26,7 +26,6 @@ local diarrhea = {
             end
         end)
     end,
-    
     ondetach = function(inst, target)
         local eater = target.components.eater
         if eater and inst.health then
@@ -38,4 +37,19 @@ local diarrhea = {
         end 
     end,
 
+}
+
+
+
+
+
+--------------------------------------------------------倒霉------------------------------------------------------------
+local unlucky = {
+    duration = KSFUN_TUNING.TOTAL_DAY_TIME,
+    onattach = function(inst, target)
+        target.components.ksfun_lucky:AddModifier("power_unlucky", -100)
+    end,
+    ondetach = function(inst, target)
+        target.components.ksfun_lucky:RemoveModifier("power_unlucky")
+    end,
 }
