@@ -14,6 +14,11 @@ function LUCKY:DoDelta(delta)
 end
 
 
+function LUCKY:Set(v)
+    self.lucky = v
+end
+
+
 function LUCKY:GetLucky()
     local v = self.lucky * self.basemulti + self.multipliers:Get()
     return math.floor(v + 0.5 )

@@ -2,6 +2,10 @@ local EVENTS = KSFUN_TUNING.EVENTS
 local ITEMS_DEF = require "defs/ksfun_items_def"
 
 
+local function initLucky(inst)
+    inst:AddComponent("ksfun_lucky")
+end
+
 
 --- 人物死亡，全属性等级随机降低
 local function onPlayerDeath(inst)
@@ -102,13 +106,10 @@ end
 
 
 AddPlayerPostInit(function(player)
-
-    KsFunLog("player init", player.prefab)
-
+    initLucky(player)
     initPowerSystem(player)
     initPlayerProperty(player)
     initTaskSystem(player)
-
     --- 测试代码
     if KSFUN_TUNING.DEBUG then
         player:ListenForEvent("oneat", testFunc)

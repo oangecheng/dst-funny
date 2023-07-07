@@ -76,7 +76,6 @@ end
 
 
 local function getCookTaskDesc(demand)
-    KsFunLog("getCookTaskDesc", demand.type)
     local name = nil
     local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
     local cooktype = demand.type

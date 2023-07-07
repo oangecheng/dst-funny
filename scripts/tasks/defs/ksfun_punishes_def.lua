@@ -10,8 +10,10 @@ local function powerLvLose(player, tasklv)
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
             local v = tasklv * 0.5
+            KsFunLog("powerLvLose origin", v)
             if player.components.ksfun_lucky then
                v = v - 2 * player.components.ksfun_lucky:GetRatio()
+               KsFunLog("powerLvLose change", v)
             end
             -- 四舍五入
             local delta = math.max(1, math.floor(v + 0.5))
@@ -36,9 +38,10 @@ local function powerExpLose(player, tasklv)
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
             local v = math.random(tasklv) * 10
-
+            KsFunLog("powerExpLose origin", v)
             if player.components.ksfun_lucky then
-                v = v - 100 * player.components.ksfun_lucky:GetRatio()
+                v = v - 50 * player.components.ksfun_lucky:GetRatio()
+                KsFunLog("powerExpLose change", v)
             end
 
             local delta = math.max(10, math.floor(v + 0.5))
@@ -63,11 +66,6 @@ local function punishMonster(player, tasklv)
     local monsters = nil
     local num = 1
 
-    local lucky = 0
-    if player.components.ksfun_lucky then
-        lucky = player.components.ksfun_lucky:GetRatio()
-    end
-
     if r < 0.1 then
         monsters = list["L"]
     elseif r < 0.3 then
@@ -78,12 +76,18 @@ local function punishMonster(player, tasklv)
     end
 
     -- 运气差的时候，可能刷出两倍的怪，boss也可能是两个
+    local lucky = 0
+    if player.components.ksfun_lucky then
+        lucky = player.components.ksfun_lucky:GetRatio()
+    end
+    KsFunLog("punishMonster origin", lucky, num)
     num = math.floor(num * (1 - lucky) + 0.5)
+    KsFunLog("punishMonster change", lucky, num)
     num = math.max(1, num)
 
     local selected = {}
     for i=1, num do
-        local t = GetRandomItem(t)
+        local t = GetRandomItem(monsters)
         table.insert(selected, t)
     end
 
@@ -107,6 +111,7 @@ punish.random = function(player, tasklv)
         lucky = player.components.ksfun_lucky:GetRatio()
     end
 
+    KsFunLog("random punish", lucky, r)
     -- 100幸运值时，有20%概率没有任何惩罚
     if r < lucky * 0.2 then
         return nil
@@ -114,6 +119,7 @@ punish.random = function(player, tasklv)
 
     -- 幸运值加成不超过0.2
     r = r + math.min(lucky * 0.2, 0.2)
+    KsFunLog("random punish change", lucky, r)
     local punish = nil
 
     -- 20% 概率遭受属性等级削弱
