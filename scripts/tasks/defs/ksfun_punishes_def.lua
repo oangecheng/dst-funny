@@ -79,7 +79,7 @@ end
 local punish = {}
 
 
-punish.randomPunish = function(player, tasklv)
+punish.random = function(player, tasklv)
     local punishtype = GetRandomItem(TYPES)
     local data = nil
     if punishtype == TYPES.POWER_LV_LOSE then

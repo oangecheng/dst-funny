@@ -92,8 +92,7 @@ end
 --- 随机生成一些物品
 --- @param tasklv 任务难度等级
 --- @return 名称，等级，数量，类型
-ksfun_rewards.randomNormalItem = function(player, tasklv)
-
+local function randomNormalItem(player, tasklv)
     local lv = math.min(tasklv, item_max_lv)
     local item_lv = lv
 
@@ -117,7 +116,7 @@ end
 local ksfun_items = require("defs/ksfun_items_def")
 
 --- 随机获取一个特殊物品奖励
-ksfun_rewards.randomKsFunItem = function(player, task_lv)
+local function randomKsFunItem(player, task_lv)
     local itemtype = GetRandomItem(KSFUN_ITEM_TYPES)
 
     local list = nil
@@ -161,7 +160,7 @@ local POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 --- @param player 角色
 --- @param task_lv 等级
 --- data = {power = a}
-ksfun_rewards.randomNewPower = function(player, task_lv)
+local function randomNewPower(player, task_lv)
     local name = KsFunGetCanRewardPower(player)
     if name then
         return {
@@ -179,7 +178,7 @@ end
 --- @param player 角色
 --- @param task_lv 等级
 --- data = {power = a, num = b}
-ksfun_rewards.randomPowerLv = function(player, task_lv)
+local function randomPowerLv(player, task_lv)
     local power = KsFunRandomPower(player, POWERS, true)
     local lv = math.random(3)
     if power then
@@ -199,7 +198,7 @@ end
 --- @param player 角色
 --- @param task_lv 等级
 --- data = {power = a, num = b}
-ksfun_rewards.randomPowerExp = function(player, task_lv)
+local function randomPowerExp(player, task_lv)
     local power = KsFunRandomPower(player, POWERS, true)
     local exp = math.random(task_lv) * 10
     if power then
@@ -216,15 +215,69 @@ end
 
 
 
+--- 任务奖励和难度绑定
+local function calcRewardRatio(player, tasklv)
+    local v = 0
+    if KSFUN_TUNING.DIFFCULTY > 0 then
+        v = tasklv * 0.5
+    elseif KSFUN_TUNING.DIFFCULTY < 0 then
+        v = tasklv * 2
+    else
+        v =  tasklv
+    end
+
+    -- 附加幸运值，幸运值倍率有可能小于1
+    local lucky = player.components.ksfun_lucky
+    if lucky then
+        return v * lucky:GetLuckyRatio()
+    end
+
+    return v 
+end
+
+
+
+--- 任务等级越高，越容易获得特殊奖励
+--- 任务等级最高基准为10，也就是高级任务有25%概率获得特殊奖励
+local function randomReward(player, tasklv)
+    local r = calcRewardRatio(player, tasklv)
+    local v = KSFUN_TUNING.DEBUG and 1 or r/40
+
+    local reward = nil
+    if math.random() < v then
+        local rewardpower = math.random() < 0.5
+        --- 50%概率分配属性相关奖励
+        if rewardpower then
+            -- 优先分配属性奖励，再分配属性等级或者经验
+            reward = randomNewPower(player, tasklv)
+            -- 没命中，再去分配经验或者等级
+            if not reward then
+                local rewardlv = math.random() < 0.5
+                if rewardlv then
+                    reward = randomPowerLv(player, tasklv)
+                else
+                    reward = randomPowerExp(player, tasklv)
+                end
+            end
+        end
+
+        -- 还是没有命中，尝试分配特殊装备
+        if not reward then
+            reward = randomKsFunItem(player, tasklv)
+        end
+
+        if reward then
+            return reward
+        end
+    end
+
+    --- 兜底奖励，各种普通物品
+    return randomNormalItem(player, tasklv)
+end
+
 
 local rewardsfunc = {
-    [REWARD_TYPES.PLAYER_POWER]     = ksfun_rewards.randomNewPower,
-    [REWARD_TYPES.PLAYER_POWER_LV]  = ksfun_rewards.randomPowerLv,
-    [REWARD_TYPES.PLAYER_POWER_EXP] = ksfun_rewards.randomPowerExp,
-    [REWARD_TYPES.ITEM]             = ksfun_rewards.randomNormalItem,
-    [REWARD_TYPES.KSFUN_ITEM]       = ksfun_rewards.randomKsFunItem,
-
+    random = randomReward
 }
-
 
 return rewardsfunc
