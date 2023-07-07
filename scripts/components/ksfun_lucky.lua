@@ -10,19 +10,18 @@ end)
 
 
 function LUCKY:DoDelta(delta)
-    local v = math.max(0, self.lucky + delta)
-    self.lucky = math.min(MAX, v)
+    self.lucky = math.clamp(self.lucky - delta, 0, MAX)
 end
 
 
 function LUCKY:GetLucky()
-    local v = (self.lucky + self.multipliers:Get()) * self.basemulti
+    local v = self.lucky * self.basemulti + self.multipliers:Get()
     return math.floor(v + 0.5 )
 end
 
 
-function LUCKY:GetLuckyRatio()
-    return 1 + 0.01 * self:GetLucky()
+function LUCKY:GetRatio()
+    return 0.01 * self:GetLucky()
 end
 
 

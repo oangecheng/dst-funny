@@ -9,11 +9,16 @@ local function powerLvLose(player, tasklv)
         local powers = system:GetAllPowers()
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
-            local delta = math.random(1 + tasklv * 0.5)
+            local v = tasklv * 0.5
+            if player.components.ksfun_lucky then
+               v = v - 2 * player.components.ksfun_lucky:GetRatio()
+            end
+            -- 四舍五入
+            local delta = math.max(1, math.floor(v + 0.5))
             return {
                 type = TYPES.POWER_LV_LOSE,
                 data = {
-                    name = name, 
+                    name = name,
                     num  = delta
                 }
             }
@@ -30,7 +35,14 @@ local function powerExpLose(player, tasklv)
         local powers = system:GetAllPowers()
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
-            local delta = math.random(tasklv) * 50
+            local v = math.random(tasklv) * 10
+
+            if player.components.ksfun_lucky then
+                v = v - 100 * player.components.ksfun_lucky:GetRatio()
+            end
+
+            local delta = math.max(10, math.floor(v + 0.5))
+
             return {
                 type = TYPES.POWER_EXP_LOSE,
                 data = {
@@ -51,6 +63,11 @@ local function punishMonster(player, tasklv)
     local monsters = nil
     local num = 1
 
+    local lucky = 0
+    if player.components.ksfun_lucky then
+        lucky = player.components.ksfun_lucky:GetRatio()
+    end
+
     if r < 0.1 then
         monsters = list["L"]
     elseif r < 0.3 then
@@ -59,6 +76,10 @@ local function punishMonster(player, tasklv)
         monsters = list["S"]
         num = math.random(tasklv) + 3
     end
+
+    -- 运气差的时候，可能刷出两倍的怪，boss也可能是两个
+    num = math.floor(num * (1 - lucky) + 0.5)
+    num = math.max(1, num)
 
     local selected = {}
     for i=1, num do
@@ -80,16 +101,38 @@ local punish = {}
 
 
 punish.random = function(player, tasklv)
-    local punishtype = GetRandomItem(TYPES)
-    local data = nil
-    if punishtype == TYPES.POWER_LV_LOSE then
-        data = powerLvLose(player, tasklv)
-    elseif punishtype == TYPES.POWER_EXP_LOSE then
-        data = powerExpLose(player, tasklv)
-    elseif punishtype == TYPES.MONSTER then
-        data = punishMonster(player, tasklv)
+    local r = math.random()
+    local lucky = 0
+    if player.components.ksfun_lucky then
+        lucky = player.components.ksfun_lucky:GetRatio()
     end
-    return data
+
+    -- 100幸运值时，有20%概率没有任何惩罚
+    if r < lucky * 0.2 then
+        return nil
+    end
+
+    -- 幸运值加成不超过0.2
+    r = r + math.min(lucky * 0.2, 0.2)
+    local punish = nil
+
+    -- 20% 概率遭受属性等级削弱
+    -- 如果你的幸运等级超过100了，就不会触发等级降低
+    if r < 0.2 then
+        punish = powerLvLose(player, tasklv)
+    end
+    if punish == nil and r < 0.5 then
+        punish = powerExpLose(player, tasklv)
+    end
+
+    if punish == nil then
+        local ismon = math.random() < 0.5
+        if ismon then
+            punish = punishMonster(player, tasklv)
+        end
+    end
+
+    return punish
 end
 
 

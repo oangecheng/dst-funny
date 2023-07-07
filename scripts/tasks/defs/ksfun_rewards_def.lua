@@ -226,13 +226,13 @@ local function calcRewardRatio(player, tasklv)
         v =  tasklv
     end
 
-    -- 附加幸运值，幸运值倍率有可能小于1
+    -- 附加幸运值，幸运值倍率有可能小于0
     local lucky = player.components.ksfun_lucky
     if lucky then
-        return v * lucky:GetLuckyRatio()
+        v = v * (1 + lucky:GetRatio())
     end
 
-    return v 
+    return v
 end
 
 
