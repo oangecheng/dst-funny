@@ -1,5 +1,6 @@
 
 local TYPES = KSFUN_PUNISHES
+local prefabsdef = require("defs/ksfun_prefabs_def")
 
 
 local function powerLvLose(player, tasklv)
@@ -44,6 +45,37 @@ end
 
 
 
+local function punishMonster(player, tasklv)
+    local r = math.random()
+    local list = prefabsdef.punishmon
+    local monsters = nil
+    local num = 1
+
+    if r < 0.1 then
+        monsters = list["L"]
+    elseif r < 0.3 then
+        monsters = list["M"]
+    else
+        monsters = list["S"]
+        num = math.random(tasklv) + 3
+    end
+
+    local selected = {}
+    for i=1, num do
+        local t = GetRandomItem(t)
+        table.insert(selected, t)
+    end
+
+    return {
+        type = TYPES.MONSTER,
+        data = {
+            monsters = selected  -- prefab list
+        }
+    }
+end
+
+
+
 local punish = {}
 
 
@@ -54,6 +86,8 @@ punish.randomPunish = function(player, tasklv)
         data = powerLvLose(player, tasklv)
     elseif punishtype == TYPES.POWER_EXP_LOSE then
         data = powerExpLose(player, tasklv)
+    elseif punishtype == TYPES.MONSTER then
+        data = punishMonster(player, tasklv)
     end
     return data
 end

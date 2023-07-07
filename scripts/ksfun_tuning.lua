@@ -134,4 +134,5 @@ KSFUN_EVENTS = {
 KSFUN_PUNISHES = {
     POWER_LV_LOSE  = 1,
     POWER_EXP_LOSE = 2,
+    MONSTER        = 3,
 }

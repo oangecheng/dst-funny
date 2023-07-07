@@ -7,7 +7,8 @@ local MONSTER_LV1 = {
     "hound",
     "firehound",
     "icehound",
-    "spider"
+    "spider",
+    "bat",
 }
 
 
@@ -36,6 +37,7 @@ local MONSTER_LV3 = {
     "bishop",
     "rook",
     "tallbird",
+    "slurtle",
 }
 
 

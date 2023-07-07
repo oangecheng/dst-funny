@@ -93,6 +93,13 @@ function KSFUN_LEVEL:DoDelta(delta)
 end
 
 
+function KSFUN_LEVEL:LoseLv(lv)
+    if lv > 0 then
+        self:SetLevel(self.lv - lv)
+    end
+end
+
+
 --- 获取剩余可升级次数
 function KSFUN_LEVEL:GetLeftUpCount()
     return self.max - self.lv
@@ -100,6 +107,12 @@ end
 
 
 function KSFUN_LEVEL:GainExp(exp)
+    -- 小于0掉经验，不会掉级
+    if exp < 0 then
+        self:LoseExp(-exp)
+        return
+    end
+
     local e = math.floor(exp)
     self.exp = self.exp + e
     local expFun = defaultExpFunc
@@ -114,6 +127,12 @@ function KSFUN_LEVEL:GainExp(exp)
      -- 大于0表示可以升级，触发升级逻辑
     self:SetLevel(lv)
     -- 刷新客户端数据
+    self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
+end
+
+
+function KSFUN_LEVEL:LoseExp(exp)
+    self.exp = math.max(self.exp - exp, 0)
     self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
 end
 

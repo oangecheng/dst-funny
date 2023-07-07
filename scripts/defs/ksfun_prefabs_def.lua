@@ -106,6 +106,13 @@ local foods = {
 }
 
 
+--- 任务失败惩罚生成的怪物
+local punishmonsters = {
+    ["S"] = { "mosquito", "frog", "hound", "firehound", "icehound", "spider", "spider_warrior", "spider_hider", "spider_spitter", "killerbee", "slurtle", "snurtle", "bat",  "bishop", "monkey"},
+    ["M"] = { "spat", "warg",},
+    ["L"] = { "deerclops", "spiderqueen", "dragonfly", "beequeen", "minotaur"}
+}
+
 
 
 
@@ -115,6 +122,7 @@ local prefabs = {
     fishes       = fishes,
     ponds        = ponds,
     foods        = foods,
+    punishmon    = punishmonsters
 }
 
 return prefabs

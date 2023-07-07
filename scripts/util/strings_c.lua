@@ -181,7 +181,12 @@ STRINGS.KSFUN_TASK_LIMIT      = "(限制: %s)"
 
 STRINGS.KSFUN_TASK_REWARD_POWER     = "%s完成了任务,获得了 [%s] 属性奖励" 
 STRINGS.KSFUN_TASK_REWARD_ITEM      = "%s完成了任务,获得了 [%s]x%s"
+
 STRINGS.KSFUN_TASK_REWARD_POWER_EXP = "[%s] 经验 +%s"
 STRINGS.KSFUN_TASK_REWARD_POWER_LV  = "[%s] 等级 +%s"
 STRINGS.KSFUN_TASK_REWARD_ITEM_2    = "任务成功, 获得奖励 %s"
 
+STRINGS.KSFUN_TASK_PUNISH_NONE      = "任务失败, 不过太走运了!"
+STRINGS.KSFUN_TASK_PUNISH_POWER_LV  = "任务失败, %s等级%s"
+STRINGS.KSFUN_TASK_PUNISH_POWER_EXP = "任务失败, %s经验%s"
+STRINGS.KSFUN_TASK_PUNISH_MONSTER   = "任务失败, 接受怪物们的制裁吧!"

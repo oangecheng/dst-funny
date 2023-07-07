@@ -44,6 +44,12 @@ GLOBAL.KsFunShowNotice = function(msg)
 end
 
 
+GLOBAL.KsFunShowTip = function(player, msg)
+    if player.components.talker and msg then
+        player.components.talker:Say(msg)
+    end
+end
+
 
 --- 角色升级时提示一下
 GLOBAL.KsFunSayPowerNotice = function(doer, powerprefab)
@@ -257,6 +263,25 @@ GLOBAL.KsFunCanHit = function(isplayer, defaultratio)
     return math.random(100) < r * 100
 end
 
+
+
+--- 在玩家周围生成带有敌意的怪物
+GLOBAL.KsFunSpawnHostileMonster = function(player, monstername, num)
+    local count = num and num or 1
+    for i=1, count do
+        local mon = SpawnPrefab(monstername)
+        if mon then
+            local x,y,z = player:GetWorldPosition()
+            local r  = math.random(6)
+            local dx = math.random(r)
+            local dz = math.random(r)
+            mon.Transform:SetPosition(x+dx, 0, z+dz)
+            if mon.components.combat then
+                mon.components.combat:SuggestTarget(player)
+            end
+        end
+    end
+end
 
 
 GLOBAL.KsFunFormatTime  = KsFunFormatTime
