@@ -11,7 +11,8 @@ end)
 
 
 --- 击杀怪物会提升怪物等级
-function MONSTER:GainMonsterExp(prefab, exp)    
+function MONSTER:GainMonsterExp(prefab, e)    
+    local exp = math.floor(e + 0.5)
     local data = self.monsterdata[prefab] or {lv = 0, exp = 0}
     data.exp = data.exp + exp
     -- 计算可以升的级数

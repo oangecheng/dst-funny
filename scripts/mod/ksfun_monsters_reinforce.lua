@@ -3,13 +3,56 @@
 
 local NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
 
+
+local function getMonsterConfig(powerlimit, blacklist, whitelist)
+    return { powerlimit = powerlimit, blacklist = blacklist, whitelist = whitelist }
+end
+
+
 local monsters = {
+
+    ["butterfly"] = getMonsterConfig(1, nil, { NAMES.HEALTH }),
+
     -- 普通小怪
-    ["spider"]  = { exp = 2,   powerlimit = 5,  powerexclude = nil },
-    ["hound"]   = { exp = 5,   powerlimit = 5,  powerexclude = nil },
+    ["frog"]             = getMonsterConfig(5),
+    ["mosquito"]         = getMonsterConfig(5),
+    ["killerbee"]        = getMonsterConfig(5),
+    ["bee"]              = getMonsterConfig(5),
+    ["hound"]            = getMonsterConfig(5),
+    ["firehound"]        = getMonsterConfig(5),
+    ["icehound"]         = getMonsterConfig(5, { NAMES.ICE_EXPLOSION }),
+    ["spider"]           = getMonsterConfig(5),
+    ["spider_warrior"]   = getMonsterConfig(5), 
+    ["spider_hider"]     = getMonsterConfig(5),
+    ["spider_spitter"]   = getMonsterConfig(5),
+
+    -- 中大型怪物
+    ["spat"]             = getMonsterConfig(8),
+    ["warg"]             = getMonsterConfig(8),
+    ["beefalo"]          = getMonsterConfig(8),
+    ["koalefant_summer"] = getMonsterConfig(8),
+    ["koalefant_winter"] = getMonsterConfig(8),
+    ["tentacle"]         = getMonsterConfig(8, { NAMES.LOCOMOTOR }),  -- 触手移速没意义
+    ["knight"]           = getMonsterConfig(8),
+    ["bishop"]           = getMonsterConfig(8),
+    ["rook"]             = getMonsterConfig(8),
+    ["tallbird"]         = getMonsterConfig(8),
+    ["slurtle"]          = getMonsterConfig(8),
 
     -- boss
-    ["bearger"] = { exp = 100, powerlimit = 10, powerexclude = nil },
+    ["leif"]             = getMonsterConfig(10),
+    ["leif_sparse"]      = getMonsterConfig(10),
+    ["bearger"]          = getMonsterConfig(10),
+    ["spiderqueen"]      = getMonsterConfig(10),
+    ["malbatross"]       = getMonsterConfig(10), -- 邪天翁
+    ["minotaur"]         = getMonsterConfig(10), -- 远古守护者
+    ["antlion"]          = getMonsterConfig(10, { NAMES.LOCOMOTOR }), -- 蚁狮
+    ["dragonfly"]        = getMonsterConfig(10), -- 龙蝇
+    ["deerclops"]        = getMonsterConfig(10), -- 巨鹿
+    ["moose"]            = getMonsterConfig(10), -- 大鹅
+    ["toadstool"]        = getMonsterConfig(10, nil, { NAMES.LOCOMOTOR, NAMES.HEALTH, NAMES.ABSORB, NAMES.SANITY_AURA }), -- 蛤蟆
+    ["toadstool_dark"]   = getMonsterConfig(10, nil, { NAMES.LOCOMOTOR, NAMES.HEALTH, NAMES.ABSORB, NAMES.SANITY_AURA }), -- 悲惨蛤蟆
+    ["beequeen"]         = getMonsterConfig(10), -- 蜂后
 }
 
 
@@ -20,7 +63,7 @@ local function isHit(defaultratio)
 end
 
 
-local function reinforceMonster(inst, limit, exclude)
+local function reinforceMonster(inst, limit, blacklist, whitelist)
     local worldmonster = TheWorld.components.ksfun_world_monster
     local lv = worldmonster and worldmonster:GetMonsterLevel(inst.prefab)
     if lv and lv > 10 then
@@ -32,9 +75,13 @@ local function reinforceMonster(inst, limit, exclude)
         local num  = math.random(math.max(1, seed))
 
         local powernames = {}
-        for k,v in pairs(NAMES) do
+
+        -- 如果有白名单，用白名单数据
+        local illegnames = whitelist and whitelist or NAMES
+    
+        for k,v in pairs(illegnames) do
             -- 有些怪物不能加部分属性，比如克劳斯会有血量上限的变化
-            if exclude == nil or (not table.contains(exclude, v)) then
+            if blacklist == nil or (not table.contains(blacklist, v)) then
                 table.insert(powernames, v)
             end
         end
@@ -56,16 +103,19 @@ end
 
 --- 怪物死亡时，会获得经验来提升自己的世界等级
 local function onMonsterDeath(inst)
-    local exp = monsters[inst.prefab].exp
-    TheWorld.components.ksfun_world_monster:GainMonsterExp(inst.prefab, exp)
-    TheNet:Announce("怪物等级提升了！")
+    if table.containskey(inst.prefab) then
+        if inst.components.health then
+            local exp = inst.components.health.maxhealth * 0.2
+            TheWorld.components.ksfun_world_monster:GainMonsterExp(inst.prefab, exp)
+        end
+    end
 end
 
 
 for k,v in pairs(monsters) do
     AddPrefabPostInit(k, function(inst)
         inst:AddComponent("ksfun_power_system")
-        reinforceMonster(inst, v.powerlimit, v.powerexclude)
+        reinforceMonster(inst, v.powerlimit, v.blacklist, v.whitelist)
         inst:ListenForEvent("death", onMonsterDeath)
     end)
 end
