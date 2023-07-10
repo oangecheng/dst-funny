@@ -20,13 +20,18 @@ end
 
 
 function LUCKY:GetLucky()
+    return self.lucky
+end
+
+
+function LUCKY:GetDisplayLucky()
     local v = self.lucky * self.basemulti + self.multipliers:Get()
-    return math.floor(v + 0.5 )
+    return math.floor(v + 0.5)
 end
 
 
 function LUCKY:GetRatio()
-    return 0.01 * self:GetLucky()
+    return 0.01 * self:GetDisplayLucky()
 end
 
 

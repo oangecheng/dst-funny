@@ -21,24 +21,31 @@ end)
 
 --- 缓存用户的数据
 function KSFUN_WORLD_PLAYERS:CachePlayerStatus(player)
-    local data = self.playerdatas[player.userid] or {}
-    data.powers = player.components.ksfun_power_system:GetAllPowers()
-    for k,v in pairs(data.powers) do
-        v.components.ksfun_power:Detach()
+    if player.components.ksfun_power_system then
+        local data = self.playerdatas[player.userid] or {}
+        data.powers = player.components.ksfun_power_system:GetAllPowers()
+        -- 保存幸运值
+        data.lucky  = player.components.ksfun_lucky:GetLucky()
+        for k,v in pairs(data.powers) do
+            v.components.ksfun_power:Detach()
+        end
+        self.playerdatas[player.userid] = data
     end
-    self.playerdatas[player.userid] = data
 end
 
 
 --- 恢复用户的数据
 --- 换人可以保留属性
 function KSFUN_WORLD_PLAYERS:RecoverPlayerStatus(player)
-    local data = self.playerdatas[player.userid]
-    if data and data.powers then
-        for k,v in pairs(data.powers) do
-            player.components.ksfun_power_system:AddPower(k, v)
+    if player.components.ksfun_power_system then
+        local data = self.playerdatas[player.userid]
+        if data and data.powers then
+            for k,v in pairs(data.powers) do
+                player.components.ksfun_power_system:AddPower(k, v)
+            end
         end
-    end
+    end 
+    
 end
 
 
@@ -48,15 +55,17 @@ function KSFUN_WORLD_PLAYERS:OnSave()
     -- k用户id, v每个角色的数据
     local data = {}
     for k, v in pairs(self.playerdatas) do
-
+        local userdata = {}
+        userdata.lucky = v.lucky or 0
         if next(v.powers) then
             local powers = {}
             for k1, v1 in pairs(v.powers) do
                 local saved = v1:GetSaveRecord()
                 powers[k1] = saved
             end
-            data[k] = { powers = powers}
+            userdata.powers = powers
         end
+        data[k] = userdata
 
     end
     return data
@@ -68,6 +77,10 @@ function KSFUN_WORLD_PLAYERS:OnLoad(data)
     if data ~= nil and next(data) then
         -- 角色属性恢复
         for k, v in pairs(data) do
+            
+            local userdata = {}
+            userdata.lucky = data.lucky or 0
+
             if next(v.powers) then
                 local powers = {}
                 for k1, v1 in pairs(v.powers) do
@@ -76,8 +89,9 @@ function KSFUN_WORLD_PLAYERS:OnLoad(data)
                         powers[k1] = ent
                     end
                 end
-                self.playerdatas[v] = { powers = powers}
+                userdata.powers = powers
             end
+            self.playerdatas[k] = userdata
         end
     end
 end
