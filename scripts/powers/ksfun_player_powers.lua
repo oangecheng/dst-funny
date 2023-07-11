@@ -93,7 +93,9 @@ local health = {
     ondesc = getPowerDesc,
 
     onsave = function(inst, data)
-        data.percent = inst.target.components.health:GetPercent()
+        if inst.target then
+            data.percent = inst.target.components.health:GetPercent()
+        end
     end,
 
     onload = function(inst, data)
@@ -216,7 +218,9 @@ local hunger = {
     ondesc = getPowerDesc,
 
     onsave = function(inst, data)
-        data.percent = inst.target.components.hunger:GetPercent()
+        if inst.target then
+            data.percent = inst.target.components.hunger:GetPercent()
+        end
     end,
 
     onload = function(inst, data)
@@ -329,7 +333,9 @@ local sanity = {
     ondesc = getPowerDesc,
 
     onsave = function(inst, data)
-        data.percent = inst.target.components.sanity:GetPercent()
+        if inst.target then
+            data.percent = inst.target.components.sanity:GetPercent()
+        end
     end,
 
     onload = function(inst, data)

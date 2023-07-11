@@ -235,23 +235,22 @@ GLOBAL.KsFunGetCanRewardPower = function(player)
     for k, v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
 
         -- 排除黑名单属性，避免异常
-        if blackpowers ~= nil and table.contains(blackpowers, v) then
-            break
-        end
-
-        if KSFUN_TUNING.MODE == 0 then
-            -- 未拥有该属性
-            if player.components.ksfun_power_system:GetPower(v) == nil then
-                table.insert(temp, v)
-            end
-        else
-            -- 没有人获得过属性
-            local worldcount = worlddata:GetWorldPowerCount(v)
-            KsFunLog("KsFunGetCanRewardPower", worldcount)
-            if worldcount < 1 then
-                table.insert(temp, v)
+        if not (blackpowers ~= nil and table.contains(blackpowers, v)) then
+            if KSFUN_TUNING.MODE == 0 then
+                -- 未拥有该属性
+                if player.components.ksfun_power_system:GetPower(v) == nil then
+                    table.insert(temp, v)
+                end
+            else
+                -- 没有人获得过属性
+                local worldcount = worlddata:GetWorldPowerCount(v)
+                KsFunLog("KsFunGetCanRewardPower", worldcount)
+                if worldcount < 1 then
+                    table.insert(temp, v)
+                end
             end
         end
+       
     end
     
     if #temp > 0 then

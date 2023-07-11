@@ -103,6 +103,11 @@ local function testFunc(inst, data)
     for k,v in pairs(KSFUN_TUNING.NEGA_POWER_NAMES) do
         local ent = inst.components.ksfun_power_system:AddPower(v)
     end
+
+    for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
+        local ent = inst.components.ksfun_power_system:AddPower(v)
+    end
+
     local ent = SpawnPrefab("spear")
     ent.components.ksfun_item_forever:Enable()
     ent.components.ksfun_breakable:Enable()

@@ -6,7 +6,7 @@ KSFUN_TUNING =  {
     DIFFCULTY = 0,
     MODE = 1,
 
-    DEBUG = true,
+    DEBUG = false,
     LOG_TAG = "ksfun_log: ",  
 
     -- 角色属性

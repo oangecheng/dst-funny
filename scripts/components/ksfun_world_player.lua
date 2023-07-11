@@ -37,11 +37,16 @@ end
 --- 恢复用户的数据
 --- 换人可以保留属性
 function KSFUN_WORLD_PLAYERS:RecoverPlayerStatus(player)
+    local config  = require("defs/ksfun_players_def").playerconfig(player)
+    local pblacks = config and config.pblacks or nil
     if player.components.ksfun_power_system then
         local data = self.playerdatas[player.userid]
         if data and data.powers then
             for k,v in pairs(data.powers) do
-                player.components.ksfun_power_system:AddPower(k, v)
+                -- 黑名单不添加，换个角色会再加回来
+                if not (pblacks ~= nil and table.contains(pblacks, k)) then
+                    player.components.ksfun_power_system:AddPower(k, v)
+                end 
             end
         end
     end 

@@ -2,7 +2,7 @@
 
 
 local NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
-local monsters = require("def/ksfun_monsters_def").reinforceMonster()
+local monsters = require("defs/ksfun_monsters_def").reinforceMonster()
 
 
 --- 计算附加属性概率
@@ -52,11 +52,9 @@ end
 
 --- 怪物死亡时，会获得经验来提升自己的世界等级
 local function onMonsterDeath(inst)
-    if table.containskey(inst.prefab) then
-        if inst.components.health then
-            local exp = inst.components.health.maxhealth * 0.2
-            TheWorld.components.ksfun_world_monster:GainMonsterExp(inst.prefab, exp)
-        end
+    if inst.components.health then
+        local exp = inst.components.health.maxhealth * 0.2
+        TheWorld.components.ksfun_world_monster:GainMonsterExp(inst.prefab, exp)
     end
 end
 
