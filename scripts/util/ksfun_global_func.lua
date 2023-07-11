@@ -227,9 +227,18 @@ end
 --- @param player 玩家
 GLOBAL.KsFunGetCanRewardPower = function(player)
     local temp = {}
-    -- 随机排序
+
+    local playerconfig = require("defs/ksfun_players_def").playerconfig(player)
+    local blackpowers  = playerconfig and playerconfig.pblacks or nil
+
     local worlddata = TheWorld.components.ksfun_world_data
     for k, v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
+
+        -- 排除黑名单属性，避免异常
+        if blackpowers ~= nil and table.contains(blackpowers, v) then
+            break
+        end
+
         if KSFUN_TUNING.MODE == 0 then
             -- 未拥有该属性
             if player.components.ksfun_power_system:GetPower(v) == nil then

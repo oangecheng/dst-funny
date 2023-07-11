@@ -1,9 +1,13 @@
 local EVENTS = KSFUN_TUNING.EVENTS
-local ITEMS_DEF = require "defs/ksfun_items_def"
+local ITEMS_DEF  = require "defs/ksfun_items_def"
+local playersdef = require "defs/ksfun_players_def" 
 
 
-local function initLucky(inst)
+local function initLucky(inst, config)
     inst:AddComponent("ksfun_lucky")
+    if config.lucky then
+        inst.components.ksfun_lucky:SetLucky(config.lucky)
+    end
 end
 
 
@@ -114,13 +118,16 @@ end
 
 
 AddPlayerPostInit(function(player)
-    initLucky(player)
-    initPowerSystem(player)
-    initPlayerProperty(player)
-    initTaskSystem(player)
-    --- 测试代码
-    if KSFUN_TUNING.DEBUG then
-        player:ListenForEvent("oneat", testFunc)
+    --- 只支持原生角色
+    local config = playersdef.playerconfig(player)
+    if config ~= nil then
+        initLucky(player, config)
+        initPowerSystem(player)
+        initPlayerProperty(player)
+        initTaskSystem(player)
+        --- 测试代码
+        if KSFUN_TUNING.DEBUG then
+            player:ListenForEvent("oneat", testFunc)
+        end
     end
-
 end)

@@ -14,7 +14,7 @@ function LUCKY:DoDelta(delta)
 end
 
 
-function LUCKY:Set(v)
+function LUCKY:SetLucky(v)
     self.lucky = v
 end
 
