@@ -5,7 +5,7 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 
 --------------------------------------------- 击杀任务定义---------------------------------------------------------------------
 local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
-local MONSTER = require "tasks/defs/ksfun_monsters_def"
+local MONSTER = require "defs/ksfun_monsters_def"
 
 local function default(kill_type)
 
@@ -14,7 +14,7 @@ local function default(kill_type)
         return num > 1 and lv + 1 or lv
     end
 
-    local victim, lv, num = MONSTER.randomMonster()
+    local victim, lv, num = MONSTER.randomTaskMonster()
     return {
         type = kill_type,
         duration = 0,

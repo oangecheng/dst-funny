@@ -2,58 +2,7 @@
 
 
 local NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
-
-
-local function getMonsterConfig(powerlimit, blacklist, whitelist)
-    return { powerlimit = powerlimit, blacklist = blacklist, whitelist = whitelist }
-end
-
-
-local monsters = {
-
-    ["butterfly"] = getMonsterConfig(1, nil, { NAMES.HEALTH }),
-
-    -- 普通小怪
-    ["frog"]             = getMonsterConfig(5),
-    ["mosquito"]         = getMonsterConfig(5),
-    ["killerbee"]        = getMonsterConfig(5),
-    ["bee"]              = getMonsterConfig(5),
-    ["hound"]            = getMonsterConfig(5),
-    ["firehound"]        = getMonsterConfig(5),
-    ["icehound"]         = getMonsterConfig(5, { NAMES.ICE_EXPLOSION }),
-    ["spider"]           = getMonsterConfig(5),
-    ["spider_warrior"]   = getMonsterConfig(5), 
-    ["spider_hider"]     = getMonsterConfig(5),
-    ["spider_spitter"]   = getMonsterConfig(5),
-
-    -- 中大型怪物
-    ["spat"]             = getMonsterConfig(8),
-    ["warg"]             = getMonsterConfig(8),
-    ["beefalo"]          = getMonsterConfig(8),
-    ["koalefant_summer"] = getMonsterConfig(8),
-    ["koalefant_winter"] = getMonsterConfig(8),
-    ["tentacle"]         = getMonsterConfig(8, { NAMES.LOCOMOTOR }),  -- 触手移速没意义
-    ["knight"]           = getMonsterConfig(8),
-    ["bishop"]           = getMonsterConfig(8),
-    ["rook"]             = getMonsterConfig(8),
-    ["tallbird"]         = getMonsterConfig(8),
-    ["slurtle"]          = getMonsterConfig(8),
-
-    -- boss
-    ["leif"]             = getMonsterConfig(10),
-    ["leif_sparse"]      = getMonsterConfig(10),
-    ["bearger"]          = getMonsterConfig(10),
-    ["spiderqueen"]      = getMonsterConfig(10),
-    ["malbatross"]       = getMonsterConfig(10), -- 邪天翁
-    ["minotaur"]         = getMonsterConfig(10), -- 远古守护者
-    ["antlion"]          = getMonsterConfig(10, { NAMES.LOCOMOTOR }), -- 蚁狮
-    ["dragonfly"]        = getMonsterConfig(10), -- 龙蝇
-    ["deerclops"]        = getMonsterConfig(10), -- 巨鹿
-    ["moose"]            = getMonsterConfig(10), -- 大鹅
-    ["toadstool"]        = getMonsterConfig(10, nil, { NAMES.LOCOMOTOR, NAMES.HEALTH, NAMES.ABSORB, NAMES.SANITY_AURA }), -- 蛤蟆
-    ["toadstool_dark"]   = getMonsterConfig(10, nil, { NAMES.LOCOMOTOR, NAMES.HEALTH, NAMES.ABSORB, NAMES.SANITY_AURA }), -- 悲惨蛤蟆
-    ["beequeen"]         = getMonsterConfig(10), -- 蜂后
-}
+local monsters = require("def/ksfun_monsters_def").reinforceMonster()
 
 
 --- 计算附加属性概率
@@ -115,7 +64,7 @@ end
 for k,v in pairs(monsters) do
     AddPrefabPostInit(k, function(inst)
         inst:AddComponent("ksfun_power_system")
-        reinforceMonster(inst, v.powerlimit, v.blacklist, v.whitelist)
+        reinforceMonster(inst, v.pnum, v.pblacks, v.pwhites)
         inst:ListenForEvent("death", onMonsterDeath)
     end)
 end

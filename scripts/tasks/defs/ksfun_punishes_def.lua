@@ -1,6 +1,7 @@
 
 local TYPES = KSFUN_PUNISHES
-local prefabsdef = require("defs/ksfun_prefabs_def")
+local prefabsdef  = require("defs/ksfun_prefabs_def")
+local monstersdef = require("defs/ksfun_monsters_def") 
 
 
 local function powerLvLose(player, tasklv)
@@ -10,10 +11,8 @@ local function powerLvLose(player, tasklv)
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
             local v = tasklv * 0.5
-            KsFunLog("powerLvLose origin", v)
             if player.components.ksfun_lucky then
                v = v - 2 * player.components.ksfun_lucky:GetRatio()
-               KsFunLog("powerLvLose change", v)
             end
             -- 四舍五入
             local delta = math.max(1, math.floor(v + 0.5))
@@ -38,10 +37,8 @@ local function powerExpLose(player, tasklv)
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
             local v = math.random(tasklv) * 10
-            KsFunLog("powerExpLose origin", v)
             if player.components.ksfun_lucky then
                 v = v - 50 * player.components.ksfun_lucky:GetRatio()
-                KsFunLog("powerExpLose change", v)
             end
 
             local delta = math.max(10, math.floor(v + 0.5))
@@ -62,28 +59,31 @@ end
 
 local function punishMonster(player, tasklv)
     local r = math.random()
-    local list = prefabsdef.punishmon
+    local list = monstersdef.punishMonsters
     local monsters = nil
     local num = 1
 
-    if r < 0.1 then
-        monsters = list["L"]
-    elseif r < 0.3 then
-        monsters = list["M"]
-    else
+    if r < 0.1 then monsters = list["L"]
+    elseif r < 0.3 then monsters = list["M"]
+    else 
         monsters = list["S"]
-        num = math.random(tasklv) + 3
+        num = math.random(tasklv)
     end
 
     -- 运气差的时候，可能刷出两倍的怪，boss也可能是两个
-    local lucky = 0
+    local luckyratio = 0
     if player.components.ksfun_lucky then
-        lucky = player.components.ksfun_lucky:GetRatio()
+        luckyratio = player.components.ksfun_lucky:GetRatio()
     end
-    KsFunLog("punishMonster origin", lucky, num)
-    num = math.floor(num * (1 - lucky) + 0.5)
-    KsFunLog("punishMonster change", lucky, num)
-    num = math.max(1, num)
+
+    -- 脸黑出双倍的怪物，幸运值20以上就不会出
+    -- 幸运值负值越大越容易出双倍怪
+    local multi = 1
+    if math.random() > (0.8 + luckyratio) then
+        multi = 2
+    end
+
+    num = num * multi
 
     local selected = {}
     for i=1, num do
