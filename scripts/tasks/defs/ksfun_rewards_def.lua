@@ -8,77 +8,23 @@ local ksfun_rewards = {}
 
 
 --------------------------------------------- 普通物品相关奖励 ---------------------------------------------------------------------
-local item1 = {
-    "goldnugget", -- 金块
-    "charcoal", -- 木炭
-    "flint", -- 燧石
-    "cutgrass",  -- 草
-    "marble", -- 大理石
-    "nitre", -- 硝石
+local items = {
+    [1] = { "cutgrass", "twigs", "log", "rocks", "flint", "charcoal", "poop", "cutreeds", "houndstooth", "spidergland", "silk", "stinger", "seeds"},
+    [2] = { "goldnugget", "saltrock", "livinglog", "marble", "nitre", "boneshard", "papyrus", "dug_grass", "dug_berrybush", "dug_berrybush2", "dug_berrybush_juicy"},
+    -- 活木/噩梦燃料/蜡纸/猪皮/红宝石/蓝宝石
+    [3] = { "livinglog", "nightmarefuel", "waxpaper", "pigskin", "redgem", "bluegem", },
+    -- 夏日象鼻/冬日象鼻/钢丝绒/海象牙/紫宝石/月石
+    [4] = { "trunk_summer", "trunk_winter", "steelwool", "walrus_tusk", "purplegem", "moonrocknugget", },
+    -- 绿宝石/橙宝石/黄宝石/砂石/齿轮/化石碎片
+    [5] = { "greengem", "orangegem", "yellowgem", "townportaltalisman", "gears", "fossil_piece", },
+    -- 犀牛角/蛤蟆皮/眼球/鳞片/暗影之心/铥矿棒/绿魔杖/橙魔杖/黄魔杖
+    [6] = { "minotaurhorn", "shroom_skin", "deerclops_eyeball", "dragon_scales", "shadowheart", "ruins_bat", "greenstaff", "orangestaff", "yellowstaff"},
+    -- 彩虹宝石/月杖
+    [7] = {"opalpreciousgem", "opalstaff", },
 }
-
-
-local item2 = {
-    "livinglog", -- 活木
-    "nightmarefuel", -- 噩梦燃料
-    "waxpaper", -- 蜡纸
-    "pigskin",  -- 猪皮
-    "redgem", -- 红宝石
-    "bluegem", -- 绿宝石
-
-}
-
-
-local item3 = {
-    "trunk_summer", -- 夏日象鼻
-    "trunk_winter", -- 冬日象鼻
-    "steelwool", -- 钢丝绒
-    "walrus_tusk", -- 海象牙
-    "purplegem", -- 紫宝石
-    "moonrocknugget", -- 月石
-}
-
-
-local item4 = {
-    "greengem",  -- 绿宝石
-    "orangegem", -- 橙宝石
-    "yellowgem", -- 黄宝石
-    "townportaltalisman", -- 砂石
-    "gears", -- 齿轮
-    "fossil_piece", -- 化石碎片
-}
-
-
-local item5 = {
-    "minotaurhorn",
-    "shroom_skin",
-    "deerclops_eyeball",
-    "dragon_scales",
-    "shadowheart",
-    "ruins_bat", -- 铥矿棒
-    "greenstaff", -- 绿法杖
-    "orangestaff", -- 橙法杖
-    "yellowstaff", -- 星杖
-}
-
-
--- 等级6的物品中，包含可升级的物品
-local item6 = {
-  "opalpreciousgem", -- 彩虹宝石
-  "opalstaff", -- 月杖
-}
-
-
-local items = {}
-items[1] = item1
-items[2] = item2
-items[3] = item3
-items[4] = item4
-items[5] = item5
-items[6] = item6
 
 --- 普通物品的最大等级
-local item_max_lv = 6
+local item_max_lv = 7
 
 
 --- 随机生成物品数量
@@ -229,7 +175,7 @@ local function calcRewardRatio(player, tasklv)
     -- 附加幸运值，幸运值倍率有可能小于0
     local lucky = player.components.ksfun_lucky
     if lucky then
-        v = v * (1 + lucky:GetRatio())
+        v = v * (1 + math.min(lucky:GetRatio(), 1))
     end
 
     return v
@@ -238,13 +184,15 @@ end
 
 
 --- 任务等级越高，越容易获得特殊奖励
---- 任务等级最高基准为10，也就是高级任务有25%概率获得特殊奖励
+--- 任务等级最高基准为10，也就是高级任务有50%概率获得特殊奖励
+--- 如果幸运值拉满，100%获得特殊奖励
 local function randomReward(player, tasklv)
     local r = calcRewardRatio(player, tasklv)
-    local v = KSFUN_TUNING.DEBUG and 1 or r/40
+    local v = KSFUN_TUNING.DEBUG and 1 or r * 0.05
 
     local reward = nil
     if math.random() < v then
+
         local rewardpower = math.random() < 0.5
         --- 50%概率分配属性相关奖励
         if rewardpower then
