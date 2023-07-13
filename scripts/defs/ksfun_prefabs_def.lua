@@ -52,41 +52,7 @@ local extra = {
 local pickabledefs = MergeMaps(taskpicklist, extra)
 
 
-
-
-local fishes = {
-    ["oceanfish_small_1_inv"]  = 1,
-    ["oceanfish_small_2_inv"]  = 1,
-    ["oceanfish_small_3_inv"]  = 1,
-    ["oceanfish_small_4_inv"]  = 1,
-    ["oceanfish_small_5_inv"]  = 1,
-    ["oceanfish_small_6_inv"]  = 1,
-    ["oceanfish_small_7_inv"]  = 3,
-    ["oceanfish_small_8_inv"]  = 3,
-    ["oceanfish_small_9_inv"]  = 3,
-
-    ["oceanfish_medium_1_inv"] = 2,
-    ["oceanfish_medium_2_inv"] = 2,
-    ["oceanfish_medium_3_inv"] = 2,
-    ["oceanfish_medium_4_inv"] = 2,
-    ["oceanfish_medium_5_inv"] = 2,
-    ["oceanfish_medium_6_inv"] = 3,
-    ["oceanfish_medium_7_inv"] = 3,
-    ["oceanfish_medium_8_inv"] = 3,
-
-    ["wobster_moonglass"]      = 3,
-    ["wobster_sheller"]        = 3,
-    ["fish"]                   = 1,
-    ["eel"]                    = 2,
-}
-
-
-local ponds = {
-    "pond", "pond_cave", "pond_mos", "oasislake"
-}
-
-
-
+--- 食物定义
 local foods = {
     ["turkeydinner"]  = 1,  -- 火鸡正餐
     ["unagi"]         = 1,  -- 鳗鱼料理
@@ -106,11 +72,90 @@ local foods = {
 }
 
 
---- 任务失败惩罚生成的怪物
-local punishmonsters = {
-    ["S"] = { "mosquito", "frog", "hound", "firehound", "icehound", "spider", "spider_warrior", "spider_hider", "spider_spitter", "killerbee", "slurtle", "snurtle", "bat",  "bishop", "monkey"},
-    ["M"] = { "spat", "warg",},
-    ["L"] = { "deerclops", "spiderqueen", "dragonfly", "beequeen", "minotaur"}
+
+
+--- 物品定义
+local itemsdef = {
+    ["cutgrass"]            = { lv = 1, rcnt = 40 },     -- 草
+    ["twigs"]               = { lv = 1, rcnt = 40 },     -- 树枝
+    ["rocks"]               = { lv = 1, rcnt = 40 },     -- 石头
+    ["flint"]               = { lv = 1, rcnt = 20 },     -- 燧石
+    ["log"]                 = { lv = 1, rcnt = 20 },     -- 木头
+    ["poop"]                = { lv = 1, rcnt = 20 },     -- 便便
+    ["charcoal"]            = { lv = 1, rcnt = 20 },     -- 木炭
+    ["cutreeds"]            = { lv = 1, rcnt = 20 },     -- 芦苇
+    ["spidergland"]         = { lv = 1, rcnt = 10 },     -- 蜘蛛胰腺
+    ["silk"]                = { lv = 1, rcnt = 10 },     -- 蜘蛛丝
+    ["houndstooth"]         = { lv = 1, rcnt = 10 },     -- 狗牙
+    ["stinger"]             = { lv = 1, rcnt = 10 },     -- 蜂刺
+    ["beefalowool"]         = { lv = 1, rcnt = 10 },     -- 牛毛  
+
+
+    ["goldnugget"]          = { lv = 2, rcnt = 10 },     -- 金子
+    ["saltrock"]            = { lv = 2, rcnt = 10 },     -- 盐晶
+    ["livinglog"]           = { lv = 2, rcnt = 5  },     -- 活木
+    ["marble"]              = { lv = 2, rcnt = 5  },     -- 大理石 
+    ["nitre"]               = { lv = 2, rcnt = 10 },     -- 硝石
+    ["boneshard"]           = { lv = 2, rcnt = 10 },     -- 骨片 
+    ["dug_grass"]           = { lv = 2, rcnt = 10 },     -- 草丛，可种植的
+    ["dug_sapling"]         = { lv = 2, rcnt = 10 },     -- 树苗
+    ["dug_berrybush"]       = { lv = 2, rcnt = 6  },     -- 浆果丛
+    ["dug_berrybush2"]      = { lv = 2, rcnt = 6  },     -- 浆果丛2
+    ["dug_berrybush_juicy"] = { lv = 2, rcnt = 3  },     -- 蜜汁浆果丛
+    ["bullkelp_root"]       = { lv = 2, rcnt = 5  },     -- 海带茎
+    ["waterplant_planter"]  = { lv = 2, rcnt = 3  },     -- 海芽插穗
+
+
+    ["waxpaper"]            = { lv = 3, rcnt = 3  },     -- 蜡纸
+    ["livinglog"]           = { lv = 3, rcnt = 5  },     -- 活木
+    ["nightmarefuel"]       = { lv = 3, rcnt = 5  },     -- 噩梦燃料
+    ["pigskin"]             = { lv = 3, rcnt = 10 },     -- 猪皮
+    ["moonrocknugget"]      = { lv = 3, rcnt = 8  },     -- 月石
+    ["redgem"]              = { lv = 3, rcnt = 3  },     -- 红宝石
+    ["bluegem"]             = { lv = 3, rcnt = 3  },     -- 蓝宝石
+    ["lightninggoathorn"]   = { lv = 3, rcnt = 2  },     -- 电羊角
+    ["thulecite"]           = { lv = 3, rcnt = 2  },     -- 铥矿
+    ["honeycomb"]           = { lv = 3, rcnt = 2  },     -- 蜂巢
+
+
+    ["trunk_summer"]        = { lv = 4, rcnt = 2  },     -- 夏日象鼻 
+    ["trunk_winter"]        = { lv = 4, rcnt = 2  },     -- 冬日象鼻
+    ["steelwool"]           = { lv = 4, rcnt = 2  },     -- 钢丝绒 
+    ["walrus_tusk"]         = { lv = 4, rcnt = 2  },     -- 海象牙 
+    ["purplegem"]           = { lv = 4, rcnt = 3  },     -- 紫宝石
+    ["fossil_piece"]        = { lv = 4, rcnt = 3  },     -- 化石碎片
+    ["gears"]               = { lv = 4, rcnt = 2  },     -- 齿轮
+    ["slurtlehat"]          = { lv = 4, rcnt = 2  },     -- 蜗牛头盔
+
+
+    ["greengem"]            = { lv = 5, rcnt = 2  },     -- 绿宝石
+    ["orangegem"]           = { lv = 5, rcnt = 2  },     -- 橙宝石 
+    ["yellowgem"]           = { lv = 5, rcnt = 2  },     -- 黄宝石
+    ["greenstaff"]          = { lv = 5, rcnt = 1  },     -- 绿魔杖 
+    ["orangestaff"]         = { lv = 5, rcnt = 1  },     -- 橙魔杖 
+    ["yellowstaff"]         = { lv = 5, rcnt = 1  },     -- 黄魔杖
+    ["orangeamulet"]        = { lv = 5, rcnt = 1  },     -- 橙护符
+    ["yellowamulet"]        = { lv = 5, rcnt = 1  },     -- 黄护符 
+    ["greenamulet"]         = { lv = 5, rcnt = 1  },     -- 绿护符 
+    ["nightsword"]          = { lv = 5, rcnt = 1  },     -- 暗影剑
+    ["armor_sanity"]        = { lv = 5, rcnt = 1  },     -- 暗影甲
+
+ 
+    ["eyebrellahat"]        = { lv = 6, rcnt = 1  },     -- 眼球伞
+    ["minotaurhorn"]        = { lv = 6, rcnt = 2  },     -- 犀牛角 
+    ["shroom_skin"]         = { lv = 6, rcnt = 2  },     -- 蛤蟆皮 
+    ["deerclops_eyeball"]   = { lv = 6, rcnt = 2  },     -- 眼球 
+    ["dragon_scales"]       = { lv = 6, rcnt = 2  },     -- 龙蝇皮 
+    ["shadowheart"]         = { lv = 6, rcnt = 2  },     -- 暗影之心 
+    ["ruins_bat"]           = { lv = 6, rcnt = 2  },     -- 铥矿棒
+    ["ruinshat"]            = { lv = 6, rcnt = 2  },     -- 铥矿帽
+    ["armorruins"]          = { lv = 6, rcnt = 2  },     -- 铥矿甲
+    ["hivehat"]             = { lv = 6, rcnt = 1  },     -- 峰王帽 
+    ["townportaltalisman"]  = { lv = 6, rcnt = 10 },     -- 沙之石
+
+
+    ["opalpreciousgem"]     = { lv = 7, rcnt = 1  },     -- 彩虹宝石 
+    ["opalstaff"]           = { lv = 7, rcnt = 1  },     -- 月杖 
 }
 
 
@@ -119,10 +164,21 @@ local punishmonsters = {
 local prefabs = {
     pickable     = pickabledefs,
     taskpickable = taskpicklist,
-    fishes       = fishes,
-    ponds        = ponds,
     foods        = foods,
-    punishmon    = punishmonsters
 }
+
+
+prefabs.getItemsByLv = function(lv)
+    local list = {}
+    for k,v in pairs(itemsdef) do
+        if v.lv == lv then
+            table.insert(list, k)
+        end
+    end
+    local name = GetRandomItem(list)
+    local rcnt = itemsdef[name].rcnt
+    return name, rcnt
+end
+
 
 return prefabs

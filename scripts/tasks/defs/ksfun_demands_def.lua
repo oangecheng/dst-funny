@@ -132,17 +132,52 @@ local pick = {
 
 
 --------------------------------------------- 钓鱼任务定义---------------------------------------------------------------------
-local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
-local fishes     = prefabsdef.fishes
+-- 鱼类定义
+local fishes = {
+    ["oceanfish_small_1_inv"]  = 1,
+    ["oceanfish_small_2_inv"]  = 1,
+    ["oceanfish_small_3_inv"]  = 1,
+    ["oceanfish_small_4_inv"]  = 1,
+    ["oceanfish_small_5_inv"]  = 1,
+    ["oceanfish_small_6_inv"]  = 1,
+    ["oceanfish_small_7_inv"]  = 3,
+    ["oceanfish_small_8_inv"]  = 3,
+    ["oceanfish_small_9_inv"]  = 3,
 
+    ["oceanfish_medium_1_inv"] = 2,
+    ["oceanfish_medium_2_inv"] = 2,
+    ["oceanfish_medium_3_inv"] = 2,
+    ["oceanfish_medium_4_inv"] = 2,
+    ["oceanfish_medium_5_inv"] = 2,
+    ["oceanfish_medium_6_inv"] = 3,
+    ["oceanfish_medium_7_inv"] = 3,
+    ["oceanfish_medium_8_inv"] = 3,
+
+    ["wobster_moonglass"]      = 3,
+    ["wobster_sheller"]        = 3,
+    ["fish"]                   = 1,
+    ["eel"]                    = 2,
+}
+-- 池塘定义
+local ponds = {
+    "pond", 
+    "pond_cave", 
+    "pond_mos", 
+    "oasislake"
+}
+
+
+local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
+
+--- 计算鱼的数量
 local function calcFishNum()
-    local n = math.random(8) + 2 
+    local n = math.random(3)
     return KSFUN_TUNING.DEBUG and 1 or n
 end
 
 --- 计算钓鱼任务难度
 local function calcFishDifficulty(fishtype, lv, num)
-    local base = lv + (num > 5 and 2 or 1)
+    local base = lv + (num > 1 and 2 or 1)
     if fishtype == FISH_TYPES.TIME_LIMIT then
         return base + 1
     elseif fishtype == FISH_TYPES.POND_LIMIT then
@@ -169,7 +204,7 @@ local function generateFishDemand(fishtype)
         fish = GetRandomItem(table.getkeys(fishes))
         lv   = fishes[fish]
     elseif fishtype == FISH_TYPES.POND_LIMIT then
-        pond = GetRandomItem(prefabsdef.ponds)
+        pond = GetRandomItem(ponds)
     end
 
     local diffculty = calcFishDifficulty(fishtype, lv, num)

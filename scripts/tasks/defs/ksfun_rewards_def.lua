@@ -8,43 +8,42 @@ local ksfun_rewards = {}
 
 
 --------------------------------------------- 普通物品相关奖励 ---------------------------------------------------------------------
-local items = {
-    [1] = { "cutgrass", "twigs", "log", "rocks", "flint", "charcoal", "poop", "cutreeds", "houndstooth", "spidergland", "silk", "stinger", "seeds"},
-    [2] = { "goldnugget", "saltrock", "livinglog", "marble", "nitre", "boneshard", "papyrus", "dug_grass", "dug_berrybush", "dug_berrybush2", "dug_berrybush_juicy"},
-    -- 活木/噩梦燃料/蜡纸/猪皮/红宝石/蓝宝石
-    [3] = { "livinglog", "nightmarefuel", "waxpaper", "pigskin", "redgem", "bluegem", },
-    -- 夏日象鼻/冬日象鼻/钢丝绒/海象牙/紫宝石/月石
-    [4] = { "trunk_summer", "trunk_winter", "steelwool", "walrus_tusk", "purplegem", "moonrocknugget", },
-    -- 绿宝石/橙宝石/黄宝石/砂石/齿轮/化石碎片
-    [5] = { "greengem", "orangegem", "yellowgem", "townportaltalisman", "gears", "fossil_piece", },
-    -- 犀牛角/蛤蟆皮/眼球/鳞片/暗影之心/铥矿棒/绿魔杖/橙魔杖/黄魔杖
-    [6] = { "minotaurhorn", "shroom_skin", "deerclops_eyeball", "dragon_scales", "shadowheart", "ruins_bat", "greenstaff", "orangestaff", "yellowstaff"},
-    -- 彩虹宝石/月杖
-    [7] = {"opalpreciousgem", "opalstaff", },
-}
+local prefabsdef = require("defs/ksfun_prefabs_def")
 
 --- 普通物品的最大等级
-local item_max_lv = 7
-
-
---- 随机生成物品数量
---- 如果任务等级比奖励等级高，奖励数量会变多
-local function randomItemNum(lv, itemlv)
-    local delta = math.max(1, lv - itemlv)
-    return math.random(2^delta)
-end
+local maxitemlv = 7
 
 
 --- 随机生成一些物品
---- @param tasklv 任务难度等级
+--- 任务等级越高，奖励越丰富，同时附加幸运值策略
+--- @param  tasklv 任务难度等级
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, tasklv)
-    local lv = math.min(tasklv, item_max_lv)
-    local item_lv = lv
+    -- 计算奖励物品等级
+    local lv = tasklv
+    local r  = math.random()
 
-    local list = items[item_lv] 
-    local name = GetRandomItem(list)
-    local num  = randomItemNum(tasklv, item_lv)
+    local luckyratio = 0
+    if player.components.ksfun_lucky then
+        luckyratio = player.components.ksfun_lucky:GetRatio() 
+    end
+
+    -- 默认10%概率，附加幸运等级
+    r = r - luckyratio * 0.1
+    if r < 0.1 then
+        lv = lv + 2
+    elseif r < 0.3 then
+        lv = lv + 1
+    end
+    lv = math.max(maxitemlv, lv)
+
+    local name,num = prefabsdef.getItemsByLv(lv)
+    --- 数量有幸运值加成
+    --- 不走运时收益减半，至少保留一个物品的奖励
+    local luckymulti = math.max(0.5, 1 + luckyratio)
+    local delta = math.max(0, tasklv - maxitemlv)
+    num = math.max(1, num * luckymulti + delta)
+
     return {
         type = REWARD_TYPES.ITEM,
         data = {
@@ -63,17 +62,16 @@ local ksfun_items = require("defs/ksfun_items_def")
 
 --- 随机获取一个特殊物品奖励
 local function randomKsFunItem(player, task_lv)
-    local itemtype = GetRandomItem(KSFUN_ITEM_TYPES)
-
+    local itemtype = math.random(4)
     local list = nil
     local num = 1
-    if itemtype == KSFUN_ITEM_TYPES.WEAPON then
+    if itemtype == 1 then
         list =  ksfun_items.weapon
-    elseif itemtype == KSFUN_ITEM_TYPES.HAT then
+    elseif itemtype == 2 then
         list = ksfun_items.hat
-    elseif itemtype == KSFUN_ITEM_TYPES.ARMOR then
+    elseif itemtype == 3 then
         list = ksfun_items.armor
-    elseif itemtype == KSFUN_ITEM_TYPES.GEM then
+    elseif itemtype == 4 then
         list = ksfun_items.gems
     end
     
