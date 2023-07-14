@@ -27,7 +27,7 @@ function KSFUN_LEVEL:SetNextLvExpFunc(func)
 end
 
 
-function KSFUN_LEVEL:SetLevel(lv, notice)
+function KSFUN_LEVEL:SetLevel(lv)
     if lv == self.lv then
         return
     end
@@ -40,7 +40,10 @@ function KSFUN_LEVEL:SetLevel(lv, notice)
     if self.onLvChangeFunc then
         self.onLvChangeFunc(self.inst, { delta = delta, lv = self.lv })
     end
-    KsFunLog("SetLevel", delta)
+    KsFunLog("SetLevel", lv)
+    if self.inst.replica.ksfun_level then
+        self.inst.replica.ksfun_level:SyncData(tostring(self.lv))
+    end
     self.inst:PushEvent("ksfun_level_changed", {lv = self.lv, exp = self.exp})   
 end
 

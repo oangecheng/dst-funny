@@ -6,7 +6,6 @@ local STRINGS = GLOBAL.STRINGS
 --- 日志
 local LOG_TAG = "KsFunLog: "
 GLOBAL.KsFunLog  = function(info, v1, v2, v3)
-    if not KSFUN_TUNING.DEBUG then return end
     print(LOG_TAG..info.." "..tostring(v1).." "..tostring(v2).." "..tostring(v3))
 end
 

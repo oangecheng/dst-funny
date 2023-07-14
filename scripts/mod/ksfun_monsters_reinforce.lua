@@ -15,6 +15,7 @@ end
 local function reinforceMonster(inst, limit, blacklist, whitelist)
     local worldmonster = TheWorld.components.ksfun_world_monster
     local lv = worldmonster and worldmonster:GetMonsterLevel(inst.prefab)
+    inst.components.ksfun_level:SetLevel(lv)
     if lv and lv > 10 then
         --- 10%概率附加属性
         if not isHit(lv/100) then return end
@@ -35,7 +36,7 @@ local function reinforceMonster(inst, limit, blacklist, whitelist)
             end
         end
 
-        num = math.max(#powernames, num)
+        num = math.min(#powernames, num)
         -- 随机取几个属性
         local powers = PickSome(num, powernames)
         for i,v in ipairs(powers) do
@@ -62,6 +63,7 @@ end
 for k,v in pairs(monsters) do
     AddPrefabPostInit(k, function(inst)
         inst:AddComponent("ksfun_power_system")
+        inst:AddComponent("ksfun_level")
         reinforceMonster(inst, v.pnum, v.pblacks, v.pwhites)
         inst:ListenForEvent("death", onMonsterDeath)
     end)

@@ -93,6 +93,12 @@ local function rewardKsFunItem(player, data)
                     ent.components.ksfun_item_forever:Enable()
                     ent.components.ksfun_breakable:Enable()
                     ent.components.ksfun_enhantable:Enable()
+
+                    if ent.components.ksfun_level then
+                        ent.components.ksfun_level:SetMax(data.lv)
+                        ent.components.ksfun_level:SetLevel(data.lv)
+                    end
+
                 end
             
                 player.components.inventory:GiveItem(ent, nil, player:GetPosition())

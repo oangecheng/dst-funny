@@ -88,7 +88,7 @@ local function onPickSomeThing(inst, data)
         if demand.data.target == data.object.prefab then
             local delta = 0
             if demand.type == PICK_TYPES.FULL_MOON then
-                if TheWorld.isfullmoon then
+                if TheWorld.state.isfullmoon then
                     delta = 1
                 end
             else

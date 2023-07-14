@@ -76,6 +76,11 @@ local function initTaskSystem(player)
     -- 任务结束，从任务列表当中移除
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
+        if data.iswin then
+            if player.components.ksfun_lucky then
+                player.components.ksfun_lucky:DoDelta(1)
+            end
+        end
     end)
     -- 每天开始给个任务卷轴
     -- 如果任务列表的任务没有到达上限的话

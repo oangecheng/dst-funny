@@ -76,13 +76,13 @@ local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
 local pickables  = prefabsdef.taskpickable
 
 local function calcPickItemsNum()
-    local num = math.random(20) + 10
+    local num = math.random(10) + 10
     return KSFUN_TUNING.DEBUG and 1 or num
 end
 
 --- 计算采集任务难度
 local function calcPickDifficulty(type, lv, num)
-    local base = lv + (num > 20 and 2 or 1)
+    local base = lv or 0
     if type == PICK_TYPES.TIME_LIMIT then
         return base + 1
     elseif type == PICK_TYPES.FULL_MOON then
@@ -241,11 +241,11 @@ local fish = {
 local COOK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
 
 local function calcCookNum()
-    return KSFUN_TUNING.DEBUG and 1 or math.random(7) + 3
+    return KSFUN_TUNING.DEBUG and 1 or math.random(5)
 end
 
 local function calcCookDiffculty(cooktype, lv, num)
-    local base = (lv or 0) + (num > 5 and 2 or 1)
+    local base = (lv or 0) + (num > 3 and 1 or 0)
     if cooktype == COOK_TYPES.TIME_LIMIT then
         return base + 1
     elseif cooktype == COOK_TYPES.FOOD_LIMIT then

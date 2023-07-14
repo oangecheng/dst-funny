@@ -149,11 +149,29 @@ AddClassPostConstruct("widgets/hoverer", function(self)
                 if target.prefab == "ksfun_task_reel" and target.replica.ksfun_task_demand then
                     local content = target.replica.ksfun_task_demand:GetContent()
                     if content then
-                        str = str .. "\n" .. "----" .. content
+                        str = str .. "\n" .. "要求:" .. content
                     end
                 end
-            end
+
+                if target.replica.ksfun_level then
+                    local lv = target.replica.ksfun_level:GetLevel()
+                    if lv and lv > 0 then
+                        str = str.."lv"..lv
+                    end
+                end
+
+                if target.replica.ksfun_power_system then
+                    local names = target.replica.ksfun_power_system:GetPowerNames()
+                    if names ~= "" then
+                        str = str.."\n"..names
+                    end
+                end
+        
+            end     
         end
+
+       
+
         return old_SetString(text, str)
     end
 end)

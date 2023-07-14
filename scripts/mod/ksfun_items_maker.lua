@@ -80,8 +80,7 @@ end
 
 
 local function initLevel(inst)
-    inst.components.ksfun_level:SetMax(1)
-    inst.components.ksfun_level:SetLevel(1)
+ 
 end
 
 
@@ -94,7 +93,6 @@ for k,v in pairs(itemsdef.ksfunitems) do
         inst:AddComponent("ksfun_breakable")
         inst:AddComponent("ksfun_power_system")
         
-        initLevel(inst)
         initBreakable(inst)
         initEnhantable(inst)
 

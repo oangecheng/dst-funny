@@ -77,11 +77,11 @@ monsters.punishMonsters = function()
     for k,v in pairs(monstersdef) do
         if v.punish > 0 then
             if v.lv > 5 then
-                table.insert(list["L"], v) 
+                table.insert(list["L"], k) 
             elseif v.lv > 4 then
-                table.insert(list["M"], v)
+                table.insert(list["M"], k)
             else
-                table.insert(list["S"], v)
+                table.insert(list["S"], k)
             end
         end
     end

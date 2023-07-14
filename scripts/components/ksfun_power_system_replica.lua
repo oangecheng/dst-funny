@@ -76,6 +76,16 @@ function KSFUN_POWERS:GetTitle()
 end
 
 
+function KSFUN_POWERS:GetPowerNames()
+    local str = ""
+    for k,v in pairs(self.powers) do
+        local name = KsFunGetPowerNameStr(k)
+        str = str.."["..name.."]"
+    end
+    return str
+end
+
+
 --- 获取指定属性
 --- @param name 属性 string
 --- @return {lv = number, exp = number}

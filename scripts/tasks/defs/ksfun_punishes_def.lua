@@ -59,7 +59,7 @@ end
 
 local function punishMonster(player, tasklv)
     local r = math.random()
-    local list = monstersdef.punishMonsters
+    local list = monstersdef.punishMonsters()
     local monsters = nil
     local num = 1
 

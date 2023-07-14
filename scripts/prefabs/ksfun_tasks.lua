@@ -8,9 +8,9 @@ local function MakeTask(taskname)
     local taskhandler = taskhelper.getTaskHandler(taskname)
 
     -- 任务结束发送通知
-    local function finishTask(inst, player)
+    local function finishTask(inst, player, iswin)
         local name = inst.components.ksfun_task:GetName()
-        player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name})
+        player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name, iswin = iswin })
     end
 
     --- 重新启用timer
@@ -30,14 +30,14 @@ local function MakeTask(taskname)
     local function onWinFunc(inst, player, data)
         taskhandler.onWinFunc(inst, player, data)
         inst.components.timer:StopTimer("ksfun_task_over")
-        finishTask(inst, player)
+        finishTask(inst, player, true)
     end
 
     --- 任务失败回调
     local function onLoseFunc(inst, player, data)
         taskhandler.onLoseFunc(inst, player, data)
         inst.components.timer:StopTimer("ksfun_task_over")
-        finishTask(inst, player)
+        finishTask(inst, player, false)
     end
 
 

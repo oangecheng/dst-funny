@@ -35,7 +35,7 @@ local function randomNormalItem(player, tasklv)
     elseif r < 0.3 then
         lv = lv + 1
     end
-    lv = math.max(maxitemlv, lv)
+    lv = math.min(maxitemlv, lv)
 
     local name,num = prefabsdef.getItemsByLv(lv)
     --- 数量有幸运值加成
