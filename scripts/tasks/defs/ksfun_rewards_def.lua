@@ -14,29 +14,35 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 local maxitemlv = 7
 
 
+local function calcItemLv(player, tasklv, luckyratio)
+    if tasklv >= maxitemlv then
+        return maxitemlv
+    end
+
+    -- 即使很低等级的任务，也有小概率获得最高等级奖励
+    for i = maxitemlv, tasklv, -1 do
+        local r = math.random(2 ^ i)
+        if r <= (2 ^ tasklv) * (1 + luckyratio) then
+            return i
+        end
+    end
+    return tasklv
+end
+
+
 --- 随机生成一些物品
 --- 任务等级越高，奖励越丰富，同时附加幸运值策略
 --- @param  tasklv 任务难度等级
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, tasklv)
-    -- 计算奖励物品等级
-    local lv = tasklv
     local r  = math.random()
-
     local luckyratio = 0
     if player.components.ksfun_lucky then
         luckyratio = player.components.ksfun_lucky:GetRatio() 
     end
 
-    -- 默认10%概率，附加幸运等级
-    r = r - luckyratio * 0.1
-    if r < 0.1 then
-        lv = lv + 2
-    elseif r < 0.3 then
-        lv = lv + 1
-    end
-    lv = math.min(maxitemlv, lv)
-
+    -- 计算奖励物品等级
+    local lv = calcItemLv(player, tasklv, luckyratio)
     local name,num = prefabsdef.getItemsByLv(lv)
     --- 数量有幸运值加成
     --- 不走运时收益减半，至少保留一个物品的奖励

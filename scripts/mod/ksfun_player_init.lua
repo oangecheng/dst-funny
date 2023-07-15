@@ -30,10 +30,10 @@ end
 --- 初始化角色的各项属性
 local function initPlayerProperty(inst)
     -- 机器人血量上限可以变化，也就无法附加血量变更的属性
-    if inst.prefab ~= "wx78" then
-        local v = inst.components.health.maxhealth
-        inst.components.health:SetMaxHealth(math.floor(v * 0.8))
-    end
+    -- if inst.prefab ~= "wx78" then
+    --     local v = inst.components.health.maxhealth
+    --     inst.components.health:SetMaxHealth(math.floor(v * 0.8))
+    -- end
 end
 
 
@@ -76,21 +76,29 @@ local function initTaskSystem(player)
     -- 任务结束，从任务列表当中移除
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
+
+        -- 任务成功+1幸运值，失败-1
+        local luckydelta = -1
         if data.iswin then
-            if player.components.ksfun_lucky then
-                player.components.ksfun_lucky:DoDelta(1)
-            end
+            luckydelta = 1
         end
+        if player.components.ksfun_lucky then
+            player.components.ksfun_lucky:DoDelta(luckydelta)
+        end
+
     end)
-    -- 每天开始给个任务卷轴
-    -- 如果任务列表的任务没有到达上限的话
+
+    -- 每天开始给3个任务卷轴
     player:WatchWorldState("cycles", function(inst)
-        if player.components.ksfun_task_system:CanAddMoreTask() then
-            local ent = SpawnPrefab("ksfun_task_reel")
-            if ent then
-                player.components.inventory:GiveItem(ent, nil, player:GetPosition())
-            end
-        end
+        inst:DoTaskInTime(2, function()
+            local count = 3
+            for i=1, count do
+                local ent = SpawnPrefab("ksfun_task_reel")
+                if ent then
+                    player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+                end
+            end  
+        end)
     end)
 end
 
