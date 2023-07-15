@@ -105,6 +105,7 @@ end
 function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
 	local title = nil
+	local lucky = 0
 
 	local powers = {}
 	if TheWorld.ismastersim then
@@ -122,12 +123,20 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d}
 			end
 		end
+
+		if inst.components.ksfun_lucky then
+			lucky = inst.components.ksfun_lucky:GetLucky()
+		end
 		
 	else
 		local system = inst.replica.ksfun_power_system
 		if system then
 			title  = system:GetTitle()
 			powers = system:GetPowers()
+		end
+
+		if inst.replica.ksfun_lucky then
+			lucky = inst.replica.ksfun_lucky:GetLucky()
 		end
 	end
 
@@ -145,6 +154,8 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 		if self.powers[key] == nil then
 			self.powers[key] = self.root:AddChild(self:KsFunCard())
 		end
+
+		local titlestr = name.." ".."幸运值:"..lucky 
 
 		self.powers[key].title:SetString(name)
 

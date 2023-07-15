@@ -1,6 +1,5 @@
 local function OnContentDirty(self, inst)
     local lv = self._content:value()
-    KsFunLog("WORLD_MONSTER", lv)
     self.lv = lv and tonumber(lv) or 0
 end
 
@@ -8,7 +7,7 @@ local LEVEL = Class(function(self, inst)
     self.inst = inst
     self.lv = 0
 
-    self._content = net_string(inst.GUID, "ksfun_world_monster._content", "ksfun_itemdirty")
+    self._content = net_string(inst.GUID, "ksfun_level._content", "ksfun_itemdirty")
     inst:ListenForEvent("ksfun_itemdirty", function(inst) OnContentDirty(self, inst) end)
 end, nil, {})
 
