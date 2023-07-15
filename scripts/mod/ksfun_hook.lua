@@ -156,17 +156,16 @@ AddClassPostConstruct("widgets/hoverer", function(self)
                 if target.replica.ksfun_level then
                     local lv = target.replica.ksfun_level:GetLevel()
                     if lv and lv > 0 then
-                        str = str.."lv"..lv
+                        local desc = "lv"..lv
+                        if target.replica.ksfun_power_system then
+                            local names = target.replica.ksfun_power_system:GetPowerNames()
+                            if names ~= "" then
+                                desc = desc.."  "..names
+                            end
+                        end
+                        str = str.."\n"..desc
                     end
                 end
-
-                if target.replica.ksfun_power_system then
-                    local names = target.replica.ksfun_power_system:GetPowerNames()
-                    if names ~= "" then
-                        str = str.."\n"..names
-                    end
-                end
-        
             end     
         end
 
