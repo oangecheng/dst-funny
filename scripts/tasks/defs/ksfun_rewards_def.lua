@@ -49,6 +49,7 @@ local function randomNormalItem(player, tasklv)
     local luckymulti = math.max(0.5, 1 + luckyratio)
     local delta = math.max(0, tasklv - maxitemlv)
     num = math.max(1, num * luckymulti + delta)
+    num = math.floor(num + 0.5)
 
     return {
         type = REWARD_TYPES.ITEM,

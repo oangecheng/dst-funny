@@ -101,9 +101,15 @@ end
 --- 获取可以作为任务对象的怪物
 --- @return name名称 lv等级 num数量
 monsters.randomTaskMonster = function()
-    local name, mon = GetRandomItemWithIndex(monstersdef)
-    local lv  = mon.lv
-    local num = getTaskMonsterNum(lv)
+    local lv = math.random(7)
+    local list = {}
+    for k,v in pairs(monstersdef) do
+        if lv == v.lv then
+            table.insert(list, k)
+        end
+    end
+    local name = GetRandomItem(list)
+    local num  = getTaskMonsterNum(lv)
     return name, lv, num
 end
 

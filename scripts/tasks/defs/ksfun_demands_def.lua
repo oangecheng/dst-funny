@@ -309,4 +309,30 @@ local demands = {
 }
 
 
-return demands
+
+local demandsdef = {}
+
+
+demandsdef.random = function()
+    local r = math.random()
+
+    local name = nil
+    -- 50%概率击杀类任务
+    if r < 0.5 then
+        name = NAMES.KILL
+    else
+        local list = {}
+        for k, v in pairs(NAMES) do
+            if k ~= NAMES.KILL then
+                table.insert(list, v)
+            end
+        end
+        name = GetRandomItem(list)
+    end
+
+    local demand = demands[name].random()
+    return name, demand
+end
+
+
+return demandsdef

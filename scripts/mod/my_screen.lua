@@ -141,7 +141,7 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 	end
 
 	if title then
-		self:AddTitle(title)
+		self:AddTitle(inst, title, lucky)
 	end
 
 
@@ -155,7 +155,6 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 			self.powers[key] = self.root:AddChild(self:KsFunCard())
 		end
 
-		local titlestr = name.." ".."幸运值:"..lucky 
 
 		self.powers[key].title:SetString(name)
 
@@ -192,14 +191,19 @@ end
 
 
 
-function KSFUN_PLAYER_PANEL:AddTitle(title)
+function KSFUN_PLAYER_PANEL:AddTitle(inst, title, lucky)
 	local key = title.prefab
 	if key == nil then return end
 
 	local r,g,b = getColor(title.lv)
 
+	local name = title.name
+	if inst:HasTag("player") then
+		name = name.." ".."幸运值:"..lucky 
+	end
+
 	self.titles[key] = self.root:AddChild(self:KsFunCard())
-	self.titles[key].title:SetString(title.name)
+	self.titles[key].title:SetString(name)
 	self.titles[key].title:SetColour(r, g, b, 1)
 	self.titles[key]:SetHAnchor(0)
 	self.titles[key]:SetVAnchor(0)
