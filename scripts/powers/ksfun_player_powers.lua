@@ -242,12 +242,14 @@ local hunger = {
 --- MAGIC 6,7,  (SCIENCE最大倍率x2)
 --- ANCIENT 14,15,16 (MAGIC最大倍率x2)
 --- CELESTIAL 14,16, (同ANCIENT, 月岛科技等级只有1和3)
+--- SHADOWFORGING 15, 16
 local BUILD_ITEM_EXP_MULTI_DEFS = {
     SCIENCE = 0,
     MAGIC = 4,
     ANCIENT = 12,
     CELESTIAL = 13,
     LUNARFORGING = 13,
+    SHADOWFORGING = 14,
 }
 
 
@@ -279,6 +281,8 @@ local function getExpMultiByRecipeLevel(recipe_level)
         multi = tonumber(recipe_level.CELESTIAL)    + BUILD_ITEM_EXP_MULTI_DEFS.CELESTIAL
     elseif recipe_level.LUNARFORGING ~= 0 then
         multi = tonumber(recipe_level.LUNARFORGING) + BUILD_ITEM_EXP_MULTI_DEFS.LUNARFORGING
+    elseif recipe_level.SHADOWFORGING ~= 0 then
+        mult = tonumber(recipe_level.SHADOWFORGING) + BUILD_ITEM_EXP_MULTI_DEFS.SHADOWFORGING
     end
     multi = math.max(1, multi)
     return multi
@@ -290,7 +294,7 @@ end
 local function onBuildItemFunc(player, data)
     local recipe_level = data.recipe.level
     local multi = getExpMultiByRecipeLevel(recipe_level)
-    local exp = multi * 1
+    local exp = multi * 10
     KsFunPowerGainExp(player, NAMES.SANITY, exp)
 end
 
@@ -301,7 +305,7 @@ end
 local function oBuildStructureFunc(player, data)
     local recipe_level = data.recipe.level
     local multi = getExpMultiByRecipeLevel(recipe_level)
-    local exp = multi * 2
+    local exp = multi * 20
     KsFunPowerGainExp(player, NAMES.SANITY, exp)
 end
 
