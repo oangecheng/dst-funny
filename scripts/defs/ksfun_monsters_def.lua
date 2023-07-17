@@ -5,6 +5,7 @@ local lcount = 8
 local hcount = 10
 
 local monstersdef = {
+    ["rabbit"]               = { lv = 1, punish = 0, pnum = scount, pwhites = {NAMES.HEALTH} }, -- 兔子
     ["butterfly"]            = { lv = 1, punish = 0, pnum = scount, pwhites = {NAMES.HEALTH} }, -- 蝴蝶
     ["bee"]                  = { lv = 1, punish = 0, pnum = scount },  -- 蜜蜂
     ["killerbee"]            = { lv = 1, punish = 1, pnum = scount },  -- 杀人峰
@@ -14,6 +15,7 @@ local monstersdef = {
     ["firehound"]            = { lv = 1, punish = 1, pnum = scount },  -- 火猎犬
     ["icehound"]             = { lv = 1, punish = 1, pnum = scount },  -- 冰猎犬
     ["spider"]               = { lv = 1, punish = 1, pnum = scount },  -- 蜘蛛
+    ["catcoon"]              = { lv = 1, punish = 0, pnum = scount },  -- 浣猫
 
     ["spider_warrior"]       = { lv = 2, punish = 1, pnum = mcount },  -- 蜘蛛战士
     ["spider_hider"]         = { lv = 2, punish = 1, pnum = mcount },  -- 洞穴蜘蛛
@@ -21,7 +23,7 @@ local monstersdef = {
     ["crawlingnightmare"]    = { lv = 2, punish = 0, pnum = mcount },  -- 爬行梦魇
     ["nightmarebeak"]        = { lv = 2, punish = 0, pnum = mcount },  -- 巨喙梦魇
     ["krampus"]              = { lv = 2, punish = 1, pnum = mcount },  -- 坎普斯
-    ["pigman"]               = { lv = 2, punish = 0, pnum = mcount },  -- 猪人
+    ["pigman"]               = { lv = 2, punish = 0, pnum = mcount, pblacks = {NAMES.SANITY} },  -- 猪人
     ["moonpig"]              = { lv = 2, punish = 0, pnum = mcount },  -- 疯猪
     ["merm"]                 = { lv = 2, punish = 0, pnum = mcount },  -- 鱼人
     ["bunnyman"]             = { lv = 2, punish = 0, pnum = mcount },  -- 兔人, 
@@ -57,12 +59,14 @@ local monstersdef = {
     ["eyeofterror"]          = { lv = 5, punish = 1, pnum = hcount },  -- 恐怖之眼
     ["twinofterror1"]        = { lv = 5, punish = 1, pnum = hcount },  -- 双子魔眼1
     ["twinofterror2"]        = { lv = 5, punish = 1, pnum = hcount },  -- 双子魔眼2
+    ["daywalker"]            = { lv = 5, punish = 1, pnum = hcount },  -- 噩梦猪人
 
-    ["toadstool"]            = { lv = 6, punish = 1, pnum = hcount },  -- 蛤蟆
+    ["toadstool"]            = { lv = 6, punish = 1, pnum = hcount, pblacks = {NAMES.DAMAGE} },  -- 蛤蟆
     ["beequeen"]             = { lv = 6, punish = 1, pnum = hcount },  -- 蜂后
     ["klaus"]                = { lv = 6, punish = 1, pnum = hcount, pblacks = {NAMES.HEALTH} }, -- 克劳斯
 
-    ["toadstool_dark"]       = { lv = 7, punish = 0, pnum = hcount },  -- 悲惨蛤蟆  
+    ["stalker_atrium"]       = { lv = 7, punish = 0, pnum = hcount },  -- 暗影编制者  
+    ["toadstool_dark"]       = { lv = 7, punish = 0, pnum = hcount, pblacks = {NAMES.DAMAGE} },  -- 悲惨蛤蟆  
     ["crab_king"]            = { lv = 7, punish = 0, pnum = hcount, pblacks = {NAMES.LOCOMOTOR} }, -- 帝王蟹
     ["alterguardian_phase3"] = { lv = 7, punish = 0, pnum = hcount}, -- 天体英雄3阶
 }
