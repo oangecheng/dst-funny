@@ -166,24 +166,22 @@ end
 
 
 
---- 任务奖励和难度绑定
-local function calcRewardRatio(player, tasklv)
-    local v = 0
-    if KSFUN_TUNING.DIFFCULTY > 0 then
-        v = tasklv * 0.5
-    elseif KSFUN_TUNING.DIFFCULTY < 0 then
-        v = tasklv * 2
-    else
-        v =  tasklv
-    end
 
-    -- 附加幸运值，幸运值倍率有可能小于0
+--- 计算是否命中特殊奖励
+--- 和幸运值&难度绑定
+local function canRewardSpecial(player, tasklv)
+    local r = math.random(1024)
+    local mult = 1
+    -- 和幸运值绑定
+    -- 幸运值影响因子为1，100的幸运值，6级任务特殊奖励概率=7级
     local lucky = player.components.ksfun_lucky
     if lucky then
-        v = v * (1 + math.min(lucky:GetRatio(), 1))
+        mult = mult + lucky:GetRatio()
     end
-
-    return v
+    -- 增加难度影响
+    mult = mult - KSFUN_TUNING.DIFFCULTY * 0.5
+    mult = math.max(0, mult)
+    return r <= 2^tasklv * mult
 end
 
 
@@ -192,14 +190,10 @@ end
 --- 任务等级最高基准为10，也就是高级任务有50%概率获得特殊奖励
 --- 如果幸运值拉满，100%获得特殊奖励
 local function randomReward(player, tasklv)
-    local r = calcRewardRatio(player, tasklv)
-    local v = KSFUN_TUNING.DEBUG and 1 or r * 0.05
-
     local reward = nil
-    if math.random() < v then
-
-        local rewardpower = math.random() < 0.5
+    if canRewardSpecial(player, tasklv) then
         --- 50%概率分配属性相关奖励
+        local rewardpower = math.random() < 0.5
         if rewardpower then
             -- 优先分配属性奖励，再分配属性等级或者经验
             reward = randomNewPower(player, tasklv)

@@ -44,9 +44,9 @@ configuration_options = {
 		name  = "diffculty",
 		label = ch and "难度" or "diffculty",
 		options = {
-			{description = ch and "简单" or "easy",    data = -0.5},
-			{description = ch and "默认" or "default", data = 0   },
-            {description = ch and "困难" or "hard",    data = 0.5 },
+			{description = ch and "简单" or "easy",    data = -1},
+			{description = ch and "默认" or "default", data = 0 },
+            {description = ch and "困难" or "hard",    data = 1 },
 		},
 		default = 0,
 	},

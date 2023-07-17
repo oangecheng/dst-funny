@@ -266,9 +266,9 @@ end
 --- @param isplayer 是否是玩家
 --- @param defaultratio 默认概率，怪物会有难度加成
 GLOBAL.KsFunCanHit = function(isplayer, defaultratio)
-    if KSFUN_TUNING.DEBUG then return 1 end
-    local r = isplayer and defaultratio or (1 + KSFUN_TUNING.DIFFCULTY) * defaultratio
-    return math.random(100) < r * 100
+    if KSFUN_TUNING.DEBUG then return true end
+    local r = isplayer and defaultratio or (1 + KSFUN_TUNING.DIFFCULTY * 0.5) * defaultratio
+    return math.random() < math.max(0.1, r)
 end
 
 

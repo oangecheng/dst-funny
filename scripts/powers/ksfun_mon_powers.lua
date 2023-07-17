@@ -4,7 +4,7 @@ local monsterpowers = {}
 
 --- 计算属性等级上限，四舍五入
 local function calcPowerLvWidthDiffculty(defaultlv)
-    return math.floor((1 + KSFUN_TUNING.DIFFCULTY) * defaultlv + 0.5) 
+    return math.floor((1 + KSFUN_TUNING.DIFFCULTY * 0.5) * defaultlv + 0.5) 
 end
 
 
