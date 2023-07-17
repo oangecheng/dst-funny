@@ -7,16 +7,15 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
 local MONSTER = require "defs/ksfun_monsters_def"
 
-local function default(kill_type)
+local function default(killtype, initlv)
 
     -- 任务难度系数
     local function calcDifficulty(lv, num)
         return num > 1 and lv + 1 or lv
     end
-
-    local victim, lv, num = MONSTER.randomTaskMonster()
+    local victim, lv, num = MONSTER.randomTaskMonster(initlv)
     return {
-        type = kill_type,
+        type = killtype,
         duration = 0,
         diffculty = calcDifficulty(lv, num), -- 难度系数评估
         data = {
@@ -29,14 +28,14 @@ end
 
 
 -- 普通任务，不限制时间
-local function normal()
-    return default(KILL_TYPES.NORMAL)
+local function normal(initlv)
+    return default(KILL_TYPES.NORMAL, initlv)
 end
 
 
 -- 限时任务
-local function timeLimit()
-    local ret = default(KILL_TYPES.TIME_LIMIT)
+local function timeLimit(initlv)
+    local ret = default(KILL_TYPES.TIME_LIMIT, initlv)
     ret.diffculty = ret.diffculty + 1
     --- 计算时长，6级任务，需要的时间为 (6*10 + 10) / 10 = 7天
     --- 最少有一天的时间
@@ -47,21 +46,21 @@ end
 
 
 -- 无伤任务
-local function attackedLimit()
-    local ret = default(KILL_TYPES.ATTACKED_LIMIT)
+local function attackedLimit(initlv)
+    local ret = default(KILL_TYPES.ATTACKED_LIMIT, targerlv)
     ret.diffculty = ret.diffculty + 2
     return ret
 end
 
 local kill = {
-    random = function()
+    random = function(initlv)
         local type = GetRandomItem(KILL_TYPES)
         if type == KILL_TYPES.TIME_LIMIT then
-            return timeLimit()
+            return timeLimit(initlv)
         elseif type == KILL_TYPES.ATTACKED_LIMIT then
-            return attackedLimit()
+            return attackedLimit(initlv)
         else
-            return normal()
+            return normal(initlv)
         end
     end
 }
@@ -116,7 +115,7 @@ local function generatePickDemand(picktype)
 end
 
 local pick = {
-    random = function()
+    random = function(initlv)
         local picktype = GetRandomItem(PICK_TYPES)
         return generatePickDemand(picktype)
     end
@@ -224,7 +223,7 @@ end
 
 
 local fish = {
-    random = function()
+    random = function(initlv)
         local fishtype = GetRandomItem(FISH_TYPES)
         return generateFishDemand(fishtype)
     end
@@ -249,7 +248,7 @@ local function calcCookDiffculty(cooktype, lv, num)
     if cooktype == COOK_TYPES.TIME_LIMIT then
         return base + 1
     elseif cooktype == COOK_TYPES.FOOD_LIMIT then
-        return base + 1
+        return base + 2
     end
     return base
 end
@@ -282,7 +281,7 @@ local function generateCookDemand(cooktype)
 end
 
 local cook = {
-    random = function()
+    random = function(initlv)
         local cooktype = GetRandomItem(COOK_TYPES)
         return generateCookDemand(cooktype)
     end,
@@ -313,7 +312,7 @@ local demands = {
 local demandsdef = {}
 
 
-demandsdef.random = function()
+demandsdef.random = function(initlv)
     local r = math.random()
 
     local name = nil
@@ -330,7 +329,7 @@ demandsdef.random = function()
         name = GetRandomItem(list)
     end
 
-    local demand = demands[name].random()
+    local demand = demands[name].random(initlv)
     return name, demand
 end
 

@@ -5,8 +5,8 @@ local helper = {}
 --------------------------------------------- 生成任务要求函数定义---------------------------------------------------------------------
 local demandsdef = require("tasks/defs/ksfun_demands_def")
 
-helper.randomTaskData = function()
-    local name,demand = demandsdef.random()
+helper.randomTaskData = function(initlv)
+    local name,demand = demandsdef.random(initlv)
     local task = {}
     task.name     = name
     task.tasklv   = demand.diffculty

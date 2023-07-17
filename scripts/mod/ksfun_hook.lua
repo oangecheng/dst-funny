@@ -386,3 +386,23 @@ AddPrefabPostInit("berrybush_juicy",function(inst)
 		end
 	end
 end)
+
+
+
+---------------------------------------------给猪王金子可以获得任务卷轴-------------------------------------------------
+AddPrefabPostInit("pigking", function(inst)
+	if TheWorld.ismastersim then
+		if inst.components.trader and inst.components.trader.onaccept then
+			local oldonacceptfn=inst.components.trader.onaccept
+			inst.components.trader.onaccept=function(inst,giver,item)
+				--如果是包装袋则返还蜡纸
+				if item.prefab=="bundle" then
+					inst:DoTaskInTime(2 / 3, function(item,giver)
+						LaunchAt(SpawnPrefab("waxpaper"), inst, giver, 1, 5, 1)
+					end)
+				end
+				oldonacceptfn(inst,giver,item)
+			end
+		end
+	end
+end)

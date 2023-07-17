@@ -3,6 +3,7 @@ local scount = 3
 local mcount = 5
 local lcount = 8
 local hcount = 10
+local maxlv  = 7
 
 local monstersdef = {
     ["rabbit"]               = { lv = 1, punish = 0, pnum = scount, pwhites = {NAMES.HEALTH} }, -- 兔子
@@ -104,8 +105,9 @@ end
 
 --- 获取可以作为任务对象的怪物
 --- @return name名称 lv等级 num数量
-monsters.randomTaskMonster = function()
-    local lv = math.random(7)
+monsters.randomTaskMonster = function(initlv)
+    local lv = initlv or math.random(maxlv)
+    lv = math.min(maxlv, lv)
     local list = {}
     for k,v in pairs(monstersdef) do
         if lv == v.lv then
