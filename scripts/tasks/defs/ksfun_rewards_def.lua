@@ -65,40 +65,44 @@ end
 
 
 --------------------------------------------- 特殊物品奖励 ---------------------------------------------------------------------
-local ksfun_items = require("defs/ksfun_items_def")
+local ksfunitems = require("defs/ksfun_items_def")
+
 
 --- 随机获取一个特殊物品奖励
 local function randomKsFunItem(player, task_lv)
-    local itemtype = math.random(4)
-    local list = nil
-    local num = 1
-    if itemtype == 1 then
-        list =  ksfun_items.weapon
-    elseif itemtype == 2 then
-        list = ksfun_items.hat
-    elseif itemtype == 3 then
-        list = ksfun_items.armor
-    elseif itemtype == 4 then
-        list = ksfun_items.gems
+    local temp = {}
+    local itemlist = JoinArrays(ksfunitems.weapon, ksfunitems.hat, ksfunitems.armor, ksfunitems.gems)
+    local worlddata = TheWorld.components.ksfun_world_data
+
+    local max = 0
+    if KSFUN_TUNING.MODE == 1 then max = 2
+    elseif KSFUN_TUNING.MODE == 2 then max = 1
+    end
+
+    if max~=0 and worlddata then
+        for i,v in ipairs(itemlist) do
+            if worlddata:GetWorldItemCount() < max then
+                table.insert(temp, v)
+            end
+        end
+    else
+        temp = itemlist
     end
     
-    -- 随机一个物品
-    local name = list[math.random(#list)]
-    -- 随机一个等级
-    local temp = math.random(2)
-    local lv = math.max(temp, 1) 
+    if next(temp) ~= nil then
+        local name = GetRandomItem(temp)
+        local lv = math.random(2)
+        return {
+            -- 主类别
+            type = REWARD_TYPES.KSFUN_ITEM,
+            data = {
+                item = name,
+                lv = lv,
+            }   
+        }
+    end
 
-    return {
-        -- 主类别
-        type = REWARD_TYPES.KSFUN_ITEM,
-        data = {
-            item = name,
-            num = num,
-            -- 次类别
-            type = itemtype,
-            lv = lv,
-        }   
-    }
+    return nil
 end
 
 

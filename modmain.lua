@@ -10,7 +10,7 @@ modimport("scripts/util/ksfun_util.lua")
 local diffculty = GetModConfigData("diffculty")
 KSFUN_TUNING.DIFFCULTY = diffculty or 0
 local mode = GetModConfigData("mode")
-KSFUN_TUNING.MODE = mode or 1 
+KSFUN_TUNING.MODE = mode or 0 
 
 
 

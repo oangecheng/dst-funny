@@ -83,26 +83,23 @@ end
 --- 给物品赋予等级
 local function rewardKsFunItem(player, data)
     local item = data and data.item or nil
-    KsFunLog("rewardKsFunItem", item, data.num, data.lv)
+    KsFunLog("rewardKsFunItem", item, data.lv)
 
-    if item then
-        for i=1, data.num do
-            local ent = SpawnPrefab(item)
-            if ent then
-                if ent.components.ksfun_item_forever then
-                    ent.components.ksfun_item_forever:Enable()
-                    ent.components.ksfun_breakable:Enable()
-                    ent.components.ksfun_enhantable:Enable()
-
-                    if ent.components.ksfun_level then
-                        ent.components.ksfun_level:SetMax(data.lv)
-                        ent.components.ksfun_level:SetLevel(data.lv)
-                    end
-
-                end
-            
-                player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+    local ent = SpawnPrefab(item)
+    if ent then
+        if ent.components.ksfun_item_forever then
+            ent.components.ksfun_item_forever:Enable()
+            ent.components.ksfun_breakable:Enable()
+            ent.components.ksfun_enhantable:Enable()
+            if ent.components.ksfun_level then
+                ent.components.ksfun_level:SetMax(data.lv)
+                ent.components.ksfun_level:SetLevel(data.lv)
             end
+        end
+            
+        player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+        if TheWorld.components.ksfun_world_data then
+            TheWorld.components.ksfun_world_data:AddWorldItemCount(ent.prefab)
         end
 
         local itemname = KsFunGetPrefabName(item)

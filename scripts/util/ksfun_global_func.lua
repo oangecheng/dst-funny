@@ -241,10 +241,11 @@ GLOBAL.KsFunGetCanRewardPower = function(player)
                     table.insert(temp, v)
                 end
             else
-                -- 没有人获得过属性
+                -- 疯狂模式上限1，竞争模式为2
                 local worldcount = worlddata:GetWorldPowerCount(v)
                 KsFunLog("KsFunGetCanRewardPower", worldcount)
-                if worldcount < 1 then
+                local max = KSFUN_TUNING.MODE == 1 and 2 or 1
+                if worldcount < max then
                     table.insert(temp, v)
                 end
             end
