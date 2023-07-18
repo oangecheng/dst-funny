@@ -64,9 +64,45 @@ local unlucky = {
 
 
 
+
+
+--------------------------------------------------------虚弱------------------------------------------------------------
+-- 攻击-20%，受到的伤害 +20%， 持续30s
+local weak = {
+    duration = KSFUN_TUNING.DEBUG and 30 or KSFUN_TUNING.TIME_SEG,
+    onattach = function(inst, target)
+        if target.components.combat then
+            target.components.combat.externaldamagemultipliers:SetModifier(inst, 0.8)
+        end
+        if target.components.health ~= nil then
+            target.components.health.externalabsorbmodifiers:SetModifier("ksfun_powers_nega_weak", -0.2)
+        end
+    end,
+    ondetach = function(inst, target)
+        if target.components.combat then
+            target.components.combat.externaldamagemultipliers:RemoveModifier(inst)
+        end
+        if target.components.health ~= nil then
+            target.components.health.externalabsorbmodifiers:RemoveModifier("ksfun_powers_nega_weak")
+        end
+    end,
+}
+
+
+
+
+
+
+
+
+
+
+
+
 local negapowers = {
     [NAMES.DIARRHEA] = diarrhea,
     [NAMES.UNLUCKY]  = unlucky,
+    [NAMES.WEAK]     = weak,
 }
 
 return negapowers

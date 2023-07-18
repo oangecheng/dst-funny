@@ -57,6 +57,7 @@ KSFUN_TUNING =  {
     NEGA_POWER_NAMES = {
         DIARRHEA      = "nega_diarrhea",
         UNLUCKY       = "nega_unlucky",
+        WEAK          = "nega_weak",
     },
 
 

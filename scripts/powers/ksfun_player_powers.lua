@@ -636,10 +636,10 @@ local function updateDamageStatus(inst, reset)
     local combat = inst.target and inst.target.components.combat
     if combat then
         if reset then
-            combat.externaldamagetakenmultipliers:RemoveModifier(inst)
+            combat.externaldamagemultipliers:RemoveModifier(inst)
         else
             local lv = inst.components.ksfun_level:GetLevel()
-            combat.externaldamagetakenmultipliers:SetModifier(inst, 1 + lv /100)
+            combat.externaldamagemultipliers:SetModifier(inst, 1 + lv /100)
         end
     end
 end
