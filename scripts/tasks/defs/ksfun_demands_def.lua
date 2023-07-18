@@ -317,7 +317,8 @@ demandsdef.random = function(initlv)
 
     local name = nil
     -- 50%概率击杀类任务
-    if r < 0.5 then
+    -- 指定等级的任务目前只支持击杀类任务
+    if r < 0.5 or initlv then
         name = NAMES.KILL
     else
         local list = {}

@@ -7,8 +7,6 @@ local assets =
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
 }
 
-local taskhelper = require("tasks/ksfun_task_helper")
-
 
 local function fn()
     local inst = CreateEntity()
@@ -35,10 +33,6 @@ local function fn()
     end
 
     inst:AddComponent("ksfun_task_demand")
-    -- 随机生成一个任务数据
-    local taskdata = taskhelper.randomTaskData()
-    inst.components.ksfun_task_demand:SetDemand(taskdata)
-
     inst:AddComponent("inspectable")
 
     inst:AddComponent("fuel")

@@ -114,14 +114,14 @@ local itemsdef = {
     ["redgem"]              = { lv = 3, rcnt = 3  },     -- 红宝石
     ["bluegem"]             = { lv = 3, rcnt = 3  },     -- 蓝宝石
     ["lightninggoathorn"]   = { lv = 3, rcnt = 2  },     -- 电羊角
-    ["thulecite"]           = { lv = 3, rcnt = 2  },     -- 铥矿
     ["honeycomb"]           = { lv = 3, rcnt = 2  },     -- 蜂巢
 
 
     ["trunk_summer"]        = { lv = 4, rcnt = 2  },     -- 夏日象鼻 
     ["trunk_winter"]        = { lv = 4, rcnt = 2  },     -- 冬日象鼻
     ["steelwool"]           = { lv = 4, rcnt = 2  },     -- 钢丝绒 
-    ["walrus_tusk"]         = { lv = 4, rcnt = 2  },     -- 海象牙 
+    ["walrus_tusk"]         = { lv = 4, rcnt = 2  },     -- 海象牙
+    ["thulecite"]           = { lv = 4, rcnt = 2  },     -- 铥矿 
     ["purplegem"]           = { lv = 4, rcnt = 3  },     -- 紫宝石
     ["fossil_piece"]        = { lv = 4, rcnt = 3  },     -- 化石碎片
     ["gears"]               = { lv = 4, rcnt = 2  },     -- 齿轮

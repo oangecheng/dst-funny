@@ -390,17 +390,36 @@ end)
 
 
 ---------------------------------------------给猪王金子可以获得任务卷轴-------------------------------------------------
+local taskitemsdef = {
+    ["goldnugget"] = 0,
+    ["redgem"]     = 3,
+    ["bluegem"]    = 3,
+    ["purplegem"]  = 5,
+    ["thulecite"]  = 7,
+}
+
+--- 给予猪王特定的物品可以获得任务卷轴
+--- 金块是随机
 AddPrefabPostInit("pigking", function(inst)
 	if TheWorld.ismastersim then
 		if inst.components.trader and inst.components.trader.onaccept then
-			local oldonacceptfn=inst.components.trader.onaccept
-			inst.components.trader.onaccept=function(inst,giver,item)
-				--如果是包装袋则返还蜡纸
-				if item.prefab=="bundle" then
-					inst:DoTaskInTime(2 / 3, function(item,giver)
-						LaunchAt(SpawnPrefab("waxpaper"), inst, giver, 1, 5, 1)
-					end)
-				end
+			local oldonacceptfn = inst.components.trader.onaccept
+			inst.components.trader.onaccept = function(inst,giver,item)
+                local lv = taskitemsdef[item.prefab]
+                if lv then
+                    local taskreel = nil
+                    if lv == 0 then
+                        taskreel = KsFunSpawnTaskReel()
+                    else
+                        local initlv = math.random(7-lv) + lv
+                        taskreel = KsFunSpawnTaskReel(initlv)
+                    end
+                    if taskreel then
+                        inst:DoTaskInTime(2 / 3, function(item,giver)
+                            LaunchAt(taskreel, inst, giver, 1, 5, 1)
+                        end)
+                    end
+                end
 				oldonacceptfn(inst,giver,item)
 			end
 		end

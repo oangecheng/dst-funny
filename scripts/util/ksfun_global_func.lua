@@ -293,6 +293,24 @@ GLOBAL.KsFunSpawnHostileMonster = function(player, monstername, num)
 end
 
 
+
+--- 生成任务卷轴
+GLOBAL.KsFunSpawnTaskReel = function(initlv)
+    local helper = require("tasks/ksfun_task_helper")
+    local inst   = SpawnPrefab("ksfun_task_reel")
+    if inst then
+        local data  = taskhelper.randomTaskData(initlv)
+        local valid = inst.components.ksfun_task_demand:SetDemand(data)
+        -- 不合法的数据，将卷轴移除
+        if not valid then
+            inst:DoTaskInTime(0, inst:Remove())
+            return nil
+        end
+    end
+    return inst
+end
+
+
 GLOBAL.KsFunFormatTime  = KsFunFormatTime
 GLOBAL.KsFunRandomPower = KsFunRandomPower
 GLOBAL.KsFunGetAoeProperty = KsFunGetAoeProperty
