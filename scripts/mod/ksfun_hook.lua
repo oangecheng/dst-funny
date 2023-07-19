@@ -398,13 +398,35 @@ local taskitemsdef = {
     ["thulecite"]  = 7,
 }
 
+
 --- 给予猪王特定的物品可以获得任务卷轴
 --- 金块是随机
 AddPrefabPostInit("pigking", function(inst)
 	if TheWorld.ismastersim then
-		if inst.components.trader and inst.components.trader.onaccept then
-			local oldonacceptfn = inst.components.trader.onaccept
-			inst.components.trader.onaccept = function(inst,giver,item)
+        local trader = inst.components.trader
+
+        local oldTradeTest = trader.abletoaccepttest
+        trader:SetAbleToAcceptTest(function(inst, item, giver)
+            if taskitemsdef[item.prefab] ~= nil then
+                return true
+            end
+            if oldTradeTest and oldTradeTest(inst, item, giver) then
+                return true
+            end
+            return false
+        end)
+
+        local oldTest = trader.test
+        trader:SetAcceptTest(function(inst, item, giver)
+            if table.containskey(taskitemsdef, item.prefab) then
+                return true
+            end
+            return not self.test or self.test(self.inst, item, giver)
+        end)
+        
+		if trader and trader.onaccept then
+			local oldonacceptfn = trader.onaccept
+			trader.onaccept = function(inst,giver,item)
                 local lv = taskitemsdef[item.prefab]
                 if lv then
                     local taskreel = nil
@@ -416,7 +438,7 @@ AddPrefabPostInit("pigking", function(inst)
                     end
                     if taskreel then
                         inst:DoTaskInTime(2 / 3, function(item,giver)
-                            LaunchAt(taskreel, inst, giver, 1, 5, 1)
+                            LaunchAt(taskreel, inst, giver, 2, 5, 1)
                         end)
                     end
                 end

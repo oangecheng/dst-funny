@@ -162,7 +162,7 @@ local itemsdef = {
 
 local lostrecipes = {
     "gears",
-    "opalpreciousgem",
+    -- "opalpreciousgem",
 }
 
 

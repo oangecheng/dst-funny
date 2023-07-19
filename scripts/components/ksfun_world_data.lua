@@ -33,7 +33,7 @@ function WORLD_DATA:AddWorldItemCount(prefab)
 end
 
 
-function WORLD_DATAL:GetWorldItemCount(prefab)
+function WORLD_DATA:GetWorldItemCount(prefab)
     local data = self.ksfunitems[prefab]
     if data then
         return data.count or 0

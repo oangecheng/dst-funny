@@ -11,13 +11,17 @@ function TASK_DEMAND:GetDemand()
 end
 
 
-function TASK_DEMAND:SetDemand(demand)
-    if demand == nil then return end
-    self.demand = demand
+function TASK_DEMAND:SetDemand(task)
+    if task == nil then return end
+    self.demand = task
     local desc = KsFunGetTaskDesc(self.demand)
     -- 任务显示有问题，移除这个任务卷轴
     if desc == nil then
-        KsFunLog("SetDemand fail", self.demand.name)
+        local demand = task and task.demand or nil
+        local data = demand and demand.data or nil
+        local content = data and data.victim or nil
+        local type = demand and demand.type or nil
+        KsFunLog("SetDemand fail", task.name, type, content)
         return false
     else
         if self.inst.replica.ksfun_task_demand then

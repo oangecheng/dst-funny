@@ -62,8 +62,8 @@ local function rewardNomralItem(player, data)
     local special= ""
     local saystr = ""
     if data and next(data) ~= nil then
-        for i,v in data do
-            local s = "["..KsFunGetPrefabName(v.name).."x"..v.num.."]"
+        for i,v in ipairs(data) do
+            local s = "["..KsFunGetPrefabName(v.item).."x"..v.num.."]"
             saystr = saystr..s
 
             if v.special then
@@ -71,6 +71,7 @@ local function rewardNomralItem(player, data)
             end
 
             for i=1, v.num do
+                local ent = SpawnPrefab(v.item)
                 if ent then
                     player.components.inventory:GiveItem(ent, nil, player:GetPosition())
                 end
@@ -80,7 +81,7 @@ local function rewardNomralItem(player, data)
 
     if saystr ~= "" then
         local tip = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM_2, saystr)
-        KsFunShowTip(tip)
+        KsFunShowTip(player, tip)
     end
 
     if special ~= "" then

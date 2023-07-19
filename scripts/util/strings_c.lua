@@ -19,6 +19,7 @@ STRINGS.KSFUN_NAMES = {
     ["pond_cave"]          = STRINGS.NAMES[string.upper("pond")].."(洞穴)",
     ["pond_mos"]           = STRINGS.NAMES[string.upper("pond")].."(蚊子)",
     ["moose"]              = "麋鹿鹅",
+    ["gears_blueprint"]    = STRINGS.NAMES[string.upper("gears")].."蓝图",
 }
 
 

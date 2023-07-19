@@ -47,7 +47,7 @@ end
 
 -- 无伤任务
 local function attackedLimit(initlv)
-    local ret = default(KILL_TYPES.ATTACKED_LIMIT, targerlv)
+    local ret = default(KILL_TYPES.ATTACKED_LIMIT, initlv)
     ret.diffculty = ret.diffculty + 2
     return ret
 end

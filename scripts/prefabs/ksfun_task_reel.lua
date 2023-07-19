@@ -23,9 +23,6 @@ local function fn()
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("ksfun_task")
-
-    MakeInventoryFloatable(inst, "med", nil, 0.75)
-
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

@@ -4,9 +4,10 @@ local STRINGS = GLOBAL.STRINGS
 
 
 --- 日志
-local LOG_TAG = "KsFunLog: "
 GLOBAL.KsFunLog  = function(info, v1, v2, v3)
-    print(LOG_TAG..info.." "..tostring(v1).." "..tostring(v2).." "..tostring(v3))
+    if KSFUN_TUNING.PRINT_LOG then
+        print("KsFunLog: "..info.." "..tostring(v1).." "..tostring(v2).." "..tostring(v3))
+    end
 end
 
 
@@ -300,7 +301,7 @@ GLOBAL.KsFunSpawnTaskReel = function(initlv)
     local helper = require("tasks/ksfun_task_helper")
     local inst   = SpawnPrefab("ksfun_task_reel")
     if inst then
-        local data  = taskhelper.randomTaskData(initlv)
+        local data  = helper.randomTaskData(initlv)
         local valid = inst.components.ksfun_task_demand:SetDemand(data)
         -- 不合法的数据，将卷轴移除
         if not valid then

@@ -35,12 +35,15 @@ end
 local function checkSanityReward(player, rewardsdata)
     local sanity = player.components.ksfun_power_system:GetPower(POWERS.SANITY)
     if sanity ~= nil then
+        KsFunLog("checkSanityReward 1")
         local lvlimt, ratio = KSFUN_TUNING.DEBUG and 1, 1 or 50, 0.1
         if sanity.components.ksfun_level:GetLevel() >= lvlimt and math.random() <= ratio then
             local list = prefabsdef.getLostRecipes()
-            for i,v in pairs(list) do
+            for i,v in ipairs(list) do
+                KsFunLog("checkSanityReward 2", v)
                 if player.components.builder and not player.components.builder:KnowsRecipe(v) then
-                    table.insert(rewardsdata, { name = v.."_blueprint" , num = 1, special = true })
+                    KsFunLog("checkSanityReward 3", v)
+                    table.insert(rewardsdata, { item = v.."_blueprint" , num = 1, special = true })
                     return
                 end
             end
@@ -71,7 +74,7 @@ local function randomNormalItem(player, tasklv)
     num = math.floor(num + 0.5)
 
     local data = {}
-    table.insert({item = name, num = num})
+    table.insert(data, {item = name, num = num})
     checkSanityReward(player, data)
 
     return {
