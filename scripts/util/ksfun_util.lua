@@ -3,10 +3,15 @@
 
 
 local function getKillTaskDesc(demand)
+    local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
+
+    if demand.type == KILL_TYPES.NOT_KILL then
+        return STRINGS.KSFUN_TASK_KILL_NOT_DESC..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
+    end
+
     -- 先从自定义的名称里面拿，有些怪物的名称是一样的，所以要区分一下
     local victimname = KsFunGetPrefabName(demand.data.victim)
     local num = demand.data.num
-    local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
     if victimname then
         local str = string.format(STRINGS.KSFUN_TASK_KILL_DESC, tostring(num), tostring(victimname))
         -- 击杀1只蜘蛛

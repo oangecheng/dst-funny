@@ -68,7 +68,12 @@ local function MakeTask(taskname)
 
         -- 倒计时结束任务失败
         local function onTimeDone(d)
-            inst.components.ksfun_task:Lose()
+            local ksfuntask = inst.components.ksfun_task
+            if ksfuntask:IsTimeReverse() then
+                ksfuntask:Win()
+            else
+                ksfuntask:Lose()
+            end
         end
 
         -- 初始化时判定是否需要添加计时器

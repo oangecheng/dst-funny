@@ -19,7 +19,10 @@ local function onKillOther(killer, data)
         local kill_task = inst and inst.components.ksfun_task or nil
         if kill_task then
             local demand = kill_task:GetTaskData().demand
-            if demand.data.victim and demand.data.num then
+            -- 杀怪任务就失败了
+            if demand.type == KILL_TYPES.NOT_KILL then
+                kill_task:Lose()
+            elseif demand.data.victim and demand.data.num then
                 if demand.data.victim == victim.prefab then
                     demand.data.num = demand.data.num - 1
                 end

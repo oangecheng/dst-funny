@@ -80,6 +80,7 @@ KSFUN_TUNING =  {
             NORMAL         = 1,
             TIME_LIMIT     = 2,
             ATTACKED_LIMIT = 3,
+            NOT_KILL       = 4,
         },
         PICK = {
             NORMAL         = 1,
