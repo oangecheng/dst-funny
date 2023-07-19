@@ -59,22 +59,35 @@ end
 
 --- 普通物品奖励
 local function rewardNomralItem(player, data)
-    local item = data and data.item or nil
-    KsFunLog("rewardNomralItem", item, data.num)
-    if item then
-        for i=1, data.num do
-            local ent = SpawnPrefab(item)
-            if ent then
-                player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+    local special= ""
+    local saystr = ""
+    if data and next(data) ~= nil then
+        for i,v in data do
+            local s = "["..KsFunGetPrefabName(v.name).."x"..v.num.."]"
+            saystr = saystr..s
+
+            if v.special then
+                special = special..s
+            end
+
+            for i=1, v.num do
+                if ent then
+                    player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+                end
             end
         end
-
-        if player.components.talker then
-            local itemname = STRINGS.NAMES[string.upper(item)].."x"..data.num
-            local msg = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM_2, itemname)
-            player.components.talker:Say(msg)
-        end
     end
+
+    if saystr ~= "" then
+        local tip = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM_2, saystr)
+        KsFunShowTip(tip)
+    end
+
+    if special ~= "" then
+        local notice = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM_3, player.name, special)
+        KsFunShowNotice(notice)
+    end
+
 end
 
 

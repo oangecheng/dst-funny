@@ -160,6 +160,12 @@ local itemsdef = {
 
 
 
+local lostrecipes = {
+    "gears",
+    "opalpreciousgem",
+}
+
+
 
 local prefabs = {
     pickable     = pickabledefs,
@@ -178,6 +184,11 @@ prefabs.getItemsByLv = function(lv)
     local name = GetRandomItem(list)
     local rcnt = itemsdef[name].rcnt
     return name, rcnt
+end
+
+
+prefabs.getLostRecipes = function()
+    return lostrecipes
 end
 
 

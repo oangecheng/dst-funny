@@ -1,6 +1,7 @@
 
 local KSFUN_ITEM_TYPES = KSFUN_TUNING.KSFUN_ITEM_TYPES
 local REWARD_TYPES = KSFUN_TUNING.TASK_REWARD_TYPES
+local POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 local ksfun_rewards = {}
 
@@ -30,6 +31,24 @@ local function calcItemLv(player, tasklv, luckyratio)
 end
 
 
+--- 智商等级>50有10%的概率获得蓝图奖励
+local function checkSanityReward(player, rewardsdata)
+    local sanity = player.components.ksfun_power_system:GetPower(POWERS.SANITY)
+    if sanity ~= nil then
+        local lvlimt, ratio = KSFUN_TUNING.DEBUG and 1, 1 or 50, 0.1
+        if sanity.components.ksfun_level:GetLevel() >= lvlimt and math.random() <= ratio then
+            local list = prefabsdef.getLostRecipes()
+            for i,v in pairs(list) do
+                if player.components.builder and not player.components.builder:KnowsRecipe(v) then
+                    table.insert(rewardsdata, { name = v.."_blueprint" , num = 1, special = true })
+                    return
+                end
+            end
+        end
+    end
+end
+
+
 --- 随机生成一些物品
 --- 任务等级越高，奖励越丰富，同时附加幸运值策略
 --- @param  tasklv 任务难度等级
@@ -51,12 +70,13 @@ local function randomNormalItem(player, tasklv)
     num = math.max(1, num * luckymulti + delta)
     num = math.floor(num + 0.5)
 
+    local data = {}
+    table.insert({item = name, num = num})
+    checkSanityReward(player, data)
+
     return {
         type = REWARD_TYPES.ITEM,
-        data = {
-            item = name,
-            num = num,
-        }
+        data = data
     }
 end
 
