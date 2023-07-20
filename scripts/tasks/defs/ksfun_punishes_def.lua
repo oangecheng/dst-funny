@@ -2,6 +2,7 @@
 local TYPES = KSFUN_PUNISHES
 local prefabsdef  = require("defs/ksfun_prefabs_def")
 local monstersdef = require("defs/ksfun_monsters_def") 
+local negapowers  = KSFUN_TUNING.NEGA_POWER_NAMES
 
 
 local function powerLvLose(player, tasklv)
@@ -101,7 +102,22 @@ end
 
 
 
+
+local function punishNegaPowers(player, tasklv)
+    local name = GetRandomItem(negapowers)
+    return {
+        type = TYPES.NEGA_POWER,
+        data = {
+            name = name,
+        }
+    }
+end
+
+
+
+
 local punish = {}
+local typelist = { TYPES.MONSTER, TYPES.NEGA_POWER }
 
 
 punish.random = function(player, tasklv)
@@ -131,10 +147,13 @@ punish.random = function(player, tasklv)
         punish = powerExpLose(player, tasklv)
     end
 
+
     if punish == nil then
-        local ismon = math.random() < 0.5
-        if ismon then
-            punish = punishMonster(player, tasklv)
+        local t = GetRandomItem(typelist)
+        if t == TYPES.MONSTER then
+            return punishMonster(player, tasklv)
+        elseif t == TYPES.NEGA_POWER then
+            return punishNegaPowers(player, tasklv)
         end
     end
 

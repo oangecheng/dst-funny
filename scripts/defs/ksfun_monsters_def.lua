@@ -68,7 +68,7 @@ local monstersdef = {
 
     ["stalker_atrium"]       = { lv = 7, punish = 0, pnum = hcount },  -- 暗影编制者  
     ["toadstool_dark"]       = { lv = 7, punish = 0, pnum = hcount, pblacks = {NAMES.DAMAGE} },  -- 悲惨蛤蟆  
-    ["crabking"]            = { lv = 7, punish = 0, pnum = hcount, pblacks = {NAMES.LOCOMOTOR} }, -- 帝王蟹
+    ["crabking"]             = { lv = 7, punish = 0, pnum = hcount, pblacks = {NAMES.LOCOMOTOR} }, -- 帝王蟹
     ["alterguardian_phase3"] = { lv = 7, punish = 0, pnum = hcount}, -- 天体英雄3阶
 }
 

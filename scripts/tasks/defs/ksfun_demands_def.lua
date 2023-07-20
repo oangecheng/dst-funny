@@ -48,7 +48,7 @@ end
 -- 无伤任务
 local function attackedLimit(initlv)
     local ret = default(KILL_TYPES.ATTACKED_LIMIT, initlv)
-    ret.diffculty = ret.diffculty + 2
+    ret.diffculty = ret.diffculty + 3
     return ret
 end
 
@@ -267,7 +267,7 @@ local function calcCookNum()
 end
 
 local function calcCookDiffculty(cooktype, lv, num)
-    local base = (lv or 0) + (num > 3 and 1 or 0)
+    local base = (lv or 0) + (num > 3 and 2 or 1)
     if cooktype == COOK_TYPES.TIME_LIMIT then
         return base + 1
     elseif cooktype == COOK_TYPES.FOOD_LIMIT then

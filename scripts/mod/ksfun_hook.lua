@@ -392,10 +392,10 @@ end)
 ---------------------------------------------给猪王金子可以获得任务卷轴-------------------------------------------------
 local taskitemsdef = {
     ["goldnugget"] = 0,
-    ["redgem"]     = 3,
-    ["bluegem"]    = 3,
-    ["purplegem"]  = 5,
-    ["thulecite"]  = 7,
+    ["redgem"]     = 2,
+    ["bluegem"]    = 2,
+    ["purplegem"]  = 4,
+    ["thulecite"]  = 6,
 }
 
 

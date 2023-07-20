@@ -31,6 +31,16 @@ end
 
 
 
+local function punishNegaPower(player, data)
+    local system = player.components.ksfun_power_system
+    if system and data.name then
+        system:AddPower(data.name)
+    end
+end
+
+
+
+
 local function onPunishFunc(inst, player, taskdata)
     local punish = taskdata.punish
     if punish and punish.data then
@@ -40,6 +50,8 @@ local function onPunishFunc(inst, player, taskdata)
             losePowerProperty(player, false, punish.data)
         elseif punish.type == TYPES.MONSTER then
             punishMonster(player, punish.data)
+        elseif punish.type == TYPES.NEGA_POWER then
+            punishNegaPower(player, punish.data)
         end
     else
         KsFunShowTip(player, STRINGS.KSFUN_TASK_PUNISH_NONE)
