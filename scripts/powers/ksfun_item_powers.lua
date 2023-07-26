@@ -420,24 +420,20 @@ local absorb = {
 
 
 
-local item = {
-    
+
+
+local itempowers = {
+    [NAMES.WATER_PROOFER] = waterproofer,
+    [NAMES.DAPPERNESS]    = dapperness,
+    [NAMES.INSULATOR]     = insulator,
+    [NAMES.DAMAGE]        = damage,
+    [NAMES.CHOP]          = chop,
+    [NAMES.MINE]          = mine,
+    [NAMES.LIFESTEAL]     = lifesteal,
+    [NAMES.AOE]           = aoe,
+    [NAMES.MAXUSES]       = maxuses,
+    [NAMES.SPEED]         = speed,
+    [NAMES.ABSORB]        = absorb,
 }
 
-
-item.insulator    = { data = insulator }
-item.waterproofer = { data = waterproofer }
-item.dapperness   = { data = dapperness }
-
-item.lifesteal    = { data = lifesteal }
-item.aoe          = { data = aoe }
-item.mine         = { data = mine }
-item.chop         = { data = chop }
-item.maxuses      = { data = maxuses }
-item.damage       = { data = damage }
-
-item.speed        = { data = speed }
-item.absorb       = { data = absorb }
-
-
-return item
+return itempowers

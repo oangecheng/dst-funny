@@ -1,5 +1,4 @@
 local NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
-local monsterpowers = {}
 
 
 --- 计算属性等级上限，四舍五入
@@ -254,20 +253,73 @@ local health = {
 }
 
 
+------ 怪物击退 ----------------------------------------------------------------------------------------
+local function onKnockback(attacker, data)
+    local power = attacker.components.ksfun_power_system:GetPower(NAMES.KNOCK_BACK)
+    -- 20% 的概率击退
+    local hit = canHit(0.2)
+    if hit and power and data.target then
+        local lv = power.components.ksfun_level:GetLevel()
+        local radius = 0.2 + math.min(0.8, lv * 0.01 )
+        if data.target:HasTag("player") then
+            data.target:PushEvent("knockback", {knocker = attacker, radius = radius})
+        end
+    end
+end
+
+local knockback = {
+    onattach = function(inst, target)
+        target:ListenForEvent("onattackother", onKnockback)
+    end
+}
 
 
 
 
 
 
-monsterpowers.absorb       = { data = absorb } 
-monsterpowers.iceexplosion = { data = iceexplosion }
-monsterpowers.sanityaura   = { data = sanityaura }
-monsterpowers.realdamage   = { data = realdamage }
-monsterpowers.damage       = { data = damage }
-monsterpowers.locomotor    = { data = locomotor }
-monsterpowers.critdamage   = { data = critdamage }
-monsterpowers.health       = { data = health }
+------ 怪物攻击掉落物品 ----------------------------------------------------------------------------------------
+local function onSteal(attacker, data)
+    local power = attacker.components.ksfun_power_system:GetPower(NAMES.STEAL)
+    -- 20% 的概率击落物品
+    if power and data.target and data.target:HasTag("player") then
+        local lv = power.components.ksfun_power:GetLevel()
+        local multi = math.min(2, lv * 0.01 + 1)
+        local hit = canHit(0.2 * mult)
+        if attacker.components.thief then
+            attacker.components.thief:StealItem(data.target)
+        end
+    end
+end
 
+local steal = {
+    onattach = function(inst, target)
+        if target.components.thief == nil then
+            target:AddComponent("thief")
+        end
+        onattach = function(inst, target)
+            target:ListenForEvent("onattackother", onSteal)
+        end
+    end
+}
+
+
+
+
+
+
+
+local monsterpowers = {
+    [NAMES.ABSORB]        = absorb,
+    [NAMES.ICE_EXPLOSION] = iceexplosion,
+    [NAMES.SANITY_AURA]   = sanityaura,
+    [NAMES.REAL_DAMAGE]   = realdamage,
+    [NAMES.DAMAGE]        = damage,
+    [NAMES.LOCOMOTOR]     = locomotor,
+    [NAMES.CRIT_DAMAGE]   = critdamage,
+    [NAMES.HEALTH]        = health,
+    [NAMES.KNOCK_BACK]    = knockback,
+    [NAMES.STEAL]         = steal,
+}
 
 return monsterpowers

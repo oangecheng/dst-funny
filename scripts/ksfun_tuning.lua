@@ -52,6 +52,8 @@ KSFUN_TUNING =  {
         ICE_EXPLOSION = "monster_ice_explosion",
         SANITY_AURA   = "monster_sanity_aura",
         ABSORB        = "monster_absorb",
+        KNOCK_BACK    = "monster_knockback",
+        STEAL         = "monster_steal",
     },
 
 

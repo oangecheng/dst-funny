@@ -2,9 +2,6 @@ local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
 
-local playerpowers = {}
-
-
 --- 不需要format的属性描述可以使用这个
 local function getPowerDesc(inst)
     local extra = KsFunGetPowerDescExtra(inst.prefab)
@@ -726,15 +723,17 @@ local critdamage = {
 
 
 
-playerpowers.health       = { data = health }
-playerpowers.hunger       = { data = hunger }
-playerpowers.sanity       = { data = sanity }
-playerpowers.pick         = { data = pick }
-playerpowers.farm         = { data = farm }
-playerpowers.killdrop     = { data = killdrop }
-playerpowers.damage       = { data = damage }
-playerpowers.locomotor    = { data = locomotor }
-playerpowers.critdamage   = { data = critdamage }
+local playerpowers = {
+    [NAMES.HUNGER]      = hunger,
+    [NAMES.SANITY]      = sanity,
+    [NAMES.HEALTH]      = health,
+    [NAMES.PICK]        = pick,
+    [NAMES.FARM]        = farm,
+    [NAMES.KILL_DROP]   = killdrop,
+    [NAMES.CRIT_DAMAGE] = critdamage,
+    [NAMES.LOCOMOTOR]   = locomotor,
+    [NAMES.DAMAGE]      = damage,
+}
 
 
 return playerpowers
