@@ -107,14 +107,15 @@ local iceexplosion = {
 
 ------ 怪物降智光环增强 ----------------------------------------------------------------------------------------
 local delta = TUNING.SANITYAURA_SMALL / 25
+local SANITYAURA_KEY = "sanityaura"
 
 local function updateSanityauraStatus(inst)
     local power = inst.components.ksfun_power
-    local data  = power:GetData()
-    if data and inst.target then
+    local aura = power:GetData(SANITYAURA_KEY) or 0
+    if inst.target then
         if inst.target.components.sanityaura then
             local lv = inst.components.ksfun_level:GetLevel()
-            inst.target.components.sanityaura.aura = data.aura - lv * delta
+            inst.target.components.sanityaura.aura = aura - lv * delta
         end
     end
 end
@@ -124,7 +125,7 @@ local sanityaura = {
         if target.components.sanityaura == nil then
             target:AddComponent("sanityaura")
         end
-        inst.components.ksfun_power:SetData( {aura = target.components.sanityaura.aura} )
+        inst.components.ksfun_power:SaveData(SANITYAURA_KEY,target.components.sanityaura.aura)
         -- 最高不超过巨鹿
         setPowerMaxLv(inst, 50, 100)
         updateSanityauraStatus(inst)
@@ -219,14 +220,15 @@ local critdamage = {
 
 
 ------ 怪物血量提升 ----------------------------------------------------------------------------------------
+local HEALTH_KEY = "maxhealth"
 -- 按照百分比提升
 local function updateHealthStatus(inst)
     local lv = inst.components.ksfun_level.lv
     local health = inst.target.components.health
-    local data = inst.components.ksfun_power:GetData()
-    if health and data then
+    local max = inst.components.ksfun_power:GetData(HEALTH_KEY) or 100
+    if health then
         local percent = health:GetPercent()
-        health:SetMaxHealth(math.floor(data.health * (1 + lv * 0.01) + 0.5))
+        health:SetMaxHealth(math.floor(max * (1 + lv * 0.01) + 0.5))
         health:SetPercent(percent)
     end
 end
@@ -235,10 +237,9 @@ local health = {
     onattach = function(inst, target, name)
         local h = target.components.health
         -- 记录原始数据
-        inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
+        inst.components.ksfun_power:SaveData(HEALTH_KEY, h.maxhealth)
         if inst.percent then
-            local data = inst.components.ksfun_power:GetData()
-            h:SetMaxHealth(data.health)
+            h:SetMaxHealth(h.maxhealth)
             h:SetPercent(inst.percent)
         end
         updateHealthStatus(inst)

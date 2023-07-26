@@ -4,7 +4,8 @@ local KSFUN_POWER = Class(function(self, inst)
     self.target = nil
     self.name = nil
     -- 这个字段是用来缓存物品原本的属性
-    self.data = nil
+    self.data = {}
+    self.property = {}
     self.istemp = false
 
     self.onAttachFunc = nil
@@ -47,15 +48,23 @@ function KSFUN_POWER:IsTemp()
 end
 
 
-function KSFUN_POWER:GetData()
-    return self.data
+function KSFUN_POWER:SaveData(key, value)
+    self.data[key] = value
 end
 
 
-function KSFUN_POWER:SetData(data)
-    if self.data == nil then
-        self.data = data
-    end
+function KSFUN_POWER:GetData(key)
+    return self.data[key]
+end
+
+
+function KSFUN_POWER:SaveProperty(key, value)
+    self.property[key] = value
+end
+
+
+function KSFUN_POWER:GetProperty(key)
+    return self.property[key]
 end
 
 

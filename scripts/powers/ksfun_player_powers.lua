@@ -23,14 +23,15 @@ end
 
 
 ---------------------------------------------------------------------------------------------- 血量增强 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local HEALTH_KEY = "maxhealth"
 ---@param reset 是否是重置
 local function updateHealthStatus(inst, reset)
     local lv = inst.components.ksfun_level:GetLevel()
     local health = inst.target.components.health
-    local data = inst.components.ksfun_power:GetData()
-    if health and data then
+    local maxhealth = inst.components.ksfun_power:GetData(HEALTH_KEY) or 100
+    if health then
         local percent = health:GetPercent()
-        local max = reset and data.health or data.health + lv
+        local max = reset and maxhealth or maxhealth + lv
         health:SetMaxHealth(max)
         health:SetPercent(percent)
     end
@@ -71,7 +72,7 @@ local health = {
     onattach = function(inst, target, name)
         local h = target.components.health
         -- 记录原始数据
-        inst.components.ksfun_power:SetData({health = h.maxhealth, percent = h:GetPercent()})
+        inst.components.ksfun_power:SaveData(HEALTH_KEY, h.maxhealth)
         if inst.percent then
             h:SetPercent(inst.percent)
         end
@@ -111,17 +112,18 @@ local health = {
 
 
 ---------------------------------------------------------------------------------------------- 饱食度 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local HUNGER_KEY = "maxhunger"
 -- 更新角色的状态
 -- 设置最大饱食度和饱食度的下降速率
 -- 肚子越大，饿的越快
 local function updateHungerStatus(inst, reset)
-    local data   = inst.components.ksfun_power:GetData()
+    local maxhunger = inst.components.ksfun_power:GetData(HUNGER_KEY) or 100
     local lv     = inst.components.ksfun_level:GetLevel()
     local hunger = inst.target.components.hunger
 
-    if hunger and data then
+    if hunger then
         local percent = hunger:GetPercent()
-        hunger.max = reset and data.maxhunger or data.maxhunger + lv
+        hunger.max = reset and maxhunger or maxhunger + lv
         hunger:SetPercent(percent)
     end
 
@@ -193,7 +195,7 @@ local hunger = {
     onattach = function(inst, target, name)
         local h = target.components.hunger
         -- 记录原始数据
-        inst.components.ksfun_power:SetData({ maxhunger = h.max, percent = h:GetPercent() })
+        inst.components.ksfun_power:SaveData(HUNGER_KEYM, h.max)
         if inst.percent then
             h:SetPercent(inst.percent)
         end
@@ -237,6 +239,7 @@ local hunger = {
 
 
 ------------------------------------------------------------------------------------------- 精神值 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local SANITY_KEY = "maxsanity"
 -- 各科技等级经验值倍率
 --- SCIENCE 1,2,3
 --- MAGIC 6,7,  (SCIENCE最大倍率x2)
@@ -254,13 +257,13 @@ local BUILD_ITEM_EXP_MULTI_DEFS = {
 
 
 local function updateSanityStatus(inst, reset)
-    local data = inst.components.ksfun_power:GetData()
+    local maxsanity = inst.components.ksfun_power:GetData(SANITY_KEY) or 100
     local sanity = inst.target.components.sanity
     local lv = inst.components.ksfun_level:GetLevel()
 
-    if sanity and data then
+    if sanity then
         local percent = sanity:GetPercent()
-        sanity.max = reset and data.sanity or data.sanity + lv
+        sanity.max = reset and maxsanity or maxsanity + lv
         sanity:SetPercent(percent)
     end
 end
@@ -314,7 +317,7 @@ local sanity = {
     onattach = function(inst, target, name)
         local s = target.components.sanity
         -- 记录原始数据
-        inst.components.ksfun_power:SetData({ sanity = s.max, percent = s:GetPercent() })
+        inst.components.ksfun_power:SaveData(SANITY_KEY, s.max)
         if inst.percent then
             s:SetPercent(inst.percent)
         end

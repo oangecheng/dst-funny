@@ -111,23 +111,25 @@ local chop = {
 
 
 ----- 最大使用次数 ----------------------------------------------------------------------------------------
+local MAXUSE_KEY = "maxuse"
+
 local function updateMaxusesStatus(inst)
-    local data = inst.components.ksfun_power:GetData()
+    local oldmax = inst.components.ksfun_power:GetData(MAXUSE_KEY)
     local lv   = inst.components.ksfun_level:GetLevel()
 
     -- 武器每次提升100的耐久
     local finiteuses = inst.target.components.finiteuses
-    if finiteuses and data then
+    if finiteuses and oldmax then
         local percent = finiteuses:GetPercent()
-        finiteuses:SetMaxUses(data.maxuses + lv * 100)
+        finiteuses:SetMaxUses(oldmax + lv * 100)
         finiteuses:SetPercent(percent)
     end
 
     -- 护甲每次提升200的耐久
     local armor = inst.target.components.armor
-    if armor and data then
+    if armor and oldmax then
         local percent = armor:GetPercent()
-        armor.maxcondition = data.maxuses + lv * 200
+        armor.maxcondition = oldmax + lv * 200
         armor:SetPercent(percent)
     end
 end
@@ -135,10 +137,10 @@ end
 local maxuses = {
     onattach = function(inst, target)
         if target.components.armor then
-            inst.components.ksfun_power:SetData({ maxuses = target.components.armor.maxcondition })
+            inst.components.ksfun_power:SaveData(MAXUSE_KEY, target.components.armor.maxcondition)
         end
         if target.components.finiteuses then
-            inst.components.ksfun_power:SetData({ maxuses = target.components.finiteuses.total })
+            inst.components.ksfun_power:SaveData(MAXUSE_KEY, target.components.finiteuses.total)
         end
         updateMaxusesStatus(inst)
     end,
@@ -154,15 +156,13 @@ local maxuses = {
 
 
 ----- 武器基础伤害 ----------------------------------------------------------------------------------------
+local DAMAGE_KEY = "damage"
 local function updateDamageStatus(inst, l, n)
     local power = inst.components.ksfun_power
-    local data  = power:GetData()
-    if data then
-        local damage = data.damage or 0
-        if inst.target and inst.target.components.weapon then
-            local level = inst.components.ksfun_level:GetLevel()
-            inst.target.components.weapon:SetDamage(damage + level)
-        end
+    local damage = power:GetData(DAMAGE_KEY) or 0
+    if inst.target and inst.target.components.weapon then
+        local level = inst.components.ksfun_level:GetLevel()
+        inst.target.components.weapon:SetDamage(damage + level)
     end
 end
 
@@ -170,7 +170,7 @@ local damage = {
     onattach = function(inst, target)
         if target.components.weapon then
             local d = target.components.weapon.damage
-            inst.components.ksfun_power:SetData({ damage = d})
+            inst.components.ksfun_power:SaveData(DAMAGE_KEY, d)
             updateDamageStatus(inst)
         end
     end,
@@ -193,13 +193,16 @@ local damage = {
 
 
 ----- 保暖/隔热属性 ----------------------------------------------------------------------------------------
-local function updateInsulatorStatus(inst, l, n)
+local INSULATION_KEY = "insulation"
+local INSULATION_TYPE_KEY = "type"
+local function updateInsulatorStatus(inst)
     local insulator = inst.target and inst.target.components.insulator or nil
     local lv    = inst.components.ksfun_level:GetLevel()
-    local data  = inst.components.ksfun_power:GetData()
-    if insulator and data then
-        insulator:SetInsulation(data.insulation + lv)
-        local type = inst.type or data.type or insulator.type
+    local insu  = inst.components.ksfun_power:GetData(INSULATION_KEY)
+    local t     = inst.components.ksfun_power:GetData(INSULATION_TYPE_KEY)
+    if insulator then
+        insulator:SetInsulation(insu + lv)
+        local type = inst.type or t or insulator.type
         if type == SEASONS.SUMMER then
             insulator:SetSummer()
         elseif type  == SEASONS.WINTER then
@@ -246,7 +249,8 @@ local insulator = {
             target:AddComponent("insulator")
         end
         local ins, t = target.components.insulator:GetInsulation()
-        inst.components.ksfun_power:SetData({insulation = ins, type = t})
+        inst.components.ksfun_power:SaveData(INSULATION_KEY, ins)
+        inst.components.ksfun_power:SaveData(INSULATION_TYPE_KEY, t)
         if not inst.type then inst.type = t end
         changeInsulatorType(inst, target)
         updateInsulatorStatus(inst)
@@ -278,19 +282,20 @@ local insulator = {
 
 ----- 精神恢复 ----------------------------------------------------------------------------------------
 local DAPPERNESS_RATIO = TUNING.DAPPERNESS_MED / 3
+local DAPPERNESS_KEY = "dapperness"
 local function updateDappernessStatus(inst)
-    local data = inst.components.ksfun_power:GetData()
+    local dapperness = inst.components.ksfun_power:GetData(DAMAGE_KEY) or 0
     local equippable = inst.target and inst.target.components.equippable or nil
     local level = inst.components.ksfun_level
-    if equippable and data then
-        equippable.dapperness = data.dapperness + DAPPERNESS_RATIO * level:GetLevel()
+    if equippable then
+        equippable.dapperness = dapperness + DAPPERNESS_RATIO * level:GetLevel()
     end
 end
 
 local dapperness = {
     onattach = function(inst, target)
         local equippable = target.components.equippable
-        inst.components.ksfun_power:SetData({dapperness = equippable.dapperness})
+        inst.components.ksfun_power:SaveData(DAPPERNESS_KEY, equippable.dapperness)
         updateDappernessStatus(inst)
     end,
     onstatechange = updateDappernessStatus,
@@ -310,12 +315,13 @@ local dapperness = {
 
 
 ----- 防水 ----------------------------------------------------------------------------------------
+local PROOF_EFFECT_KEY = "waterproof"
 local function updateWaterproofStatus(inst)
     local waterproofer = inst.target.components.waterproofer
-    local data = inst.components.ksfun_power:GetData()
-    local lv   = inst.components.ksfun_level:GetLevel()
-    if waterproofer and data then
-        waterproofer:SetEffectiveness(data.effectiveness + lv * 0.01)
+    local effect = inst.components.ksfun_power:GetData(PROOF_EFFECT_KEY) or 0
+    local lv     = inst.components.ksfun_level:GetLevel()
+    if waterproofer then
+        waterproofer:SetEffectiveness(effect + lv * 0.01)
     end
 end
 
@@ -327,7 +333,7 @@ local waterproofer = {
             target.components.waterproofer:SetEffectiveness(0)
         end
         local effect = target.components.waterproofer:GetEffectiveness()
-        inst.components.ksfun_power:SetData({effectiveness = effect})
+        inst.components.ksfun_power:SaveData(PROOF_EFFECT_KEY, effect)
         -- 计算最大等级，眼球伞的最大等级就是0，也就是不需要升级的
         -- 眼球伞应该没办法添加防水属性，后面看下怎么加酸雨防护，暂时保留
         local max = math.floor((1 - effect) / 0.01)
@@ -349,10 +355,10 @@ local waterproofer = {
 
 
 ------ 移速 ----------------------------------------------------------------------------------------
+local SPEED_KEY = "speed"
 local speedmax = 50
 local function updateSpeedStatus(inst, l, n)
-    local d = inst.components.ksfun_power:GetData()
-    local speed = d and d.speed or 1
+    local speed = inst.components.ksfun_power:GetData(SPEED_KEY) or 1
     local lv = inst.components.ksfun_level:GetLevel()
     if inst.target.components.equippable ~= nil then
         inst.target.components.equippable.walkspeedmult = speed + lv / 100
@@ -362,7 +368,7 @@ end
 local speed = {
     onattach = function(inst, target)
         local equippable = target.components.equippable
-        inst.components.ksfun_power:SetData({speed = equippable:GetWalkSpeedMult()})
+        inst.components.ksfun_power:SaveData(SPEED_KEY, equippable:GetWalkSpeedMult())
         inst.components.ksfun_level:SetMax(speedmax)
         updateSpeedStatus(inst)
     end,
@@ -383,20 +389,20 @@ local speed = {
 
 
 ------ 护甲防护 ----------------------------------------------------------------------------------------
+local ABSORB_KEY = "absorb"
 local function updateAbsorbStatus(inst)
     local armor = inst.target.components.armor
-    local data  = inst.components.ksfun_power:GetData()
+    local absorb = inst.components.ksfun_power:GetData(ABSORB_KEY) or 0
     local lv    = inst.components.ksfun_level:GetLevel()
-    if armor and data then
-        local p = data.absorb
-        armor:SetAbsorption(p + lv * 0.01)
+    if armor then
+        armor:SetAbsorption(absorb + lv * 0.01)
     end
 end
 
 local absorb = {
     onattach = function(inst, target)
         local absorb = target.components.armor.absorb_percent 
-        inst.components.ksfun_power:SetData( {absorb = absorb} )
+        inst.components.ksfun_power:SaveData(ABSORB_KEY, absorb)
         local max = math.floor(math.max(0.9 - absorb, 0)/0.01 + 0.5)
         inst.components.ksfun_level:SetMax(max)
         updateAbsorbStatus(inst)
