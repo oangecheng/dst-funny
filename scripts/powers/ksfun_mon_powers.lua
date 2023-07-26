@@ -81,7 +81,7 @@ end
 local function onDeath(inst)
     local power = inst.components.ksfun_power_system:GetPower(NAMES.ICE_EXPLOSION)
     local hit = canHit(0.2)
-    if hit and power and power.components.ksfun_power:IsEnable() then
+    if hit and power then
         local lv = power.components.ksfun_level:GetLevel()
         local area = 2 + 2 * lv/10
         local coldness = 1 + lv/10

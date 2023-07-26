@@ -3,13 +3,11 @@ local KSFUN_POWER = Class(function(self, inst)
     self.inst = inst
     self.target = nil
     self.name = nil
-    self.enable = true
     -- 这个字段是用来缓存物品原本的属性
     self.data = nil
     self.istemp = false
 
     self.onAttachFunc = nil
-    self.onEnableChanged = nil
     self.onDetachFunc = nil
     self.onExtendFunc = nil
     self.onGetDescFunc = nil
@@ -38,18 +36,6 @@ function KSFUN_POWER:SetOnGetDescFunc(func)
     self.onGetDescFunc = func
 end
 
-function KSFUN_POWER:SetOnEnableChangedFunc(func)
-    self.onEnableChanged = func
-end
-
-
-function KSFUN_POWER:SetEnable(enable)
-    self.enable = enable
-    if self.onEnableChanged then
-        self.onEnableChanged(self.enable)
-    end
-end
-
 
 function KSFUN_POWER:SetTemp()
     self.istemp = true
@@ -58,11 +44,6 @@ end
 
 function KSFUN_POWER:IsTemp()
     return self.istemp
-end
-
-
-function KSFUN_POWER:IsEnable()
-    return self.enable
 end
 
 
