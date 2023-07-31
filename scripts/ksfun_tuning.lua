@@ -54,6 +54,7 @@ KSFUN_TUNING =  {
         ABSORB        = "monster_absorb",
         KNOCK_BACK    = "monster_knockback",
         STEAL         = "monster_steal",
+        LIFESTEAL     = "monster_lifesteal"
     },
 
 

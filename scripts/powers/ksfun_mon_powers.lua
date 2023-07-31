@@ -288,9 +288,8 @@ local function onSteal(attacker, data)
     -- 20% 的概率击落物品
     if power and data.target and data.target:HasTag("player") then
         local lv = power.components.ksfun_power:GetLevel()
-        local multi = math.min(2, lv * 0.01 + 1)
-        local hit = canHit(0.2 * mult)
-        if attacker.components.thief then
+        local hit = canHit(0.2 + lv * 0.03)
+        if hit and attacker.components.thief then
             attacker.components.thief:StealItem(data.target)
         end
     end
@@ -301,9 +300,39 @@ local steal = {
         if target.components.thief == nil then
             target:AddComponent("thief")
         end
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
         target:ListenForEvent("onattackother", onSteal)
     end
 }
+
+
+
+
+
+
+
+------ 怪物攻击恢复生命值 ----------------------------------------------------------------------------------------
+local function onLifeSteal(attacker, data)
+    local power = attacker.components.ksfun_power_system:GetPower(NAMES.LIFESTEAL)
+    -- 20% 的概率击落物品
+    if power and data.target and data.target:HasTag("player") then
+        local lv = power.components.ksfun_power:GetLevel()
+        local hit = canHit(0.2 + lv * 0.03)
+        if hit and attacker.components.health then
+            local delta = attacker.components.health.max * lv * 0.005
+            attacker.components.health:DoDelta(delta)
+        end
+    end
+end
+
+local lifesteal = {
+    onattach = function(inst, target)
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
+        target:ListenForEvent("onattackother", onLifeSteal)
+    end
+}
+
+
 
 
 
@@ -322,6 +351,7 @@ local monsterpowers = {
     [NAMES.HEALTH]        = health,
     [NAMES.KNOCK_BACK]    = knockback,
     [NAMES.STEAL]         = steal,
+    [NAMES.LIFESTEAL]     = lifesteal,
 }
 
 return monsterpowers
