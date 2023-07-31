@@ -360,7 +360,7 @@ local PICKABLE_DEFS = require("defs/ksfun_prefabs_def").pickable
 --- 升级到30级大概需要采集400多个草
 --- 0级的时候有 10% 概率双倍
 local function calcPickMulti(power)
-    local lv = math.floor(power.components.ksfun_level:GetLevel() / 30 )
+    local lv = math.floor(power.components.ksfun_level:GetLevel() * 0.1)
 
     if lv < 1 then 
         return (math.random(100) < 10)  and 1 or 0
@@ -463,7 +463,7 @@ end
 
 local pick = {
     onattach = function(inst, target, name)
-        inst.components.ksfun_level:SetMax(300)
+        inst.components.ksfun_level:SetMax(100)
         target:ListenForEvent("picksomething", onPickSomeThing)
         target:ListenForEvent("ksfun_picksomething", onPickSomeThing)
     end,
@@ -639,14 +639,14 @@ local function updateDamageStatus(inst, reset)
             combat.externaldamagemultipliers:RemoveModifier(inst)
         else
             local lv = inst.components.ksfun_level:GetLevel()
-            combat.externaldamagemultipliers:SetModifier(inst, 1 + lv /100)
+            combat.externaldamagemultipliers:SetModifier(inst, 1 + lv * 0.005)
         end
     end
 end
 
 local damage = {
     onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(50)
+        inst.components.ksfun_level:SetMax(100)
         updateDamageStatus(inst)
     end,
 
@@ -676,7 +676,7 @@ local function updateLocomotorStatus(inst, reset)
             locomotor:RemoveExternalSpeedMultiplier(inst, "ksfun_power_locomotor")
         else
             local lv = inst.components.ksfun_level:GetLevel()
-            local mult = 1 + lv / 100
+            local mult = 1 + lv * 0.005
             locomotor:SetExternalSpeedMultiplier(inst, "ksfun_power_locomotor", mult)
         end
     end
@@ -685,7 +685,7 @@ end
 local locomotor = {
 
     onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(50)
+        inst.components.ksfun_level:SetMax(100)
         updateLocomotorStatus(inst)
     end,
 

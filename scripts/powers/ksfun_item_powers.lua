@@ -18,7 +18,7 @@ end
 
 
 ------ 吸血属性 ----------------------------------------------------------------------------------------
-local lifestealmax = 5
+local lifestealmax = 100
 
 local lifesteal = {
     onattach = function(inst)
@@ -26,7 +26,7 @@ local lifesteal = {
     end,
     ondesc = getPowerDesc,
     forgable = {
-        items     = {["mosquitosack"] = 2},
+        items     = {["mosquitosack"] = 20, ["spidergland"] = 10},
         onsuccess = onForgSuccess,
     },
 }
@@ -34,7 +34,7 @@ local lifesteal = {
 
 
 ------- 溅射伤害 ----------------------------------------------------------------------------------------
-local aoemax = 10
+local aoemax = 100
 
 local function onGetAoeDescFunc( inst, target, name )
     local multi,area = KsFunGetAoeProperty(inst)
@@ -49,7 +49,7 @@ local aoe = {
     ondesc   = onGetAoeDescFunc,
     forgable = {
         onsuccess = onForgSuccess,
-        items     = {["minotaurhorn"] = 5}, --犀牛角
+        items     = {["minotaurhorn"] = 1000}, --犀牛角
     }
 }
 
@@ -59,7 +59,7 @@ local aoe = {
 local minemax = 10
 local function updateMineStatus(inst)
     local lv = inst.components.ksfun_level:GetLevel()
-    local m = math.max(minemax - lv, 1)
+    local m = math.max(minemax - lv * 0.1, 1)
     inst.target.components.finiteuses:SetConsumption(ACTIONS.MINE, 1)
     local multi = math.floor(minemax/m + 0.5)
     inst.target.components.tool:SetAction(ACTIONS.MINE, multi)
@@ -68,14 +68,14 @@ end
 local mine = {
     onattach = function(inst, target)
         if target.components.tool == nil then target:AddComponent("tool") end
-        inst.components.ksfun_level:SetMax(minemax)
+        inst.components.ksfun_level:SetMax(100)
         updateMineStatus(inst)  
     end,
     ondesc = getPowerDesc,
     onstatechange = updateMineStatus,
     -- 使用大理石或者硝石进行升级
     forgable = {
-        items = { ["marble"] = 1, ["nitre"]  = 1,},
+        items = { ["marble"] = 50, ["nitre"]  = 100, ["flint"] = 10, ["rocks"] = 10},
         onsuccess = onForgSuccess,
     }
 }
@@ -86,7 +86,7 @@ local mine = {
 local chopmax = 15
 local function updateChopStatus(inst)
     local lv = inst.components.ksfun_level:GetLevel()
-    local m = math.max(chopmax - lv, 1)
+    local m = math.max(chopmax - lv * 0.15, 1)
     inst.target.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
     local multi = math.floor(chopmax/m + 0.5)
     inst.target.components.tool:SetAction(ACTIONS.CHOP, multi)
@@ -95,14 +95,14 @@ end
 local chop = {
     onattach = function(inst, target)
         if target.components.tool == nil then target:AddComponent("tool") end
-        inst.components.ksfun_level:SetMax(chopmax)
+        inst.components.ksfun_level:SetMax(100)
         updateChopStatus(inst)  
     end,
     ondesc = getPowerDesc,
     onstatechange = updateChopStatus,
     -- 使用活木升级
     forgable = {
-        items = { ["livinglog"] = 1,},
+        items = { ["livinglog"] = 50, ["log"] = 10, },
         onsuccess = onForgSuccess,
     }
 }
@@ -147,7 +147,7 @@ local maxuses = {
     onstatechange = updateMaxusesStatus,
     ondesc = getPowerDesc,
     forgable = {
-        items = {["dragon_scales"] = 10,}, -- 龙鳞提升耐久
+        items = {["dragon_scales"] = 20, }, -- 龙鳞提升耐久
         onsuccess = onForgSuccess,
     }
 }
@@ -361,12 +361,12 @@ local waterproofer = {
 
 ------ 移速 ----------------------------------------------------------------------------------------
 local SPEED_KEY = "speed"
-local speedmax = 50
+local speedmax = 100
 local function updateSpeedStatus(inst, l, n)
     local speed = inst.components.ksfun_power:GetData(SPEED_KEY) or 1
     local lv = inst.components.ksfun_level:GetLevel()
     if inst.target.components.equippable ~= nil then
-        inst.target.components.equippable.walkspeedmult = speed + lv / 100
+        inst.target.components.equippable.walkspeedmult = speed + lv * 0.006
     end
 end
 
@@ -383,8 +383,8 @@ local speed = {
     forgable = {
         onsuccess = onForgSuccess,
         items = {
-            ["walrus_tusk"] = 100,
-            ["cane"] = 150,
+            ["walrus_tusk"] = 200,
+            ["cane"] = 250,
         }
     }    
 }

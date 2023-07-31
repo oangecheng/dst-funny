@@ -82,9 +82,9 @@ function KsFunGetAoeProperty(aoepower)
     local level = aoepower.components.ksfun_level
     -- 初始 50% 范围伤害，满级80%
     -- 初始 1.2 范围， 满级3范围
-    local percent = level:GetLevel() / level:GetMax()
-    local multi = 0.5 + 0.3 * percent
-    local area  = 1.2 + 1.8 * percent
+    local lv = level:GetLevel()
+    local multi = 0.5 + 0.03 * lv
+    local area  = 1.2 + 0.018 * lv
     return multi, area
 end
 

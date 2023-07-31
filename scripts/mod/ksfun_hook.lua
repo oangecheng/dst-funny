@@ -234,7 +234,8 @@ local function doLifestealAttack(lifesteal, attacker, victim)
         local level  = lifesteal.components.ksfun_level
         local health = attacker and attacker.components.health or nil
         if level and health then
-            health:DoDelta(level:GetLevel(), false, "ksfun_item_lifesteal")
+            local delta = math.floor(level:GetLevel() * 0.05 + 1 + 0.5)
+            health:DoDelta(delta, false, "ksfun_item_lifesteal")
         end
     end
 end
