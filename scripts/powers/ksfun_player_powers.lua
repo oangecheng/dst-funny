@@ -383,7 +383,7 @@ end
 
 local function onPickSomeThing(player, data)
     local obj = data.object
-    local exp = (PICKABLE_DEFS[obj.prefab] or 0) * 10
+    local exp = (PICKABLE_DEFS[obj.prefab] or 0)
     if exp <= 0 then 
         return 
     end

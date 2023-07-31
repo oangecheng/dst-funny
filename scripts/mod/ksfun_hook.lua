@@ -408,23 +408,12 @@ AddPrefabPostInit("pigking", function(inst)
 	if TheWorld.ismastersim then
         local trader = inst.components.trader
 
-        local oldTradeTest = trader.abletoaccepttest
-        trader:SetAbleToAcceptTest(function(inst, item, giver)
-            if taskitemsdef[item.prefab] ~= nil then
-                return true
-            end
-            if oldTradeTest and oldTradeTest(inst, item, giver) then
-                return true
-            end
-            return false
-        end)
-
         local oldTest = trader.test
         trader:SetAcceptTest(function(inst, item, giver)
             if table.containskey(taskitemsdef, item.prefab) then
                 return true
             end
-            return not self.test or self.test(self.inst, item, giver)
+            return oldTest and oldTest(inst, item, giver)
         end)
         
 		if trader and trader.onaccept then
@@ -440,6 +429,7 @@ AddPrefabPostInit("pigking", function(inst)
                         taskreel = KsFunSpawnTaskReel(initlv)
                     end
                     if taskreel then
+                        inst.sg:GoToState("cointoss")
                         inst:DoTaskInTime(2 / 3, function(item,giver)
                             LaunchAt(taskreel, inst, giver, 2, 5, 1)
                         end)
