@@ -192,7 +192,7 @@ local hunger = {
     onattach = function(inst, target, name)
         local h = target.components.hunger
         -- 记录原始数据
-        inst.components.ksfun_power:SaveData(HUNGER_KEYM, h.max)
+        inst.components.ksfun_power:SaveData(HUNGER_KEY, h.max)
         if inst.percent then
             h:SetPercent(inst.percent)
         end

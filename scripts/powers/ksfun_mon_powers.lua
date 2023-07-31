@@ -300,9 +300,7 @@ local steal = {
         if target.components.thief == nil then
             target:AddComponent("thief")
         end
-        onattach = function(inst, target)
-            target:ListenForEvent("onattackother", onSteal)
-        end
+        target:ListenForEvent("onattackother", onSteal)
     end
 }
 
