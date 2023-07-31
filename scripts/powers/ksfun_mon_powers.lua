@@ -1,4 +1,5 @@
 local NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
+local MAXLV = 100
 
 
 --- 计算属性等级上限，四舍五入
@@ -33,14 +34,14 @@ local function updateAbsorbStatus(inst)
     local health = inst.target.components.health  
     local lv = inst.components.ksfun_level:GetLevel()
     if health then
-        health.externalabsorbmodifiers:SetModifier("ksfun_power", lv * 0.01)
+        health.externalabsorbmodifiers:SetModifier("ksfun_power", lv * 0.003)
     end
 end
 
 local absorb = {
     onattach = function(inst)
-        -- 最多减伤30%，最高难度50%
-        setPowerMaxLv(inst, 30, 50)
+        -- 最多减伤30%，最高难度60%
+        setPowerMaxLv(inst, MAXLV, MAXLV*2)
         updateAbsorbStatus(inst)
     end,
     onstatechange = updateAbsorbStatus
@@ -82,8 +83,8 @@ local function onDeath(inst)
     local hit = canHit(0.2)
     if hit and power then
         local lv = power.components.ksfun_level:GetLevel()
-        local area = 2 + 2 * lv/10
-        local coldness = 1 + lv/10
+        local area = 2 + 2 * lv * 0.01
+        local coldness = 1 + lv * 0.01
         doIceExplosion(inst, area, coldness)
     end
 end
@@ -93,7 +94,7 @@ local iceexplosion = {
     onattach = function(inst, target)
         if target.prefab ~= "icehound" then
             target:ListenForEvent("death", onDeath)
-            setPowerMaxLv(inst, 10, 20)
+            setPowerMaxLv(inst, MAXLV, MAXLV * 2)
         end
     end,
 }
@@ -126,7 +127,7 @@ local sanityaura = {
         end
         inst.components.ksfun_power:SaveData(SANITYAURA_KEY,target.components.sanityaura.aura)
         -- 最高不超过巨鹿
-        setPowerMaxLv(inst, 50, 100)
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
         updateSanityauraStatus(inst)
     end,
     onstatechange = updateSanityauraStatus
@@ -139,20 +140,20 @@ local sanityaura = {
 ------ 怪物额外真实伤害 ----------------------------------------------------------------------------------------
 local function realdamageAttack(attacker, data)
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.REAL_DAMAGE)
-    -- 20% 的概率造成属性等级点的额外真实伤害，不计算护甲
+    -- 20% 的概率造成属性等级*0.03点的额外真实伤害，不计算护甲
     local hit = canHit(0.2)
     if hit and power and data.target then
         local lv = power.components.ksfun_level:GetLevel()
         local health = data.target.components.health
         if health then
-            health:DoDelta(-lv, nil, nil, true, nil, true)
+            health:DoDelta(-lv * 0.03, nil, nil, true, nil, true)
         end
     end
 end
 
 local realdamage = {
     onattach = function(inst, target)
-        setPowerMaxLv(inst, 20, 50)
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
         target:ListenForEvent("onattackother", realdamageAttack)
     end,
 }
@@ -173,7 +174,7 @@ end
 local damage = {
     onattach = function(inst)
         -- 默认最大2倍攻击，最大3倍攻击
-        setPowerMaxLv(inst, 100, 200)
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
         updateDamageStatus(inst)
     end,
     onstatechange = updateDamageStatus,
@@ -196,8 +197,8 @@ end
 
 local locomotor = {
     onattach = function(inst)
-        -- 默认最大1.5倍移速，最高2倍移速
-        setPowerMaxLv(inst, 50, 100)
+        -- 默认最大2倍移速，最高3倍移速
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
         updateLocomotorStatus(inst)
     end,
     onstatechange = updateLocomotorStatus,
@@ -210,7 +211,7 @@ local locomotor = {
 ------ 怪物暴击 ----------------------------------------------------------------------------------------
 local critdamage = {
     onattach = function(inst, target)
-        setPowerMaxLv(inst, 100, 200)
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
     end,
 }
 
