@@ -15,7 +15,7 @@ or
 ]]
 
 -- 作者
-author = "Zax"
+author = "橙子"
 -- 版本
 version = "0.1.0"
 -- klei官方论坛地址，为空则默认是工坊的地址

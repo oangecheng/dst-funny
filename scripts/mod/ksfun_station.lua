@@ -40,16 +40,18 @@ end
 --- 第一个位置放被强化的物品
 --- 第二个位置放强化需要的的材料
 --- 强化的顺序一次是  附魔 ——> 突破 ——> 升级
+--- 第3个格子放入10个以上的金子且可以放弃当前任务
 local function onClose(inst, doer)
     local item1 = inst.components.container:GetItemInSlot(1)
     local item2 = inst.components.container:GetItemInSlot(2)
+    local item3 = inst.components.container:GetItemInSlot(3)
 
-    if item1 and item2 == nil then
-        if item1.prefab == "purplegem" then
+    if item3 and item2 == nil and item1 == nil then
+        if item3.prefab == "goldnugget" and item.components.stackable:StackSize() >= 10 then
             local task = doer.components.ksfun_task_system:GetTask()
             if task then
                 task.components.ksfun_task:Lose()
-                item1:DoTaskInTime(0, item1:Remove())
+                item3:DoTaskInTime(0, item3:Remove())
                 return
             end
         end
@@ -60,18 +62,20 @@ local function onClose(inst, doer)
             if handKsFunItem(doer, item1, item2) then
                 -- doer.components.talker:Say("强化成功！")
             else
-                doer.components.talker:Say("当前材料无法进行强化！")
+                KsFunShowTip(STRINGS.KSFUN_REINFORCE_INVALID_ITEM)
             end
         else
-            doer.components.talker:Say("位置1的物品无法被强化!")
+            KsFunShowTip(STRINGS.KSFUN_REINFORCE_INVALID_TARGET)
         end
     end
 end
 
 
-AddPrefabPostInit("researchlab", function(inst)
-    inst:AddComponent("container")
-    inst.components.container:WidgetSetup("researchlab")
+AddPrefabPostInit("dragonflyfurnace", function(inst)
+    if inst.components.container == nil then
+        inst:AddComponent("container")
+    end
+    inst.components.container:WidgetSetup("dragonflyfurnace")
     inst.components.container.onopenfn = onOpen
     inst.components.container.onclosefn = onClose
     inst.components.container.skipclosesnd = true

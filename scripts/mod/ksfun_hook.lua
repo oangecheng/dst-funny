@@ -296,19 +296,20 @@ AddComponentPostInit("combat", function(self)
             return damage
         end
 
-        local power = nil
         local crit  = false
-        local lv  = power.components.ksfun_level:GetLevel()
-        local r = math.min(0.002 * lv, 0.3)
 
         if self.inst:HasTag("player") then
-            power = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.CRIT_DAMAGE)
+            local power = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.CRIT_DAMAGE)
             if power then
+                local lv  = power.components.ksfun_level:GetLevel()
+                local r = math.min(0.002 * lv, 0.3)
                 crit  = KsFunCanHit(true, r) 
             end
         else
-            power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
+            local power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
             if power then
+                local lv  = power.components.ksfun_level:GetLevel()
+                local r = math.min(0.002 * lv, 0.3)
                 crit  = KsFunCanHit(false, r) 
             end
         end

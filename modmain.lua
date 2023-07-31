@@ -26,6 +26,7 @@ Assets = {
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
     Asset("IMAGE", "images/ksfun_task_reel.tex"),
     Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
+    Asset("ANIM" , "anim/ui_chest_3x1.zip"),
 }
 
 local ITEM_POWER_NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
