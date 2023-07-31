@@ -11,7 +11,7 @@ local monstersdef = {
     ["bee"]                  = { lv = 1, punish = 0, pnum = scount },  -- 蜜蜂
     ["killerbee"]            = { lv = 1, punish = 1, pnum = scount },  -- 杀人峰
     ["mosquito"]             = { lv = 1, punish = 1, pnum = scount },  -- 蚊子
-    ["frog"]                 = { lv = 1, punish = 1, pnum = scount },  -- 青蛙
+    ["frog"]                 = { lv = 1, punish = 1, pnum = scount, pblacks = {NAMES.STEAL} },  -- 青蛙
     ["hound"]                = { lv = 1, punish = 1, pnum = scount },  -- 猎犬
     ["firehound"]            = { lv = 1, punish = 1, pnum = scount },  -- 火猎犬
     ["icehound"]             = { lv = 1, punish = 1, pnum = scount },  -- 冰猎犬
@@ -53,7 +53,7 @@ local monstersdef = {
     ["malbatross"]           = { lv = 5, punish = 0, pnum = hcount },  -- 邪天翁
     ["minotaur"]             = { lv = 5, punish = 1, pnum = hcount },  -- 远古守护者
     ["antlion"]              = { lv = 5, punish = 0, pnum = hcount, pblacks = {NAMES.LOCOMOTOR} }, -- 蚁狮
-    ["bearger"]              = { lv = 5, punish = 1, pnum = hcount },  -- 熊大
+    ["bearger"]              = { lv = 5, punish = 1, pnum = hcount, pblacks = {NAMES.KNOCK_BACK, NAMES.STEAL} },  -- 熊大
     ["dragonfly"]            = { lv = 5, punish = 1, pnum = hcount },  -- 龙蝇
     ["deerclops"]            = { lv = 5, punish = 1, pnum = hcount },  -- 巨鹿
     ["moose"]                = { lv = 5, punish = 1, pnum = hcount },  -- 大鹅
