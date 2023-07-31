@@ -195,14 +195,25 @@ local damage = {
 ----- 保暖/隔热属性 ----------------------------------------------------------------------------------------
 local INSULATION_KEY = "insulation"
 local INSULATION_TYPE_KEY = "type"
+local INSULATION_SWITCH = "switchable"
+local INSULATION_TYPE = "currenttype"
+
+
+local function getInsulationType(inst)
+    local type = inst.components.ksfun_power:GetData(INSULATION_TYPE_KEY)
+    local currenttype = inst.components.ksfun_power:GetData(INSULATION_TYPE)
+    return currenttype or type or inst.target.components.insulator.type
+end
+
 local function updateInsulatorStatus(inst)
     local insulator = inst.target and inst.target.components.insulator or nil
     local lv    = inst.components.ksfun_level:GetLevel()
     local insu  = inst.components.ksfun_power:GetData(INSULATION_KEY)
     local t     = inst.components.ksfun_power:GetData(INSULATION_TYPE_KEY)
+    local currenttype = inst.components.ksfun_power:GetData(INSULATION_TYPE)
     if insulator then
         insulator:SetInsulation(insu + lv)
-        local type = inst.type or t or insulator.type
+        local type = getInsulationType(inst)
         if type == SEASONS.SUMMER then
             insulator:SetSummer()
         elseif type  == SEASONS.WINTER then
@@ -215,12 +226,15 @@ end
 local function changeInsulatorType(inst, target)
     -- 月圆之夜给予一个彩虹宝石可以获得切换模式的能力
     local function testfunc(t, item, giver)
-        if not inst.switch then
+        if KSFUN_TUNING.DEBUG then return true end
+        local currenttype = getInsulationType(inst)
+        local switchable  = inst.components.ksfun_power:GetData(INSULATION_SWITCH)
+        if not switchable then
             return TheWorld.state.isfullmoon and item.prefab == "opalpreciousgem"
         else
-            if inst.type == SEASONS.SUMMER then
+            if currenttype == SEASONS.SUMMER then
                 return item.prefab == "redgem"
-            elseif inst.type == SEASONS.WINTER then
+            elseif currenttype == SEASONS.WINTER then
                 return item.prefab == "bluegem"
             end
         end
@@ -229,12 +243,12 @@ local function changeInsulatorType(inst, target)
 
     local function acceptfunc(t, item, giver)
         if item.prefab == "opalpreciousgem" then
-            inst.switch = true
+            inst.components.ksfun_power:SaveData(INSULATION_SWITCH, true)
         elseif item.prefab == "redgem" then
-            inst.type = SEASONS.WINTER
+            inst.components.ksfun_power:SaveData(INSULATION_TYPE, SEASONS.WINTER)
             updateInsulatorStatus(inst)
         elseif item.prefab == "bluegem" then
-            inst.type = SEASONS.SUMMER
+            inst.components.ksfun_power:SaveData(INSULATION_TYPE, SEASONS.SUMMER)
             updateInsulatorStatus(inst)
         end
     end
@@ -251,20 +265,11 @@ local insulator = {
         local ins, t = target.components.insulator:GetInsulation()
         inst.components.ksfun_power:SaveData(INSULATION_KEY, ins)
         inst.components.ksfun_power:SaveData(INSULATION_TYPE_KEY, t)
-        if not inst.type then inst.type = t end
-        changeInsulatorType(inst, target)
         updateInsulatorStatus(inst)
+        
     end,
     ondesc = getPowerDesc,
     onstatechange = updateInsulatorStatus,
-    onsave = function(inst, data)
-        data.type = inst.type or nil
-        data.switch = inst.switch or false
-    end,
-    onload = function(inst, data)
-        inst.type = data.type or nil
-        inst.switch = data.switch or false
-    end,
     forgable = {
         onsuccess = onForgSuccess,
         items = {
