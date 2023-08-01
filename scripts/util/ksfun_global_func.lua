@@ -78,7 +78,7 @@ end
 
 
 
-function KsFunGetAoeProperty(aoepower)
+GLOBAL.KsFunGetAoeProperty  = function(aoepower)
     local level = aoepower.components.ksfun_level
     -- 初始 50% 范围伤害，满级80%
     -- 初始 1.2 范围， 满级3范围
@@ -89,7 +89,7 @@ function KsFunGetAoeProperty(aoepower)
 end
 
 
-function KsFunRandomPower(inst, powers, existed)
+GLOBAL.KsFunRandomPower = function(inst, powers, existed)
     local temp = {}
 
     -- 随机排序
@@ -313,6 +313,3 @@ GLOBAL.KsFunSpawnTaskReel = function(initlv)
 end
 
 
-GLOBAL.KsFunFormatTime  = KsFunFormatTime
-GLOBAL.KsFunRandomPower = KsFunRandomPower
-GLOBAL.KsFunGetAoeProperty = KsFunGetAoeProperty
