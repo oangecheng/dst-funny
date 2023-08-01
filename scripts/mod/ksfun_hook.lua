@@ -301,22 +301,22 @@ AddComponentPostInit("combat", function(self)
         if self.inst:HasTag("player") then
             local power = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.CRIT_DAMAGE)
             if power then
-                local lv  = power.components.ksfun_level:GetLevel()
+                local lv = power.components.ksfun_level:GetLevel()
                 local r = math.min(0.002 * lv, 0.3)
-                crit  = KsFunCanHit(true, r) 
+                crit = KsFunAttackCanHit(self.inst, target, r, "player critdamage")
             end
         else
             local power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
             if power then
-                local lv  = power.components.ksfun_level:GetLevel()
+                local lv = power.components.ksfun_level:GetLevel()
                 local r = math.min(0.002 * lv, 0.3)
-                crit  = KsFunCanHit(false, r) 
+                crit = KsFunAttackCanHit(self.inst, target, r, "mon critdamage")
             end
         end
 
-        -- 暴击命中
+        -- 暴击命中, 10%概率3倍暴击，90%概率2倍暴击
         if crit then
-            damage = damage * 2       
+            damage = damage * (math.random() > 0.1 and 2 or 3 )    
         end
 
         return damage

@@ -40,7 +40,6 @@ function KSFUN_LEVEL:SetLevel(lv)
     if self.onLvChangeFunc then
         self.onLvChangeFunc(self.inst, { delta = delta, lv = self.lv })
     end
-    KsFunLog("SetLevel", lv)
     if self.inst.replica.ksfun_level then
         self.inst.replica.ksfun_level:SyncData(tostring(self.lv))
     end

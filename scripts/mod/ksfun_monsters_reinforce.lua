@@ -6,11 +6,8 @@ local monsters = require("defs/ksfun_monsters_def").reinforceMonster()
 
 
 --- 计算附加属性概率
-local function shouldAddPower(defaultratio)
-    if KSFUN_TUNING.DEBUG then return true end
-    local r =  (1 + KSFUN_TUNING.DIFFCULTY * 0.5) * defaultratio
-    r = math.max(0.1, r)
-    return math.random() < r
+local function shouldAddPower(inst, defaultratio)
+    return math.random() < defaultratio * KsFunMultiPositive(inst)
 end
 
 
@@ -21,7 +18,7 @@ local function reinforceMonster(inst, limit, blacklist, whitelist)
     if lv and lv > 10 then
         --- 10级之后才会附加属性
         --- 100级之后，怪物100%附加属性
-        if not shouldAddPower(lv/100) then return end
+        if not shouldAddPower(inst, lv/100) then return end
 
         --- 每增加50级，怪物有概率多获得一个属性，但不超过属性上限, 至少有1个属性
         local seed = math.min(math.floor(lv/50 + 0.5), limit) 
@@ -54,10 +51,22 @@ local function reinforceMonster(inst, limit, blacklist, whitelist)
 end
 
 
+local function test(inst)
+    if inst.prefab == "spider" then
+        for k,v in pairs(NAMES) do
+            local ent = inst.components.ksfun_power_system:AddPower(v)
+            if ent then
+                ent.components.ksfun_level:SetLevel(100)
+            end
+        end
+    end
+end
+
+
 --- 怪物死亡时，会获得经验来提升自己的世界等级
 local function onMonsterDeath(inst)
     if inst.components.health then
-        local exp = inst.components.health.maxhealth * 0.2
+        local exp = inst.components.health.maxhealth * 0.2 * KsFunMultiNegative(inst)
         TheWorld.components.ksfun_world_monster:GainMonsterExp(inst.prefab, exp)
     end
 end
@@ -67,7 +76,11 @@ for k,v in pairs(monsters) do
     AddPrefabPostInit(k, function(inst)
         inst:AddComponent("ksfun_power_system")
         inst:AddComponent("ksfun_level")
-        reinforceMonster(inst, v.pnum, v.pblacks, v.pwhites)
+        if KSFUN_TUNING.DEBUG then
+            test(inst)
+        else
+            reinforceMonster(inst, v.pnum, v.pblacks, v.pwhites)
+        end
         inst:ListenForEvent("death", onMonsterDeath)
     end)
 end

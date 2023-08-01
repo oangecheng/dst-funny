@@ -44,11 +44,12 @@ configuration_options = {
 		name  = "diffculty",
 		label = ch and "难度选择" or "diffculty select",
 		options = {
-			{description = ch and "简单" or "easy",    data = -1},
-			{description = ch and "默认" or "default", data = 0 },
-            {description = ch and "困难" or "hard",    data = 1 },
+			{description = ch and "简单" or "easy",    data = 2 },
+			{description = ch and "默认" or "default", data = 5 },
+            {description = ch and "困难" or "hard",    data = 7 },
+            {description = ch and "恐怖" or "scary",   data = 10}
 		},
-		default = 0,
+		default = 5,
 	},
 
     -- 玩法模式设置
@@ -59,8 +60,8 @@ configuration_options = {
         label = ch and "模式选择" or "mode select",
         options = {
             { description = ch and "娱乐" or "entertainment", data = 0 },
-            { description = ch and "竞争" or "entertainment", data = 1 },
-            { description = ch and "疯狂" or "competition",   data = 2 },
+            { description = ch and "竞争" or "competition",   data = 1 },
+            { description = ch and "疯狂" or "crazy",         data = 2 },
         },
         default = 0
     },

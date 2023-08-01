@@ -3,14 +3,8 @@ local MAXLV = 100
 
 
 --- 计算属性等级上限，四舍五入
-local function calcPowerLvWidthDiffculty(defaultlv)
-    return math.floor((1 + KSFUN_TUNING.DIFFCULTY * 0.5) * defaultlv + 0.5) 
-end
-
-
---- 计算怪物特殊攻击命中概率
-local function canHit(defaultratio)
-    return KsFunCanHit(false, defaultratio)
+local function calcPowerLvWidthDiffculty(power, defaultlv)
+    return defaultlv * KsFunMultiPositive(power.target)
 end
 
 
@@ -19,7 +13,7 @@ end
 --- @param defaultlv 默认的上限
 --- @param max 部分属性需要有限制，超过上限会出现问题
 local function setPowerMaxLv(inst, defaultlv, max)
-    local lv =  calcPowerLvWidthDiffculty(defaultlv)
+    local lv =  calcPowerLvWidthDiffculty(inst, defaultlv)
     lv = max and math.min(lv, max) or lv
     inst.components.ksfun_level:SetMax(lv)
 end
@@ -80,7 +74,7 @@ end
 --- 冰冻效果 [1, 2]
 local function onDeath(inst)
     local power = inst.components.ksfun_power_system:GetPower(NAMES.ICE_EXPLOSION)
-    local hit = canHit(0.2)
+    local hit = 0.2 * KsFunMultiPositive(inst)
     if hit and power then
         local lv = power.components.ksfun_level:GetLevel()
         local area = 2 + 2 * lv * 0.01
@@ -139,14 +133,15 @@ local sanityaura = {
 
 ------ 怪物额外真实伤害 ----------------------------------------------------------------------------------------
 local function realdamageAttack(attacker, data)
+    if not data.target then return end
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.REAL_DAMAGE)
-    -- 20% 的概率造成属性等级*0.03点的额外真实伤害，不计算护甲
-    local hit = canHit(0.2)
-    if hit and power and data.target then
+    -- 30% 的概率造成属性等级*0.03点的额外真实伤害，不计算护甲
+    local hit = KsFunAttackCanHit(attacker, data.target, 0.3, "realdamageAttack")
+    if hit and power then
         local lv = power.components.ksfun_level:GetLevel()
         local health = data.target.components.health
         if health then
-            health:DoDelta(-lv * 0.03, nil, nil, true, nil, true)
+            health:DoDelta(-lv * 0.3, nil, nil, true, nil, true)
         end
     end
 end
@@ -259,10 +254,11 @@ local health = {
 
 ------ 怪物击退 ----------------------------------------------------------------------------------------
 local function onKnockback(attacker, data)
+    if not data.target then return end
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.KNOCK_BACK)
-    -- 20% 的概率击退
-    local hit = canHit(0.2)
-    if hit and power and data.target then
+    -- 30% 的概率击退
+    local hit = KsFunAttackCanHit(attacker, data.target, 0.3, "onKnockback")
+    if hit and power then
         local lv = power.components.ksfun_level:GetLevel()
         local radius = 0.2 + math.min(0.8, lv * 0.01 )
         if data.target:HasTag("player") then
@@ -284,11 +280,12 @@ local knockback = {
 
 ------ 怪物攻击掉落物品 ----------------------------------------------------------------------------------------
 local function onSteal(attacker, data)
+    if not data.target then return end 
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.STEAL)
-    -- 20% 的概率击落物品
-    if power and data.target and data.target:HasTag("player") then
-        local lv = power.components.ksfun_power:GetLevel()
-        local hit = canHit(0.2 + lv * 0.03)
+    -- [20%, 50%] 的概率击落物品
+    if power and data.target:HasTag("player") then
+        local lv = power.components.ksfun_level:GetLevel()
+        local hit = KsFunAttackCanHit(attacker, data.target, 0.2 + lv * 0.003, "onSteal")
         if hit and attacker.components.thief then
             attacker.components.thief:StealItem(data.target)
         end
@@ -313,13 +310,13 @@ local steal = {
 
 ------ 怪物攻击恢复生命值 ----------------------------------------------------------------------------------------
 local function onLifeSteal(attacker, data)
+    if not data.target then return end 
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.LIFESTEAL)
-    -- 20% 的概率击落物品
-    if power and data.target and data.target:HasTag("player") then
-        local lv = power.components.ksfun_power:GetLevel()
-        local hit = canHit(0.2 + lv * 0.03)
+    if power and data.target:HasTag("player") then
+        local lv = power.components.ksfun_level:GetLevel()
+        local hit = KsFunAttackCanHit(attacker, data.target, 0.2 + lv * 0.003, "onLifeSteal")
         if hit and attacker.components.health then
-            local delta = attacker.components.health.max * lv * 0.005
+            local delta = attacker.components.health.maxhealth * lv * 0.005
             attacker.components.health:DoDelta(delta)
         end
     end

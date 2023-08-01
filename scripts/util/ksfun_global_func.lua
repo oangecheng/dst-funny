@@ -264,17 +264,6 @@ end
 
 
 
---- 计算攻击命中概率
---- @param isplayer 是否是玩家
---- @param defaultratio 默认概率，怪物会有难度加成
-GLOBAL.KsFunCanHit = function(isplayer, defaultratio)
-    if KSFUN_TUNING.DEBUG then return true end
-    local r = isplayer and defaultratio or (1 + KSFUN_TUNING.DIFFCULTY * 0.5) * defaultratio
-    return math.random() < math.max(0.1, r)
-end
-
-
-
 --- 在玩家周围生成带有敌意的怪物
 GLOBAL.KsFunSpawnHostileMonster = function(player, monstername, num)
     local count = num and num or 1
@@ -313,29 +302,82 @@ GLOBAL.KsFunSpawnTaskReel = function(initlv)
 end
 
 
-
-
-
+------------------------------------概率计算相关，绑定幸运值和难度-----------------------------------------------------
+local MIN_CHANCE = 0.1
+local MAX_CHANCE = 2
 
 local function lucky(inst)
-    return inst.components.ksfun_lucky and inst.components.ksfun_lucky:GetRatio() or 0
+    return inst and inst.components.ksfun_lucky and inst.components.ksfun_lucky:GetRatio() or 0
 end
+
+local function luckyMultiPositive(inst)
+    local m = math.clamp(1 + lucky(inst), MIN_CHANCE, MAX_CHANCE)
+    KsFunLog("luckyMultiPositive", m)
+    return m
+end
+
+local function luckyMultiNegative(inst)
+    local m = math.clamp(1 - lucky(inst), MIN_CHANCE, MAX_CHANCE)
+    KsFunLog("luckyMultiNegative", m) 
+    return m
+end
+
+local function diffMultiPositive()
+    local m = math.clamp(MAX_CHANCE - KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
+    KsFunLog("diffMultiPositive", m)
+    return m
+end
+
+local function diffMultiNegative()
+    local m = math.clamp(KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
+    KsFunLog("diffMultiNegative", m)
+    return m
+ end
 
 --- 计算正向倍率，比如奖励啥的
 --- 幸运：越幸运，影响越大
 --- 难度：值越大，影响越小
 GLOBAL.KsFunMultiPositive = function(inst)
-    local luckymulti = math.clamp(1 + lucky(inst), 0.1, 2) 
-    local diffmulti  = math.clamp(2 - KSFUN_TUNING.DIFFCULTY * 0.2, 0.1, 2)
-    return luckymulti * diffmulti
+    local m = luckyMultiPositive(inst) * diffMultiPositive()
+    KsFunLog("KsFunMultiPositive", m)
+    return m
 end
-
 
 --- 计算反向倍率，比如惩罚啥的
 --- 幸运：越幸运，影响越小
 --- 难度：值越大，影响越大
 GLOBAL.KsFunMultiNegative = function(inst)
-    local luckymulti = math.clamp(1 - lucky(inst), 0.1, 2) 
-    local diffmulti  = math.clamp(KSFUN_TUNING.DIFFCULTY * 0.2, 0.1, 2)
-    return luckymulti * diffmulti
+    local m = luckyMultiNegative(inst) * diffMultiNegative()
+    KsFunLog("KsFunMultiNegative", m)
+    return m
+end
+
+--- 计算攻击命中概率
+--- @param attacker 攻击者
+--- @param target 被攻击者
+--- @param defaultratio 默认概率 下限0.1倍， 上限3倍
+GLOBAL.KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
+    KsFunLog("KsFunAttackCanHit", msg)
+    local r = math.random()
+    local attackermulti = 1
+    local targetmulti = 1
+    local diffmulti = 1
+    
+    -- 攻击者为玩家时，幸运值越大，难度越低，命中概率越高
+    if attacker:HasTag("player") then
+        attackermulti = luckyMultiPositive(attacker)
+        diffmulti = diffMultiPositive()      
+    end
+
+    -- 被攻击者为玩家时，幸运值越大，难度越低，命中概率越低
+    if target:HasTag("player") then
+        targetmulti = luckyMultiNegative(target)
+        diffmulti  = diffMultiNegative()
+    end
+    
+    local v = defaultratio * attackermulti * targetmulti * diffmulti
+    v = math.clamp(v, 0.1, 3)
+    KsFunLog("KsFunAttackCanHit", v, r, msg)
+    v = KSFUN_TUNING.DEBUG and 100 or v
+    return r <= defaultratio * v
 end

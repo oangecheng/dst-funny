@@ -18,15 +18,16 @@ local function MakePower(name, data)
 
     -- 统一解绑target
     local function onDetachFunc(inst, target, name)
+        if inst.target == nil then return end
         local func = data.power and data.power.onDetachFunc or data.ondetach  
         if func then 
             func(inst, target, name) 
         end
-        inst.target = nil
     end
 
 
     local function onGetDescFunc(inst, target, name)
+        if inst.target == nil then return end
         local func = data.power and data.power.onGetDescFunc or data.ondesc  
         local str = func and func(inst, target, name) or "default"
         return str
@@ -34,6 +35,7 @@ local function MakePower(name, data)
 
 
     local function onLvChangeFunc(inst, d)
+        if inst.target == nil then return end
         local func = data.level and data.level.onLvChangeFunc or data.onstatechange
         if d.lv < 0 then
             -- <0 属性失效，移除 
@@ -61,6 +63,7 @@ local function MakePower(name, data)
 
 
     local function onExtendFunc(inst, target, name)
+        if inst.target == nil then return end
         local timer = inst.components.timer
         if timer and data.duration then
             timer:StopTimer("ksfun_power_over")
