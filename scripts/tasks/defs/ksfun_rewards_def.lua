@@ -15,15 +15,14 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 local maxitemlv = 7
 
 
-local function calcItemLv(player, tasklv, luckyratio)
+local function calcItemLv(player, tasklv, multi)
     if tasklv >= maxitemlv then
         return maxitemlv
     end
-
     -- 即使很低等级的任务，也有小概率获得最高等级奖励
     for i = maxitemlv, tasklv, -1 do
         local r = math.random(2 ^ i)
-        if r <= (2 ^ tasklv) * (1 + luckyratio) then
+        if r <= (2 ^ tasklv) * (multi or 1) then
             return i
         end
     end
@@ -55,19 +54,14 @@ end
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, tasklv)
     local r  = math.random()
-    local luckyratio = 0
-    if player.components.ksfun_lucky then
-        luckyratio = player.components.ksfun_lucky:GetRatio() 
-    end
-
     -- 计算奖励物品等级
-    local lv = calcItemLv(player, tasklv, luckyratio)
+    local multi = KsFunMultiPositive(player)
+    local lv = calcItemLv(player, tasklv, multi)
     local name,num = prefabsdef.getItemsByLv(lv)
-    --- 数量有幸运值加成
-    --- 不走运时收益减半，至少保留一个物品的奖励
-    local luckymulti = math.max(0.5, 1 + luckyratio)
     local delta = math.max(0, tasklv - maxitemlv)
-    num = math.max(1, num * luckymulti + delta)
+    --- 最大不超过3倍
+    local maxnum = num * 3
+    num = math.clamp(num * multi + delta, 1, maxnum)
     num = math.floor(num + 0.5)
 
     local data = {}
@@ -195,17 +189,8 @@ end
 --- 和幸运值&难度绑定
 local function canRewardSpecial(player, tasklv)
     local r = math.random(1024)
-    local mult = 1
-    -- 和幸运值绑定
-    -- 幸运值影响因子为1，100的幸运值，6级任务特殊奖励概率=7级
-    local lucky = player.components.ksfun_lucky
-    if lucky then
-        mult = mult + lucky:GetRatio()
-    end
-    -- 增加难度影响
-    mult = mult - KSFUN_TUNING.DIFFCULTY * 0.5
-    mult = math.max(0, mult)
-    return r <= 2^tasklv * mult
+    local multi = KsFunMultiPositive(player)
+    return r <= 2^tasklv * multi
 end
 
 

@@ -11,11 +11,7 @@ local function powerLvLose(player, tasklv)
         local powers = system:GetAllPowers()
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
-            local v = tasklv * 0.5
-            if player.components.ksfun_lucky then
-               v = v - 2 * player.components.ksfun_lucky:GetRatio()
-            end
-            -- 四舍五入
+            local v = math.random(3) * KsFunMultiNegative(player)
             local delta = math.max(1, math.floor(v + 0.5))
             return {
                 type = TYPES.POWER_LV_LOSE,
@@ -37,11 +33,7 @@ local function powerExpLose(player, tasklv)
         local powers = system:GetAllPowers()
         if next(powers) ~= nil then
             local name, power = GetRandomItemWithIndex(powers)
-            local v = math.random(tasklv) * 10
-            if player.components.ksfun_lucky then
-                v = v - 50 * player.components.ksfun_lucky:GetRatio()
-            end
-
+            local v = math.random(100) * KsFunMultiNegative(player)
             local delta = math.max(10, math.floor(v + 0.5))
 
             return {
@@ -71,20 +63,9 @@ local function punishMonster(player, tasklv)
         num = math.random(tasklv)
     end
 
-    -- 运气差的时候，可能刷出两倍的怪，boss也可能是两个
-    local luckyratio = 0
-    if player.components.ksfun_lucky then
-        luckyratio = player.components.ksfun_lucky:GetRatio()
-    end
-
-    -- 脸黑出双倍的怪物，幸运值20以上就不会出
-    -- 幸运值负值越大越容易出双倍怪
-    local multi = 1
-    if math.random() > (0.8 + luckyratio) then
-        multi = 2
-    end
-
-    num = num * multi
+    -- 不超过10个怪物
+    num = math.floor(num * KsFunMultiNegative(player) + 0.5)
+    num = math.clamp(num, 1, 10)
 
     local selected = {}
     for i=1, num do
@@ -117,42 +98,26 @@ end
 
 
 local punish = {}
-local typelist = { TYPES.MONSTER, TYPES.NEGA_POWER }
+local typelist = { 1, 2 }
 
 
 punish.random = function(player, tasklv)
+
+    local multi = KsFunMultiNegative(player)
     local r = math.random()
-    local lucky = 0
-    if player.components.ksfun_lucky then
-        lucky = player.components.ksfun_lucky:GetRatio()
-    end
 
-    KsFunLog("random punish", lucky, r)
-    -- 100幸运值时，有20%概率没有任何惩罚
-    if r < lucky * 0.2 then
-        return nil
-    end
-
-    -- 幸运值加成不超过0.2
-    r = r + math.min(lucky * 0.2, 0.2)
-    KsFunLog("random punish change", lucky, r)
     local punish = nil
-
-    -- 20% 概率遭受属性等级削弱
-    -- 如果你的幸运等级超过100了，就不会触发等级降低
-    if r < 0.2 then
+    if r < 0.1 * multi then
         punish = powerLvLose(player, tasklv)
-    end
-    if punish == nil and r < 0.5 then
+    elseif r < 0.3 * multi then
         punish = powerExpLose(player, tasklv)
     end
 
-
     if punish == nil then
         local t = GetRandomItem(typelist)
-        if t == TYPES.MONSTER then
+        if t == 1 then
             return punishMonster(player, tasklv)
-        elseif t == TYPES.NEGA_POWER then
+        elseif t == 2 then
             return punishNegaPowers(player, tasklv)
         end
     end

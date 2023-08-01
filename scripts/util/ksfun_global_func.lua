@@ -313,3 +313,29 @@ GLOBAL.KsFunSpawnTaskReel = function(initlv)
 end
 
 
+
+
+
+
+local function lucky(inst)
+    return inst.components.ksfun_lucky and inst.components.ksfun_lucky:GetRatio() or 0
+end
+
+--- 计算正向倍率，比如奖励啥的
+--- 幸运：越幸运，影响越大
+--- 难度：值越大，影响越小
+GLOBAL.KsFunMultiPositive = function(inst)
+    local luckymulti = math.clamp(1 + lucky(inst), 0.1, 2) 
+    local diffmulti  = math.clamp(2 - KSFUN_TUNING.DIFFCULTY * 0.2, 0.1, 2)
+    return luckymulti * diffmulti
+end
+
+
+--- 计算反向倍率，比如惩罚啥的
+--- 幸运：越幸运，影响越小
+--- 难度：值越大，影响越大
+GLOBAL.KsFunMultiNegative = function(inst)
+    local luckymulti = math.clamp(1 - lucky(inst), 0.1, 2) 
+    local diffmulti  = math.clamp(KSFUN_TUNING.DIFFCULTY * 0.2, 0.1, 2)
+    return luckymulti * diffmulti
+end
