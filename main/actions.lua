@@ -2,6 +2,10 @@
 
 
 local function acceptTask(doer, invobject)
+    -- 没有任务系统的不支持
+    if doer.components.ksfun_task_system == nil then
+        return
+    end
     local taskdata = invobject.components.ksfun_task_demand:GetDemand()
     if taskdata then
         local data  = deepcopy(taskdata)
