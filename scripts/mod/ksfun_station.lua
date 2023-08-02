@@ -47,7 +47,7 @@ local function onClose(inst, doer)
     local item3 = inst.components.container:GetItemInSlot(3)
 
     if item3 and item2 == nil and item1 == nil then
-        if item3.prefab == "goldnugget" and item.components.stackable:StackSize() >= 10 then
+        if item3.prefab == "goldnugget" and item3.components.stackable:StackSize() >= 10 then
             local task = doer.components.ksfun_task_system:GetTask()
             if task then
                 task.components.ksfun_task:Lose()
@@ -62,10 +62,10 @@ local function onClose(inst, doer)
             if handKsFunItem(doer, item1, item2) then
                 -- doer.components.talker:Say("强化成功！")
             else
-                KsFunShowTip(STRINGS.KSFUN_REINFORCE_INVALID_ITEM)
+                KsFunShowTip(doer, STRINGS.KSFUN_REINFORCE_INVALID_ITEM)
             end
         else
-            KsFunShowTip(STRINGS.KSFUN_REINFORCE_INVALID_TARGET)
+            KsFunShowTip(doer, STRINGS.KSFUN_REINFORCE_INVALID_TARGET)
         end
     end
 end

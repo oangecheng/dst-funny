@@ -366,7 +366,7 @@ local function updateSpeedStatus(inst, l, n)
     local speed = inst.components.ksfun_power:GetData(SPEED_KEY) or 1
     local lv = inst.components.ksfun_level:GetLevel()
     if inst.target.components.equippable ~= nil then
-        inst.target.components.equippable.walkspeedmult = speed + lv * 0.006
+        inst.target.components.equippable.walkspeedmult = speed + lv * 0.01
     end
 end
 
