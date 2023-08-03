@@ -115,12 +115,12 @@ local function updateHungerStatus(inst, reset)
         hunger:SetPercent(percent)
     end
 
-    -- 100级之后每级新增千分之5的饱食度下降，最大不超过50%
+    -- 100级之后每级新增1%的饱食度下降，最大不超过50%
     if lv > 100  then
         if reset then
             hunger.burnratemodifiers:RemoveModifier("ksfun_power_player_hunger")
         else
-            local hunger_multi = math.max(math.max(0 , lv - 100) * 0.005 + 1, 1.5)
+            local hunger_multi = math.max((lv - 100) * 0.01 + 1, 1.5)
             hunger.burnratemodifiers:SetModifier("ksfun_power_player_hunger", hunger_multi)
         end
     end
@@ -630,14 +630,14 @@ local function updateDamageStatus(inst, reset)
             combat.externaldamagemultipliers:RemoveModifier(inst)
         else
             local lv = inst.components.ksfun_level:GetLevel()
-            combat.externaldamagemultipliers:SetModifier(inst, 1 + lv * 0.005)
+            combat.externaldamagemultipliers:SetModifier(inst, 1 + lv * 0.01)
         end
     end
 end
 
 local damage = {
     onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(100)
+        inst.components.ksfun_level:SetMax(50)
         updateDamageStatus(inst)
     end,
 
@@ -667,7 +667,7 @@ local function updateLocomotorStatus(inst, reset)
             locomotor:RemoveExternalSpeedMultiplier(inst, "ksfun_power_locomotor")
         else
             local lv = inst.components.ksfun_level:GetLevel()
-            local mult = 1 + lv * 0.005
+            local mult = 1 + lv * 0.01
             locomotor:SetExternalSpeedMultiplier(inst, "ksfun_power_locomotor", mult)
         end
     end
@@ -676,7 +676,7 @@ end
 local locomotor = {
 
     onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(100)
+        inst.components.ksfun_level:SetMax(50)
         updateLocomotorStatus(inst)
     end,
 

@@ -316,7 +316,7 @@ local function onLifeSteal(attacker, data)
         local lv = power.components.ksfun_level:GetLevel()
         local hit = KsFunAttackCanHit(attacker, data.target, 0.2 + lv * 0.003, "onLifeSteal")
         if hit and attacker.components.health then
-            local delta = attacker.components.health.maxhealth * lv * 0.005
+            local delta = math.floor(attacker.components.health.maxhealth * lv * 0.005)
             attacker.components.health:DoDelta(delta)
         end
     end
