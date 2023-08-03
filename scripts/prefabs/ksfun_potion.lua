@@ -28,6 +28,11 @@ local function onitemgive(inst, giver, item)
 end
 
 
+local function onused(inst, target)
+    if inst.power and target.com
+
+end
+
 
 local function fn()
     local inst = CreateEntity()
@@ -58,6 +63,9 @@ local function fn()
     inst:AddComponent("trader")
     inst.components.trader:SetAbleToAcceptTest(abletoaccepttest)
     inst.components.trader.onaccept = onitemgive
+
+    inst:AddComponent("ksfun_useable")
+    inst.components.ksfun_useable:SetOnUse()
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/ksfun_potion.xml"
