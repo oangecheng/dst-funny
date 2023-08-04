@@ -104,18 +104,6 @@ KSFUN_TUNING =  {
         }
     },
 
-    TASK_REWARD_TYPES = {
-        -- 普通物品奖励
-        ITEM = 1,
-        -- 升级物品
-        KSFUN_ITEM = 2,
-        -- 属性奖励
-        PLAYER_POWER = 3,
-        -- 属性等级奖励
-        PLAYER_POWER_LV = 4,
-        -- 属性经验奖励
-        PLAYER_POWER_EXP = 5,
-    },
 
     KSFUN_ITEM_TYPES = {
         WEAPON = 1,
@@ -148,4 +136,13 @@ KSFUN_PUNISHES = {
     POWER_EXP_LOSE = 2,
     MONSTER        = 3,
     NEGA_POWER     = 4,
+}
+
+
+
+KSFUN_REWARD_TYPES = {
+    -- 普通物品奖励
+    ITEM  = 1,
+    POTION = 2,
+    GEM   = 3
 }

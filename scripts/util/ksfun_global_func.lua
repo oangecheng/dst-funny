@@ -226,40 +226,7 @@ end
 --- 获取可以给予玩家奖励的属性
 --- @param player 玩家
 GLOBAL.KsFunGetCanRewardPower = function(player)
-    local temp = {}
-
-    local playerconfig = require("defs/ksfun_players_def").playerconfig(player)
-    local blackpowers  = playerconfig and playerconfig.pblacks or nil
-
-    local worlddata = TheWorld.components.ksfun_world_data
-    for k, v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
-
-        -- 排除黑名单属性，避免异常
-        if not (blackpowers ~= nil and table.contains(blackpowers, v)) then
-            if KSFUN_TUNING.MODE == 0 then
-                -- 未拥有该属性
-                if player.components.ksfun_power_system:GetPower(v) == nil then
-                    table.insert(temp, v)
-                end
-            else
-                -- 疯狂模式上限1，竞争模式为2
-                local worldcount = worlddata:GetWorldPowerCount(v)
-                KsFunLog("KsFunGetCanRewardPower", worldcount)
-                local max = KSFUN_TUNING.MODE == 1 and 2 or 1
-                if worldcount < max then
-                    table.insert(temp, v)
-                end
-            end
-        end
-       
-    end
-    
-    if #temp > 0 then
-        return GetRandomItem(temp)
-    else
-        return nil
-    end
-    
+    return true
 end
 
 

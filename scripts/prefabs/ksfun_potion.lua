@@ -69,9 +69,9 @@ local function fn()
     inst:AddTag("ksfun_item")
     inst.entity:SetPristine()
 
-    inst.displaynamefn = function(aaa)
-        return "魔法药水"
-    end
+    -- inst.displaynamefn = function(aaa)
+    --     return "魔法药水"
+    -- end
 
     if not TheWorld.ismastersim then
         return inst
