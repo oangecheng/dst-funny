@@ -18,7 +18,8 @@ PrefabFiles = {
     "ksfun_tasks",
     "ksfun_player_powers",
     "ksfun_task_reel",
-    "ksfun_power_gems"
+    "ksfun_power_gems",
+    "ksfun_potion",
 }
 
 Assets = {
@@ -26,6 +27,9 @@ Assets = {
     Asset("ATLAS", "images/ksfun_task_reel.xml"),
     Asset("IMAGE", "images/ksfun_task_reel.tex"),
     Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
+    Asset("ANIM" , "anim/ksfun_potion.zip"),
+    Asset("IMAGE", "images/inventoryitems/ksfun_potion.tex"),
+    Asset("ATLAS", "images/inventoryitems/ksfun_potion.xml"),	
     Asset("ANIM" , "anim/ui_chest_3x1.zip"),
 }
 

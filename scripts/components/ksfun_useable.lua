@@ -12,8 +12,9 @@ end
 
 function USEABLE:Use(doer, target)
     if target and self.onused then
-        self.onused(self.inst, doer, target)
+        return self.onused(self.inst, doer, target)
     end
+    return false
 end
 
 

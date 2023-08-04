@@ -2,8 +2,8 @@
 
 local assets = {
 	Asset("ANIM" , "anim/ksfun_potion.zip"),
-    Asset("IMAGE", "images/ksfun_potion.tex"),
-    Asset("ATLAS", "images/ksfun_potion.xml"),
+    Asset("IMAGE", "images/inventoryitems/ksfun_potion.tex"),
+    Asset("ATLAS", "images/inventoryitems/ksfun_potion.xml"),
 }
 
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
@@ -46,8 +46,9 @@ local function onuse(inst, doer, target)
         end
     end
     if used then
-        inst:DoTaskInTime(0, ins:Remove())
-    end   
+        inst:DoTaskInTime(0, inst:Remove())
+    end
+    return used   
 end
 
 
@@ -60,11 +61,11 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-
     inst.AnimState:SetBank("ksfun_potion")
     inst.AnimState:SetBuild("ksfun_potion")
     inst.AnimState:PlayAnimation("idle")
 
+    inst:AddTag("CLASSIFIED")
     inst:AddTag("ksfun_item")
     inst.entity:SetPristine()
 
@@ -85,10 +86,10 @@ local function fn()
     inst.components.ksfun_useable:SetOnUse(onuse)
 
     inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/ksfun_potion.xml"
+    inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_potion.xml"
 
     inst.OnLoad = function(inst, data)
-        inst.power = data.power or nil
+        inst.power = data and data.power or nil
     end
     inst.OnSave = function(inst, data)
         data.power = inst.power or nil
