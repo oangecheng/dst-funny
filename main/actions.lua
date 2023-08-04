@@ -42,7 +42,7 @@ local ksfun_actions = {
         fn = function(act)
             local doer = act.doer
             if doer and act.invobject then
-                act.invobject.components.ksfun_useable:Use(doer)
+                act.invobject.components.ksfun_useable:Use(doer, doer)
             end
         end
     }

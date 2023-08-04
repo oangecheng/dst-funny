@@ -46,13 +46,6 @@ local function onEnhantFunc(inst, doer, item)
 end
 
 
---- 给附魔组件添加属性
---- 附魔成功能够给物品添加一条新的属性
-local function initEnhantable(inst)
-    inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhantFunc)
-end
-
-
 
 --- 物品等级突破，这里突破之后等级也随之提升一级
 local function onBreakFunc(inst, item)
@@ -73,17 +66,6 @@ end
 
 
 
-local function initBreakable(inst)
-    inst.components.ksfun_breakable:SetOnBreakFunc(onBreakFunc)
-end
-
-
-
-local function initLevel(inst)
- 
-end
-
-
 --- 给特殊物品添加组件
 for k,v in pairs(itemsdef.ksfunitems) do
     AddPrefabPostInit(k, function(inst)
@@ -92,9 +74,16 @@ for k,v in pairs(itemsdef.ksfunitems) do
         inst:AddComponent("ksfun_enhantable")
         inst:AddComponent("ksfun_breakable")
         inst:AddComponent("ksfun_power_system")
-        
-        initBreakable(inst)
-        initEnhantable(inst)
+        inst:AddComponent("ksfun_activatable")
+
+        inst.components.ksfun_activatable:SetOnActivate(function(inst, doer, item)
+            inst.components.ksfun_item_forever:Enable()
+            inst.components.ksfun_enhantable:Enable()
+            inst.components.ksfun_breakable:Enable()
+        end)
+
+        inst.components.ksfun_breakable:SetOnBreakFunc(onBreakFunc)
+        inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhantFunc)
 
         inst:ListenForEvent("ksfun_level_changed", function(ent, data)
             inst.components.ksfun_power_system:SyncData()
