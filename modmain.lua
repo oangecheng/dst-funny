@@ -24,12 +24,14 @@ PrefabFiles = {
 
 Assets = {
     Asset("ANIM" , "anim/ksfun_task_reel.zip"),	
-    Asset("ATLAS", "images/ksfun_task_reel.xml"),
-    Asset("IMAGE", "images/ksfun_task_reel.tex"),
-    Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
+    Asset("ATLAS", "images/inventoryitems/ksfun_task_reel.xml"),
+    Asset("IMAGE", "images/inventoryitems/ksfun_task_reel.tex"),
+
     Asset("ANIM" , "anim/ksfun_potion.zip"),
     Asset("IMAGE", "images/inventoryitems/ksfun_potion.tex"),
     Asset("ATLAS", "images/inventoryitems/ksfun_potion.xml"),	
+    
+    Asset("ANIM" , "anim/ksfun_power_gem.zip"),	
     Asset("ANIM" , "anim/ui_chest_3x1.zip"),
 }
 
