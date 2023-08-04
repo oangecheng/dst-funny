@@ -34,17 +34,15 @@ local ksfun_actions = {
         end
     },
 
-    KSFUN_USE_POTION = {
-        id = "KSFUN_USE_POTION",
+    KSFUN_USE_ITEM = {
+        id = "KSFUN_USE_ITEM",
         strfn = function(act)
-            return "KSFUN_USE_POTION"
+            return "KSFUN_USE_ITEM"
         end,
         fn = function(act)
             local doer = act.doer
-            if doer and act.invobject and act.invobject.power then
-                if doer.components.ksfun_power_system then
-                    doer.components.ksfun_power_system:AddPower(act.invobject.power)
-                end
+            if doer and act.invobject then
+                act.invobject.components.ksfun_useable:Use(doer)
             end
         end
     }
@@ -74,9 +72,9 @@ STRINGS.ACTIONS.KSFUN_TASK_DEMAND = {
     GENERIC = ACTIONS_KSFUN_TASK_DEMAND_GENERIC_STR,
     KSFUN_TASK_DEMAND = ACTIONS_KSFUN_TASK_DEMAND_STR
 }
-STRINGS.ACTIONS.KSFUN_USE_POTION = {
-    GENERIC = ACTIONS_KSFUN_USE_POTION_GENERIC_STR,
-    KSFUN_USE_POTION = ACTIONS_KSFUN_USE_POTION_STR
+STRINGS.ACTIONS.KSFUN_USE_ITEM = {
+    GENERIC = ACTIONS_KSFUN_USE_ITEM_GENERIC_STR,
+    KSFUN_USE_ITEM = ACTIONS_KSFUN_USE_ITEM_STR
 }
 
 
@@ -88,12 +86,20 @@ AddComponentAction("INVENTORY", "ksfun_task_demand", function(inst, doer, action
 end)
 
 
+AddComponentAction("INVENTORY", "ksfun_useable", function(inst, doer, actions)
+    if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
+        and inst:HasTag("ksfun_item") and doer:HasTag("player") and not doer:HasTag("playerghost") then
+        table.insert(actions, ACTIONS.KSFUN_USE_ITEM)
+    end
+end)
+
+
 
 local sgwilsons = {"wilson", "wilson_client"}
 for i, v in ipairs(sgwilsons) do
     local _dolongactions = {
         ACTIONS.KSFUN_TASK_DEMAND,
-        ACTIONS.KSFUN_USE_POTION,
+        ACTIONS.KSFUN_USE_ITEM,
     }
     for i1, v1 in ipairs(_dolongactions) do
         AddStategraphActionHandler(v, ActionHandler(v1, function(inst, action)

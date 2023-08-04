@@ -29,8 +29,12 @@ end
 
 
 local function onused(inst, target)
-    if inst.power and target.com
-
+    if target:HasTag("player") then
+        if inst.power and target.components.ksfun_power_system then
+            target.components.ksfun_power_system:AddPower(inst.power)
+            inst:DoTaskInTime(0, inst:Remove())
+        end
+    end   
 end
 
 
@@ -48,7 +52,7 @@ local function fn()
     inst.AnimState:SetBuild("ksfun_potion")
     inst.AnimState:PlayAnimation("idle")
 
-    inst:AddTag("ksfun")
+    inst:AddTag("ksfun_item")
     inst.entity:SetPristine()
 
     inst.displaynamefn = function(aaa)
@@ -65,7 +69,7 @@ local function fn()
     inst.components.trader.onaccept = onitemgive
 
     inst:AddComponent("ksfun_useable")
-    inst.components.ksfun_useable:SetOnUse()
+    inst.components.ksfun_useable:SetOnUse(onused)
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/ksfun_potion.xml"
