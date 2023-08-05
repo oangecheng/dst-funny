@@ -291,29 +291,31 @@ AddComponentPostInit("combat", function(self)
     self.CalcDamage = function(self, target, weapon, multiplier)
         -- 计算原始伤害
         local damage = oldCaclDamage(self, target, weapon, multiplier)
-        local system = self.inst.components.ksfun_power_system
-        if system == nil then
-            return damage
-        end
-
-        local crit  = false
-
+        local crit = false 
         if self.inst:HasTag("player") then
-            local power = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.CRIT_DAMAGE)
-            if power then
-                local lv = power.components.ksfun_level:GetLevel()
-                local r = math.min(0.002 * lv, 0.3)
-                crit = KsFunAttackCanHit(self.inst, target, r, "player critdamage")
+            local system = weapon.components.ksfun_power_system
+            if system then
+                local power = system:GetPower(KSFUN_TUNING.ITEM_POWER_NAMES.DAMAGE)
+                if power then
+                    local lv = power.components.ksfun_level:GetLevel()
+                    if lv >= 100 then
+                        local r = math.clamp(0.002 * lv, 0.1, 0.3)
+                        crit = KsFunAttackCanHit(self.inst, target, r, "weapon critdamage")
+                    end
+                end
             end
         else
-            local power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
-            if power then
-                local lv = power.components.ksfun_level:GetLevel()
-                local r = math.min(0.002 * lv, 0.3)
-                crit = KsFunAttackCanHit(self.inst, target, r, "mon critdamage")
+            local system = self.inst.components.ksfun_power_system
+            if system then
+                local power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
+                if power then
+                    local lv = power.components.ksfun_level:GetLevel()
+                    local r = math.clamp(0.002 * lv, 0.1, 0.3)
+                    crit = KsFunAttackCanHit(self.inst, target, r, "mon critdamage")
+                end
             end
-        end
 
+        end
         -- 暴击命中, 10%概率3倍暴击，90%概率2倍暴击
         if crit then
             damage = damage * (math.random() > 0.1 and 2 or 3 )    

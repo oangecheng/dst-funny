@@ -724,21 +724,6 @@ local lucky = {
 
 
 
----------------------------------------------------------------------------------------------- 暴击 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-local critdamage = {
-    onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(100)
-    end,
-
-    onstatechange = function(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
-    end,
-
-    ondesc = getPowerDesc,
-}
-
-
-
 
 
 local playerpowers = {
@@ -748,7 +733,6 @@ local playerpowers = {
     [NAMES.PICK]        = pick,
     [NAMES.FARM]        = farm,
     [NAMES.KILL_DROP]   = killdrop,
-    [NAMES.CRIT_DAMAGE] = critdamage,
     [NAMES.LOCOMOTOR]   = locomotor,
     [NAMES.LUCKY]       = lucky,
 }

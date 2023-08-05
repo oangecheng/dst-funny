@@ -18,7 +18,6 @@ KSFUN_TUNING =  {
         SANITY        = "player_sanity",
         LUCKY         = "player_lucky",
 
-        CRIT_DAMAGE   = "player_critdamage",
         LOCOMOTOR     = "player_locomotor",
 
         PICK          = "player_pick",
