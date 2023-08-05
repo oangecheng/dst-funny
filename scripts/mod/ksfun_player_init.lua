@@ -85,15 +85,15 @@ local function initTaskSystem(player)
 
     -- 每天开始给1-2个任务卷轴
     player:WatchWorldState("cycles", function(inst)
-        inst:DoTaskInTime(2, function()
-            local count = math.random(2)
-            for i=1, count do
-                local ent = KsFunSpawnTaskReel()
-                if ent then
-                    player.components.inventory:GiveItem(ent, nil, player:GetPosition())
-                end
-            end  
-        end)
+        -- inst:DoTaskInTime(2, function()
+        --     local count = math.random(2)
+        --     for i=1, count do
+        --         local ent = KsFunSpawnTaskReel()
+        --         if ent then
+        --             player.components.inventory:GiveItem(ent, nil, player:GetPosition())
+        --         end
+        --     end  
+        -- end)
     end)
 end
 

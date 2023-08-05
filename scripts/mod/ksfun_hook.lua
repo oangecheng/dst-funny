@@ -428,13 +428,13 @@ AddPrefabPostInit("pigking", function(inst)
                     if lv == 0 then
                         taskreel = KsFunSpawnTaskReel()
                     else
-                        local initlv = math.random(7-lv) + lv
+                        local initlv = math.min( math.random(2) + lv, 7)
                         taskreel = KsFunSpawnTaskReel(initlv)
                     end
                     if taskreel then
                         inst.sg:GoToState("cointoss")
                         inst:DoTaskInTime(2 / 3, function(item,giver)
-                            LaunchAt(taskreel, inst, giver, 2, 5, 1)
+                            LaunchAt(taskreel, inst, giver, 2, 5)
                         end)
                     end
                 end
