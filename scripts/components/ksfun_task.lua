@@ -41,6 +41,10 @@ function KSFUN_TASK:GetName()
     return self.name
 end
 
+function KSFUN_TASK:GetTaskLevel()
+    return self.task_data.tasklv or 0
+end
+
 
 function KSFUN_TASK:SetTaskData(data)
     self.task_data = data

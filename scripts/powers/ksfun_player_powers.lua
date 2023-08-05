@@ -695,6 +695,33 @@ local locomotor = {
 
 
 
+---------------------------------------------------------------------------------------------- 幸运 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local function onTaskFinish(inst, data)
+    if data.iswin then
+        local exp = 2 ^ data.lv
+        KsFunPowerGainExp(inst, NAMES.LUCKY, exp)
+    end
+end
+
+local lucky = {
+    onattach = function(inst, target)
+        inst.components.ksfun_level:SetMax(100)
+        target:ListenForEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, onTaskFinish)
+    end,
+
+    ondetach = function(inst, target)
+        target:RemoveEventCallback(KSFUN_TUNING.EVENTS.TASK_FINISH, onTaskFinish)
+    end,
+
+    onstatechange = function(inst)
+        KsFunSayPowerNotice(inst.target, inst.prefab)
+    end,
+
+    ondesc = getPowerDesc,
+}
+
+
+
 
 
 ---------------------------------------------------------------------------------------------- 暴击 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -723,6 +750,7 @@ local playerpowers = {
     [NAMES.KILL_DROP]   = killdrop,
     [NAMES.CRIT_DAMAGE] = critdamage,
     [NAMES.LOCOMOTOR]   = locomotor,
+    [NAMES.LUCKY]       = lucky,
 }
 
 

@@ -16,10 +16,11 @@ KSFUN_TUNING =  {
         HEALTH        = "player_health",
         HUNGER        = "player_hunger",
         SANITY        = "player_sanity",
+        LUCKY         = "player_lucky",
 
         CRIT_DAMAGE   = "player_critdamage",
         LOCOMOTOR     = "player_locomotor",
-        
+
         PICK          = "player_pick",
         FARM          = "player_farm",
         KILL_DROP     = "player_killdrop",

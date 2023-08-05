@@ -10,7 +10,8 @@ local function MakeTask(taskname)
     -- 任务结束发送通知
     local function finishTask(inst, player, iswin)
         local name = inst.components.ksfun_task:GetName()
-        player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name, iswin = iswin })
+        local lv   = inst.components.ksfun_task:GetTaskLevel()
+        player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name, iswin = iswin, lv = lv })
     end
 
     --- 重新启用timer
