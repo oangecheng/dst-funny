@@ -723,7 +723,6 @@ local playerpowers = {
     [NAMES.KILL_DROP]   = killdrop,
     [NAMES.CRIT_DAMAGE] = critdamage,
     [NAMES.LOCOMOTOR]   = locomotor,
-    [NAMES.DAMAGE]      = damage,
 }
 
 

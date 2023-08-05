@@ -19,8 +19,7 @@ KSFUN_TUNING =  {
 
         CRIT_DAMAGE   = "player_critdamage",
         LOCOMOTOR     = "player_locomotor",
-        DAMAGE        = "player_damage",
-
+        
         PICK          = "player_pick",
         FARM          = "player_farm",
         KILL_DROP     = "player_killdrop",
