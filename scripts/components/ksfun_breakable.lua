@@ -1,15 +1,29 @@
 
+local function canBreak(self, doer, item)
+    if self.breaktest then
+        return self.breaktest(self.inst, doer, item)
+    end
+    return true
+end
+
+
 local KSFUN_BREAKABLE = Class(function(self, inst)
     self.inst = inst
     self.enable = false
     self.count = 0
 
     self.onBreakFunc = nil
+    self.breaktest = nil
 end)
 
 
 function KSFUN_BREAKABLE:SetOnBreakFunc(func)
     self.onBreakFunc = func
+end
+
+
+function KSFUN_BREAKABLE:SetBreakTest(func)
+    self.breaktest = func
 end
 
 
@@ -27,10 +41,12 @@ end
 function KSFUN_BREAKABLE:Break(doer, item)
     KsFunLog("break start", self.inst.prefab, item.prefab, self.enable)
     if self.enable and self.onBreakFunc then
-        if self.onBreakFunc(self.inst, doer, item) then
-            item:DoTaskInTime(0, item:Remove())
+        if canBreak(self, doer, item) then
             self.count = self.count + 1
-            KsFunLog("break success", self.inst.prefab)
+            if self.onBreakFunc then
+                self.onBreakFunc(self.inst, doer, item)
+            end
+            item:DoTaskInTime(0, item:Remove())
             return true
         end
     end

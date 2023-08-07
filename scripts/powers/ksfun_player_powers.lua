@@ -692,6 +692,7 @@ local lucky = {
 local function updateGiantStatus(inst, reset)
     local lv = inst.components.ksfun_level:GetLevel()
     -- 每级新增1%的饱食度下降，最大不超过50%
+    local hunger = inst.target.components.hunger
     if reset then
         hunger.burnratemodifiers:RemoveModifier("ksfun_power_player_hunger")
     else

@@ -50,7 +50,7 @@ local function onuse(inst, doer, target)
 
             -- 已经拥有了，尝试突破等级上限
             elseif ent.components.ksfun_breakable then
-                local level = inst.components.ksfun_level
+                local level = ent.components.ksfun_level
                 if level and level:IsMax() then
                     local cnt = ent.components.ksfun_breakable:GetCount()
                     -- 当前是9阶的时候，todo 突破上限限制
@@ -90,12 +90,9 @@ local function onEnhant(inst, doer, item)
         if powername ~= nil then
             inst.power = powername
             updateDisplayName(inst)
+            KsFunShowTip(doer, "魔药调制成功!")
             return true
-        else
-            KsFunShowTip("当前材料无法调制魔药!")
         end
-    else
-        KsFunShowTip("已经是调制过的魔药了!")
     end
     return false
 end
@@ -103,12 +100,17 @@ end
 
 
 local function onBreak(inst, doer, item)
-    local nextlv = inst.components.ksfun_level:GetLevel() + 1
-    if nextlv < prefabsdef.getBreakLv(item.prefab) then
-        local avalue = inst.components.ksfun_achievements:GetValue()
-        if avalue >= 2^nextlv then
-            inst.components.ksfun_achievements:DoDelta(-2^nextlv)
-            inst.components.ksfun_level:SetLevel(nextlv)
+    local itemlv = prefabsdef.getBreakLv(item.prefab)
+    if itemlv == 0 then
+        KsFunShowTip(doer, "不是强化魔药的材料!")
+        return false
+    end
+    local lv = inst.components.ksfun_level:GetLevel()
+    if lv <= itemlv then
+        local avalue = doer.components.ksfun_achievements:GetValue()
+        if avalue >= 2^itemlv then
+            doer.components.ksfun_achievements:DoDelta(-2^itemlv)
+            inst.components.ksfun_level:SetLevel(itemlv)
             updateDisplayName(inst)
             return true
         else
@@ -123,7 +125,7 @@ end
 
 
 local function net(inst)
-    inst.ksfunchangename = GLOBAL.net_bool(inst.GUID, "ksfunchangename", "ksfun_itemdirty")
+    inst.ksfunchangename = net_string(inst.GUID, "ksfunchangename", "ksfun_itemdirty")
     inst:ListenForEvent("ksfun_itemdirty", function(inst)
         local newname = inst.ksfunchangename:value()
 		if newname then
@@ -153,7 +155,7 @@ local function fn()
     inst:AddTag("ksfun_item")
     inst.entity:SetPristine()
 
-    net()
+    net(inst)
 
     if not TheWorld.ismastersim then
         return inst

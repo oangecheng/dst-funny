@@ -120,7 +120,14 @@ local function MakePower(name, data)
         if data.onbreak then
             inst:AddComponent("ksfun_breakable")
             inst.components.ksfun_breakable:Enable()
-            inst.components.ksfun_breakable:SetOnBreakFunc(data.onbreak)
+            inst.components.ksfun_breakable:SetOnBreakFunc(function(inst, doer, item)
+                if data.onbreak then
+                    data.onbreak(inst, doer, item)
+                end
+                if inst.target then
+                    inst.target.components.ksfun_power_system:SyncData()
+                end
+            end)
         end
 
 

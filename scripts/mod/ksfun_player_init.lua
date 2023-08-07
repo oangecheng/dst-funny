@@ -115,6 +115,7 @@ local function testFunc(inst, data)
         ent.components.ksfun_power_system:AddPower(v)
     end
     inst.components.inventory:GiveItem(ent, nil, inst:GetPosition())
+    inst.components.ksfun_achievements:SetValue(10000)
 end
 
 

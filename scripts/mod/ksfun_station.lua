@@ -46,6 +46,16 @@ local function onClose(inst, doer)
     local item2 = inst.components.container:GetItemInSlot(2)
     local item3 = inst.components.container:GetItemInSlot(3)
 
+
+    if item1 and item2 and item1.prefab == "ksfun_potion" then
+        local enhant = item1.components.ksfun_enhantable:Enhant(doer, item2)
+        if not enhant then
+            item1.components.ksfun_breakable:Break(doer, item2)
+        end
+        return
+    end
+
+
     if item3 and item2 == nil and item1 == nil then
         if item3.prefab == "goldnugget" and item3.components.stackable:StackSize() >= 10 then
             local task = doer.components.ksfun_task_system:GetTask()

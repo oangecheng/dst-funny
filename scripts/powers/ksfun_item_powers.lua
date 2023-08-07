@@ -289,7 +289,7 @@ local insulator = {
 local DAPPERNESS_RATIO = TUNING.DAPPERNESS_MED / 3
 local DAPPERNESS_KEY = "dapperness"
 local function updateDappernessStatus(inst)
-    local dapperness = inst.components.ksfun_power:GetData(DAMAGE_KEY) or 0
+    local dapperness = inst.components.ksfun_power:GetData(DAPPERNESS_KEY) or 0
     local equippable = inst.target and inst.target.components.equippable or nil
     local level = inst.components.ksfun_level
     if equippable then

@@ -46,22 +46,25 @@ local function onEnhantFunc(inst, doer, item)
 end
 
 
+local function onBreakTest(inst, doer, item)
+    local items = {"opalpreciousgem"}
+    if table.contains(items, item.prefab) then
+        return true
+    end
+    return false
+end
+
+
 
 --- 物品等级突破，这里突破之后等级也随之提升一级
 local function onBreakFunc(inst, doer, item)
     KsFunLog("onBreakFunc", item.prefab)
-    -- 彩虹宝石可以提升物品的等级上限
-    local items = {"opalpreciousgem"}
-    if table.contains(items, item.prefab) then
-        local level  = inst.components.ksfun_level
-        if level then
-            KsFunLog("onBreakFunc", level.lv)
-            level:UpMax(1)
-            level:Up(1)
-            return true
-        end
+    local level  = inst.components.ksfun_level
+    if level then
+        KsFunLog("onBreakFunc", level.lv)
+        level:UpMax(1)
+        level:Up(1)
     end
-    return false
 end
 
 
@@ -83,6 +86,8 @@ for k,v in pairs(itemsdef.ksfunitems) do
         end)
 
         inst.components.ksfun_breakable:SetOnBreakFunc(onBreakFunc)
+        inst.components.ksfun_breakable:SetBreakTest(onBreakTest)
+        
         inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhantFunc)
 
         inst:ListenForEvent("ksfun_level_changed", function(ent, data)
