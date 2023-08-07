@@ -66,6 +66,7 @@ local function onEnhant(inst, doer, item)
         local powername = itemsdef[item.prefab]
         if powername ~= nil then
             inst.power = powername
+            updateDisplayName(inst)
             return true
         else
             KsFunShowTip("当前材料无法调制魔药!")
@@ -85,6 +86,7 @@ local function onBreak(inst, doer, item)
         if avalue >= 2^nextlv then
             inst.components.ksfun_achievements:DoDelta(-2^nextlv)
             inst.components.ksfun_level:DoDelta(1)
+            updateDisplayName(inst)
             return true
         else
             KsFunShowTip(doer, "成就点数不足!")
