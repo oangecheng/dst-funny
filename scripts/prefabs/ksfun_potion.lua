@@ -7,25 +7,19 @@ local assets = {
 }
 
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
+local prefabsdef = require("defs/ksfun_prefabs_def")
 
 
 local itemsdef = {
-    ["butter"]        = NAMES.HEALTH,
+    ["dragonfruit"]   = NAMES.HEALTH,
     ["meat_dried"]    = NAMES.HUNGER,
-    ["nightmarefuel"] = NAMES.SANITY,
+    ["green_cap"]     = NAMES.SANITY,
     ["berries"]       = NAMES.PICK,
-    ["dragonfruit"]   = NAMES.FARM,
+    ["seeds"]         = NAMES.FARM,
+    ["cactus_meat"]   = NAMES.LOCOMOTOR,
+    ["monstermeat"]   = NAMES.KILL_DROP,
+    ["butter"]        = NAMES.LUCKY,
 }
-
-
-local function abletoaccepttest(inst, item, giver)
-    return inst.power == nil and table.containskey(itemsdef, item.prefab)
-end
-
-
-local function onitemgive(inst, giver, item)
-    inst.power = itemsdef[item.prefab]
-end
 
 
 local function onuse(inst, doer, target)
@@ -50,6 +44,43 @@ local function onuse(inst, doer, target)
     end
     return used   
 end
+
+
+
+local function onEnhant(inst, doer, item)
+    if not inst.power then
+        local powername = itemsdef[item.prefab]
+        if powername ~= nil then
+            inst.power = powername
+            return true
+        else
+            KsFunShowTip("当前材料无法调制魔药!")
+        end
+    else
+        KsFunShowTip("已经是调制过的魔药了!")
+    end
+    return false
+end
+
+
+
+local function onBreak(inst, doer, item)
+    local nextlv = inst.components.ksfun_level:GetLevel() + 1
+    if nextlv < prefabsdef.getBreakLv(item.prefab) then
+        local avalue = inst.components.ksfun_achievements:GetValue()
+        if avalue >= 2^nextlv then
+            inst.components.ksfun_achievements:DoDelta(-2^nextlv)
+            inst.components.ksfun_level:DoDelta(1)
+            return true
+        else
+            KsFunShowTip(doer, "成就点数不足!")
+        end
+    else
+        KsFunShowTip(doer, "当前材料等级太低!")
+    end
+    return false
+end
+
 
 
 local function fn()
@@ -78,12 +109,21 @@ local function fn()
     end
 
     inst:AddComponent("inspectable")
-    inst:AddComponent("trader")
-    inst.components.trader:SetAbleToAcceptTest(abletoaccepttest)
-    inst.components.trader.onaccept = onitemgive
+
 
     inst:AddComponent("ksfun_useable")
     inst.components.ksfun_useable:SetOnUse(onuse)
+
+    inst:AddComponent("ksfun_level")
+    inst.components.ksfun_level:SetMax(10)
+
+    inst:AddComponent("ksfun_enhantable")
+    inst.components.ksfun_enhantable:Enable()
+    inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhant)
+
+    inst:AddComponent("ksfun_breakable")
+    inst.components.ksfun_breakable:Enable()
+    inst.components.ksfun_breakable:SetOnBreakFunc(onBreak)
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_potion.xml"

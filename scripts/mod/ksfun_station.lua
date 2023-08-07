@@ -11,7 +11,7 @@ local function handKsFunItem(doer, ksfunitem, material)
     end
     --- 尝试突破，提升等级上限，等级1的物品，只能添加一种额外属性，等级2可以添加2种，类推
     if ksfunitem.components.ksfun_breakable then
-        if ksfunitem.components.ksfun_breakable:Break(material) then 
+        if ksfunitem.components.ksfun_breakable:Break(doer, material) then 
             return true
         end
     end

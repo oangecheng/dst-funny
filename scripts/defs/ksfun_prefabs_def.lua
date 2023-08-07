@@ -74,6 +74,24 @@ local foods = {
 
 
 
+--- 突破等级上限物品定义
+local breakitemsdef = {
+    ["goldnugget"] = 1,
+    ["moonrocknugget"] = 2,
+    ["redgem"] = 3,
+    ["bluegem"] = 4,
+    ["purplegem"] = 5,
+    ["thulecite"] = 6,
+    ["greengem"] = 7,
+    ["orangegem"] = 8,
+    ["yellowgem"] = 9,
+    ["opalpreciousgem"] = 10,
+}
+
+
+
+
+
 --- 物品定义
 local itemsdef = {
     ["cutgrass"]            = { lv = 1, rcnt = 40 },     -- 草
@@ -189,6 +207,11 @@ end
 
 prefabs.getLostRecipes = function()
     return lostrecipes
+end
+
+
+prefabs.getBreakLv = function(prefab)
+    return breakitemsdef[prefab] or 0
 end
 
 

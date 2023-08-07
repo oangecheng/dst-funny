@@ -48,7 +48,7 @@ end
 
 
 --- 物品等级突破，这里突破之后等级也随之提升一级
-local function onBreakFunc(inst, item)
+local function onBreakFunc(inst, doer, item)
     KsFunLog("onBreakFunc", item.prefab)
     -- 彩虹宝石可以提升物品的等级上限
     local items = {"opalpreciousgem"}
