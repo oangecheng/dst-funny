@@ -369,6 +369,17 @@ AddComponentPostInit("stewer", function(self)
 		end
 		return oldHarvest and oldHarvest(self,harvester) or nil
 	end
+
+    -- hook烹饪时间
+    local oldStartCooking = self.StartCooking
+    self.StartCooking = function(self, doer)
+        local oldmulti = self.cooktimemult
+        self.cooktimemult = oldmulti * 0.5
+        if oldStartCooking then
+            oldStartCooking(self, doer)
+        end
+        self.cooktimemult = oldmulti
+    end
 end)
 
 
