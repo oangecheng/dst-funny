@@ -16,7 +16,7 @@ KSFUN_TUNING.MODE = mode or 0
 
 PrefabFiles = {
     "ksfun_tasks",
-    "ksfun_player_powers",
+    "ksfun_powers",
     "ksfun_task_reel",
     "ksfun_power_gems",
     "ksfun_potion",

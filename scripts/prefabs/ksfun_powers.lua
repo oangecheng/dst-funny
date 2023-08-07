@@ -9,9 +9,8 @@ local function MakePower(name, data)
     -- 统一绑定target
     local function onAttachFunc(inst, target, name)
         inst.target = target
-        local func = data.power and data.power.onAttachFunc or data.onattach  
-        if func then 
-            func(inst, target, name) 
+        if data.onattach then 
+            data.onattach(inst, target, name) 
         end
     end
 
@@ -19,7 +18,7 @@ local function MakePower(name, data)
     -- 统一解绑target
     local function onDetachFunc(inst, target, name)
         if inst.target == nil then return end
-        local func = data.power and data.power.onDetachFunc or data.ondetach  
+        local func = data.ondetach  
         if func then 
             func(inst, target, name) 
         end
@@ -28,7 +27,7 @@ local function MakePower(name, data)
 
     local function onGetDescFunc(inst, target, name)
         if inst.target == nil then return end
-        local func = data.power and data.power.onGetDescFunc or data.ondesc  
+        local func = data.ondesc  
         local str = func and func(inst, target, name) or "default"
         return str
     end
@@ -36,7 +35,7 @@ local function MakePower(name, data)
 
     local function onLvChangeFunc(inst, d)
         if inst.target == nil then return end
-        local func = data.level and data.level.onLvChangeFunc or data.onstatechange
+        local func = data.onstatechange
         if d.lv < 0 then
             -- <0 属性失效，移除 
             inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
@@ -47,7 +46,7 @@ local function MakePower(name, data)
 
 
     local function onLoadFunc(inst, d)
-        local func = data.power and data.power.onLoadFunc or data.onload
+        local func=  data.onload
         if func then 
             func(inst, d) 
         end
@@ -55,7 +54,7 @@ local function MakePower(name, data)
 
 
     local function onSaveFunc(inst, d)
-        local func = data.power and data.power.onSaveFunc or data.onsave
+        local func = data.onsave
         if func then 
             func(inst, d) 
         end
@@ -115,6 +114,13 @@ local function MakePower(name, data)
             if data.forgable.ontest then
                 inst.components.ksfun_forgable:SetOnTestFunc(data.forgable.ontest)
             end
+        end
+
+
+        if data.onbreak then
+            inst:AddComponent("ksfun_breakable")
+            inst.components.ksfun_breakable:Enable()
+            inst.components.ksfun_breakable:SetOnBreakFunc(data.onbreak)
         end
 
 

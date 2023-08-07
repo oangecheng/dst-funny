@@ -9,6 +9,16 @@ local function getPowerDesc(inst)
 end
 
 
+--- 尝试更新属性的最大值
+local function updatePowerMax(inst, delta)
+    if inst.components.ksfun_breakable then
+        local count = inst.components.ksfun_breakable:GetCount()
+        local maxlv = (count + 1) * (delta or 10)
+        inst.components.ksfun_level:SetMax(maxlv)
+    end
+end
+
+
 
 ---------------------------------------------------------------------------------------------- 血量增强 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local HEALTH_KEY = "maxhealth"
@@ -64,6 +74,7 @@ local health = {
         if inst.percent then
             h:SetPercent(inst.percent)
         end
+        updatePowerMax(inst, 20)
         updateHealthStatus(inst)
         -- 玩家杀怪可以升级
         target:ListenForEvent("killed", onKillOther)
@@ -79,6 +90,10 @@ local health = {
         KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
+    onbreak = function(inst)
+        updatePowerMax(inst, 20)
+    end,
+
     ondesc = getPowerDesc,
 
     onsave = function(inst, data)
@@ -90,6 +105,7 @@ local health = {
     onload = function(inst, data)
         inst.percent = data.percent or nil
     end,
+
 }
 
 
@@ -188,6 +204,7 @@ local hunger = {
             h:SetPercent(inst.percent)
         end
 
+        updatePowerMax(inst, 20)
         updateHungerStatus(inst)
         target:ListenForEvent("oneat", onEat)
         target:ListenForEvent("hungerdelta", onHungerPercentChange)
@@ -203,6 +220,10 @@ local hunger = {
     onstatechange = function(inst)
         updateHungerStatus(inst)
         KsFunSayPowerNotice(inst.target, inst.prefab)
+    end,
+
+    onbreak = function(inst)
+        updatePowerMax(inst, 20)
     end,
 
     ondesc = getPowerDesc,
@@ -309,6 +330,8 @@ local sanity = {
         if inst.percent then
             s:SetPercent(inst.percent)
         end
+
+        updatePowerMax(inst, 20)
         updateSanityStatus(inst)
         target:ListenForEvent("builditem", onBuildItemFunc)
         target:ListenForEvent("buildstructure", oBuildStructureFunc)
@@ -323,6 +346,10 @@ local sanity = {
     onstatechange = function(inst)
         updateSanityStatus(inst)
         KsFunSayPowerNotice(inst.target, inst.prefab)
+    end,
+
+    onbreak = function(inst)
+        updatePowerMax(inst, 20)
     end,
 
     ondesc = getPowerDesc,
@@ -454,7 +481,7 @@ end
 
 local pick = {
     onattach = function(inst, target, name)
-        inst.components.ksfun_level:SetMax(100)
+        updatePowerMax(inst, 10)
         target:ListenForEvent("picksomething", onPickSomeThing)
         target:ListenForEvent("ksfun_picksomething", onPickSomeThing)
     end,
@@ -466,6 +493,10 @@ local pick = {
 
     onstatechange = function(inst)
         KsFunSayPowerNotice(inst.target, inst.prefab)
+    end,
+
+    onbreak = function(inst)
+        updatePowerMax(inst, 10)
     end,
 
     ondesc = getPowerDesc,
@@ -540,7 +571,7 @@ end
 
 local farm = {
     onattach = function(inst, target, name)
-        inst.components.ksfun_level:SetMax(100)
+        updatePowerMax(inst, 10)
         target:ListenForEvent("picksomething", onPickFarmPlant)
     end,
 
@@ -553,6 +584,10 @@ local farm = {
     end,
 
     ondesc = getPowerDesc,
+
+    onbreak = function(inst)
+        updatePowerMax(inst, 10)
+    end,
 }
 
 
@@ -600,7 +635,7 @@ end
 
 local killdrop = {
     onattach = function(inst, target, name)
-        inst.components.ksfun_level:SetMax(100)
+        updatePowerMax(inst, 10)
         target:ListenForEvent("killed", killItemDrop)
     end,
 
@@ -612,47 +647,12 @@ local killdrop = {
         KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
+    onbreak = function(inst)
+        updatePowerMax(inst, 10)
+    end,
+
     ondesc = getPowerDesc,
 }
-
-
-
-
-
-
-
-
----------------------------------------------------------------------------------------------- 伤害倍率 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-local function updateDamageStatus(inst, reset)
-    local combat = inst.target and inst.target.components.combat
-    if combat then
-        if reset then
-            combat.externaldamagemultipliers:RemoveModifier(inst)
-        else
-            local lv = inst.components.ksfun_level:GetLevel()
-            combat.externaldamagemultipliers:SetModifier(inst, 1 + lv * 0.01)
-        end
-    end
-end
-
-local damage = {
-    onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(50)
-        updateDamageStatus(inst)
-    end,
-
-    ondetach = function(inst, target)
-        updateDamageStatus(inst, true)
-    end,
-
-    onstatechange = function(inst)
-        updateDamageStatus(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
-    end,
-
-    ondesc = getPowerDesc
-}
-
 
 
 
@@ -676,7 +676,7 @@ end
 local locomotor = {
 
     onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(50)
+        updatePowerMax(inst, 10)
         updateLocomotorStatus(inst)
     end,
 
@@ -689,7 +689,11 @@ local locomotor = {
         KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
-    ondesc = getPowerDesc
+    onbreak = function(inst)
+        updatePowerMax(inst, 10)
+    end,
+
+    ondesc = getPowerDesc,
 }
 
 
@@ -705,7 +709,7 @@ end
 
 local lucky = {
     onattach = function(inst, target)
-        inst.components.ksfun_level:SetMax(100)
+        updatePowerMax(inst, 10)
         target:ListenForEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, onTaskFinish)
     end,
 
@@ -715,6 +719,10 @@ local lucky = {
 
     onstatechange = function(inst)
         KsFunSayPowerNotice(inst.target, inst.prefab)
+    end,
+
+    onbreak = function(inst)
+        updatePowerMax(inst, 10)
     end,
 
     ondesc = getPowerDesc,

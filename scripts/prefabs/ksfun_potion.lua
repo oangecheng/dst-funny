@@ -6,6 +6,7 @@ local assets = {
     Asset("ATLAS", "images/inventoryitems/ksfun_potion.xml"),
 }
 
+local MAX = 10
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local prefabsdef = require("defs/ksfun_prefabs_def")
 
@@ -40,11 +41,32 @@ local function onuse(inst, doer, target)
     local used = false
     if target:HasTag("player") then
         local system = target.components.ksfun_power_system
-        if inst.power and system and system:GetPower(inst.power) == nil then
-            system:AddPower(inst.power)
-            used = true
+        if inst.power and system  then
+            local ent = system:GetPower(inst.power)
+            -- 还没有拥有，首次是添加该属性
+            if ent == nil then
+                ent = system:AddPower(inst.power)
+                used = true
+
+            -- 已经拥有了，尝试突破等级上限
+            elseif ent.components.ksfun_breakable then
+                local level = inst.components.ksfun_level
+                if level and level:IsMax() then
+                    local cnt = ent.components.ksfun_breakable:GetCount()
+                    -- 当前是9阶的时候，todo 突破上限限制
+                    if cnt == MAX - 1 then
+                        used = false
+                    -- 药剂等级 > 属性等阶 
+                    elseif inst.components.ksfun_level:GetLevel() > cnt then
+                        ent.components.ksfun_breakable:Break(doer, inst)
+                        used = true
+                    end 
+                end               
+            end
         end
+
     else
+
         local activatable = target.components.ksfun_activatable
         if (not inst.power) and activatable then
             if activatable:CanActivate() then
@@ -53,6 +75,7 @@ local function onuse(inst, doer, target)
             end
         end
     end
+
     if used then
         inst:DoTaskInTime(0, inst:Remove())
     end

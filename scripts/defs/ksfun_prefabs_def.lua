@@ -85,7 +85,7 @@ local breakitemsdef = {
     ["greengem"] = 7,
     ["orangegem"] = 8,
     ["yellowgem"] = 9,
-    ["opalpreciousgem"] = 10,
+    -- ["opalpreciousgem"] = 10,  后续开发
 }
 
 
