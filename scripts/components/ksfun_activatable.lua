@@ -16,6 +16,11 @@ function ACTIVATE:CanActivate()
 end
 
 
+function ACTIVATE:IsActivated()
+    return self.isactivated
+end
+
+
 function ACTIVATE:DoActivate(doer, item)
     self.isactivated = true
     if self.onactivate then

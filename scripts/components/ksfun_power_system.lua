@@ -119,9 +119,11 @@ end
 
 local function getTitle(inst)
     local prefab = inst.prefab
-    local name = STRINGS.NAMES[string.upper(prefab)]
-    if inst.components.ksfun_enhantable and inst.components.ksfun_enhantable:IsEnable() then
-        name = name.."[可升级]"
+    local name = KsFunGetPrefabName(inst.prefab)
+    if inst.components.ksfun_activatable and inst.components.ksfun_activatable:IsActivated() then
+        local cnt = inst.components.ksfun_breakable:GetCount()
+        -- 1阶战斗长矛
+        name = cnt..STRINGS.KSFUN_BREAK_COUNT..name
     end
     local level = inst.components.ksfun_level
     local lv = level and level:GetLevel() or -1
@@ -141,8 +143,9 @@ function KSFUN_POWERS:SyncData()
         local lv   = power.components.ksfun_level:GetLevel()
         local exp  = power.components.ksfun_level:GetExp()
         local desc = power.components.ksfun_power:GetDesc()
-        -- 名称;等级;经验值;描述
-        local d = k .. "|" .. tostring(lv) .. "|" .. tostring(exp) .. "|" ..desc
+        local bcnt = power.components.ksfun_breakable and power.components.ksfun_breakable:GetCount() or -1
+        -- 名称|等级|经验值|描述|等阶
+        local d = k .. "|" .. tostring(lv) .. "|" .. tostring(exp) .. "|" ..desc .."|" .. tostring(bcnt)
         data = data .."#".. d
     end
     if data ~= "" and self.inst.replica.ksfun_power_system then

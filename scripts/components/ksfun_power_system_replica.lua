@@ -20,16 +20,18 @@ local function onPowerWithLevelDirty(self, inst)
                 end
             else
                 --- 属性数据
-                if GetTableSize(d2) == 4 then
+                if GetTableSize(d2) == 5 then
                     local name = d2[1]
                     local lv   = tonumber(d2[2])
                     local exp  = tonumber(d2[3])
                     local desc = d2[4]
+                    local bcnt = tonumber(d2[5])
                     self.powers[name] = {
                         name = name,
                         lv   = lv,
                         exp  = exp,
                         desc = desc,
+                        bcnt = bcnt
                     }
                 end
             end

@@ -120,7 +120,8 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 			for k,v in pairs(list) do
 				local l = v.components.ksfun_level
 				local d = v.components.ksfun_power:GetDesc()
-				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d}
+				local bcnt = v.components.ksfun_breakable and v.components.ksfun_breakable:GetCount() or -1
+				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d, bcnt = bcnt}
 			end
 		end
 
@@ -153,6 +154,10 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
 		if self.powers[key] == nil then
 			self.powers[key] = self.root:AddChild(self:KsFunCard())
+		end
+
+		if v.bcnt >=0 then
+			name = name.."("..v.bcnt..STRINGS.KSFUN_BREAK_COUNT..")"
 		end
 
 
