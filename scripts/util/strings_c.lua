@@ -98,6 +98,7 @@ STRINGS.NAMES.KSFUN_POWER_PLAYER_PICK           = "园艺大师"
 STRINGS.NAMES.KSFUN_POWER_PLAYER_FARM           = "当代神农"
 STRINGS.NAMES.KSFUN_POWER_PLAYER_KILLDROP       = "怪物猎人"
 STRINGS.NAMES.KSFUN_POWER_PLAYER_LUCKY          = "幸运"
+STRINGS.NAMES.KSFUN_POWER_PLAYER_GIANT          = "巨人"
 
 
 --- 怪物属性，可以不显示名称，预留
@@ -135,6 +136,8 @@ STRINGS.KSFUN_POWER_DESC = {
     KSFUN_POWER_PLAYER_PICK       = "采集加速/倍率获取",
     KSFUN_POWER_PLAYER_FARM       = "倍率采集农作物/施肥提效",
     KSFUN_POWER_PLAYER_KILLDROP   = "击杀额外掉落物品",
+    KSFUN_POWER_PLAYER_LUCKY      = "更多的好事/更少的坏事",
+    KSFUN_POWER_PLAYER_GIANT      = "提升工作效率/增加模型大小",
 }
 
 STRINGS.KSFUN_NEGA_POWER_NOTICE = {
