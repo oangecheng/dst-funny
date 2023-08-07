@@ -77,6 +77,17 @@ GLOBAL.KsFunPowerGainExp = function(inst, name, exp)
 end
 
 
+GLOBAL.KsFunGetPowerLv = function(inst, name)
+    if inst.components.ksfun_power_system then
+        local power = inst.components.ksfun_power_system:GetPower(name)
+        if power then
+            return power.components.ksfun_level:GetLevel()
+        end
+    end
+    return nil
+end
+
+
 
 GLOBAL.KsFunGetAoeProperty  = function(aoepower)
     local level = aoepower.components.ksfun_level

@@ -48,7 +48,7 @@ local absorb = {
 
 
 ------ 怪物冰爆属性 ----------------------------------------------------------------------------------------
-local FREEZABLE_TAGS = { "freezable" }
+local FREEZABLE_TAGS = { "freezable", "player" }
 local NO_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
 
 local function doIceExplosion(inst, area, coldness)
@@ -133,7 +133,7 @@ local sanityaura = {
 
 ------ 怪物额外真实伤害 ----------------------------------------------------------------------------------------
 local function realdamageAttack(attacker, data)
-    if not data.target then return end
+    if not (data.target and  data.target:HasTag("player")) then return end
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.REAL_DAMAGE)
     -- 30% 的概率造成属性等级*0.03点的额外真实伤害，不计算护甲
     local hit = KsFunAttackCanHit(attacker, data.target, 0.3, "realdamageAttack")
@@ -254,16 +254,14 @@ local health = {
 
 ------ 怪物击退 ----------------------------------------------------------------------------------------
 local function onKnockback(attacker, data)
-    if not data.target then return end
+    if not (data.target and  data.target:HasTag("player")) then return end
     local power = attacker.components.ksfun_power_system:GetPower(NAMES.KNOCK_BACK)
     -- 30% 的概率击退
     local hit = KsFunAttackCanHit(attacker, data.target, 0.3, "onKnockback")
     if hit and power then
         local lv = power.components.ksfun_level:GetLevel()
         local radius = 0.2 + math.min(0.8, lv * 0.01 )
-        if data.target:HasTag("player") then
-            data.target:PushEvent("knockback", {knocker = attacker, radius = radius})
-        end
+        data.target:PushEvent("knockback", {knocker = attacker, radius = radius})
     end
 end
 
@@ -333,6 +331,27 @@ local lifesteal = {
 
 
 
+------ 怪物荆棘，反伤 ----------------------------------------------------------------------------------------
+--- 伤害移除，不计算护甲
+local function onbramble(inst, data)
+    if not (data.attacker and data.attacker:HasTag("player")) then return end
+    local lv = KsFunGetPowerLv(inst, NAMES.BRAMBLE)
+    if lv and  data.attacker.components.health then
+        local dmg = 5 + math.floor(0.1 * lv)
+        data.attacker.components.health:DoDelta(-dmg, nil, nil, true, nil, true)
+        data.attacker:PushEvent("thorns")
+    end
+end
+
+local bramble = {
+    onattach = function(inst, target)
+        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
+        target:ListenForEvent("attacked", onbramble)
+    end
+}
+
+
+
 
 
 
@@ -349,6 +368,7 @@ local monsterpowers = {
     [NAMES.KNOCK_BACK]    = knockback,
     [NAMES.STEAL]         = steal,
     [NAMES.LIFESTEAL]     = lifesteal,
+    [NAMES.BRAMBLE]       = bramble,
 }
 
 return monsterpowers
