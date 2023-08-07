@@ -273,18 +273,33 @@ end
 local MIN_CHANCE = 0.1
 local MAX_CHANCE = 2
 
-local function lucky(inst)
-    return inst and inst.components.ksfun_lucky and inst.components.ksfun_lucky:GetRatio() or 0
+
+local function luckyMulti(inst)
+    local system = inst.components.ksfun_power_system
+    local multi = 0
+    if system then
+        local lucky = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.LUCKY)
+        if lucky then
+            multi = lucky.components.ksfun_level:GetLevel() * 0.01
+        end
+    end
+    -- 处于不幸的debuff时，你的幸运会变成赋值
+    if inst.unlucky then
+        multi = inst.unlucky * multi
+    end
+
+    return multi
 end
 
+
 local function luckyMultiPositive(inst)
-    local m = math.clamp(1 + lucky(inst), MIN_CHANCE, MAX_CHANCE)
+    local m = math.clamp(1 + luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
     KsFunLog("luckyMultiPositive", m)
     return m
 end
 
 local function luckyMultiNegative(inst)
-    local m = math.clamp(1 - lucky(inst), MIN_CHANCE, MAX_CHANCE)
+    local m = math.clamp(1 - luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
     KsFunLog("luckyMultiNegative", m) 
     return m
 end

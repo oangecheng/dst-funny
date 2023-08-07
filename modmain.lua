@@ -47,7 +47,7 @@ AddReplicableComponent("ksfun_power_system")
 AddReplicableComponent("ksfun_task_system")
 AddReplicableComponent("ksfun_task_demand")
 AddReplicableComponent("ksfun_level")
-AddReplicableComponent("ksfun_lucky")
+AddReplicableComponent("ksfun_achievements")
 
 
 local player_panel = require "mod/my_screen"

@@ -3,10 +3,10 @@ local ITEMS_DEF  = require "defs/ksfun_items_def"
 local playersdef = require "defs/ksfun_players_def" 
 
 
-local function initLucky(inst, config)
-    inst:AddComponent("ksfun_lucky")
-    if config.lucky then
-        inst.components.ksfun_lucky:SetLucky(config.lucky)
+local function initAchievements(inst, config)
+    inst:AddComponent("ksfun_achievements")
+    if config.achievements then
+        inst.components.ksfun_achievements:SetValue(config.achievements)
     end
 end
 
@@ -71,29 +71,17 @@ local function initTaskSystem(player)
     -- 任务结束，从任务列表当中移除
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
-
-        -- 任务成功+1幸运值，失败-1
-        local luckydelta = -1
+        local delta = 0
         if data.iswin then
-            luckydelta = 1
+            delta = 2 ^ (data.lv or 0)
         end
-        if player.components.ksfun_lucky then
-            player.components.ksfun_lucky:DoDelta(luckydelta)
+        if player.components.ksfun_achievements then
+            player.components.ksfun_achievements:DoDelta(delta)
         end
-
     end)
 
-    -- 每天开始给1-2个任务卷轴
     player:WatchWorldState("cycles", function(inst)
-        -- inst:DoTaskInTime(2, function()
-        --     local count = math.random(2)
-        --     for i=1, count do
-        --         local ent = KsFunSpawnTaskReel()
-        --         if ent then
-        --             player.components.inventory:GiveItem(ent, nil, player:GetPosition())
-        --         end
-        --     end  
-        -- end)
+       
     end)
 end
 
@@ -134,7 +122,7 @@ AddPlayerPostInit(function(player)
     --- 只支持原生角色
     local config = playersdef.playerconfig(player)
     if config ~= nil then
-        initLucky(player, config)
+        initAchievements(player, config)
         initPowerSystem(player)
         initPlayerProperty(player)
         initTaskSystem(player)

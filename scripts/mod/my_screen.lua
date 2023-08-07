@@ -105,7 +105,7 @@ end
 function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 
 	local title = nil
-	local lucky = 0
+	local achievements = 0
 
 	local powers = {}
 	if TheWorld.ismastersim then
@@ -124,8 +124,8 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 			end
 		end
 
-		if inst.components.ksfun_lucky then
-			lucky = inst.components.ksfun_lucky:GetLucky()
+		if inst.components.ksfun_achievements then
+			achievements = inst.components.ksfun_achievements:GetValue()
 		end
 		
 	else
@@ -135,13 +135,13 @@ function KSFUN_PLAYER_PANEL:AddPowerCards(inst)
 			powers = system:GetPowers()
 		end
 
-		if inst.replica.ksfun_lucky then
-			lucky = inst.replica.ksfun_lucky:GetLucky()
+		if inst.replica.ksfun_achievements then
+			achievements = inst.replica.ksfun_achievements:GetValue()
 		end
 	end
 
 	if title then
-		self:AddTitle(inst, title, lucky)
+		self:AddTitle(inst, title, achievements)
 	end
 
 
@@ -191,7 +191,7 @@ end
 
 
 
-function KSFUN_PLAYER_PANEL:AddTitle(inst, title, lucky)
+function KSFUN_PLAYER_PANEL:AddTitle(inst, title, achievements)
 	local key = title.prefab
 	if key == nil then return end
 
@@ -199,7 +199,7 @@ function KSFUN_PLAYER_PANEL:AddTitle(inst, title, lucky)
 
 	local name = title.name
 	if inst:HasTag("player") then
-		name = name.." ".."幸运值:"..lucky 
+		name = name.." ".."幸运值:"..achievements 
 	end
 
 	self.titles[key] = self.root:AddChild(self:KsFunCard())

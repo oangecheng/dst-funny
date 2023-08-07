@@ -703,7 +703,7 @@ local function onTaskFinish(inst, data)
     end
 end
 
-local lucky = {
+local achievements = {
     onattach = function(inst, target)
         inst.components.ksfun_level:SetMax(100)
         target:ListenForEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, onTaskFinish)
@@ -734,7 +734,7 @@ local playerpowers = {
     [NAMES.FARM]        = farm,
     [NAMES.KILL_DROP]   = killdrop,
     [NAMES.LOCOMOTOR]   = locomotor,
-    [NAMES.LUCKY]       = lucky,
+    [NAMES.LUCKY]       = achievements,
 }
 
 

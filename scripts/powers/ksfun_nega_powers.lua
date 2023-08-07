@@ -50,14 +50,10 @@ local diarrhea = {
 local unlucky = {
     duration = KSFUN_TUNING.DEBUG and 60 or KSFUN_TUNING.TOTAL_DAY_TIME,
     onattach = function(inst, target)
-        if target.components.ksfun_lucky then
-            target.components.ksfun_lucky:AddModifier("power_unlucky", -100)
-        end
+        target.unlucky = -1
     end,
     ondetach = function(inst, target)
-        if target.components.ksfun_lucky then
-            target.components.ksfun_lucky:RemoveModifier("power_unlucky")
-        end
+        target.unlucky = nil
     end,
 }
 
