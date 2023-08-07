@@ -199,7 +199,7 @@ function KSFUN_PLAYER_PANEL:AddTitle(inst, title, achievements)
 
 	local name = title.name
 	if inst:HasTag("player") then
-		name = name.." ".."幸运值:"..achievements 
+		name = name.." ".."成就点:"..achievements 
 	end
 
 	self.titles[key] = self.root:AddChild(self:KsFunCard())
