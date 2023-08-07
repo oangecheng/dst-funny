@@ -181,6 +181,7 @@ local function fn()
 
     inst.OnLoad = function(inst, data)
         inst.power = data and data.power or nil
+        updateDisplayName(inst)
     end
     inst.OnSave = function(inst, data)
         data.power = inst.power or nil
