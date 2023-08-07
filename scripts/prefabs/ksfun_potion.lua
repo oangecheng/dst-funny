@@ -108,7 +108,7 @@ local function onBreak(inst, doer, item)
         local avalue = inst.components.ksfun_achievements:GetValue()
         if avalue >= 2^nextlv then
             inst.components.ksfun_achievements:DoDelta(-2^nextlv)
-            inst.components.ksfun_level:DoDelta(1)
+            inst.components.ksfun_level:SetLevel(nextlv)
             updateDisplayName(inst)
             return true
         else
