@@ -22,6 +22,20 @@ local itemsdef = {
 }
 
 
+local function updateDisplayName(inst)
+    if inst.ksfunchangename then
+        local name = KsFunGetPrefabName(inst.prefab)
+        local lv = inst.components.ksfun_level:GetLevel()
+        name = lv.."阶"..name
+        if inst.power then
+            local powername = KsFunGetPowerNameStr(inst.power)
+            name = name.." "..powername
+        end
+        inst.ksfunchangename:set(name)
+    end
+end
+
+
 local function onuse(inst, doer, target)
     local used = false
     if target:HasTag("player") then
@@ -83,6 +97,20 @@ end
 
 
 
+local function net(inst)
+    inst.ksfunchangename = GLOBAL.net_bool(inst.GUID, "ksfunchangename", "ksfun_itemdirty")
+    inst:ListenForEvent("ksfun_itemdirty", function(inst)
+        local newname = inst.ksfunchangename:value()
+		if newname then
+			inst.displaynamefn = function(aaa)
+				return newname
+			end
+		end
+	end)
+end
+
+
+
 local function fn()
     local inst = CreateEntity()
 
@@ -100,9 +128,7 @@ local function fn()
     inst:AddTag("ksfun_item")
     inst.entity:SetPristine()
 
-    -- inst.displaynamefn = function(aaa)
-    --     return "魔法药水"
-    -- end
+    net()
 
     if not TheWorld.ismastersim then
         return inst
