@@ -107,7 +107,7 @@ end
 
 
 
-GLOBAL.KsFunGetTaskDesc = function(taskdata)
+KsFunGetTaskDesc = function(taskdata)
     local NAMES  = KSFUN_TUNING.TASK_NAMES
     local demand = taskdata.demand
     local name   = taskdata.name

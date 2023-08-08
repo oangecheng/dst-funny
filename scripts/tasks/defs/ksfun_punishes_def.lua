@@ -65,6 +65,7 @@ local function punishMonster(player, tasklv)
 
     -- 不超过10个怪物
     num = math.floor(num * KsFunMultiNegative(player) + 0.5)
+    ---@diagnostic disable-next-line: undefined-field
     num = math.clamp(num, 1, 10)
 
     local selected = {}

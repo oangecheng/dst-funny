@@ -68,6 +68,7 @@ local function onClose(inst, doer)
     end
 
     if item1 and item2 then
+        ---@diagnostic disable-next-line: undefined-field
         if table.containskey(ksfunitems_def.ksfunitems, item1.prefab) then
             if handKsFunItem(doer, item1, item2) then
                 -- doer.components.talker:Say("强化成功！")
@@ -79,6 +80,12 @@ local function onClose(inst, doer)
         end
     end
 end
+
+
+local function startPotion(inst, doer, item)
+    
+end
+
 
 
 AddPrefabPostInit("dragonflyfurnace", function(inst)

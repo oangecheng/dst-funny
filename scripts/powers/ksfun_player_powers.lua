@@ -22,7 +22,8 @@ end
 
 ---------------------------------------------------------------------------------------------- 血量增强 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local HEALTH_KEY = "maxhealth"
----@param reset 是否是重置
+--- @param inst table
+--- @param reset boolean
 local function updateHealthStatus(inst, reset)
     local lv = inst.components.ksfun_level:GetLevel()
     local health = inst.target.components.health
@@ -75,7 +76,7 @@ local health = {
             h:SetPercent(inst.percent)
         end
         updatePowerMax(inst, 20)
-        updateHealthStatus(inst)
+        updateHealthStatus(inst, false)
         -- 玩家杀怪可以升级
         target:ListenForEvent("killed", onKillOther)
     end,
@@ -86,7 +87,7 @@ local health = {
     end,
 
     onstatechange = function(inst)
-        updateHealthStatus(inst)
+        updateHealthStatus(inst, false)
         KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
@@ -250,7 +251,7 @@ local function getExpMultiByRecipeLevel(recipe_level)
     elseif recipe_level.LUNARFORGING ~= 0 then
         multi = tonumber(recipe_level.LUNARFORGING) + BUILD_ITEM_EXP_MULTI_DEFS.LUNARFORGING
     elseif recipe_level.SHADOWFORGING ~= 0 then
-        mult = tonumber(recipe_level.SHADOWFORGING) + BUILD_ITEM_EXP_MULTI_DEFS.SHADOWFORGING
+        multi = tonumber(recipe_level.SHADOWFORGING) + BUILD_ITEM_EXP_MULTI_DEFS.SHADOWFORGING
     end
     multi = math.max(1, multi)
     return multi
@@ -258,7 +259,7 @@ end
 
 --- 建造物品时获得升级经验
 --- @param player 玩家
---- @param data 物品数据
+--- @param data table 物品数据
 local function onBuildItemFunc(player, data)
     local recipe_level = data.recipe.level
     local multi = getExpMultiByRecipeLevel(recipe_level)
@@ -269,7 +270,7 @@ end
 
 --- 建造物品时获得升级经验
 --- @param player 玩家
---- @param data 建筑数据
+--- @param data table 建筑数据
 local function oBuildStructureFunc(player, data)
     local recipe_level = data.recipe.level
     local multi = getExpMultiByRecipeLevel(recipe_level)

@@ -1,10 +1,10 @@
 
-local require = GLOBAL.require
-local STRINGS = GLOBAL.STRINGS
+local require = require
+local STRINGS = STRINGS
 
 
 --- 日志
-GLOBAL.KsFunLog  = function(info, v1, v2, v3)
+KsFunLog = function(info, v1, v2, v3)
     if KSFUN_TUNING.PRINT_LOG then
         print("KsFunLog: "..info.." "..tostring(v1).." "..tostring(v2).." "..tostring(v3))
     end
@@ -14,7 +14,7 @@ end
 --- 获取物品名称
 --- 有自定义名称的，修改一下
 --- @param prefab 物品代码
-GLOBAL.KsFunGetPrefabName = function(prefab)
+KsFunGetPrefabName = function(prefab)
     local name = STRINGS.KSFUN_NAMES[prefab]
     return name or STRINGS.NAMES[string.upper(prefab)]
 end
@@ -24,14 +24,14 @@ end
 --- 获取属性的显示名称
 --- 例如攻击增强..
 --- @param powername 不带前缀的属性名称
-GLOBAL.KsFunGetPowerNameStr = function(powername)
+KsFunGetPowerNameStr = function(powername)
     return KsFunGetPrefabName("ksfun_power_"..powername) or ""
 end
 
 
 
 --- 获取属性的描述性文字
-GLOBAL.KsFunGetPowerDescExtra = function(powerprefab)
+KsFunGetPowerDescExtra = function(powerprefab)
     return STRINGS.KSFUN_POWER_DESC[string.upper(powerprefab)] or ""
 end
 
@@ -39,13 +39,13 @@ end
 
 
 --- 全局提示
---- @param msg 消息
-GLOBAL.KsFunShowNotice = function(msg)
+--- @param msg string 消息
+KsFunShowNotice = function(msg)
 	TheNet:Announce(msg)
 end
 
 
-GLOBAL.KsFunShowTip = function(player, msg)
+KsFunShowTip = function(player, msg)
     if player.components.talker and msg then
         player.components.talker:Say(msg)
     end
@@ -53,7 +53,7 @@ end
 
 
 --- 角色升级时提示一下
-GLOBAL.KsFunSayPowerNotice = function(doer, powerprefab)
+KsFunSayPowerNotice = function(doer, powerprefab)
     if doer.components.talker then
         local name = KsFunGetPrefabName(powerprefab)
         local msg  = string.format(STRINGS.KSFUN_POWER_LEVEL_UP_NOTICE, name)
@@ -64,9 +64,10 @@ end
 
 
 --- 查找对应的能力获取经验值
---- @param name 属性名称，不包含前缀
---- @param exp 经验
-GLOBAL.KsFunPowerGainExp = function(inst, name, exp)
+--- @param inst table
+--- @param name string 属性名称，不包含前缀
+--- @param exp  number 经验
+KsFunPowerGainExp = function(inst, name, exp)
     if exp == 0 then return end
     if inst.components.ksfun_power_system then
         local power = inst.components.ksfun_power_system:GetPower(name)
@@ -77,7 +78,7 @@ GLOBAL.KsFunPowerGainExp = function(inst, name, exp)
 end
 
 
-GLOBAL.KsFunGetPowerLv = function(inst, name)
+KsFunGetPowerLv = function(inst, name)
     if inst.components.ksfun_power_system then
         local power = inst.components.ksfun_power_system:GetPower(name)
         if power then
@@ -89,7 +90,7 @@ end
 
 
 
-GLOBAL.KsFunGetAoeProperty  = function(aoepower)
+KsFunGetAoeProperty  = function(aoepower)
     local level = aoepower.components.ksfun_level
     -- 初始 50% 范围伤害，满级80%
     -- 初始 1.2 范围， 满级3范围
@@ -100,7 +101,7 @@ GLOBAL.KsFunGetAoeProperty  = function(aoepower)
 end
 
 
-GLOBAL.KsFunRandomPower = function(inst, powers, existed)
+KsFunRandomPower = function(inst, powers, existed)
     local temp = {}
 
     -- 随机排序
@@ -132,7 +133,7 @@ end
 
 
 
-GLOBAL.KsFunIsValidVictim = function(victim)
+KsFunIsValidVictim = function(victim)
     return victim ~= nil
         and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
                 victim:HasTag("veggie") or
@@ -149,14 +150,14 @@ end
 
 
 
-GLOBAL.KsFunGeneratePowerDefaultDesc = function(lv, exp)
+KsFunGeneratePowerDefaultDesc = function(lv, exp)
     return "LV=["..lv.."]   ".."EXP=["..exp.."]"
 end
 
 
 
 
-GLOBAL.KsFunGetPowerDesc = function(power, extradesc)
+KsFunGetPowerDesc = function(power, extradesc)
     local level = power.components.ksfun_level
     local extra = extradesc and "    "..extradesc.."" or ""
 
@@ -172,7 +173,7 @@ end
 
 
 --- 添加可交易组件
-GLOBAL.KsFunAddTrader = function(inst, testfunc, acceptfunc)
+KsFunAddTrader = function(inst, testfunc, acceptfunc)
     if inst.components.trader == nil then
         inst:AddComponent("trader")
     end
@@ -202,7 +203,7 @@ end
 
 
 --- 绑定任务卷轴
-GLOBAL.KsFunBindTaskReel = function(inst, player, data)
+KsFunBindTaskReel = function(inst, player, data)
     local system = player.components.ksfun_task_system
 
     local msg    = nil
@@ -236,14 +237,14 @@ end
 
 --- 获取可以给予玩家奖励的属性
 --- @param player 玩家
-GLOBAL.KsFunGetCanRewardPower = function(player)
+KsFunGetCanRewardPower = function(player)
     return true
 end
 
 
 
 --- 在玩家周围生成带有敌意的怪物
-GLOBAL.KsFunSpawnHostileMonster = function(player, monstername, num)
+KsFunSpawnHostileMonster = function(player, monstername, num)
     local count = num and num or 1
     for i=1, count do
         local mon = SpawnPrefab(monstername)
@@ -264,7 +265,7 @@ end
 
 
 --- 生成任务卷轴
-GLOBAL.KsFunSpawnTaskReel = function(initlv)
+KsFunSpawnTaskReel = function(initlv)
     local helper = require("tasks/ksfun_task_helper")
     local inst   = SpawnPrefab("ksfun_task_reel")
     if inst then
@@ -281,7 +282,7 @@ end
 
 
 
-GLOBAL.KsFunIsMedalOpen = function()
+KsFunIsMedalOpen = function()
     return TUNING.FUNCTIONAL_MEDAL_IS_OPEN
 end
 
@@ -337,7 +338,7 @@ local function diffMultiNegative()
 --- 计算正向倍率，比如奖励啥的
 --- 幸运：越幸运，影响越大
 --- 难度：值越大，影响越小
-GLOBAL.KsFunMultiPositive = function(inst)
+KsFunMultiPositive = function(inst)
     local m = luckyMultiPositive(inst) * diffMultiPositive()
     KsFunLog("KsFunMultiPositive", m)
     return m
@@ -346,17 +347,18 @@ end
 --- 计算反向倍率，比如惩罚啥的
 --- 幸运：越幸运，影响越小
 --- 难度：值越大，影响越大
-GLOBAL.KsFunMultiNegative = function(inst)
+KsFunMultiNegative = function(inst)
     local m = luckyMultiNegative(inst) * diffMultiNegative()
     KsFunLog("KsFunMultiNegative", m)
     return m
 end
 
 --- 计算攻击命中概率
---- @param attacker 攻击者
---- @param target 被攻击者
---- @param defaultratio 默认概率 下限0.1倍， 上限3倍
-GLOBAL.KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
+--- @param attacker table 攻击者
+--- @param target table 被攻击者
+--- @param defaultratio number 默认概率 下限0.1倍， 上限3倍
+--- @param msg string
+KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
     KsFunLog("KsFunAttackCanHit", msg)
     local r = math.random()
     local attackermulti = 1

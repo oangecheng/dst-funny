@@ -223,40 +223,6 @@ local function updateInsulatorStatus(inst)
 end
 
 
-local function changeInsulatorType(inst, target)
-    -- 月圆之夜给予一个彩虹宝石可以获得切换模式的能力
-    local function testfunc(t, item, giver)
-        if KSFUN_TUNING.DEBUG then return true end
-        local currenttype = getInsulationType(inst)
-        local switchable  = inst.components.ksfun_power:GetData(INSULATION_SWITCH)
-        if not switchable then
-            return TheWorld.state.isfullmoon and item.prefab == "opalpreciousgem"
-        else
-            if currenttype == SEASONS.SUMMER then
-                return item.prefab == "redgem"
-            elseif currenttype == SEASONS.WINTER then
-                return item.prefab == "bluegem"
-            end
-        end
-        return false
-    end
-
-    local function acceptfunc(t, item, giver)
-        if item.prefab == "opalpreciousgem" then
-            inst.components.ksfun_power:SaveData(INSULATION_SWITCH, true)
-        elseif item.prefab == "redgem" then
-            inst.components.ksfun_power:SaveData(INSULATION_TYPE, SEASONS.WINTER)
-            updateInsulatorStatus(inst)
-        elseif item.prefab == "bluegem" then
-            inst.components.ksfun_power:SaveData(INSULATION_TYPE, SEASONS.SUMMER)
-            updateInsulatorStatus(inst)
-        end
-    end
-
-    KsFunAddTrader(target, testfunc, acceptfunc)
-end
-
-
 local insulator = {
     onattach = function(inst, target)
         if target.components.insulator == nil then

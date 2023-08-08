@@ -122,8 +122,8 @@ end
 
 
 --- 物品锁定
---- @param lock  true or false
-local function onClothesLock(lock)
+--- @param inst  true or false
+local function onClothesLock(inst)
     updateDapperness(inst)
     updateInsulation(inst)
     updateWaterproof(inst)
@@ -138,6 +138,7 @@ local function onAcceptTest(inst, item, giver)
     if clothes then
         if clothes:IsLevelUpEnabled(1) then
             if clothes:IsAbilityEnabled(1) then
+                ---@diagnostic disable-next-line: undefined-field
                 if table.contains(DAPPERNESS_ITEM_DEFS, item.prefab) then
                     return true
                 end

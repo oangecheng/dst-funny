@@ -299,6 +299,7 @@ AddComponentPostInit("combat", function(self)
                 if power then
                     local lv = power.components.ksfun_level:GetLevel()
                     if lv >= 100 then
+                        ---@diagnostic disable-next-line: undefined-field
                         local r = math.clamp(0.002 * lv, 0.1, 0.3)
                         crit = KsFunAttackCanHit(self.inst, target, r, "weapon critdamage")
                     end
@@ -310,6 +311,7 @@ AddComponentPostInit("combat", function(self)
                 local power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
                 if power then
                     local lv = power.components.ksfun_level:GetLevel()
+                    ---@diagnostic disable-next-line: undefined-field
                     local r = math.clamp(0.002 * lv, 0.1, 0.3)
                     crit = KsFunAttackCanHit(self.inst, target, r, "mon critdamage")
                 end
@@ -430,6 +432,7 @@ AddPrefabPostInit("pigking", function(inst)
 
         local oldTest = trader.test
         trader:SetAcceptTest(function(inst, item, giver)
+            ---@diagnostic disable-next-line: undefined-field
             if table.containskey(taskitemsdef, item.prefab) then
                 return true
             end

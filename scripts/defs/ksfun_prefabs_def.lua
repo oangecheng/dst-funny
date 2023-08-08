@@ -111,7 +111,6 @@ local itemsdef = {
 
     ["goldnugget"]          = { lv = 2, rcnt = 10 },     -- 金子
     ["saltrock"]            = { lv = 2, rcnt = 10 },     -- 盐晶
-    ["livinglog"]           = { lv = 2, rcnt = 5  },     -- 活木
     ["marble"]              = { lv = 2, rcnt = 5  },     -- 大理石 
     ["nitre"]               = { lv = 2, rcnt = 10 },     -- 硝石
     ["boneshard"]           = { lv = 2, rcnt = 10 },     -- 骨片 

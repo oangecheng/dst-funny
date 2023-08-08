@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global, undefined-global
 -- 判断是否是中文
 local ch = locale == "zh" or locale == "zhr"
 

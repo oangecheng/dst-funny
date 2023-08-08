@@ -148,7 +148,7 @@ local function MakePower(name, data)
         return inst
     end
 
-    return Prefab("ksfun_power_"..name, fn, nil, prefabs)
+    return Prefab("ksfun_power_"..name, fn, nil, nil)
 end
 
 

@@ -92,7 +92,7 @@ local function MakeTask(taskname)
         return inst
     end
 
-    return Prefab("ksfun_task_"..taskname, fn, nil, prefabs)
+    return Prefab("ksfun_task_"..taskname, fn, nil, nil)
 end
 
 

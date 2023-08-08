@@ -70,7 +70,7 @@ end
 
 
 function KSFUN_LEVEL:UpMax(v)
-    self.max = self.max + v or 1
+    self.max = self.max + (v or 1)
 end
 
 
@@ -82,7 +82,7 @@ end
 
 function KSFUN_LEVEL:Up(v)
     if v and v > 0 then
-        self:SetLevel(self.lv + v, true)
+        self:SetLevel(self.lv + v)
     end
 end
 

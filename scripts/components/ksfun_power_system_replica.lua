@@ -3,9 +3,11 @@ local function onPowerWithLevelDirty(self, inst)
     local data = self._itempowers:value()
     if data then
         self.powers = {}
+        ---@diagnostic disable-next-line: undefined-field
         local d1 = string.split(data, "#")
 
         for i1,v1 in pairs(d1) do
+            ---@diagnostic disable-next-line: undefined-field
             local d2 = string.split(v1, "|")
 
             --- 标题数据
@@ -89,8 +91,8 @@ end
 
 
 --- 获取指定属性
---- @param name 属性 string
---- @return {lv = number, exp = number}
+--- @param name string 属性
+--- @return table { lv = number, exp = number}
 function KSFUN_POWERS:GetPower(name)
     return self.powers[name]
 end

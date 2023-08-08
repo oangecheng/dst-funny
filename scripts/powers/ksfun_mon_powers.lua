@@ -10,8 +10,9 @@ end
 
 
 --- 设置属性上限
---- @param defaultlv 默认的上限
---- @param max 部分属性需要有限制，超过上限会出现问题
+--- @param inst table
+--- @param defaultlv number 默认的上限
+--- @param max number 部分属性需要有限制，超过上限会出现问题
 local function setPowerMaxLv(inst, defaultlv, max)
     local lv =  calcPowerLvWidthDiffculty(inst, defaultlv)
     lv = max and math.min(lv, max) or lv

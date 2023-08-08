@@ -32,7 +32,8 @@ end
 local function checkSanityReward(player, rewardsdata)
     local sanity = player.components.ksfun_power_system:GetPower(POWERS.SANITY)
     if sanity ~= nil then
-        local lvlimt, ratio = KSFUN_TUNING.DEBUG and 1, 1 or 50, 0.1
+        local lvlimt = KSFUN_TUNING.DEBUG and 1 or 50
+        local ratio  = KSFUN_TUNING.DEBUG and 1 or 0.1
         if sanity.components.ksfun_level:GetLevel() >= lvlimt and math.random() <= ratio then
             local list = prefabsdef.getLostRecipes()
             for i,v in ipairs(list) do
@@ -59,6 +60,7 @@ local function randomNormalItem(player, tasklv)
     local delta = math.max(0, tasklv - maxitemlv)
     --- 最大不超过3倍
     local maxnum = num * 3
+    ---@diagnostic disable-next-line: undefined-field
     num = math.clamp(num * multi + delta, 1, maxnum)
     num = math.floor(num + 0.5)
 
