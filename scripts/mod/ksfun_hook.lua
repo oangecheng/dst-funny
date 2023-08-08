@@ -375,7 +375,7 @@ AddComponentPostInit("stewer", function(self)
 		if self.done and harvester ~= nil and self.chef_id == harvester.userid and self.product then
 			harvester:PushEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, { food = self.product })
 		end
-		return oldHarvest and oldHarvest(self,harvester) or nil
+		return oldHarvest and oldHarvest(self, harvester) or nil
 	end
 
     -- hook烹饪时间

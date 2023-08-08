@@ -764,16 +764,15 @@ local giant = {
 
 ------------------------------------------------------------------------------------------- 厨子 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local function onHarvestFood(inst, data)
-    local edible = data.food and data.food.components.edible
-    if edible then
-        local exp = (edible.healthvalue + edible.hungervalue + edible.sanityvalue) * 0.1
-        KsFunPowerGainExp(inst, NAMES.COOKER, exp)
+    if data.food  then
+        KsFunPowerGainExp(inst, NAMES.COOKER, 10)
     end
 end
 
 
 local cooker = {
     onattach = function(inst, target)
+        updatePowerMax(inst, 10)
         target:ListenForEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestFood)
     end,
 
@@ -803,6 +802,7 @@ local playerpowers = {
     [NAMES.LOCOMOTOR]   = locomotor,
     [NAMES.LUCKY]       = lucky,
     [NAMES.GIANT]       = giant,
+    [NAMES.COOKER]      = cooker,
 }
 
 

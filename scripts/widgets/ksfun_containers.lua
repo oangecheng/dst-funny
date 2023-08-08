@@ -25,16 +25,15 @@ params.dragonflyfurnace = {
 params.dragonflyfurnace.itemtestfn = function(_, item, slot)
     if slot == 1 then
         ---@diagnostic disable-next-line: undefined-field
-        return table.containskey(itemsdef, item.prefab) or item.prefab == "ksfun_item"
+        return table.containskey(itemsdef.ksfunitems, item.prefab) or item:HasTag("ksfun_item")
     end
+    return true
 end
 
 params.dragonflyfurnace.widget.buttoninfo.fn = function(inst, doer)
     if inst.components.container ~= nil then
-		if inst.components.container:IsFull() then
-			if inst.start then
-				inst.exchangeGift(inst,doer)
-			end
+		if inst.startWork then
+			inst.startWork(inst, doer)
 		end
 	elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
 		SendRPCToServer(RPC.DoWidgetButtonAction, nil, inst, nil)

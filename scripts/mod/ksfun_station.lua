@@ -42,6 +42,7 @@ end
 --- 强化的顺序一次是  附魔 ——> 突破 ——> 升级
 --- 第3个格子放入10个以上的金子且可以放弃当前任务
 local function onClose(inst, doer)
+
     local item1 = inst.components.container:GetItemInSlot(1)
     local item2 = inst.components.container:GetItemInSlot(2)
     local item3 = inst.components.container:GetItemInSlot(3)
@@ -82,19 +83,35 @@ local function onClose(inst, doer)
 end
 
 
-local function startPotion(inst, doer, item)
-    
-end
-
-
 
 AddPrefabPostInit("dragonflyfurnace", function(inst)
     if inst.components.container == nil then
         inst:AddComponent("container")
     end
     inst.components.container:WidgetSetup("dragonflyfurnace")
-    inst.components.container.onopenfn = onOpen
-    inst.components.container.onclosefn = onClose
+    inst.components.container.onopenfn = nil
+    inst.components.container.onclosefn = nil
     inst.components.container.skipclosesnd = true
     inst.components.container.skipopensnd = true
+
+    if inst.components.timer == nil then
+        inst:AddComponent("timer")
+    end
+
+    local function onTimeDone(inst, data)
+        inst.components.container.canbeopened = true
+        if inst.ksfun_refine_doer then
+            onClose(inst, inst.ksfun_refine_doer)
+        end
+    end
+
+    inst:ListenForEvent("timerdone", onTimeDone)
+
+    inst.startWork = function(inst, doer)
+        inst.components.container:Close(doer)
+        local duration = 10
+        inst.components.timer:StartTimer("ksfun_refine", duration)
+        inst.ksfun_refine_doer = doer
+        inst.components.container.canbeopened = false
+    end
 end)
