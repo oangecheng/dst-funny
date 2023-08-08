@@ -20,6 +20,7 @@ local itemsdef = {
     ["cactus_meat"]   = NAMES.LOCOMOTOR,
     ["monstermeat"]   = NAMES.KILL_DROP,
     ["butter"]        = NAMES.LUCKY,
+    ["charcoal"]      = NAMES.COOKER,
 }
 
 

@@ -360,7 +360,13 @@ end)
 
 
 
---修改烹饪组件,在锅中收获自己做的料理的时候提升勋章
+
+local function cookTimeMulti(doer)
+    local lv = KsFunGetPowerLv(doer, KSFUN_TUNING.PLAYER_POWER_NAMES.COOKER)
+    return lv and math.max(1 - lv * 0.005, 0.5) or 1
+end
+
+--修改烹饪组件,在锅中收获自己做的料理的时候推送事件
 AddComponentPostInit("stewer", function(self)
 	local oldHarvest = self.Harvest
 	self.Harvest = function(self, harvester)
@@ -374,7 +380,7 @@ AddComponentPostInit("stewer", function(self)
     local oldStartCooking = self.StartCooking
     self.StartCooking = function(self, doer)
         local oldmulti = self.cooktimemult
-        self.cooktimemult = oldmulti * 0.5
+        self.cooktimemult = oldmulti * cookTimeMulti(doer)
         if oldStartCooking then
             oldStartCooking(self, doer)
         end

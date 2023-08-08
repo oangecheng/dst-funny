@@ -71,7 +71,7 @@ GLOBAL.KsFunPowerGainExp = function(inst, name, exp)
     if inst.components.ksfun_power_system then
         local power = inst.components.ksfun_power_system:GetPower(name)
         if power and power.components.ksfun_level then
-            power.components.ksfun_level:GainExp(exp)
+            power.components.ksfun_level:GainExp(math.floor(exp + 0.5))
         end
     end
 end
@@ -280,7 +280,14 @@ GLOBAL.KsFunSpawnTaskReel = function(initlv)
 end
 
 
-------------------------------------概率计算相关，绑定幸运值和难度-----------------------------------------------------
+
+GLOBAL.KsFunIsMedalOpen = function()
+    return TUNING.FUNCTIONAL_MEDAL_IS_OPEN
+end
+
+
+
+------------------------------------概率计算相关start，绑定幸运值和难度-----------------------------------------------------
 local MIN_CHANCE = 0.1
 local MAX_CHANCE = 2
 
@@ -374,3 +381,8 @@ GLOBAL.KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
     v = KSFUN_TUNING.DEBUG and 100 or v
     return r <= defaultratio * v
 end
+------------------------------------概率计算相关end，绑定幸运值和难度-----------------------------------------------------
+
+
+
+

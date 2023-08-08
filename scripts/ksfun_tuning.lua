@@ -17,13 +17,13 @@ KSFUN_TUNING =  {
         HUNGER        = "player_hunger",
         SANITY        = "player_sanity",
         LUCKY         = "player_lucky",
-
         LOCOMOTOR     = "player_locomotor",
-
         PICK          = "player_pick",
         FARM          = "player_farm",
         KILL_DROP     = "player_killdrop",
         GIANT         = "player_giant",
+        COOKER        = "player_cooker",
+        
     },
 
     -- 物品属性
