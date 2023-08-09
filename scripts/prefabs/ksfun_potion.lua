@@ -106,23 +106,26 @@ end
 
 local function onBreak(inst, doer, item)
     local itemlv = prefabsdef.getBreakLv(item.prefab)
+    local avalue = doer.components.ksfun_achievements:GetValue()
+    if avalue >= 2^itemlv then
+        doer.components.ksfun_achievements:DoDelta(-2^itemlv)
+        inst.components.ksfun_level:SetLevel(itemlv)
+        updateDisplayName(inst)
+    end
+end
+
+
+local function breakTest(inst, doer, item)
+    local itemlv = prefabsdef.getBreakLv(item.prefab)
     if itemlv == 0 then
-        KsFunShowTip(doer, "不是强化魔药的材料!")
         return false
     end
     local lv = inst.components.ksfun_level:GetLevel()
     if lv <= itemlv then
         local avalue = doer.components.ksfun_achievements:GetValue()
         if avalue >= 2^itemlv then
-            doer.components.ksfun_achievements:DoDelta(-2^itemlv)
-            inst.components.ksfun_level:SetLevel(itemlv)
-            updateDisplayName(inst)
             return true
-        else
-            KsFunShowTip(doer, "成就点数不足!")
         end
-    else
-        KsFunShowTip(doer, "当前材料等级太低!")
     end
     return false
 end
@@ -182,6 +185,7 @@ local function fn()
 
     inst:AddComponent("ksfun_breakable")
     inst.components.ksfun_breakable:Enable()
+    inst.components.ksfun_breakable:SetBreakTest(breakTest)
     inst.components.ksfun_breakable:SetOnBreakFunc(onBreak)
 
     inst:AddComponent("inventoryitem")

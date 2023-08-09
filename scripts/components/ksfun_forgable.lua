@@ -59,7 +59,7 @@ function KSFUN_FORGABLE:Forg(doer, item)
     if self:CanForg(doer, item) then
         forg(self, doer, item)
         if self.onForg then
-            self.onForg(doer, item)
+            self.onForg(self.inst, doer, item)
         end
     end
 end

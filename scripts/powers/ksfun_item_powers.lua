@@ -7,9 +7,9 @@ local function getPowerDesc(inst)
 end
 
 
-local function onForgSuccess(inst, data)
-    local doername  = data.doer.name
-    local item      = KsFunGetPrefabName(data.item.prefab)
+local function onForgSuccess(inst, doer, item)
+    local doername  = doer.name
+    local item      = KsFunGetPrefabName(item.prefab)
     local powername = KsFunGetPrefabName(inst.prefab)
     local msg = string.format(STRINGS.KSFUN_FORG_SUCCESS_NOTICE, doername, item, powername)
     KsFunShowNotice(msg)

@@ -12,7 +12,7 @@ end
 local function canBreak(doer, target, material)
     local breakable = target and target.components.ksfun_breakable
     if doer and breakable then
-        return breakable:canBreak(doer, material)
+        return breakable:CanBreak(doer, material)
     end
     return false
 end
@@ -44,11 +44,6 @@ local function startRefine(inst, doer, callback)
     end
 
     local duration = 0
-    if canEnhant(doer, target, material) then
-        duration = 60
-        target.components.ksfun_enhantable:Enhant(doer, material)
-        return duration
-    end
 
     if canBreak(doer, target, material)  then
         local cnt = target.components.ksfun_breakable:GetCount()
@@ -56,7 +51,13 @@ local function startRefine(inst, doer, callback)
         target.components.ksfun_breakable:Break(doer, material)
         return duration
     end
-        
+
+    if canEnhant(doer, target, material) then
+        duration = 60
+        target.components.ksfun_enhantable:Enhant(doer, material)
+        return duration
+    end
+   
     local power = getCanForgPower(doer, target, material)
     if power then
         duration = 30
@@ -90,6 +91,7 @@ AddPrefabPostInit("dragonflyfurnace", function(inst)
 
     inst.startWork = function(chest, doer)
         local time = startRefine(chest, doer)
+        time = KSFUN_TUNING.DEBUG and 1 or time 
         if  time > 0 then
             chest.components.container:Close(doer)
             chest.components.timer:StartTimer("ksfun_refine", time)

@@ -110,9 +110,9 @@ local function MakePower(name, data)
         if data.forgable then
             inst:AddComponent("ksfun_forgable")
             inst.components.ksfun_forgable:SetForgItems(data.forgable.items)
-            inst.components.ksfun_forgable:SetOnSuccessFunc(data.forgable.onsuccess)
+            inst.components.ksfun_forgable:SetOnForg(data.forgable.onsuccess)
             if data.forgable.ontest then
-                inst.components.ksfun_forgable:SetOnTestFunc(data.forgable.ontest)
+                inst.components.ksfun_forgable:SetForgTest(data.forgable.ontest)
             end
         end
 

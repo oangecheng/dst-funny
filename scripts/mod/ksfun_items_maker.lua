@@ -1,14 +1,10 @@
 local itemsdef = require("defs/ksfun_items_def")
 
 
---- 触发附魔机制
---- @param inst 装备物品
---- @param item 材料
---- @return true 成功 false 失败
-local function onEnhantFunc(inst, doer, item)
-    KsFunLog("onEnhantFunc", item.prefab)
+local function enhantTest(inst, doer, item)
     local enhantname = itemsdef.enhantitems[item.prefab]
     local powernames = itemsdef.ksfunitems[inst.prefab].names
+    local canEnhant = false
 
     if enhantname and table.contains(powernames, enhantname) then
         local system = inst.components.ksfun_power_system
@@ -27,22 +23,27 @@ local function onEnhantFunc(inst, doer, item)
                     doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
                 end
             else
-                 -- 显示提示
-                 local ret = system:AddPower(enhantname)
-                 local username = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
-                 local instname = STRINGS.NAMES[string.upper(inst.prefab)]
-                 local pname    = STRINGS.NAMES[string.upper(ret.prefab)]
-                 local msg  = string.format(STRINGS.KSFUN_ENHANT_SUCCESS, username, instname, pname)
-                 KsFunShowNotice(msg)
- 
-                 if doer.components.talker then
-                     doer.components.talker:Say(msg)
-                 end
-                 return true
+                canEnhant = true
             end
         end
     end
-    return false
+    return canEnhant
+end
+
+
+--- 触发附魔机制
+--- @param inst 装备物品
+--- @param item 材料
+--- @return true 成功 false 失败
+local function onEnhantFunc(inst, doer, item)
+    KsFunLog("onEnhantFunc", item.prefab)
+    local enhantname = itemsdef.enhantitems[item.prefab]
+    local ret = inst.components.ksfun_power_system:AddPower(enhantname)
+    local username = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
+    local instname = STRINGS.NAMES[string.upper(inst.prefab)]
+    local pname    = STRINGS.NAMES[string.upper(ret.prefab)]
+    local msg  = string.format(STRINGS.KSFUN_ENHANT_SUCCESS, username, instname, pname)
+    KsFunShowNotice(msg)
 end
 
 
@@ -88,6 +89,7 @@ for k,v in pairs(itemsdef.ksfunitems) do
         inst.components.ksfun_breakable:SetOnBreakFunc(onBreakFunc)
         inst.components.ksfun_breakable:SetBreakTest(onBreakTest)
         
+        inst.components.ksfun_enhantable:SetEnhantTest(enhantTest)
         inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhantFunc)
 
         inst:ListenForEvent("ksfun_level_changed", function(ent, data)
