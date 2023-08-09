@@ -86,14 +86,18 @@ end
 
 
 local function onEnhant(inst, doer, item)
+    local powername = itemsdef[item.prefab]
+    if powername ~= nil then
+        inst.power = powername
+        updateDisplayName(inst)
+        KsFunShowTip(doer, "魔药调制成功!")
+    end
+end
+
+
+local function enhantTest(inst, doer, item)
     if not inst.power then
-        local powername = itemsdef[item.prefab]
-        if powername ~= nil then
-            inst.power = powername
-            updateDisplayName(inst)
-            KsFunShowTip(doer, "魔药调制成功!")
-            return true
-        end
+       return itemsdef[item.prefab] ~= nil
     end
     return false
 end
@@ -173,6 +177,7 @@ local function fn()
 
     inst:AddComponent("ksfun_enhantable")
     inst.components.ksfun_enhantable:Enable()
+    inst.components.ksfun_enhantable:SetEnhantTest(enhantTest)
     inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhant)
 
     inst:AddComponent("ksfun_breakable")

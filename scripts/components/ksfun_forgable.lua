@@ -30,38 +30,40 @@ local KSFUN_FORGABLE = Class(function(self, inst)
     self.inst = inst
     self.items = {}
 
-    self.ontest = nil
-    self.onsuccess = nil
+    self.forgTest = nil
+    self.onForg = nil
 end)
 
 
---- 尝试锻造，支持批量
---- @param item 物品inst
-function KSFUN_FORGABLE:Forg(doer, ksfunitem, item)
-    if self:IsForgItem(item.prefab) then
-        -- 如果有前置判断，先判断能否进行升级
-        local data = {doer = doer, ksfunitem = ksfunitem, item = item}
-        if self.ontest == nil or self.ontest(self.inst, data) then
-            forg(self, doer, item)
-            -- 通知锻造成功
-            if self.onsuccess then
-                self.onsuccess(self.inst, data)
-            end
-            return true
-        end
+function KSFUN_FORGABLE:SetForgTest( func )
+    self.forgTest = func
+end
+
+
+function KSFUN_FORGABLE:SetOnForg( func )
+    self.onForg = func
+end
+
+
+function KSFUN_FORGABLE:CanForg(doer, material)
+    if self:IsForgItem(material.prefab) then
+       return self.forgTest == nil and true or self.forgTest(self.inst, doer, material)
     end
     return false
 end
 
 
-function KSFUN_FORGABLE:SetOnTestFunc(func)
-    self.ontest = func
+--- 尝试锻造，支持批量
+--- @param item table 物品inst
+function KSFUN_FORGABLE:Forg(doer, item)
+    if self:CanForg(doer, item) then
+        forg(self, doer, item)
+        if self.onForg then
+            self.onForg(doer, item)
+        end
+    end
 end
 
-
-function KSFUN_FORGABLE:SetOnSuccessFunc(func)
-    self.onsuccess = func
-end
 
 function KSFUN_FORGABLE:SetForgItems(itemprefabs)
     self.items = itemprefabs
@@ -69,6 +71,7 @@ end
 
 
 function KSFUN_FORGABLE:IsForgItem(itemprefab)
+    ---@diagnostic disable-next-line: undefined-field
     return table.containskey(self.items, itemprefab)
 end
 

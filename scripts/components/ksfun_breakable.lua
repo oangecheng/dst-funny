@@ -1,9 +1,9 @@
 
 local function canBreak(self, doer, item)
-    if self.breaktest then
-        return self.breaktest(self.inst, doer, item)
+    if self.enable then
+        return self.breaktest == nil and true or self.breaktest(self.inst, doer, item)
     end
-    return true
+    return false
 end
 
 
@@ -27,6 +27,11 @@ function KSFUN_BREAKABLE:SetBreakTest(func)
 end
 
 
+function KSFUN_BREAKABLE:CanBreak(doer, item)
+    return canBreak(self, doer, item)
+end
+
+
 function KSFUN_BREAKABLE:Enable()
     self.enable = true
 end
@@ -38,19 +43,16 @@ end
 
 
 --- 装备突破，能够提升最大等级上限
+--- @param doer table 操作者
+--- @param item table 用于突破的物品
 function KSFUN_BREAKABLE:Break(doer, item)
-    KsFunLog("break start", self.inst.prefab, item.prefab, self.enable)
-    if self.enable and self.onBreakFunc then
-        if canBreak(self, doer, item) then
-            self.count = self.count + 1
-            if self.onBreakFunc then
-                self.onBreakFunc(self.inst, doer, item)
-            end
-            item:DoTaskInTime(0, item:Remove())
-            return true
+    if canBreak(self, doer, item) then
+        self.count = self.count + 1
+        if self.onBreakFunc then
+            self.onBreakFunc(self.inst, doer, item)
         end
+        item:DoTaskInTime(0, item:Remove())
     end
-    return false
 end
 
 
