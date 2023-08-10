@@ -1,47 +1,49 @@
 
 
-local TASK_DEMAND = Class(function(self, inst)
+local TaskDemand = Class(function(self, inst)
     self.inst = inst
     self.demand = nil
+    self.onBind = nil
+
 end)
 
 
-function TASK_DEMAND:GetDemand()
+function TaskDemand:GetDemand()
     return self.demand
 end
 
 
-function TASK_DEMAND:SetDemand(task)
-    if task == nil then return end
-    self.demand = task
-    local desc = KsFunGetTaskDesc(self.demand)
-    -- 任务显示有问题，移除这个任务卷轴
-    if desc == nil then
-        local demand = task and task.demand or nil
-        local data = demand and demand.data or nil
-        local content = data and data.victim or nil
-        local type = demand and demand.type or nil
-        KsFunLog("SetDemand fail", task.name, type, content)
-        return false
-    else
-        if self.inst.replica.ksfun_task_demand then
-            self.inst.replica.ksfun_task_demand:SyncData(desc)
-        end
-        return true
-    end
+function TaskDemand:SetOnBind(func)
+    self.onBind = func
 end
 
 
-function TASK_DEMAND:OnSave()
+function TaskDemand:Bind(task)
+    if task == nil then return end
+    self.demand = task
+
+    local content = KsFunGetTaskDesc(self.demand)
+    if content ~= nil then
+        if self.onBind then
+            self.onBind(self.inst, self.demand, content)
+        end
+        return true
+    end
+
+    return false
+    
+end
+
+
+function TaskDemand:OnSave()
     return {
         demand = self.demand
     }
 end
 
 
-function TASK_DEMAND:OnLoad(data)
-    self.demand = data.demand or nil
-    self:SetDemand(self.demand)
+function TaskDemand:OnLoad(data)
+    self:Bind(data.demand)
 end
 
-return TASK_DEMAND
+return TaskDemand

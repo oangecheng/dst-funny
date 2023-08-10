@@ -45,7 +45,6 @@ end
 
 AddReplicableComponent("ksfun_power_system")
 AddReplicableComponent("ksfun_task_system")
-AddReplicableComponent("ksfun_task_demand")
 AddReplicableComponent("ksfun_level")
 AddReplicableComponent("ksfun_achievements")
 

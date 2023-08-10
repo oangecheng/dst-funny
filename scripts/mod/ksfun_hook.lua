@@ -146,8 +146,8 @@ AddClassPostConstruct("widgets/hoverer", function(self)
         end
         if target and target.entity ~= nil then
             if target.prefab ~= nil then
-                if target.prefab == "ksfun_task_reel" and target.replica.ksfun_task_demand then
-                    local content = target.replica.ksfun_task_demand:GetContent()
+                if target.prefab == "ksfun_task_reel" then
+                    local content = target.demandcontent
                     if content then
                         str = str .. "\n" .. "要求:" .. content
                     end

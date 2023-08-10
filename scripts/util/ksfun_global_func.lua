@@ -270,7 +270,7 @@ KsFunSpawnTaskReel = function(initlv)
     local inst   = SpawnPrefab("ksfun_task_reel")
     if inst then
         local data  = helper.randomTaskData(initlv)
-        local valid = inst.components.ksfun_task_demand:SetDemand(data)
+        local valid = inst.components.ksfun_task_demand:Bind(data)
         -- 不合法的数据，将卷轴移除
         if not valid then
             inst:DoTaskInTime(0, inst:Remove())

@@ -6,7 +6,7 @@ local assets = {
     Asset("ATLAS", "images/inventoryitems/ksfun_task_reel.xml"),
 }
 
-local function onuse(inst, doer, target)
+local function acceptTask(inst, doer, target)
     -- 没有任务系统的不支持
     if doer.components.ksfun_task_system == nil then
         return false
@@ -19,6 +19,24 @@ local function onuse(inst, doer, target)
     end
     return false
 end
+
+
+
+local function net(inst)
+    inst.ksfundemandcontent = net_string(inst.GUID, "ksfundemandcontent", "ksfun_itemdirty")
+    inst:ListenForEvent("ksfun_itemdirty", function(reel)
+        inst.demandcontent = reel.ksfundemandcontent:value()
+	end)
+end
+
+
+
+local function onTaskBind(inst, task, content)
+    if  inst.ksfundemandcontent then
+        inst.ksfundemandcontent:set(content)
+    end
+end
+
 
 
 local function fn()
@@ -38,18 +56,22 @@ local function fn()
     inst:AddTag("ksfun_item")
     inst.entity:SetPristine()
 
+    net(inst)
+    inst.demandcontent = nil
+
     if not TheWorld.ismastersim then
         return inst
     end
 
     inst:AddComponent("ksfun_task_demand")
-    inst:AddComponent("inspectable")
+    inst.components.ksfun_task_demand:SetOnBind(onTaskBind)
 
+    inst:AddComponent("inspectable")
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.SMALL_FUEL
 
     inst:AddComponent("ksfun_useable")
-    inst.components.ksfun_useable:SetOnUse(onuse)
+    inst.components.ksfun_useable:SetOnUse(acceptTask)
 
     MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
     MakeSmallPropagator(inst)
