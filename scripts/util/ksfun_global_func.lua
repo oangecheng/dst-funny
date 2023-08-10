@@ -13,7 +13,7 @@ end
 
 --- 获取物品名称
 --- 有自定义名称的，修改一下
---- @param prefab 物品代码
+--- @param prefab string 物品代码
 KsFunGetPrefabName = function(prefab)
     local name = STRINGS.KSFUN_NAMES[prefab]
     return name or STRINGS.NAMES[string.upper(prefab)]
@@ -310,27 +310,32 @@ local function luckyMulti(inst)
     return multi
 end
 
+local function clamp(a, b, c)
+    ---@diagnostic disable-next-line: undefined-field
+    return math.clamp(a, b, b)
+end
+
 
 local function luckyMultiPositive(inst)
-    local m = math.clamp(1 + luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
+    local m = clamp(1 + luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
     KsFunLog("luckyMultiPositive", m)
     return m
 end
 
 local function luckyMultiNegative(inst)
-    local m = math.clamp(1 - luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
+    local m = clamp(1 - luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
     KsFunLog("luckyMultiNegative", m) 
     return m
 end
 
 local function diffMultiPositive()
-    local m = math.clamp(MAX_CHANCE - KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
+    local m = clamp(MAX_CHANCE - KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
     KsFunLog("diffMultiPositive", m)
     return m
 end
 
 local function diffMultiNegative()
-    local m = math.clamp(KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
+    local m = clamp(KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
     KsFunLog("diffMultiNegative", m)
     return m
  end
@@ -378,7 +383,7 @@ KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
     end
     
     local v = defaultratio * attackermulti * targetmulti * diffmulti
-    v = math.clamp(v, 0.1, 3)
+    v = clamp(v, 0.1, 3)
     KsFunLog("KsFunAttackCanHit", v, r, msg)
     v = KSFUN_TUNING.DEBUG and 100 or v
     return r <= defaultratio * v
@@ -386,5 +391,24 @@ end
 ------------------------------------概率计算相关end，绑定幸运值和难度-----------------------------------------------------
 
 
+
+--- 给玩家添加属性，这里会判断属性黑名单
+--- @param player table 玩家实体
+--- @param powername string 属性名
+--- @return boolean success 是否添加成功
+function KsFunAddPlayerPower(player, powername)
+    local config  = require("defs/ksfun_players_def").playerconfig(player)
+    local system = player and player.components.ksfun_power_system
+    if system then
+        local pblacks = config and config.pblacks or nil
+        -- 黑名单不添加，换个角色会再加回来
+        ---@diagnostic disable-next-line: undefined-field
+        if not (pblacks ~= nil and table.contains(pblacks, powername)) then
+            system:AddPower(powername)
+            return true
+        end 
+    end
+    return false
+end
 
 

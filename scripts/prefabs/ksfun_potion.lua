@@ -24,57 +24,82 @@ local itemsdef = {
 }
 
 
+--- 更新客户端魔药显示的名称
 local function updateDisplayName(inst)
     if inst.ksfunchangename then
         local name = KsFunGetPrefabName(inst.prefab)
         local lv = inst.components.ksfun_level:GetLevel()
-        name = lv.."阶"..name
+        name = lv..STRINGS.KSFUN_BREAK_COUNT..name
         if inst.power then
             local powername = KsFunGetPowerNameStr(inst.power)
-            name = name.." "..powername
+            name = name.."("..powername..")"
         end
         inst.ksfunchangename:set(name)
     end
 end
 
 
-local function onuse(inst, doer, target)
+--- 给玩家使用药剂
+--- @return boolean success 是否成功使用了药剂
+local function usePotionForPlayer(inst, doer, target)
+    local system = target.components.ksfun_power_system
+    if not (inst.power and system) then
+       return false
+    end
+    local ent = system:GetPower(inst.power)
+    -- 还没有拥有，首次是添加该属性
+    if ent == nil then
+        local scuccess = KsFunAddPlayerPower(target, inst.power)
+        -- 成功公屏提示
+        if scuccess then
+            local p = KsFunGetPowerNameStr(inst.power)
+            local msg = string.format(STRINGS.KSFUN_POWER_GAIN_NOTICE, target.name, p)
+            KsFunShowNotice(msg)
+        end
+        return scuccess
+    end
+
+    -- 已经拥有了，尝试突破等级上限
+    if ent.components.ksfun_breakable then
+        local level = ent.components.ksfun_level
+        if level and level:IsMax() then
+            local cnt = ent.components.ksfun_breakable:GetCount()
+            if inst.components.ksfun_level:GetLevel() > cnt then
+                ent.components.ksfun_breakable:Break(doer, inst)
+                return true
+            end 
+        end               
+    end
+
+    return false
+end
+
+
+--- 给物品使用药剂
+--- @return boolean success 是否成功使用了药剂
+local function usePotionForItem(inst, doer, target)
+    local activatable = target.components.ksfun_activatable
+    if (not inst.power) and activatable then
+        if activatable:CanActivate() then
+            activatable:DoActivate(doer, inst)
+            local itemname = KsFunGetPrefabName(target.prefab)
+            local msg = string.format(STRINGS.KSFUN_ITEM_ACTIVATE_NOTICE, doer.name, itemname)
+            KsFunShowNotice(msg)
+            return true
+        end
+    end
+    return false
+end
+
+
+--- 使用药剂
+--- @return boolean success 是否成功使用了药剂
+local function usePostion(inst, doer, target)
     local used = false
     if target:HasTag("player") then
-        local system = target.components.ksfun_power_system
-        if inst.power and system  then
-            local ent = system:GetPower(inst.power)
-            -- 还没有拥有，首次是添加该属性
-            if ent == nil then
-                ent = system:AddPower(inst.power)
-                used = true
-
-            -- 已经拥有了，尝试突破等级上限
-            elseif ent.components.ksfun_breakable then
-                local level = ent.components.ksfun_level
-                if level and level:IsMax() then
-                    local cnt = ent.components.ksfun_breakable:GetCount()
-                    -- 当前是9阶的时候，todo 突破上限限制
-                    if cnt == MAX - 1 then
-                        used = false
-                    -- 药剂等级 > 属性等阶 
-                    elseif inst.components.ksfun_level:GetLevel() > cnt then
-                        ent.components.ksfun_breakable:Break(doer, inst)
-                        used = true
-                    end 
-                end               
-            end
-        end
-
+        used = usePotionForPlayer(inst, doer, target)
     else
-
-        local activatable = target.components.ksfun_activatable
-        if (not inst.power) and activatable then
-            if activatable:CanActivate() then
-                activatable:DoActivate(doer, inst)
-                used = true
-            end
-        end
+        used = usePotionForItem(inst, doer, target)
     end
 
     if used then
@@ -90,9 +115,10 @@ local function onEnhant(inst, doer, item)
     if powername ~= nil then
         inst.power = powername
         updateDisplayName(inst)
-        KsFunShowTip(doer, "魔药调制成功!")
+        KsFunShowTip(doer, STRINGS.KSFUN_POTION_ENHANT_SUCCESS)
     end
 end
+
 
 
 local function enhantTest(inst, doer, item)
@@ -134,10 +160,10 @@ end
 
 local function net(inst)
     inst.ksfunchangename = net_string(inst.GUID, "ksfunchangename", "ksfun_itemdirty")
-    inst:ListenForEvent("ksfun_itemdirty", function(inst)
-        local newname = inst.ksfunchangename:value()
+    inst:ListenForEvent("ksfun_itemdirty", function(potion)
+        local newname = potion.ksfunchangename:value()
 		if newname then
-			inst.displaynamefn = function(aaa)
+			potion.displaynamefn = function(aaa)
 				return newname
 			end
 		end
@@ -173,7 +199,7 @@ local function fn()
 
 
     inst:AddComponent("ksfun_useable")
-    inst.components.ksfun_useable:SetOnUse(onuse)
+    inst.components.ksfun_useable:SetOnUse(usePostion)
 
     inst:AddComponent("ksfun_level")
     inst.components.ksfun_level:SetMax(10)
@@ -191,12 +217,12 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_potion.xml"
 
-    inst.OnLoad = function(inst, data)
-        inst.power = data and data.power or nil
-        updateDisplayName(inst)
+    inst.OnLoad = function(potion, data)
+        potion.power = data and data.power or nil
+        updateDisplayName(potion)
     end
-    inst.OnSave = function(inst, data)
-        data.power = inst.power or nil
+    inst.OnSave = function(potion, data)
+        data.power = potion.power or nil
     end
 
 

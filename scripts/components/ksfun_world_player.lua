@@ -44,6 +44,7 @@ function KSFUN_WORLD_PLAYERS:RecoverPlayerStatus(player)
         if data and data.powers then
             for k,v in pairs(data.powers) do
                 -- 黑名单不添加，换个角色会再加回来
+                ---@diagnostic disable-next-line: undefined-field
                 if not (pblacks ~= nil and table.contains(pblacks, k)) then
                     player.components.ksfun_power_system:AddPower(k, v)
                 end 
