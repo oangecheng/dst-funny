@@ -60,6 +60,7 @@
     "Lua.diagnostics.disable": [
         "undefined-doc-name",
         "redundant-return-value",
-        "deprecated"
+        "deprecated",
+        "trailing-space"
     ]
 }
