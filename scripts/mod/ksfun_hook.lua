@@ -292,7 +292,7 @@ AddComponentPostInit("combat", function(self)
         -- 计算原始伤害
         local damage = oldCaclDamage(self, target, weapon, multiplier)
         local crit = false 
-        if self.inst:HasTag("player") then
+        if self.inst:HasTag("player") and weapon then
             local system = weapon.components.ksfun_power_system
             if system then
                 local power = system:GetPower(KSFUN_TUNING.ITEM_POWER_NAMES.DAMAGE)
