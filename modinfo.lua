@@ -18,7 +18,7 @@ or
 -- 作者
 author = "橙子"
 -- 版本
-version = "0.1.2.1"
+version = "0.1.2.2"
 -- klei官方论坛地址，为空则默认是工坊的地址
 forumthread = ""
 -- modicon 下一篇再介绍怎么创建的
