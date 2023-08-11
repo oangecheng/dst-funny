@@ -32,8 +32,8 @@ end
 
 
 --- 触发附魔机制
---- @param inst 装备物品
---- @param item 材料
+--- @param inst table 装备物品
+--- @param item table 材料
 --- @return true 成功 false 失败
 local function onEnhantFunc(inst, doer, item)
     KsFunLog("onEnhantFunc", item.prefab)
