@@ -124,7 +124,7 @@ end
 local function canRewardSpecial(player, tasklv)
     local r = math.random(1024)
     local multi = KsFunMultiPositive(player)
-    return r <= 2^tasklv * multi * 100
+    return r <= 2^tasklv * multi * (KSFUN_TUNING.DEBUG and 100 or 1)
 end
 
 
