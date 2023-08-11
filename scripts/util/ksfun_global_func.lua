@@ -312,7 +312,7 @@ end
 
 local function clamp(a, b, c)
     ---@diagnostic disable-next-line: undefined-field
-    return math.clamp(a, b, b)
+    return math.clamp(a, b, c)
 end
 
 

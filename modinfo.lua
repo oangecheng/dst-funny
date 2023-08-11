@@ -5,20 +5,11 @@ local ch = locale == "zh" or locale == "zhr"
 -- 名称
 name = ch and "更好玩的饥荒！" or "funny dst"
 
--- 描述
-description = ch and
-[[
-    更好玩的饥荒！
-]] 
-or
-[[ 
-    funny dst!
-]]
 
 -- 作者
 author = "橙子"
 -- 版本
-version = "0.1.2.2"
+version = "0.1.2.3"
 -- klei官方论坛地址，为空则默认是工坊的地址
 forumthread = ""
 -- modicon 下一篇再介绍怎么创建的
@@ -34,6 +25,14 @@ client_only_mod = false
 all_clients_require_mod = true
 -- 饥荒api版本，固定填10
 api_version = 10
+
+
+
+-- 描述
+description = ch 
+and "更好玩的饥荒！" ..version
+or "funny dst! " ..version
+
 
 
 

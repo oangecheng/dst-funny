@@ -69,6 +69,21 @@ local function startRefine(inst, doer, callback)
 end
 
 
+local function giveUpTask(inst, doer)
+    local item3 =  inst.components.container:GetItemInSlot(3)
+    if item3 and item3.prefab == "goldnugget" then
+        if doer.components.ksfun_task_system then
+            local task = doer.components.ksfun_task_system:GetTask()
+            if  task then
+                task.components.ksfun_task:Lose()
+                return true
+            end
+        end
+    end
+    return false
+end
+
+
 AddPrefabPostInit("dragonflyfurnace", function(inst)
     if inst.components.container == nil then
         inst:AddComponent("container")
@@ -90,6 +105,12 @@ AddPrefabPostInit("dragonflyfurnace", function(inst)
     inst:ListenForEvent("timerdone", onTimeDone)
 
     inst.startWork = function(chest, doer)
+
+        if giveUpTask(chest, doer) then
+            chest.components.container:Close(doer)
+            return
+        end
+
         local time = startRefine(chest, doer)
         time = KSFUN_TUNING.DEBUG and 1 or time 
         if  time > 0 then

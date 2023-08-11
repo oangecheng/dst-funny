@@ -444,13 +444,8 @@ AddPrefabPostInit("pigking", function(inst)
 			trader.onaccept = function(inst,giver,item)
                 local lv = taskitemsdef[item.prefab]
                 if lv then
-                    local taskreel = nil
-                    if lv == 0 then
-                        taskreel = KsFunSpawnTaskReel()
-                    else
-                        local initlv = math.min( math.random(2) + lv, 7)
-                        taskreel = KsFunSpawnTaskReel(initlv)
-                    end
+                    local initlv = math.min( math.random(2) + lv, 7)
+                    local taskreel = KsFunSpawnTaskReel(initlv)
                     if taskreel then
                         inst.sg:GoToState("cointoss")
                         inst:DoTaskInTime(2 / 3, function(item,giver)
