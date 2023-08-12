@@ -364,6 +364,9 @@ local function onPickSomeThing(player, data)
     end
 
     local power = player.components.ksfun_power_system:GetPower(NAMES.PICK)
+    if power == nil then
+        return
+    end
 
     -- 处理特殊case，目前支持多汁浆果
     if obj and data.prefab then
@@ -410,7 +413,7 @@ local function onPickSomeThing(player, data)
         -- 额外掉落物
         local extraloot = {}
         local lootdropper = obj.components.lootdropper
-        local num = calcPickMulti(player)
+        local num = calcPickMulti(power)
         local dropper = lootdropper:GenerateLoot()
         if (not IsTableEmpty(dropper)) and num > 0 then
             for _, prefab in ipairs(dropper) do
@@ -427,7 +430,7 @@ local function onPickSomeThing(player, data)
 
     -- 仙人掌花单独处理
     if obj.has_flower and (obj.prefab == "cactus" or obj.prefab == "oasis_cactus") then
-        local n = calcPickMulti(player)
+        local n = calcPickMulti(power)
         for i = 1, n do
             local flower = SpawnPrefab("cactus_flower")
             player.components.inventory:GiveItem(flower, nil, player:GetPosition())
