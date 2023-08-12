@@ -45,7 +45,9 @@ local extra = {
     ["lilybush"] = 2, -- 棱镜蹄莲花
     ["monstrain"] = 2, -- 棱镜雨竹
     ["shyerryflower"] = 2, -- 棱镜颤栗花
+    ["mandrake_berry"] = 2, -- 勋章曼德拉果
 }
+
 
 
 -- 可以额外采集的
