@@ -97,7 +97,7 @@ end
 
 
 local tasks = {}
-for k,v in pairs(KSFUN_TUNING.TASK_NAMES) do
+for k,v in pairs(KSFUN_TASK_NAMES) do
     table.insert(tasks, MakeTask(v))
 end 
 

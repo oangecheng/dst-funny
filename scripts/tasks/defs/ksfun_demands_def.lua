@@ -4,7 +4,7 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 
 
 --------------------------------------------- 击杀任务定义---------------------------------------------------------------------
-local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
+local KILL_TYPES = KSFUN_DEMAND_TYPES.KILL
 local MONSTER = require "defs/ksfun_monsters_def"
 
 local function default(killtype, initlv)
@@ -94,7 +94,7 @@ local kill = {
 
 
 --------------------------------------------- 采集任务定义---------------------------------------------------------------------
-local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
+local PICK_TYPES = KSFUN_DEMAND_TYPES.PICK
 local pickables  = prefabsdef.taskpickable
 
 local function calcPickItemsNum()
@@ -189,7 +189,7 @@ local ponds = {
 }
 
 
-local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
+local FISH_TYPES = KSFUN_DEMAND_TYPES.FISH
 
 --- 计算鱼的数量
 local function calcFishNum()
@@ -261,7 +261,7 @@ local fish = {
 
 
 --------------------------------------------- 烹饪任务定义---------------------------------------------------------------------
-local COOK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
+local COOK_TYPES = KSFUN_DEMAND_TYPES.COOK
 
 local function calcCookNum()
     return KSFUN_TUNING.DEBUG and 1 or math.random(5)
@@ -322,7 +322,7 @@ local cook = {
 
 
 
-local NAMES = KSFUN_TUNING.TASK_NAMES
+local NAMES = KSFUN_TASK_NAMES
 
 local demands = {
     [NAMES.KILL] = kill,

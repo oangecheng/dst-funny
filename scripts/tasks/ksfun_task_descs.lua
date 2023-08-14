@@ -3,7 +3,7 @@
 
 
 local function getKillTaskDesc(demand)
-    local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
+    local KILL_TYPES = KSFUN_DEMAND_TYPES.KILL
 
     if demand.type == KILL_TYPES.NOT_KILL then
         return STRINGS.KSFUN_TASK_KILL_NOT_DESC..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
@@ -37,7 +37,7 @@ local function getPickTaskDesc(demand)
 
     local num = tostring(demand.data.num)
     local picktype  = demand.type
-    local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
+    local TYPES = KSFUN_DEMAND_TYPES.PICK
     
     local base = string.format(STRINGS.KSFUN_TASK_PICK_DESC, num, name)
     if picktype == TYPES.TIME_LIMIT then
@@ -52,7 +52,7 @@ end
 
 local function getFishTaskDesc(demand)
     local name = nil
-    local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
+    local TYPES = KSFUN_DEMAND_TYPES.FISH
     local fishtype  = demand.type
 
     if fishtype == TYPES.FISH_LIMIT then
@@ -82,7 +82,7 @@ end
 
 local function getCookTaskDesc(demand)
     local name = nil
-    local TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
+    local TYPES = KSFUN_DEMAND_TYPES.COOK
     local cooktype = demand.type
 
     if cooktype == TYPES.FOOD_LIMIT then
@@ -108,7 +108,7 @@ end
 
 
 KsFunGetTaskDesc = function(taskdata)
-    local NAMES  = KSFUN_TUNING.TASK_NAMES
+    local NAMES  = KSFUN_TASK_NAMES
     local demand = taskdata.demand
     local name   = taskdata.name
     if name == NAMES.KILL then

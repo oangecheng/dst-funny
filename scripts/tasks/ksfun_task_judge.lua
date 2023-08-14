@@ -1,7 +1,7 @@
 
-local NAME = KSFUN_TUNING.TASK_NAMES.KILL
-local KILL_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.KILL
-local NAMES = KSFUN_TUNING.TASK_NAMES
+local NAME = KSFUN_TASK_NAMES.KILL
+local KILL_TYPES = KSFUN_DEMAND_TYPES.KILL
+local NAMES = KSFUN_TASK_NAMES
 
 
 local function descFunc(inst, player, taskdata)
@@ -81,7 +81,7 @@ local kill = {
 
 
 -------------------------------------------------------------------------------------------采集任务完成判定-------------------------------------------------------------------------------------------
-local PICK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.PICK
+local PICK_TYPES = KSFUN_DEMAND_TYPES.PICK
 
 local function onPickSomeThing(inst, data)
     local task   = inst.components.ksfun_task_system:GetTask(NAMES.PICK)
@@ -127,7 +127,7 @@ local pick = {
 
 
 -------------------------------------------------------------------------------------------钓鱼任务完成判定-------------------------------------------------------------------------------------------
-local FISH_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.FISH
+local FISH_TYPES = KSFUN_DEMAND_TYPES.FISH
 
 local function onFishSuccess(inst, data)
     local task = inst.components.ksfun_task_system:GetTask(NAMES.FISH)
@@ -166,7 +166,7 @@ local fish = {
 
 
 -------------------------------------------------------------------------------------------烹调任务完成判定-------------------------------------------------------------------------------------------
-local COOK_TYPES = KSFUN_TUNING.TASK_DEMAND_TYPES.COOK
+local COOK_TYPES = KSFUN_DEMAND_TYPES.COOK
 
 
 local function onHarvestSelfFood(inst, data)
