@@ -104,23 +104,6 @@ KSFUN_TUNING =  {
             FOOD_LIMIT     = 3,
         }
     },
-
-
-    KSFUN_ITEM_TYPES = {
-        WEAPON = 1,
-        HAT    = 2,
-        ARMOR  = 3,
-        GEM    = 4,
-    },
-
-    EVENTS = {
-        TASK_FINISH  = "ksfun_task_finish",
-        PLAYER_PANEL = "ksfun_player_refresh_panel",
-        POWER_ATTACH = "ksfun_power_attach",
-
-        POWER_REMOVE   = "ksfun_power_remove", 
-    },
-
 }
 
 
@@ -128,6 +111,9 @@ KSFUN_EVENTS = {
     POWER_REMOVE      = "ksfun_power_remove",
     FISH_SUCCESS      = "ksfun_fish_success", 
     HARVEST_SELF_FOOD = "ksfun_harvest_self_food",
+    TASK_FINISH       = "ksfun_task_finish",
+    PLAYER_PANEL      = "ksfun_player_refresh_panel",
+    POWER_ATTACH      = "ksfun_power_attach",
 }
 
 

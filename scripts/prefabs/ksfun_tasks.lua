@@ -11,7 +11,7 @@ local function MakeTask(taskname)
     local function finishTask(inst, player, iswin)
         local name = inst.components.ksfun_task:GetName()
         local lv   = inst.components.ksfun_task:GetTaskLevel()
-        player:PushEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, {name = name, iswin = iswin, lv = lv })
+        player:PushEvent(KSFUN_EVENTS.TASK_FINISH, {name = name, iswin = iswin, lv = lv })
     end
 
     --- 重新启用timer

@@ -19,12 +19,6 @@ local function onTaskDataDirty(self, inst)
     else
         self.tasks = {}
     end
-
-    KsFunLog("onTaskDataDirty", data)
-    if self.inst then
-        self.inst:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, self.tasks)
-    end
-
 end
 
 

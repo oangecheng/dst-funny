@@ -670,11 +670,11 @@ end
 local lucky = {
     onattach = function(inst, target)
         updatePowerMax(inst, 10)
-        target:ListenForEvent(KSFUN_TUNING.EVENTS.TASK_FINISH, onTaskFinish)
+        target:ListenForEvent(KSFUN_EVENTS.TASK_FINISH, onTaskFinish)
     end,
 
     ondetach = function(inst, target)
-        target:RemoveEventCallback(KSFUN_TUNING.EVENTS.TASK_FINISH, onTaskFinish)
+        target:RemoveEventCallback(KSFUN_EVENTS.TASK_FINISH, onTaskFinish)
     end,
 
     onstatechange = function(inst)

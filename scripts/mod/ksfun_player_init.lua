@@ -1,4 +1,4 @@
-local EVENTS = KSFUN_TUNING.EVENTS
+local EVENTS = KSFUN_EVENTS
 local ITEMS_DEF  = require "defs/ksfun_items_def"
 local playersdef = require "defs/ksfun_players_def" 
 

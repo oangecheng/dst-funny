@@ -7,7 +7,7 @@ local function addPower(self, name, ent)
 
         --- 属性系统才可以绑定
         ent.components.ksfun_power:Attach(name, self.inst)
-        self.inst:PushEvent(KSFUN_TUNING.EVENTS.POWER_ATTACH, { name = name, power = ent })
+        self.inst:PushEvent(KSFUN_EVENTS.POWER_ATTACH, { name = name, power = ent })
     else
         ent:Remove()
     end

@@ -38,10 +38,6 @@ local function onPowerWithLevelDirty(self, inst)
                 end
             end
         end
-
-        if self.inst then
-            self.inst:PushEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, self.powers)
-        end
     end
 end
 

@@ -39,12 +39,6 @@ local KSFUN_PLAYER_PANEL = Class(Widget, function(self, owner)
 
 	-- 面板距离关闭按钮50
 	self.offsetY = self.offsetY - 50
-
-	-- 监听变化，这个应该放外边去，临时
-	owner:ListenForEvent(KSFUN_TUNING.EVENTS.PLAYER_PANEL, function(inst, data)
-		-- local y = self:AddPowerCards()
-		-- self:AddTaskCards(y)
-	end)
 end)
 
 

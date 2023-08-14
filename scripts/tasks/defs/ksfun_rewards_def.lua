@@ -86,22 +86,7 @@ local ksfunitems = require("defs/ksfun_items_def")
 local function randomKsFunGem(player, task_lv)
     local temp = {}
     local itemlist = ksfunitems.gems
-    local worlddata = TheWorld.components.ksfun_world_data
-
-    local max = 0
-    if KSFUN_TUNING.MODE == 1 then max = 2
-    elseif KSFUN_TUNING.MODE == 2 then max = 1
-    end
-
-    if max~=0 and worlddata then
-        for i,v in ipairs(itemlist) do
-            if worlddata:GetWorldItemCount(v) < max then
-                table.insert(temp, v)
-            end
-        end
-    else
-        temp = itemlist
-    end
+    temp = itemlist
     
     if next(temp) ~= nil then
         local name = GetRandomItem(temp)
@@ -121,39 +106,44 @@ end
 
 --- 计算是否命中特殊奖励
 --- 和幸运值&难度绑定
+--- @param player table 玩家实体
+--- @param tasklv number 任务等级
 local function canRewardSpecial(player, tasklv)
     local r = math.random(1024)
     local multi = KsFunMultiPositive(player)
-    return r <= 2^tasklv * multi * (KSFUN_TUNING.DEBUG and 100 or 1)
+    local randomhit = r <= 2^tasklv * multi * (KSFUN_TUNING.DEBUG and 100 or 1)
+
+    --- 概率命中优先触发
+    if randomhit  then
+        return true
+    end
+
+    --- 兜底策略
+    if player.components.achievements then
+        if player.components.achievements:Consume() then
+            return true
+        end
+    end
+    return false
 end
 
 
-local function maxpotionnum()
-    local s1 = GetTableSize(KSFUN_TUNING.PLAYER_POWER_NAMES)
-    local s2 = 3
-    local s = s1 + s2
-    if KSFUN_TUNING.MODE == 1 then return s * 2
-    elseif KSFUN_TUNING.MODE == 2 then return s
-    else return -1 end
-end
 
 
 local randomRewardItem = function(player, tasklv)
     local reward = nil
     if canRewardSpecial(player, tasklv) then
         
+        -- 50%概率获得药剂奖励，50%概率宝石奖励
         if math.random() <= 0.5 then
-            local max = maxpotionnum()
             local item = "ksfun_potion"
-            if max < 0 or TheWorld.components.ksfun_world_data:GetWorldItemCount(item) < max then
-                reward = {
-                    type = KSFUN_REWARD_TYPES.POTION,
-                    data = {
-                        item = item,
-                        num = 1
-                    }
+            reward = {
+                type = KSFUN_REWARD_TYPES.POTION,
+                data = {
+                    item = item,
+                    num = 1
                 }
-            end
+            }
         end
 
         if reward == nil then
