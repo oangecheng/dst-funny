@@ -6,6 +6,7 @@ local function enhantTest(inst, doer, item)
     local powernames = itemsdef.ksfunitems[inst.prefab].names
     local canEnhant = false
 
+    ---@diagnostic disable-next-line: undefined-field
     if enhantname and table.contains(powernames, enhantname) then
         local system = inst.components.ksfun_power_system
         local level  = inst.components.ksfun_level
@@ -34,7 +35,6 @@ end
 --- 触发附魔机制
 --- @param inst table 装备物品
 --- @param item table 材料
---- @return true 成功 false 失败
 local function onEnhantFunc(inst, doer, item)
     KsFunLog("onEnhantFunc", item.prefab)
     local enhantname = itemsdef.enhantitems[item.prefab]
@@ -49,6 +49,7 @@ end
 
 local function onBreakTest(inst, doer, item)
     local items = {"opalpreciousgem"}
+    ---@diagnostic disable-next-line: undefined-field
     if table.contains(items, item.prefab) then
         return true
     end

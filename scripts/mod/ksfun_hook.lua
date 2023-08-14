@@ -441,14 +441,14 @@ AddPrefabPostInit("pigking", function(inst)
         
 		if trader and trader.onaccept then
 			local oldonacceptfn = trader.onaccept
-			trader.onaccept = function(inst,giver,item)
+			trader.onaccept = function(inst, giver, item)
                 local lv = taskitemsdef[item.prefab]
                 if lv then
                     local initlv = math.min( math.random(2) + lv, 7)
                     local taskreel = KsFunSpawnTaskReel(initlv)
                     if taskreel then
                         inst.sg:GoToState("cointoss")
-                        inst:DoTaskInTime(2 / 3, function(item,giver)
+                        inst:DoTaskInTime(2 / 3, function(item, giver)
                             LaunchAt(taskreel, inst, giver, 2, 5)
                         end)
                     end
