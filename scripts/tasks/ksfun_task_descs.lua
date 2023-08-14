@@ -110,11 +110,11 @@ end
 local function getWorkDesc(demand)
      local data = demand.data
      local num = data.num
-     if data.act == ACTIONS.CHOP then
+     if data.act == "CHOP" then
         return "砍"..num.."棵树"
-     elseif data.act == ACTIONS.MINE then
+     elseif data.act == "MINE" then
         return "挖"..num.."个矿石"
-    elseif data.act == ACTIONS.DIG then
+    elseif data.act == "DIG" then
         return "铲"..num.."株植物"
     end
     return nil

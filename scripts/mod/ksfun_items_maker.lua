@@ -16,12 +16,12 @@ local function enhantTest(inst, doer, item)
 
             if existed then
                 if doer.components.talker then
-                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_1)
+                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
                 end
             -- 判定，装备1级只能附加一个属性，2级2个 ...
             elseif powercount >= level:GetLevel() then
                 if doer.components.talker then
-                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
+                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_1)
                 end
             else
                 canEnhant = true

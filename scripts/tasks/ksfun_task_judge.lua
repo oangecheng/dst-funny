@@ -209,12 +209,15 @@ local cook = {
 local WORKTYPES = KSFUN_DEMAND_TYPES.WORK
 
 local function finishWork(player, data)
+    KsFunLog("finishWork", data.action, data.target)
     local task = player.components.ksfun_task_system:GetTask(KSFUN_TASK_NAMES.WORK)
     local demand = task and task.components.ksfun_task:GetDemand()
     if  demand then
+        KsFunLog("finishWork 1", demand.type,  demand.data.act,  data.action.id)
         if demand.type == WORKTYPES.NORMAL then
             local delta = 0
-            if demand.act == data.action then
+            if demand.data.act == data.action.id then
+                KsFunLog("finishWork 2", 2)
                 delta = 1
             end
             demand.data.num = demand.data.num - delta
