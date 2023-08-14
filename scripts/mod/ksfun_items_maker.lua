@@ -6,6 +6,7 @@ local function enhantTest(inst, doer, item)
     local powernames = itemsdef.ksfunitems[inst.prefab].names
     local canEnhant = false
 
+    ---@diagnostic disable-next-line: undefined-field
     if enhantname and table.contains(powernames, enhantname) then
         local system = inst.components.ksfun_power_system
         local level  = inst.components.ksfun_level
@@ -15,13 +16,15 @@ local function enhantTest(inst, doer, item)
 
             if existed then
                 if doer.components.talker then
-                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_1)
+                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
                 end
+
             -- 判定，装备1级只能附加一个属性，2级2个 ...
             elseif powercount >= level:GetLevel() then
                 if doer.components.talker then
-                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
+                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_1)
                 end
+                
             else
                 canEnhant = true
             end
@@ -32,9 +35,8 @@ end
 
 
 --- 触发附魔机制
---- @param inst 装备物品
---- @param item 材料
---- @return true 成功 false 失败
+--- @param inst table 装备物品
+--- @param item table 材料
 local function onEnhantFunc(inst, doer, item)
     KsFunLog("onEnhantFunc", item.prefab)
     local enhantname = itemsdef.enhantitems[item.prefab]
@@ -47,8 +49,10 @@ local function onEnhantFunc(inst, doer, item)
 end
 
 
+
 local function onBreakTest(inst, doer, item)
     local items = {"opalpreciousgem"}
+    ---@diagnostic disable-next-line: undefined-field
     if table.contains(items, item.prefab) then
         return true
     end
@@ -59,10 +63,8 @@ end
 
 --- 物品等级突破，这里突破之后等级也随之提升一级
 local function onBreakFunc(inst, doer, item)
-    KsFunLog("onBreakFunc", item.prefab)
     local level  = inst.components.ksfun_level
     if level then
-        KsFunLog("onBreakFunc", level.lv)
         level:UpMax(1)
         level:Up(1)
     end
