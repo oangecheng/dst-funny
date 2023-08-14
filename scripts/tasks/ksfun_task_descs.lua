@@ -107,6 +107,22 @@ end
 
 
 
+local function getWorkDesc(demand)
+     local data = demand.data
+     local num = data.num
+     if data.act == ACTIONS.CHOP then
+        return "砍"..num.."棵树"
+     elseif data.act == ACTIONS.MINE then
+        return "挖"..num.."个矿石"
+    elseif data.act == ACTIONS.DIG then
+        return "铲"..num.."株植物"
+    end
+    return nil
+end
+
+
+
+
 KsFunGetTaskDesc = function(taskdata)
     local NAMES  = KSFUN_TASK_NAMES
     local demand = taskdata.demand
@@ -119,6 +135,8 @@ KsFunGetTaskDesc = function(taskdata)
         return getFishTaskDesc(demand)
     elseif name == NAMES.COOK then
         return getCookTaskDesc(demand)
+    elseif name == NAMES.WORK then
+        return getWorkDesc(demand)
     end
     return nil
 end

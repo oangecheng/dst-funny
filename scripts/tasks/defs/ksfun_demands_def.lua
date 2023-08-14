@@ -317,6 +317,43 @@ local cook = {
 
 
 
+--------------------------------------------- 工作任务定义---------------------------------------------------------------------
+local WORKTYPES = KSFUN_DEMAND_TYPES.WORK
+
+local function workNum(workaction)
+    if workaction == ACTIONS.CHOP then
+        return math.random(10, 20)
+    elseif workaction == ACTIONS.DIG then
+        return math.random(5, 10)
+    elseif workaction == ACTIONS.MINE then
+        return math.random(5, 10)
+    end
+end
+
+local workactions = { ACTIONS.CHOP, ACTIONS.MINE, ACTIONS.DIG }
+
+local function workDemand(workaction)
+    local num = workNum(workaction)
+    return {
+        type == WORKTYPES.NORMAL,
+        diffculty = 3,
+        data = {
+          num = num,
+          act = workaction
+        }
+    }
+end
+
+local work = {
+    random = function (initlv)
+        local worktype = GetRandomItem(workactions)
+        return workDemand(worktype)
+    end
+}
+
+
+
+
 
 
 
@@ -329,6 +366,7 @@ local demands = {
     [NAMES.PICK] = pick,
     [NAMES.FISH] = fish,
     [NAMES.COOK] = cook,
+    [NAMES.WORK] = work,
 
 }
 

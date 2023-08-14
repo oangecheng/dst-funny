@@ -6,6 +6,7 @@ KSFUN_TASK_NAMES = {
     PICK = "pick",
     FISH = "fish",
     COOK = "cook",
+    WORK = "work",
 }
 
 
@@ -37,6 +38,10 @@ KSFUN_DEMAND_TYPES = {
         NORMAL         = 1,
         TIME_LIMIT     = 2,
         FOOD_LIMIT     = 3,
+    },
+
+    WORK = {
+        NORMAL = 1,
     }
 }
 
