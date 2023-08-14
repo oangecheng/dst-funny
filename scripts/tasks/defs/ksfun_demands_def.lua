@@ -392,7 +392,6 @@ demandsdef.random = function(initlv)
         end
         name = GetRandomItem(list)
     end
-    name = "work"
 
     local demand = demands[name].random(initlv)
     return name, demand
