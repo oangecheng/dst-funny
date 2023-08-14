@@ -40,12 +40,8 @@ end
 local function rewardKsFunItem(player, data)
     local item = data and data.item or nil
     local ent = SpawnPrefab(item)
-    if ent then
+    if ent and item then
         player.components.inventory:GiveItem(ent, nil, player:GetPosition())
-        if TheWorld.components.ksfun_world_data then
-            TheWorld.components.ksfun_world_data:AddWorldItemCount(ent.prefab)
-        end
-
         local itemname = KsFunGetPrefabName(item)
         local notice = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM, player.name, itemname, tostring(data.num))
         KsFunShowNotice(notice)

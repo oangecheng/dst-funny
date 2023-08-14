@@ -50,7 +50,6 @@ local function initPowerSystem(player)
     system:SetOnLostPowerFunc(function(inst, data)
         -- 临时属性不统计
         if istemp(data.power) then return end
-        TheWorld.components.ksfun_world_data:RemoveItemCount("ksfun_potion")
         local msg = string.format(STRINGS.KSFUN_POWER_LOST_PLAYER, inst.name, KsFunGetPowerNameStr(data.name))
         KsFunShowNotice(msg)
     end)

@@ -101,37 +101,6 @@ KsFunGetAoeProperty  = function(aoepower)
 end
 
 
-KsFunRandomPower = function(inst, powers, existed)
-    local temp = {}
-
-    -- 随机排序
-    for k, v in pairs(powers) do
-        local i = math.random(1 + #temp)
-        table.insert(temp, i, v)
-    end
-
-    local system = inst and inst.components.ksfun_power_system or nil
-
-    if system then
-        for i,v in ipairs(temp) do
-            -- 找到第一个不存在的属性返回， 找不到返回nil
-            local p = system:GetPower(v)
-            if existed then
-                if p ~= nil then
-                    return v
-                end
-            else
-                if p == nil then
-                    return v
-                end
-            end
-        end
-    end
-
-    return nil
-end
-
-
 
 KsFunIsValidVictim = function(victim)
     return victim ~= nil
@@ -151,7 +120,7 @@ end
 
 
 KsFunGeneratePowerDefaultDesc = function(lv, exp)
-    return "LV=["..lv.."]   ".."EXP=["..exp.."]"
+    return "LV=["..lv.."]  ".."EXP=["..exp.."]"
 end
 
 
@@ -231,14 +200,6 @@ KsFunBindTaskReel = function(inst, player, data)
     -- 绑定之后移除物品
     system:AddTask(data.name, data)
     inst:DoTaskInTime(0, inst:Remove())
-end
-
-
-
---- 获取可以给予玩家奖励的属性
---- @param player 玩家
-KsFunGetCanRewardPower = function(player)
-    return true
 end
 
 
