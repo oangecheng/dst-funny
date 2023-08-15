@@ -21,7 +21,6 @@ KSFUN_TUNING =  {
         PICK          = "player_pick",
         FARM          = "player_farm",
         KILL_DROP     = "player_killdrop",
-        GIANT         = "player_giant",
         COOKER        = "player_cooker",
         
     },

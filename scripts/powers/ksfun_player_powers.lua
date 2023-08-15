@@ -118,6 +118,34 @@ local health = {
 
 ---------------------------------------------------------------------------------------------- 饱食度 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local HUNGER_KEY = "maxhunger"
+
+local function updateHungerExtraStatus(inst, reset)
+    local lv = inst.components.ksfun_level:GetLevel()
+    -- 每级新增1%的饱食度下降，最大不超过50%
+    local hunger = inst.target.components.hunger
+    if reset then
+        hunger.burnratemodifiers:RemoveModifier("ksfun_power_player_hunger")
+    else
+        local hunger_multi = math.max(lv * 0.01 + 1, 2)
+        hunger.burnratemodifiers:SetModifier("ksfun_power_player_hunger", hunger_multi)
+    end
+
+    -- 升级可以提升角色的工作效率
+    local workmultiplier = inst.target.components.workmultiplier
+    if workmultiplier then
+        if reset then
+            workmultiplier:RemoveMultiplier(ACTIONS.CHOP,   inst)
+            workmultiplier:RemoveMultiplier(ACTIONS.MINE,   inst)
+            workmultiplier:RemoveMultiplier(ACTIONS.HAMMER, inst)
+        else
+            local work_multi = lv * 0.01 + 1
+            workmultiplier:AddMultiplier(ACTIONS.CHOP,   work_multi,   inst)
+            workmultiplier:AddMultiplier(ACTIONS.MINE,   work_multi,   inst)
+            workmultiplier:AddMultiplier(ACTIONS.HAMMER, work_multi,   inst)
+        end
+    end 
+end
+
 -- 更新角色的状态
 -- 设置最大饱食度和饱食度的下降速率
 -- 肚子越大，饿的越快
@@ -131,6 +159,15 @@ local function updateHungerStatus(inst, reset)
         hunger.max = reset and maxhunger or maxhunger + lv
         hunger:SetPercent(percent)
     end
+    updateHungerExtraStatus(inst, reset)
+end
+
+
+--- todo 成神技能
+local function onHungerBecomeGod(inst, data)
+    local lv = inst.components.ksfun_level:GetLevel()
+    local max = 1 + 0.01 * math.min(50, lv) 
+    inst.AnimState:SetScale(max, max, max)
 end
 
 
@@ -692,76 +729,6 @@ local lucky = {
 
 
 
-------------------------------------------------------------------------------------------- 巨人 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-local function updateGiantStatus(inst, reset)
-    local lv = inst.components.ksfun_level:GetLevel()
-    -- 每级新增1%的饱食度下降，最大不超过50%
-    local hunger = inst.target.components.hunger
-    if reset then
-        hunger.burnratemodifiers:RemoveModifier("ksfun_power_player_hunger")
-    else
-        local hunger_multi = math.max((lv - 100) * 0.01 + 1, 1.5)
-        hunger.burnratemodifiers:SetModifier("ksfun_power_player_hunger", hunger_multi)
-    end
-
-    -- 升级可以提升角色的工作效率
-    local workmultiplier = inst.target.components.workmultiplier
-    if workmultiplier then
-        if reset then
-            workmultiplier:RemoveMultiplier(ACTIONS.CHOP,   inst)
-            workmultiplier:RemoveMultiplier(ACTIONS.MINE,   inst)
-            workmultiplier:RemoveMultiplier(ACTIONS.HAMMER, inst)
-        else
-            local work_multi = lv / 100 + 1
-            workmultiplier:AddMultiplier(ACTIONS.CHOP,   work_multi,   inst)
-            workmultiplier:AddMultiplier(ACTIONS.MINE,   work_multi,   inst)
-            workmultiplier:AddMultiplier(ACTIONS.HAMMER, work_multi,   inst)
-        end
-    end 
-end
-
-
-local function onHungerChange(inst, data)
-    local max = 1
-    if data.newpercent and data.newpercent >= 0.75 then
-        local pgiant = inst.components.ksfun_power_system:GetPower(NAMES.GIANT)
-        if pgiant then
-            local lv  = pgiant.components.ksfun_level:GetLevel()
-            max = 1 + 0.01 * math.min(50, lv) 
-        end
-    end
-    inst.AnimState:SetScale(max, max, max)
-end
-
-
-local giant = {
-    onattach = function(inst, target)
-        updatePowerMax(inst, 10)
-        updateGiantStatus(inst, false)
-        target:ListenForEvent("hungerdelta", onHungerChange)
-    end,
-
-    ondetach = function(inst, target)
-        target:RemoveEventCallback("hungerdelta", onHungerChange)
-        target.AnimState:SetScale(1, 1, 1)
-        updateGiantStatus(inst, true)
-    end,
-
-    onstatechange = function(inst)
-        updateGiantStatus(inst, false)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
-    end,
-
-    onbreak = function(inst)
-        updatePowerMax(inst, 10)
-    end,
-
-    ondesc = getPowerDesc,
-    
-}
-
-
-
 
 
 
@@ -804,7 +771,6 @@ local playerpowers = {
     [NAMES.KILL_DROP]   = killdrop,
     [NAMES.LOCOMOTOR]   = locomotor,
     [NAMES.LUCKY]       = lucky,
-    [NAMES.GIANT]       = giant,
     [NAMES.COOKER]      = cooker,
 }
 
