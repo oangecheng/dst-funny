@@ -285,19 +285,16 @@ end
 
 local function luckyMultiNegative(inst)
     local m = clamp(1 - luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
-    KsFunLog("luckyMultiNegative", m) 
     return m
 end
 
 local function diffMultiPositive()
     local m = clamp(MAX_CHANCE - KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
-    KsFunLog("diffMultiPositive", m)
     return m
 end
 
 local function diffMultiNegative()
     local m = clamp(KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
-    KsFunLog("diffMultiNegative", m)
     return m
  end
 
@@ -306,7 +303,6 @@ local function diffMultiNegative()
 --- 难度：值越大，影响越小
 KsFunMultiPositive = function(inst)
     local m = luckyMultiPositive(inst) * diffMultiPositive()
-    KsFunLog("KsFunMultiPositive", m)
     return m
 end
 
@@ -315,7 +311,6 @@ end
 --- 难度：值越大，影响越大
 KsFunMultiNegative = function(inst)
     local m = luckyMultiNegative(inst) * diffMultiNegative()
-    KsFunLog("KsFunMultiNegative", m)
     return m
 end
 
@@ -325,7 +320,6 @@ end
 --- @param defaultratio number 默认概率 下限0.1倍， 上限3倍
 --- @param msg string
 KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
-    KsFunLog("KsFunAttackCanHit", msg)
     local r = math.random()
     local attackermulti = 1
     local targetmulti = 1

@@ -135,8 +135,8 @@ end
 --- power的等级经验
 function KSFUN_POWERS:SyncData()
 
-    local prefab,name,lv = getTitle(self.inst)
-    local data = prefab.."|"..name.."|"..lv
+    local prefab,name,itemlv = getTitle(self.inst)
+    local data = prefab.."|"..name.."|"..itemlv
 
     local powers = self:GetAllPowers()
     for k, power in pairs(powers) do

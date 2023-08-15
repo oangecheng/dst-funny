@@ -149,7 +149,7 @@ end
 
 
 function KSFUN_LEVEL:OnLoad(data)
-    self.lv  = data.lv or 0
+    self:SetLevel(data.lv or 0)
     self.exp = data.exp or 0
     self.max = data.max or 10000
 end

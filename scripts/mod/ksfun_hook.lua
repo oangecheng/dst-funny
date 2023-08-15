@@ -284,51 +284,6 @@ end
 
 
 
---- hook combat 组件
---- 处理暴击
-AddComponentPostInit("combat", function(self)
-    local oldCaclDamage = self.CalcDamage
-    self.CalcDamage = function(self, target, weapon, multiplier)
-        -- 计算原始伤害
-        local damage = oldCaclDamage(self, target, weapon, multiplier)
-        local crit = false 
-        if self.inst:HasTag("player") and weapon then
-            local system = weapon.components.ksfun_power_system
-            if system then
-                local power = system:GetPower(KSFUN_TUNING.ITEM_POWER_NAMES.DAMAGE)
-                if power then
-                    local lv = power.components.ksfun_level:GetLevel()
-                    if lv >= 100 then
-                        ---@diagnostic disable-next-line: undefined-field
-                        local r = math.clamp(0.002 * lv, 0.1, 0.3)
-                        crit = KsFunAttackCanHit(self.inst, target, r, "weapon critdamage")
-                    end
-                end
-            end
-        else
-            local system = self.inst.components.ksfun_power_system
-            if system then
-                local power = system:GetPower(KSFUN_TUNING.MONSTER_POWER_NAMES.CRIT_DAMAGE)
-                if power then
-                    local lv = power.components.ksfun_level:GetLevel()
-                    ---@diagnostic disable-next-line: undefined-field
-                    local r = math.clamp(0.002 * lv, 0.1, 0.3)
-                    crit = KsFunAttackCanHit(self.inst, target, r, "mon critdamage")
-                end
-            end
-
-        end
-        -- 暴击命中, 10%概率3倍暴击，90%概率2倍暴击
-        if crit then
-            damage = damage * (math.random() > 0.1 and 2 or 3 )    
-        end
-
-        return damage
-    end
-end)
-
-
-
 
 
 

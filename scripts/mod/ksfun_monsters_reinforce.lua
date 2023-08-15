@@ -52,6 +52,7 @@ end
 
 
 local function test(inst)
+    inst.components.ksfun_level:SetLevel(100)
     if inst.prefab == "spider" then
         for k,v in pairs(NAMES) do
             local ent = inst.components.ksfun_power_system:AddPower(v)

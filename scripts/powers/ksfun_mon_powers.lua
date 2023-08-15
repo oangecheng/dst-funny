@@ -206,6 +206,7 @@ local locomotor = {
 
 ------ 怪物暴击 ----------------------------------------------------------------------------------------
 local function critHookCombat(doer, target, _, power)
+    KsFunLog("critHookCombat")
     if KsFunAttackCanHit(doer, target, 0.3, "mon critdamage") then
         local lv = power.components.ksfun_level:GetLevel()
         return math.min(3, 2 + lv * 0.01)
