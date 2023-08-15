@@ -59,13 +59,12 @@ AddClassPostConstruct("widgets/controls", function(self, owner)
 end)
 
 
--- 加载各种玩法
-modimport("scripts/mod/ksfun_hook.lua")
-modimport("scripts/widgets/ksfun_containers.lua")
--- 物品制作
+
 modimport("main/recipes.lua")
--- action
 modimport("main/actions.lua")
+modimport("scripts/mod/ksfun_hook.lua")
+modimport("scripts/powers/ksfun_attack_hook.lua")
+modimport("scripts/widgets/ksfun_containers.lua")
 
 
 
