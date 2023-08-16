@@ -90,35 +90,6 @@ end
 
 
 
-KsFunGetAoeProperty  = function(aoepower)
-    local level = aoepower.components.ksfun_level
-    -- 初始 50% 范围伤害，满级80%
-    -- 初始 1.2 范围， 满级3范围
-    local lv = level:GetLevel()
-    local multi = 0.5 + 0.03 * lv
-    local area  = 1.2 + 0.018 * lv
-    return multi, area
-end
-
-
-
-KsFunIsValidVictim = function(victim)
-    return victim ~= nil
-        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
-                victim:HasTag("veggie") or
-                victim:HasTag("structure") or
-                victim:HasTag("wall") or
-                victim:HasTag("balloon") or
-                victim:HasTag("groundspike") or
-                victim:HasTag("smashable") or
-                victim:HasTag("abigail") or
-                victim:HasTag("companion"))
-        and victim.components.health ~= nil
-end
-
-
-
-
 KsFunGeneratePowerDefaultDesc = function(lv, exp)
     return "LV=["..lv.."]  ".."EXP=["..exp.."]"
 end
@@ -247,103 +218,6 @@ KsFunIsMedalOpen = function()
     return TUNING.FUNCTIONAL_MEDAL_IS_OPEN
 end
 
-
-
-------------------------------------概率计算相关start，绑定幸运值和难度-----------------------------------------------------
-local MIN_CHANCE = 0.1
-local MAX_CHANCE = 2
-
-
-local function luckyMulti(inst)
-    local system = inst.components.ksfun_power_system
-    local multi = 0
-    if system then
-        local lucky = system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.LUCKY)
-        if lucky then
-            multi = lucky.components.ksfun_level:GetLevel() * 0.01
-        end
-    end
-    -- 处于不幸的debuff时，你的幸运会变成赋值
-    if inst.unlucky then
-        multi = inst.unlucky * multi
-    end
-
-    return multi
-end
-
-local function clamp(a, b, c)
-    ---@diagnostic disable-next-line: undefined-field
-    return math.clamp(a, b, c)
-end
-
-
-local function luckyMultiPositive(inst)
-    local m = clamp(1 + luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
-    KsFunLog("luckyMultiPositive", m)
-    return m
-end
-
-local function luckyMultiNegative(inst)
-    local m = clamp(1 - luckyMulti(inst), MIN_CHANCE, MAX_CHANCE)
-    return m
-end
-
-local function diffMultiPositive()
-    local m = clamp(MAX_CHANCE - KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
-    return m
-end
-
-local function diffMultiNegative()
-    local m = clamp(KSFUN_TUNING.DIFFCULTY * 0.2, MIN_CHANCE, MAX_CHANCE)
-    return m
- end
-
---- 计算正向倍率，比如奖励啥的
---- 幸运：越幸运，影响越大
---- 难度：值越大，影响越小
-KsFunMultiPositive = function(inst)
-    local m = luckyMultiPositive(inst) * diffMultiPositive()
-    return m
-end
-
---- 计算反向倍率，比如惩罚啥的
---- 幸运：越幸运，影响越小
---- 难度：值越大，影响越大
-KsFunMultiNegative = function(inst)
-    local m = luckyMultiNegative(inst) * diffMultiNegative()
-    return m
-end
-
---- 计算攻击命中概率
---- @param attacker table 攻击者
---- @param target table 被攻击者
---- @param defaultratio number 默认概率 下限0.1倍， 上限3倍
---- @param msg string
-KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
-    local r = math.random()
-    local attackermulti = 1
-    local targetmulti = 1
-    local diffmulti = 1
-    
-    -- 攻击者为玩家时，幸运值越大，难度越低，命中概率越高
-    if attacker:HasTag("player") then
-        attackermulti = luckyMultiPositive(attacker)
-        diffmulti = diffMultiPositive()      
-    end
-
-    -- 被攻击者为玩家时，幸运值越大，难度越低，命中概率越低
-    if target:HasTag("player") then
-        targetmulti = luckyMultiNegative(target)
-        diffmulti  = diffMultiNegative()
-    end
-    
-    local v = defaultratio * attackermulti * targetmulti * diffmulti
-    v = clamp(v, 0.1, 3)
-    KsFunLog("KsFunAttackCanHit", v, r, msg)
-    v = KSFUN_TUNING.DEBUG and 100 or v
-    return r <= defaultratio * v
-end
-------------------------------------概率计算相关end，绑定幸运值和难度-----------------------------------------------------
 
 
 

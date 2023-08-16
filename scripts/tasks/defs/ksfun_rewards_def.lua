@@ -13,21 +13,6 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 local maxitemlv = 7
 
 
-local function calcItemLv(player, tasklv, multi)
-    if tasklv >= maxitemlv then
-        return maxitemlv
-    end
-    -- 即使很低等级的任务，也有小概率获得最高等级奖励
-    for i = maxitemlv, tasklv, -1 do
-        local r = math.random(2 ^ i)
-        if r <= (2 ^ tasklv) * (multi or 1) then
-            return i
-        end
-    end
-    return tasklv
-end
-
-
 --- 智商等级>50有10%的概率获得蓝图奖励
 local function checkSanityReward(player, rewardsdata)
     local sanity = player.components.ksfun_power_system:GetPower(POWERS.SANITY)
@@ -49,23 +34,24 @@ end
 
 --- 随机生成一些物品
 --- 任务等级越高，奖励越丰富，同时附加幸运值策略
---- @param  tasklv 任务难度等级
+--- @param tasklv number 任务难度等级
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, tasklv)
-    local r  = math.random()
-    -- 计算奖励物品等级
-    local multi = KsFunMultiPositive(player)
-    local lv = calcItemLv(player, tasklv, multi)
-    local name,num = prefabsdef.getItemsByLv(lv)
-    local delta = math.max(0, tasklv - maxitemlv)
-    --- 最大不超过3倍
-    local maxnum = num * 3
-    ---@diagnostic disable-next-line: undefined-field
-    num = math.clamp(num * multi + delta, 1, maxnum)
-    num = math.floor(num + 0.5)
+    local itemlv = KsFunRewardNormalLv(player, tasklv)
+    itemlv = math.min(maxitemlv, itemlv)
+    local name, num = prefabsdef.getItemsByLv(itemlv)
+    local extra = math.max(0, tasklv - itemlv)
+    num = num + extra
 
     local data = {}
     table.insert(data, {item = name, num = num})
+
+    --- 当任务等级 > 1 时，有概率获得基础资源的奖励
+    if tasklv > 1 and math.random() <= 0.1 * tasklv then
+        local item, cnt = prefabsdef.getItemsByLv(1)
+        table.insert(data, { item = item, num = cnt })
+    end
+
     checkSanityReward(player, data)
 
     return {
@@ -104,36 +90,10 @@ local function randomKsFunGem(player, task_lv)
 end
 
 
---- 计算是否命中特殊奖励
---- 和幸运值&难度绑定
---- @param player table 玩家实体
---- @param tasklv number 任务等级
-local function canRewardSpecial(player, tasklv)
-    local r = math.random(1024)
-    local multi = KsFunMultiPositive(player)
-    local randomhit = r <= 2^tasklv * multi * (KSFUN_TUNING.DEBUG and 100 or 1)
-
-    --- 概率命中优先触发
-    if randomhit  then
-        return true
-    end
-
-    --- 兜底策略
-    if player.components.achievements then
-        if player.components.achievements:Consume() then
-            return true
-        end
-    end
-    return false
-end
-
-
-
 
 local randomRewardItem = function(player, tasklv)
     local reward = nil
-    if canRewardSpecial(player, tasklv) then
-        
+    if KsFunCanRewardSpecial(player, tasklv) then
         -- 50%概率获得药剂奖励，50%概率宝石奖励
         if math.random() <= 0.5 then
             local item = "ksfun_potion"

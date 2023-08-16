@@ -6,6 +6,7 @@ require("ksfun_tuning")
 require("tasks/const/ksfun_const")
 require("tasks/ksfun_task_descs")
 require("util/ksfun_functions")
+require("util/ksfun_probable")
 
 
 ---- mode配置
