@@ -3,10 +3,10 @@ GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) en
 modimport("scripts/util/strings_c.lua")
 
 require("ksfun_tuning")
-require("tasks/const/ksfun_const")
-require("tasks/ksfun_task_descs")
 require("util/ksfun_functions")
 require("util/ksfun_probable")
+require("tasks/ksfun_task_types")
+
 
 
 ---- mode配置
