@@ -257,7 +257,6 @@ end
 local knockback = {
     onattach = function(inst, target)
         inst.doattack = onKnockback
-        target:ListenForEvent("onattackother", onKnockback)
     end
 }
 

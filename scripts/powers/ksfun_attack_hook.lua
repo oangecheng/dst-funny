@@ -55,7 +55,9 @@ AddComponentPostInit("combat", function(self)
         if self.inst then
             local multi = hookCalcDamage(self.inst, target, weapon)
             dmg = dmg * multi
-            spdmg = spdmg * multi
+            if spdmg then
+               spdmg = spdmg * multi
+            end
         end
         return dmg, spdmg
     end
