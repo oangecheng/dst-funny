@@ -100,31 +100,14 @@ local iceexplosion = {
 
 
 ------ 怪物降智光环增强 ----------------------------------------------------------------------------------------
-local SANITYAURA_DELTA = TUNING.SANITYAURA_SMALL / 25
-local SANITYAURA_KEY = "sanityaura"
-
-local function updateSanityauraStatus(inst)
-    local power = inst.components.ksfun_power
-    local aura = power:GetData(SANITYAURA_KEY) or 0
-    if inst.target then
-        if inst.target.components.sanityaura then
-            local lv = inst.components.ksfun_level:GetLevel()
-            inst.target.components.sanityaura.aura = aura - lv * SANITYAURA_DELTA
-        end
-    end
-end
-
 local sanityaura = {
     onattach = function(inst, target, name)
         if target.components.sanityaura == nil then
             target:AddComponent("sanityaura")
         end
-        inst.components.ksfun_power:SaveData(SANITYAURA_KEY,target.components.sanityaura.aura)
         -- 最高不超过巨鹿
         setPowerMaxLv(inst, MAXLV, MAXLV * 2)
-        updateSanityauraStatus(inst)
     end,
-    onstatechange = updateSanityauraStatus
 }
 
 

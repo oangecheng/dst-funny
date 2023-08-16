@@ -242,6 +242,28 @@ end)
 
 
 
+--- 降智光环hook
+local SANITYAURA_DELTA = TUNING.SANITYAURA_SMALL / 25
+AddComponentPostInit("sanityaura", function(self)
+    local oldGetAura = self.GetAura
+    self.GetAura = function (_, observer)
+        -- 先记下之前的值，计算完之后再还原
+        local aura = self.aura
+        local lv = KsFunGetPowerLv(self.inst, KSFUN_TUNING.MONSTER_POWER_NAMES.SANITY_AURA)
+        if lv and aura < 0 then
+           self.aura = self.aura - SANITYAURA_DELTA * lv
+        end
+        local v = oldGetAura(self, observer)
+        self.aura = aura
+        return v
+    end
+end)
+
+
+
+
+
+
 
 -----------------------------------------------------------------其他逻辑处理--------------------------------------------------------------------------------------
 
