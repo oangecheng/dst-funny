@@ -20,9 +20,38 @@ end
 ------ 吸血属性 ----------------------------------------------------------------------------------------
 local lifestealmax = 100
 
+
+local function canSteal(victim)
+    return victim ~= nil
+        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
+                victim:HasTag("veggie") or
+                victim:HasTag("structure") or
+                victim:HasTag("wall") or
+                victim:HasTag("balloon") or
+                victim:HasTag("groundspike") or
+                victim:HasTag("smashable") or
+                victim:HasTag("abigail") or
+                victim:HasTag("companion"))
+        and victim.components.health ~= nil
+end
+
+--- 吸血攻击
+local function doLifestealAttack(attacker, victim, _, lifesteal)
+    if canSteal(victim) then
+        local level  = lifesteal.components.ksfun_level
+        local health = attacker and attacker.components.health or nil
+        if level and health then
+            local delta = math.floor(level:GetLevel() * 0.05 + 1 + 0.5)
+            health:DoDelta(delta, false, "ksfun_item_lifesteal")
+        end
+    end
+end
+
+
 local lifesteal = {
     onattach = function(inst)
         inst.components.ksfun_level:SetMax(lifestealmax)
+        inst.doattack = doLifestealAttack
     end,
     ondesc = getPowerDesc,
     forgable = {
@@ -36,15 +65,67 @@ local lifesteal = {
 ------- 溅射伤害 ----------------------------------------------------------------------------------------
 local aoemax = 100
 
-local function onGetAoeDescFunc( inst, target, name )
-    local multi,area = KsFunGetAoeProperty(inst)
+--- aoe需要排除对象的tag
+local EXCLUDE_TAGS = {
+	"INLIMBO",
+	"companion", 
+	"wall",
+	"abigail", 
+}
+
+-- 判断是否为跟随者，比如雇佣的猪哥
+local function isFollower(inst, target)
+    if inst.components.leader ~= nil then
+        return inst.components.leader:IsFollower(target)
+    end
+    return false
+end
+
+
+--- 获取aoe的具体属性
+--- @return number multi，area 倍率 and 范围
+local function getAoeProperty(aoepower)
+    local level = aoepower.components.ksfun_level
+    -- 初始 50% 范围伤害，满级80%
+    -- 初始 1.2 范围， 满级3范围
+    local lv = level:GetLevel()
+    local multi = 0.5 + 0.03 * lv
+    local area  = 1.2 + 0.018 * lv
+    return multi, area
+end
+
+
+local function onGetAoeDescFunc(inst, _, _ )
+    local multi,area = getAoeProperty(inst)
     local desc = string.format(STRINGS.KSFUN_POWER_DESC[string.upper(inst.prefab)], tostring(area), (multi*100).."%")
     return KsFunGetPowerDesc(inst, desc)
 end
 
+
+--- 触发aoe伤害
+local function doAoeAttack(attacker, target, weapon, power)
+    local lv = power.components.ksfun_level:GetLevel()
+    -- 初始 50% 范围伤害，满级80%
+    -- 初始 1.2 范围， 满级3范围
+    local multi, area = getAoeProperty(power)
+    local combat = attacker.components.combat
+    local x,y,z = target.Transform:GetWorldPosition()
+
+    local ents = TheSim:FindEntities(x, y, z, area, { "_combat" }, EXCLUDE_TAGS)
+    for i, ent in ipairs(ents) do
+        if ent ~= target and ent ~= attacker and combat:IsValidTarget(ent) and (not isFollower(attacker, ent)) then
+            attacker:PushEvent("onareaattackother", { target = ent, weapon = weapon, stimuli = nil })
+            local damage = combat:CalcDamage(ent, weapon, 1) * multi
+            ent.components.combat:GetAttacked(attacker, damage, weapon, nil)
+        end
+    end
+end
+
+
 local aoe = {
     onattach = function(inst)
         inst.components.ksfun_level:SetMax(aoemax)
+        inst.doattack = doAoeAttack
     end,
     ondesc   = onGetAoeDescFunc,
     forgable = {
