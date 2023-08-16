@@ -44,10 +44,10 @@ AddComponentPostInit("combat", function(self)
     local oldCaclDamage = self.CalcDamage
     self.CalcDamage = function(_, target, weapon, multiplier)
         -- 计算原始伤害
-        local damage = oldCaclDamage(self, target, weapon, multiplier)
+        local dmg, spdmg = oldCaclDamage(self, target, weapon, multiplier)
         if self.inst then
-            damage = damage * hookCalcDamage(self.inst, target, weapon)
+            dmg = dmg * hookCalcDamage(self.inst, target, weapon)
         end
-        return damage
+        return dmg, spdmg
     end
 end)
