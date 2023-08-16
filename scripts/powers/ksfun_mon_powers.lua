@@ -70,13 +70,12 @@ local function doIceExplosion(inst, area, coldness)
     inst.SoundEmitter:PlaySound("dontstarve/creatures/hound/icehound_explo")
 end
 
---- 死亡时有20%概率造成范围冰冻，冰冻范围和效果受等级影响
+--- 死亡时造成范围冰冻，冰冻范围和效果受等级影响
 --- 冰冻范围 [2, 4]
 --- 冰冻效果 [1, 2]
 local function onDeath(inst)
     local power = inst.components.ksfun_power_system:GetPower(NAMES.ICE_EXPLOSION)
-    local hit = 0.2 * KsFunMultiPositive(inst)
-    if hit and power then
+    if power then
         local lv = power.components.ksfun_level:GetLevel()
         local area = 2 + 2 * lv * 0.01
         local coldness = 1 + lv * 0.01
@@ -101,7 +100,7 @@ local iceexplosion = {
 
 
 ------ 怪物降智光环增强 ----------------------------------------------------------------------------------------
-local delta = TUNING.SANITYAURA_SMALL / 25
+local SANITYAURA_DELTA = TUNING.SANITYAURA_SMALL / 25
 local SANITYAURA_KEY = "sanityaura"
 
 local function updateSanityauraStatus(inst)
@@ -110,7 +109,7 @@ local function updateSanityauraStatus(inst)
     if inst.target then
         if inst.target.components.sanityaura then
             local lv = inst.components.ksfun_level:GetLevel()
-            inst.target.components.sanityaura.aura = aura - lv * delta
+            inst.target.components.sanityaura.aura = aura - lv * SANITYAURA_DELTA
         end
     end
 end
@@ -134,13 +133,12 @@ local sanityaura = {
 
 ------ 怪物额外真实伤害 ----------------------------------------------------------------------------------------
 local function realdamageAttack(attacker, target, _, power)
-    -- 30% 的概率造成属性等级*0.03点的额外真实伤害，不计算护甲
-    local hit = KsFunAttackCanHit(attacker, target, 0.3, "realdamageAttack")
-    if hit and power then
+    if power then
         local lv = power.components.ksfun_level:GetLevel()
         local health = target.components.health
         if health then
-            health:DoDelta(-lv * 0.3, nil, nil, true, nil, true)
+            local v = math.max(5, lv * 0.3)
+            health:DoDelta(-v, nil, nil, true, nil, true)
         end
     end
 end
@@ -205,7 +203,6 @@ local locomotor = {
 
 ------ 怪物暴击 ----------------------------------------------------------------------------------------
 local function critHookCombat(doer, target, _, power)
-    KsFunLog("critHookCombat")
     if KsFunAttackCanHit(doer, target, 0.3, "mon critdamage") then
         local lv = power.components.ksfun_level:GetLevel()
         return math.min(3, 2 + lv * 0.01)
@@ -234,7 +231,9 @@ local function updateHealthStatus(inst)
     local max = inst.components.ksfun_power:GetData(HEALTH_KEY) or 100
     if health then
         local percent = health:GetPercent()
-        health:SetMaxHealth(math.floor(max * (1 + lv * 0.01) + 0.5))
+        local v = math.floor(max * (lv * 0.01) + 0.5)
+        v = math.max(1, v) + max
+        health:SetMaxHealth(v)
         health:SetPercent(percent)
     end
 end
@@ -291,7 +290,7 @@ local function onSteal(attacker, target, _, power)
     -- [20%, 50%] 的概率击落物品
     if power then
         local lv = power.components.ksfun_level:GetLevel()
-        local hit = KsFunAttackCanHit(attacker, target, 0.2 + lv * 0.003, "onSteal")
+        local hit = KsFunAttackCanHit(attacker, target, 0.5 + lv * 0.005, "onSteal")
         if hit and attacker.components.thief then
             attacker.components.thief:StealItem(target)
         end
@@ -315,11 +314,10 @@ local steal = {
 
 
 ------ 怪物攻击恢复生命值 ----------------------------------------------------------------------------------------
-local function onLifeSteal(attacker, target, _, power)
+local function onLifeSteal(attacker, _, _, power)
     if power then
         local lv = power.components.ksfun_level:GetLevel()
-        local hit = KsFunAttackCanHit(attacker, target, 0.2 + lv * 0.003, "onLifeSteal")
-        if hit and attacker.components.health then
+        if attacker.components.health then
             local v = math.floor(attacker.components.health.maxhealth * lv * 0.005)
             attacker.components.health:DoDelta(math.max(5, v))
         end
@@ -342,7 +340,7 @@ local lifesteal = {
 local function onbramble(attacker, target, weapon, power)
     local lv = KsFunGetPowerLv(target, NAMES.BRAMBLE)
     if lv and attacker.components.health then
-        local dmg = 5 + math.floor(0.1 * lv)
+        local dmg = math.floor(5 + math.floor(0.1 * lv) + 0.5)
         attacker.components.health:DoDelta(-dmg, nil, nil, true, nil, true)
         attacker:PushEvent("thorns")
     end
