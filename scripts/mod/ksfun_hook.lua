@@ -250,7 +250,7 @@ AddComponentPostInit("sanityaura", function(self)
         -- 先记下之前的值，计算完之后再还原
         local aura = self.aura
         local lv = KsFunGetPowerLv(self.inst, KSFUN_TUNING.MONSTER_POWER_NAMES.SANITY_AURA)
-        if lv and aura < 0 then
+        if lv and aura <= 0 then
            self.aura = self.aura - SANITYAURA_DELTA * lv
         end
         local v = oldGetAura(self, observer)

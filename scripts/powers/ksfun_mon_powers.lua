@@ -105,8 +105,6 @@ local sanityaura = {
         if target.components.sanityaura == nil then
             target:AddComponent("sanityaura")
         end
-        -- 最高不超过巨鹿
-        setPowerMaxLv(inst, MAXLV, MAXLV * 2)
     end,
 }
 
