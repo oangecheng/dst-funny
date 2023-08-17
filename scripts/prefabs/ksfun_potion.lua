@@ -12,15 +12,15 @@ local prefabsdef = require("defs/ksfun_prefabs_def")
 
 
 local itemsdef = {
-    ["dragonfruit"]   = NAMES.HEALTH,
-    ["meat_dried"]    = NAMES.HUNGER,
-    ["green_cap"]     = NAMES.SANITY,
-    ["berries"]       = NAMES.PICK,
-    ["seeds"]         = NAMES.FARM,
-    ["cactus_meat"]   = NAMES.LOCOMOTOR,
-    ["monstermeat"]   = NAMES.KILL_DROP,
+    ["mandrakesoup"]  = NAMES.HEALTH,
+    ["bonestew"]      = NAMES.HUNGER,
+    ["nightmarefuel"] = NAMES.SANITY,
+    ["fig"]           = NAMES.PICK,
+    ["lureplantbulb"] = NAMES.FARM,
+    ["walrus_tusk"]   = NAMES.LOCOMOTOR,
+    ["bearger_fur"]   = NAMES.KILL_DROP,
     ["butter"]        = NAMES.LUCKY,
-    ["charcoal"]      = NAMES.COOKER,
+    ["saltrock"]      = NAMES.COOKER,
 }
 
 

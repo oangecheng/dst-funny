@@ -102,20 +102,24 @@ end
 function KsFunCanRewardSpecial(player, tasklv)
 
     local seed = 0
-    if tasklv < 3 then
+    if tasklv == 1 then
         seed = 0.01
-    elseif tasklv < 5 then
-        seed = 0.05
-    elseif tasklv < 6 then
+    elseif tasklv == 2 then
+        seed = 0.03
+    elseif tasklv == 3 then
+        seed = 0.06
+    elseif tasklv == 4 then
         seed = 0.1
-    elseif tasklv < 7  then 
-        seed = 0.2
-    elseif tasklv < 8  then
+    elseif tasklv == 5 then
+        seed = 0.15
+    elseif tasklv == 6  then 
+        seed = 0.25
+    elseif tasklv == 7  then
         seed = 0.4
-    elseif tasklv < 9  then
-        seed = 0.65
-    elseif tasklv < 10 then 
-        seed = 0.9
+    elseif tasklv == 8  then
+        seed = 0.6
+    elseif tasklv == 9 then 
+        seed = 0.8
     else
         seed = 1
     end
