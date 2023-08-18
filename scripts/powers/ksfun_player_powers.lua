@@ -125,8 +125,8 @@ local function updateHungerExtraStatus(inst, reset)
     local hunger = inst.target.components.hunger
     if reset then
         hunger.burnratemodifiers:RemoveModifier("ksfun_power_player_hunger")
-    else
-        local hunger_multi = math.max(lv * 0.01 + 1, 2)
+    elseif lv >= 50 then
+        local hunger_multi = math.min((lv-50) * 0.01 + 1, 1.25)
         hunger.burnratemodifiers:SetModifier("ksfun_power_player_hunger", hunger_multi)
     end
 
