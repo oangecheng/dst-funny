@@ -23,8 +23,9 @@ local function hookCalcDamage(inst, target, weapon)
     local targetpowers = targetsystem and targetsystem:GetAllPowers()
     if  targetpowers then
         for _, value in pairs(targetpowers) do
-            if value.hookcombat then
-                multiplier = multiplier * value.hookcombat(inst, target, weapon, value)
+            -- 被攻击方触发被攻击，触发削减伤害机制
+            if value.hookoncombat then
+                multiplier = multiplier * value.hookoncombat(inst, target, weapon, value)
             end
         end
     end
