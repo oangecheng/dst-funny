@@ -60,7 +60,7 @@ local function startRefine(inst, doer, callback)
    
     local power = getCanForgPower(doer, target, material)
     if power then
-        duration = 30
+        duration = 5
         power.components.ksfun_forgable:Forg(doer, material)
         return duration
     end

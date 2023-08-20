@@ -202,15 +202,15 @@ local function updateMaxusesStatus(inst)
     local finiteuses = inst.target.components.finiteuses
     if finiteuses and oldmax then
         local percent = finiteuses:GetPercent()
-        finiteuses:SetMaxUses(oldmax + lv * 100)
+        finiteuses:SetMaxUses(oldmax*(1 + lv * 0.5))
         finiteuses:SetPercent(percent)
     end
 
-    -- 护甲每次提升200的耐久
+    -- 护甲每次提升300的耐久
     local armor = inst.target.components.armor
     if armor and oldmax then
         local percent = armor:GetPercent()
-        armor.maxcondition = oldmax + lv * 200
+        armor.maxcondition = oldmax * (1 + lv * 0.5)
         armor:SetPercent(percent)
     end
 end
@@ -290,8 +290,8 @@ local function updateInsulatorStatus(inst)
     local insulator = inst.target and inst.target.components.insulator or nil
     local lv    = inst.components.ksfun_level:GetLevel()
     local insu  = inst.components.ksfun_power:GetData(INSULATION_KEY)
-    local t     = inst.components.ksfun_power:GetData(INSULATION_TYPE_KEY)
-    local currenttype = inst.components.ksfun_power:GetData(INSULATION_TYPE)
+    inst.target.ksfunswitchable = inst.components.ksfun_power:GetData(INSULATION_SWITCH)
+    KsFunLog("updateInsulatorStatus", lv, inst.switchable)
     if insulator then
         insulator:SetInsulation(insu + lv)
         local type = getInsulationType(inst)
@@ -300,6 +300,37 @@ local function updateInsulatorStatus(inst)
         elseif type  == SEASONS.WINTER then
             insulator:SetWinter()
         end
+    end
+end
+
+local function acceptTestFunc(inst, item, giver)
+    KsFunLog("acceptTestFunc", inst.ksfunswitchable, item.prefab)
+    if inst.ksfunswitchable then
+        if item.prefab == "redgem" or item.prefab == "bluegem" then
+            return true
+        end
+    else
+        if  item.prefab == "opalpreciousgem" then
+            return true
+        end
+    end
+    return false
+end
+
+local function onItmeGive(inst, item, giver)
+    local power = inst.components.ksfun_power_system:GetPower(NAMES.INSULATOR)
+    if power == nil then
+        return
+    end
+    if item.prefab == "opalpreciousgem" then
+        power.components.ksfun_power:SaveData(INSULATION_SWITCH, true)
+        updateInsulatorStatus(power)
+    elseif item.prefab == "redgem" then
+        power.components.ksfun_power:SaveData(INSULATION_TYPE, SEASONS.WINTER)
+        updateInsulatorStatus(power)
+    elseif item.prefab == "bluegem" then
+        power.components.ksfun_power:SaveData(INSULATION_TYPE, SEASONS.SUMMER)
+        updateInsulatorStatus(power)
     end
 end
 
@@ -313,7 +344,7 @@ local insulator = {
         inst.components.ksfun_power:SaveData(INSULATION_KEY, ins)
         inst.components.ksfun_power:SaveData(INSULATION_TYPE_KEY, t)
         updateInsulatorStatus(inst)
-        
+        KsFunAddTrader(target, acceptTestFunc, onItmeGive)
     end,
     ondesc = getPowerDesc,
     onstatechange = updateInsulatorStatus,
