@@ -293,7 +293,7 @@ local function updateInsulatorStatus(inst)
     inst.target.ksfunswitchable = inst.components.ksfun_power:GetData(INSULATION_SWITCH)
     KsFunLog("updateInsulatorStatus", lv, inst.switchable)
     if insulator then
-        insulator:SetInsulation(insu + lv)
+        insulator:SetInsulation(insu + lv * 10)
         local type = getInsulationType(inst)
         if type == SEASONS.SUMMER then
             insulator:SetSummer()
