@@ -120,10 +120,17 @@ local function MakePower(name, data)
         if data.onbreak then
             inst:AddComponent("ksfun_breakable")
             inst.components.ksfun_breakable:Enable()
-            inst.components.ksfun_breakable:SetOnBreakFunc(function(inst, doer, item)
+            inst.components.ksfun_breakable:SetOnBreakFunc(function(p, doer, item)
                 if data.onbreak then
-                    data.onbreak(inst, doer, item)
+                    data.onbreak(p, doer, item)
                 end
+                -- 达到最大值，成神
+                if p.components.ksfun_breakable:IsMax() then
+                    if data.ongod then
+                        data.ongod(p, doer, item)
+                    end
+                end
+
                 if inst.target then
                     inst.target.components.ksfun_power_system:SyncData()
                 end
@@ -136,9 +143,9 @@ local function MakePower(name, data)
             inst.components.ksfun_power:SetTemp()
             inst:AddComponent("timer")
             inst.components.timer:StartTimer("ksfun_power_over", data.duration)
-            inst:ListenForEvent("timerdone", function(inst, data)
-                local name = inst.components.ksfun_power:GetName()
-                inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
+            inst:ListenForEvent("timerdone", function(p, _)
+                local pname = p.components.ksfun_power:GetName()
+                p.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = pname })
             end)
         end
 

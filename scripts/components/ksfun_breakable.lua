@@ -1,13 +1,15 @@
+-- 最大次数
+local MAX_CNT = 10
 
 local function canBreak(self, doer, item)
-    if self.enable then
+    if self.enable and self.count < MAX_CNT then
         return self.breaktest == nil and true or self.breaktest(self.inst, doer, item)
     end
     return false
 end
 
 
-local KSFUN_BREAKABLE = Class(function(self, inst)
+local Breakable = Class(function(self, inst)
     self.inst = inst
     self.enable = false
     self.count = 0
@@ -17,27 +19,45 @@ local KSFUN_BREAKABLE = Class(function(self, inst)
 end)
 
 
-function KSFUN_BREAKABLE:SetOnBreakFunc(func)
+--- 突破成功的回调函数
+---@param func function inst, doer, item 回调函数
+function Breakable:SetOnBreakFunc(func)
     self.onBreakFunc = func
 end
 
 
-function KSFUN_BREAKABLE:SetBreakTest(func)
+--- 是否可以突破的hook函数
+---@param func function inst, doer, item 回调函数
+function Breakable:SetBreakTest(func)
     self.breaktest = func
 end
 
 
-function KSFUN_BREAKABLE:CanBreak(doer, item)
+--- 判断是否可以突破
+--- @param doer table 玩家
+--- @param item table 材料
+function Breakable:CanBreak(doer, item)
     return canBreak(self, doer, item)
 end
 
 
-function KSFUN_BREAKABLE:Enable()
+--- 判断是否已经是最高等阶
+--- @return boolean
+function Breakable:IsMax()
+    return self.count >= MAX_CNT
+end
+
+
+--- 是否可用
+--- @return boolean
+function Breakable:Enable()
     self.enable = true
 end
 
 
-function KSFUN_BREAKABLE:GetCount()
+--- 获取突破次数
+--- @return number
+function Breakable:GetCount()
     return self.count
 end
 
@@ -45,18 +65,20 @@ end
 --- 装备突破，能够提升最大等级上限
 --- @param doer table 操作者
 --- @param item table 用于突破的物品
-function KSFUN_BREAKABLE:Break(doer, item)
+function Breakable:Break(doer, item)
     if canBreak(self, doer, item) then
         self.count = self.count + 1
         if self.onBreakFunc then
             self.onBreakFunc(self.inst, doer, item)
         end
-        item:DoTaskInTime(0, item:Remove())
+        if item then
+            item:DoTaskInTime(0, item:Remove())
+        end
     end
 end
 
 
-function KSFUN_BREAKABLE:OnSave()
+function Breakable:OnSave()
     return {
         enable = self.enable,
         count  = self.count,
@@ -64,10 +86,10 @@ function KSFUN_BREAKABLE:OnSave()
 end
 
 
-function KSFUN_BREAKABLE:OnLoad(data)
+function Breakable:OnLoad(data)
     self.enable = data.enable
     self.count  = data.count or 0
 end
 
 
-return KSFUN_BREAKABLE 
+return Breakable 
