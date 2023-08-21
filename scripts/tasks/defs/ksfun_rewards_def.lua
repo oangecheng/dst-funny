@@ -1,7 +1,73 @@
 
 local POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 
-local ksfun_rewards = {}
+
+--- 计算是否命中特殊奖励
+--- 和幸运值&难度绑定
+--- @param player table 玩家实体
+--- @param tasklv number 任务等级
+--- @return boolean true 给予
+local function canRewardSpecial(player, tasklv)
+
+    local seed = 0
+    if tasklv == 1 then
+        seed = 0.01
+    elseif tasklv == 2 then
+        seed = 0.03
+    elseif tasklv == 3 then
+        seed = 0.06
+    elseif tasklv == 4 then
+        seed = 0.1
+    elseif tasklv == 5 then
+        seed = 0.15
+    elseif tasklv == 6  then 
+        seed = 0.25
+    elseif tasklv == 7  then
+        seed = 0.4
+    elseif tasklv == 8  then
+        seed = 0.6
+    elseif tasklv == 9 then 
+        seed = 0.8
+    else
+        seed = 1
+    end
+
+    --- 幸运值附加倍率，最高2倍
+    --- 难度值附加倍率，最简单难度2倍
+    local hit = math.random() <= seed * KsFunMultiPositive(player)
+    if KSFUN_TUNING.DEBUG then
+        hit = true
+    end
+
+    --- 概率命中优先触发
+    if hit  then
+        return true
+    end
+
+    --- 兜底策略
+    if player.components.achievements then
+        if player.components.achievements:Consume() then
+            return true
+        end
+    end
+    return false
+end
+
+
+--- 计算是否命中特殊奖励
+--- 和幸运值&难度绑定
+--- @param player table 玩家实体
+--- @param tasklv number 任务等级
+--- @return number 返回计算后的物品等级
+local function calcRewardNormalLv(player, tasklv)
+    local m = KsFunMultiPositive(player)
+    -- 附加等级，最大不超过2
+    local addlv = m > 1 and math.min(math.floor(m + 0.5), 2) or 0
+    return tasklv + addlv
+end
+
+
+
 
 
 
@@ -37,7 +103,7 @@ end
 --- @param tasklv number 任务难度等级
 --- @return 名称，等级，数量，类型
 local function randomNormalItem(player, tasklv)
-    local itemlv = KsFunRewardNormalLv(player, tasklv)
+    local itemlv = calcRewardNormalLv(player, tasklv)
     itemlv = math.min(maxitemlv, itemlv)
     local name, num = prefabsdef.getItemsByLv(itemlv)
     local extra = math.max(0, tasklv - itemlv)
@@ -85,7 +151,6 @@ local function randomKsFunGem(player, task_lv)
             }   
         }
     end
-
     return nil
 end
 
@@ -93,7 +158,7 @@ end
 
 local randomRewardItem = function(player, tasklv)
     local reward = nil
-    if KsFunCanRewardSpecial(player, tasklv) then
+    if canRewardSpecial(player, tasklv) then
         -- 50%概率获得药剂奖励，50%概率宝石奖励
         if math.random() <= 0.5 then
             local item = "ksfun_potion"

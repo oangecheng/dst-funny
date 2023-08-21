@@ -4,7 +4,6 @@ modimport("scripts/util/strings_c.lua")
 
 require("ksfun_tuning")
 require("util/ksfun_functions")
-require("util/ksfun_probable")
 require("tasks/ksfun_task_types")
 
 
