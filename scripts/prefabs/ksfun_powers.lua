@@ -95,8 +95,9 @@ local function MakePower(name, data)
         power:SetOnGetDescFunc(onGetDescFunc)
         power.keepondespawn = true
 
+        inst.isgod = false
 
-        inst:ListenForEvent("ksfun_level_changed", function(ent, data)
+        inst:ListenForEvent("ksfun_level_changed", function(_, _)
             if inst.target then
                 inst.target.components.ksfun_power_system:SyncData()
             end

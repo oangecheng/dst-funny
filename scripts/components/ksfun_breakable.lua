@@ -48,8 +48,7 @@ function Breakable:IsMax()
 end
 
 
---- 是否可用
---- @return boolean
+--- 启用组件
 function Breakable:Enable()
     self.enable = true
 end
