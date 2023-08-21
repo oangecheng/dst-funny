@@ -126,7 +126,7 @@ local MONSTER_NAMES = KSFUN_TUNING.MONSTER_POWER_NAMES
 
 --- 计算附加属性概率
 local function shouldAddPower(inst, defaultratio)
-    return math.random() < defaultratio * KsFunMultiPositive(inst)
+    return math.random() < defaultratio * KsFunMultiNegative(inst)
 end
 
 
