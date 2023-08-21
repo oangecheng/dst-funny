@@ -94,9 +94,6 @@ if GLOBAL.TheNet:GetIsServer() then
     end)
 
     modimport("scripts/mod/ksfun_station.lua")
-    modimport("scripts/mod/ksfun_player_init.lua")
+    modimport("scripts/mod/ksfun_init.lua")
     modimport("scripts/mod/ksfun_items_maker.lua")
-    modimport("scripts/mod/ksfun_monsters_reinforce.lua")
-
-
 end
