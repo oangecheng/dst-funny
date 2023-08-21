@@ -1,9 +1,6 @@
 
 
 
-local helper = require("powers/ksfun_power_helper")
-
-
 local function MakePower(name, data)
 
     -- 统一绑定target
@@ -12,6 +9,13 @@ local function MakePower(name, data)
         if inst.target and data.onattach then 
             data.onattach(inst, target, name) 
         end
+        
+        local breakable = inst.components.ksfun_breakable
+        if data.onbreak and breakable then
+            inst.isgod = breakable:IsMax()
+            data.onbreak(inst, breakable:GetCount(), breakable:IsMax())
+        end
+
         -- 首次绑定刷新下状态
         if data.onstatechange then
             data.onstatechange(inst)
@@ -21,7 +25,7 @@ local function MakePower(name, data)
 
     local function onStateChange(inst, lvdelta)
         if inst.target then
-            inst.components.ksfun_power_system:SyncData()
+            inst.target.components.ksfun_power_system:SyncData()
             if inst.components.ksfun_level:GetLevel() < 0 then
                 inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
             else

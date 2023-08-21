@@ -10,7 +10,7 @@ end
 --- @param lvdelta any 等级变更值 
 local function notifyStateChange(self, lvdelta)
     if self.onstatechange then
-        self.onstateChange(self.inst, self.lv, self.exp, lvdelta)
+        self.onstatechange(self.inst, lvdelta)
     end
     if self.inst.replica.ksfun_level then
         self.inst.replica.ksfun_level:SyncData(tostring(self.lv))
@@ -24,8 +24,6 @@ local KsFunLevel = Class(function(self, inst)
     self.exp = 0
     --- 不设置即无上限
     self.max = nil
-
-    self.onLvChangeFunc = nil
 end)
 
 
