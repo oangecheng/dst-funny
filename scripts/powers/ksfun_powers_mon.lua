@@ -37,9 +37,8 @@ local absorb = {
     onattach = function(inst)
         -- 最多减伤30%，最高难度60%
         setPowerMaxLv(inst, MAXLV, MAXLV*2)
-        updateAbsorbStatus(inst)
     end,
-    onstatechange = updateAbsorbStatus
+    onstatechange = updateAbsorbStatus,
 }
 
 
@@ -149,7 +148,6 @@ local damage = {
     onattach = function(inst)
         -- 默认最大2倍攻击，最大3倍攻击
         setPowerMaxLv(inst, MAXLV, MAXLV * 2)
-        updateDamageStatus(inst)
     end,
     onstatechange = updateDamageStatus,
 }
@@ -173,7 +171,6 @@ local locomotor = {
     onattach = function(inst)
         -- 默认最大2倍移速，最高3倍移速
         setPowerMaxLv(inst, MAXLV, MAXLV * 2)
-        updateLocomotorStatus(inst)
     end,
     onstatechange = updateLocomotorStatus,
 }
@@ -228,7 +225,6 @@ local health = {
             h:SetMaxHealth(h.maxhealth)
             h:SetPercent(inst.percent)
         end
-        updateHealthStatus(inst)
     end,
     onstatechange = updateHealthStatus,
     onload = function(inst, data)

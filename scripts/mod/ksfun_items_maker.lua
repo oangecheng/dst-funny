@@ -59,14 +59,8 @@ end
 
 
 --- 物品等级突破，这里突破之后等级也随之提升一级
-local function onBreakFunc(inst, doer, item)
-    KsFunLog("onBreakFunc", item.prefab)
-    local level  = inst.components.ksfun_level
-    if level then
-        KsFunLog("onBreakFunc", level.lv)
-        level:UpMax(1)
-        level:Up(1)
-    end
+local function onBreakChange(inst, count, isgod)
+    inst.components.ksfun_level:SetLevel(count)
 end
 
 
@@ -75,11 +69,12 @@ end
 for k,v in pairs(itemsdef.ksfunitems) do
     AddPrefabPostInit(k, function(inst)
         inst:AddComponent("ksfun_item_forever")
+        inst:AddComponent("ksfun_activatable")
+
         inst:AddComponent("ksfun_level")
         inst:AddComponent("ksfun_enhantable")
         inst:AddComponent("ksfun_breakable")
         inst:AddComponent("ksfun_power_system")
-        inst:AddComponent("ksfun_activatable")
 
         inst.components.ksfun_activatable:SetOnActivate(function(inst, doer, item)
             inst.components.ksfun_item_forever:Enable()
@@ -87,7 +82,7 @@ for k,v in pairs(itemsdef.ksfunitems) do
             inst.components.ksfun_breakable:Enable()
         end)
 
-        inst.components.ksfun_breakable:SetOnBreakFunc(onBreakFunc)
+        inst.components.ksfun_breakable:SetOnStateChange(onBreakChange)
         inst.components.ksfun_breakable:SetBreakTest(onBreakTest)
         
         inst.components.ksfun_enhantable:SetEnhantTest(enhantTest)

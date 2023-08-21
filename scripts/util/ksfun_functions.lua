@@ -72,7 +72,7 @@ KsFunPowerGainExp = function(inst, name, exp)
     if inst.components.ksfun_power_system then
         local power = inst.components.ksfun_power_system:GetPower(name)
         if power and power.components.ksfun_level then
-            power.components.ksfun_level:GainExp(math.floor(exp + 0.5))
+            power.components.ksfun_level:DoExpDelta(math.floor(exp + 0.5))
         end
     end
 end

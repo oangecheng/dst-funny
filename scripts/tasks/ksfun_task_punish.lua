@@ -8,11 +8,11 @@ local function losePowerProperty(player, islv, data)
         local level   = power.components.ksfun_level
         local namestr = KsFunGetPowerNameStr(name)
         if islv then
-            level:LoseLv(data.num)
+            level:DoDelta(-data.num)
             local msg = string.format(STRINGS.KSFUN_TASK_PUNISH_POWER_LV, namestr, tostring(-data.num))
             KsFunShowTip(player, msg)
         else
-            level:LoseExp(data.num)
+            level:DoExpDelta(-data.num)
             local msg = string.format(STRINGS.KSFUN_TASK_PUNISH_POWER_EXP, namestr, tostring(-data.num))
             KsFunShowTip(player, msg)
         end

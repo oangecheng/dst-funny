@@ -11,8 +11,7 @@ end
 
 --- 尝试更新属性的最大值
 local function updatePowerMax(inst, count, isgod, delta)
-    inst.isgod = isgod
-    local maxlv = isgod and 10000 or (count + 1) * (delta or 10)
+    local maxlv = isgod and nil or (count + 1) * (delta or 10)
     inst.components.ksfun_level:SetMax(maxlv)
 end
 
@@ -67,15 +66,12 @@ end
 
 local health = {
     onattach = function(inst, target, name)
+        target:ListenForEvent("killed", onKillOther)
         local h = target.components.health
-        -- 记录原始数据
         inst.components.ksfun_power:SaveData(HEALTH_KEY, h.maxhealth)
         if inst.percent then
             h:SetPercent(inst.percent)
         end
-        updateHealthStatus(inst, false)
-        -- 玩家杀怪可以升级
-        target:ListenForEvent("killed", onKillOther)
     end,
 
     ondetach = function(inst, target)
@@ -85,7 +81,6 @@ local health = {
 
     onstatechange = function(inst)
         updateHealthStatus(inst, false)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
     onbreak = function(inst, count, isgod)
@@ -191,14 +186,12 @@ end
 
 local hunger = {
     onattach = function(inst, target, name)
+        target:ListenForEvent("oneat", onEat)
         local h = target.components.hunger
-        -- 记录原始数据
         inst.components.ksfun_power:SaveData(HUNGER_KEY, h.max)
         if inst.percent then
             h:SetPercent(inst.percent)
         end
-        updateHungerStatus(inst)
-        target:ListenForEvent("oneat", onEat)
     end,
 
     ondetach = function(inst, target)
@@ -208,7 +201,6 @@ local hunger = {
 
     onstatechange = function(inst)
         updateHungerStatus(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
     onbreak = function(inst, count, isgod)
@@ -313,15 +305,15 @@ end
 
 local sanity = {
     onattach = function(inst, target, name)
+        target:ListenForEvent("builditem", onBuildItemFunc)
+        target:ListenForEvent("buildstructure", oBuildStructureFunc)
+
         local s = target.components.sanity
-        -- 记录原始数据
         inst.components.ksfun_power:SaveData(SANITY_KEY, s.max)
         if inst.percent then
             s:SetPercent(inst.percent)
         end
-        updateSanityStatus(inst)
-        target:ListenForEvent("builditem", onBuildItemFunc)
-        target:ListenForEvent("buildstructure", oBuildStructureFunc)
+   
     end,
 
     ondetach = function(inst, target, name)
@@ -332,7 +324,6 @@ local sanity = {
 
     onstatechange = function(inst)
         updateSanityStatus(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
     onbreak = function(inst, count, isgod)
@@ -479,11 +470,6 @@ local pick = {
         target:RemoveEventCallback("picksomething", onPickSomeThing)
         target:RemoveEventCallback("ksfun_picksomething", onPickSomeThing)
     end,
-
-    onstatechange = function(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
-    end,
-
     onbreak = updatePowerMax,
     ondesc = getPowerDesc,
 }
@@ -619,15 +605,9 @@ local killdrop = {
     onattach = function(inst, target, name)
         target:ListenForEvent("killed", killItemDrop)
     end,
-
     ondetach = function(inst, target)
         target:RemoveEventCallback("killed", killItemDrop)
     end,
-
-    onstatechange = function(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
-    end,
-
     onbreak = updatePowerMax,
     ondesc = getPowerDesc,
 }
@@ -654,7 +634,7 @@ end
 local locomotor = {
 
     onattach = function(inst, target)
-        updateLocomotorStatus(inst)
+        
     end,
 
     ondetach = function(inst, target)
@@ -663,7 +643,6 @@ local locomotor = {
 
     onstatechange = function(inst)
         updateLocomotorStatus(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
     onbreak = updatePowerMax,
@@ -689,11 +668,6 @@ local lucky = {
     ondetach = function(inst, target)
         target:RemoveEventCallback(KSFUN_EVENTS.TASK_FINISH, onTaskFinish)
     end,
-
-    onstatechange = function(inst)
-        KsFunSayPowerNotice(inst.target, inst.prefab)
-    end,
-
     onbreak = updatePowerMax,
     ondesc = getPowerDesc,
 }
@@ -715,7 +689,6 @@ end
 
 local cooker = {
     onattach = function(inst, target)
-        updatePowerMax(inst, 10)
         target:ListenForEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestFood)
     end,
 

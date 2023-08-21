@@ -150,7 +150,6 @@ local mine = {
     onattach = function(inst, target)
         if target.components.tool == nil then target:AddComponent("tool") end
         inst.components.ksfun_level:SetMax(100)
-        updateMineStatus(inst)  
     end,
     ondesc = getPowerDesc,
     onstatechange = updateMineStatus,
@@ -177,7 +176,6 @@ local chop = {
     onattach = function(inst, target)
         if target.components.tool == nil then target:AddComponent("tool") end
         inst.components.ksfun_level:SetMax(100)
-        updateChopStatus(inst)  
     end,
     ondesc = getPowerDesc,
     onstatechange = updateChopStatus,
@@ -223,7 +221,6 @@ local maxuses = {
         if target.components.finiteuses then
             inst.components.ksfun_power:SaveData(MAXUSE_KEY, target.components.finiteuses.total)
         end
-        updateMaxusesStatus(inst)
     end,
     onstatechange = updateMaxusesStatus,
     ondesc = getPowerDesc,
@@ -252,7 +249,6 @@ local damage = {
         if target.components.weapon then
             local d = target.components.weapon.damage
             inst.components.ksfun_power:SaveData(DAMAGE_KEY, d)
-            updateDamageStatus(inst)
         end
     end,
     onstatechange = updateDamageStatus,
@@ -343,7 +339,6 @@ local insulator = {
         local ins, t = target.components.insulator:GetInsulation()
         inst.components.ksfun_power:SaveData(INSULATION_KEY, ins)
         inst.components.ksfun_power:SaveData(INSULATION_TYPE_KEY, t)
-        updateInsulatorStatus(inst)
         KsFunAddTrader(target, acceptTestFunc, onItmeGive)
     end,
     ondesc = getPowerDesc,
@@ -379,7 +374,6 @@ local dapperness = {
     onattach = function(inst, target)
         local equippable = target.components.equippable
         inst.components.ksfun_power:SaveData(DAPPERNESS_KEY, equippable.dapperness)
-        updateDappernessStatus(inst)
     end,
     onstatechange = updateDappernessStatus,
     ondesc = getPowerDesc,
@@ -421,7 +415,6 @@ local waterproofer = {
         -- 眼球伞应该没办法添加防水属性，后面看下怎么加酸雨防护，暂时保留
         local max = math.floor((1 - effect) / 0.01)
         inst.components.ksfun_level:SetMax(max)
-        updateWaterproofStatus(inst)
     end,
     onstatechange = updateWaterproofStatus,
     ondesc = getPowerDesc,
@@ -453,7 +446,6 @@ local speed = {
         local equippable = target.components.equippable
         inst.components.ksfun_power:SaveData(SPEED_KEY, equippable:GetWalkSpeedMult())
         inst.components.ksfun_level:SetMax(speedmax)
-        updateSpeedStatus(inst)
     end,
     onstatechange = updateSpeedStatus,
     ondesc = getPowerDesc,
@@ -488,7 +480,6 @@ local absorb = {
         inst.components.ksfun_power:SaveData(ABSORB_KEY, absorb)
         local max = math.floor(math.max(0.9 - absorb, 0)/0.01 + 0.5)
         inst.components.ksfun_level:SetMax(max)
-        updateAbsorbStatus(inst)
     end,
     onstatechange = updateAbsorbStatus,
     ondesc = getPowerDesc,

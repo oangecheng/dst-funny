@@ -9,54 +9,59 @@ local function MakePower(name, data)
     -- 统一绑定target
     local function onAttachFunc(inst, target, name)
         inst.target = target
-        if data.onattach then 
+        if inst.target and data.onattach then 
             data.onattach(inst, target, name) 
         end
+        -- 首次绑定刷新下状态
+        if data.onstatechange then
+            data.onstatechange(inst)
+        end
+    end
+
+
+    local function onStateChange(inst, lvdelta)
+        if inst.target then
+            inst.components.ksfun_power_system:SyncData()
+            if inst.components.ksfun_level:GetLevel() < 0 then
+                inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
+            else
+                if lvdelta and data.onstatechange then
+                    -- 等级变更时刷新状态
+                    data.onstatechange(inst)
+                    KsFunSayPowerNotice(inst.target, inst.prefab)
+                end
+            end
+        end  
     end
 
 
     -- 统一解绑target
     local function onDetachFunc(inst, target, name)
-        if inst.target == nil then return end
-        local func = data.ondetach  
-        if func then 
-            func(inst, target, name) 
+        if inst.target and data.ondetach then
+            data.ondetach(inst, target, name)
         end
     end
 
 
     local function onGetDescFunc(inst, target, name)
-        if inst.target == nil then return end
-        local func = data.ondesc  
-        local str = func and func(inst, target, name) or "default"
+        local str = "default"
+        if inst.target and data.ondesc then
+            str = data.ondesc(inst, target, name)
+        end
         return str
     end
 
 
-    local function onLvChangeFunc(inst, d)
-        if inst.target == nil then return end
-        local func = data.onstatechange
-        if d.lv < 0 then
-            -- <0 属性失效，移除 
-            inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
-        elseif func then
-            func(inst, d)
-        end             
-    end
-
-
     local function onLoadFunc(inst, d)
-        local func=  data.onload
-        if func then 
-            func(inst, d) 
+        if data.onload then 
+            data.onload(inst, d) 
         end
     end
 
 
     local function onSaveFunc(inst, d)
-        local func = data.onsave
-        if func then 
-            func(inst, d) 
+        if data.onsave then 
+            data.onsave(inst, d) 
         end
     end
 
@@ -67,6 +72,17 @@ local function MakePower(name, data)
         if timer and data.duration then
             timer:StopTimer("ksfun_power_over")
             timer:StartTimer("ksfun_power_over", data.duration)
+        end
+    end
+
+    
+    local function onBreakChange(inst, count, isgod)
+        inst.isgod = isgod
+        if data.onbreak then
+            data.onbreak(inst, count, isgod)
+        end
+        if inst.target then
+            inst.target.components.ksfun_power_system:SyncData()
         end
     end
 
@@ -99,13 +115,7 @@ local function MakePower(name, data)
 
     
         inst:AddComponent("ksfun_level")
-        inst.components.ksfun_level:SetOnLvChangeFunc(onLvChangeFunc)
-        inst:ListenForEvent("ksfun_level_changed", function(p, d)
-            if inst.target then
-                inst.target.components.ksfun_power_system:SyncData()
-            end
-        end)
-
+        inst.components.ksfun_level:SetOnStateChange(onStateChange)
 
         -- 锻造功能，提升属性值
         if data.forgable then
@@ -121,14 +131,7 @@ local function MakePower(name, data)
         if data.onbreak then
             inst:AddComponent("ksfun_breakable")
             inst.components.ksfun_breakable:Enable()
-            inst.components.ksfun_breakable:SetOnStateChange(function(p, count, isgod)
-                if data.onbreak then
-                    data.onbreak(p, count, isgod)
-                end
-                if inst.target then
-                    inst.target.components.ksfun_power_system:SyncData()
-                end
-            end)
+            inst.components.ksfun_breakable:SetOnStateChange(onBreakChange)
         end
 
 
@@ -155,27 +158,15 @@ end
 
 
 local powers = {}
--- 物品
-for k,v in pairs(KSFUN_TUNING.ITEM_POWER_NAMES) do
-    local data = helper.MakeItemPower(v)
-    table.insert( powers, MakePower(v, data))
-end
--- 玩家
-for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
-    local data = helper.MakePlayerPower(v)
-    table.insert( powers, MakePower(v, data))
-end
--- 怪物
-for k,v in pairs(KSFUN_TUNING.MONSTER_POWER_NAMES) do
-    local data = helper.MakeMonsterPower(v)
-    table.insert( powers, MakePower(v, data))
-end
 
--- 负面属性
-for k,v in pairs(KSFUN_TUNING.NEGA_POWER_NAMES) do
-    local data = helper.MakeNegaPower(v)
-    table.insert(powers, MakePower(v, data))
+local powersdef = MergeMaps(
+    require("powers/ksfun_powers_item"),
+    require("powers/ksfun_powers_player"),
+    require("powers/ksfun_powers_mon"),
+    require("powers/ksfun_powers_nega")
+)
+for k,v in pairs(powersdef) do
+    table.insert(powers, MakePower(k, v))
 end
-
 
 return unpack(powers)
