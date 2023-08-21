@@ -9,6 +9,16 @@ local function canBreak(self, doer, item)
 end
 
 
+local function update(self, count)
+    if self.count ~= count  then
+        self.count = count
+        if self.onstatechange then
+            self.onstatechange(self.inst, self.count, self:IsMax())
+        end
+    end
+end
+
+
 local Breakable = Class(function(self, inst)
     self.inst = inst
     self.enable = false
@@ -16,6 +26,7 @@ local Breakable = Class(function(self, inst)
 
     self.onBreakFunc = nil
     self.breaktest = nil
+    self.onstatechange = nil
 end)
 
 
@@ -23,6 +34,13 @@ end)
 ---@param func function inst, doer, item 回调函数
 function Breakable:SetOnBreakFunc(func)
     self.onBreakFunc = func
+end
+
+
+--- 突破成功的回调函数
+---@param func function inst, count, isgod
+function Breakable:SetOnStateChange(func)
+    self.onstatechange = func
 end
 
 
@@ -66,7 +84,7 @@ end
 --- @param item table 用于突破的物品
 function Breakable:Break(doer, item)
     if canBreak(self, doer, item) then
-        self.count = self.count + 1
+        update(self, self.count + 1)
         if self.onBreakFunc then
             self.onBreakFunc(self.inst, doer, item)
         end
@@ -87,7 +105,7 @@ end
 
 function Breakable:OnLoad(data)
     self.enable = data.enable
-    self.count  = data.count or 0
+    update(self, data.count or 0)
 end
 
 

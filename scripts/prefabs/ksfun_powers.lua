@@ -97,14 +97,14 @@ local function MakePower(name, data)
 
         inst.isgod = false
 
-        inst:ListenForEvent("ksfun_level_changed", function(_, _)
+    
+        inst:AddComponent("ksfun_level")
+        inst.components.ksfun_level:SetOnLvChangeFunc(onLvChangeFunc)
+        inst:ListenForEvent("ksfun_level_changed", function(p, d)
             if inst.target then
                 inst.target.components.ksfun_power_system:SyncData()
             end
         end)
-
-        inst:AddComponent("ksfun_level")
-        inst.components.ksfun_level:SetOnLvChangeFunc(onLvChangeFunc)
 
 
         -- 锻造功能，提升属性值
@@ -121,17 +121,10 @@ local function MakePower(name, data)
         if data.onbreak then
             inst:AddComponent("ksfun_breakable")
             inst.components.ksfun_breakable:Enable()
-            inst.components.ksfun_breakable:SetOnBreakFunc(function(p, doer, item)
+            inst.components.ksfun_breakable:SetOnStateChange(function(p, count, isgod)
                 if data.onbreak then
-                    data.onbreak(p, doer, item)
+                    data.onbreak(p, count, isgod)
                 end
-                -- 达到最大值，成神
-                if p.components.ksfun_breakable:IsMax() then
-                    if data.ongod then
-                        data.ongod(p, doer, item)
-                    end
-                end
-
                 if inst.target then
                     inst.target.components.ksfun_power_system:SyncData()
                 end
