@@ -63,7 +63,6 @@ end)
 modimport("main/recipes.lua")
 modimport("main/actions.lua")
 modimport("scripts/mod/ksfun_hook.lua")
-modimport("scripts/powers/ksfun_attack_hook.lua")
 modimport("scripts/widgets/ksfun_containers.lua")
 
 

@@ -23,7 +23,7 @@ end
 
 --- 获取属性的显示名称
 --- 例如攻击增强..
---- @param powername 不带前缀的属性名称
+--- @param powername string 不带前缀的属性名称
 KsFunGetPowerNameStr = function(powername)
     return KsFunGetPrefabName("ksfun_power_"..powername) or ""
 end
