@@ -64,19 +64,20 @@ modimport("main/recipes.lua")
 modimport("main/actions.lua")
 modimport("scripts/mod/ksfun_hook.lua")
 modimport("scripts/widgets/ksfun_containers.lua")
-
+modimport("scripts/widgets/zxui.lua")--UI、容器等
 
 
 
 AddPlayerPostInit(function(inst)
-    TheInput:AddKeyDownHandler(108, function() 
-        if inst.player_panel_showing then
-            inst.player_panel:KsFunHide()
-            inst.player_panel_showing = false
-        else
-            inst.player_panel:KsFunShow()
-            inst.player_panel_showing = true
-        end
+    TheInput:AddKeyDownHandler(108, function()
+        inst:ShowPopUp(POPUPS.KSFUNSCREEN, true)
+        -- if inst.player_panel_showing then
+        --     inst.player_panel:KsFunHide()
+        --     inst.player_panel_showing = false
+        -- else
+        --     inst.player_panel:KsFunShow()
+        --     inst.player_panel_showing = true
+        -- end
     end)
 end)
 
