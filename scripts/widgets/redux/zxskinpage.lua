@@ -8,7 +8,7 @@ local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
 local powers = {
-	["hunger"] = {
+	["player_hunger"] = {
 		lv       = 1,
 		exp      = 100,
 		breakcnt = 2,
@@ -63,7 +63,6 @@ local GridPage = Class(Widget, function(self, parent_widget, owner)
 	-- table.sort(skin_grid_data, function(a,b) return a.index < b.index end)--排序(免得pairs打乱了)
 	self.skin_grid:SetItemsData(datas)
 	self.parent_default_focus = self.skin_grid
-	self:SetSkinNumText()
 end)
 
 local textures = {

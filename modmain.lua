@@ -69,8 +69,13 @@ modimport("scripts/widgets/zxui.lua")--UI、容器等
 
 
 AddPlayerPostInit(function(inst)
-    TheInput:AddKeyDownHandler(108, function()
+    inst:ListenForEvent("oneat", function (inst, data)
         inst:ShowPopUp(POPUPS.KSFUNSCREEN, true)
+        
+    end)
+    TheInput:AddKeyDownHandler(108, function()
+        KsFunLog("AddKeyDownHandler", inst)
+        inst.HUD:ShowKsFunScreen()
         -- if inst.player_panel_showing then
         --     inst.player_panel:KsFunHide()
         --     inst.player_panel_showing = false
