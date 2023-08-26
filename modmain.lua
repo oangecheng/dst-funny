@@ -75,14 +75,14 @@ AddPlayerPostInit(function(inst)
     end)
     TheInput:AddKeyDownHandler(108, function()
         KsFunLog("AddKeyDownHandler", inst)
-        inst.HUD:ShowKsFunScreen()
-        -- if inst.player_panel_showing then
-        --     inst.player_panel:KsFunHide()
-        --     inst.player_panel_showing = false
-        -- else
-        --     inst.player_panel:KsFunShow()
-        --     inst.player_panel_showing = true
-        -- end
+        -- inst.HUD:ShowKsFunScreen()
+        if inst.player_panel_showing then
+            inst.player_panel:KsFunHide()
+            inst.player_panel_showing = false
+        else
+            inst.player_panel:KsFunShow()
+            inst.player_panel_showing = true
+        end
     end)
 end)
 
