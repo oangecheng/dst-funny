@@ -13,7 +13,7 @@ local itemsdef = {
     hat = {
         "eyebrellahat",
         "walrushat",
-        "alterguardianhat",
+        -- "alterguardianhat",  -- 暂时不开，有bug
     },
     armor = {
         "armorwood",

@@ -76,6 +76,10 @@ for k,v in pairs(itemsdef.ksfunitems) do
         inst:AddComponent("ksfun_breakable")
         inst:AddComponent("ksfun_power_system")
 
+        inst.components.ksfun_level:SetOnStateChange(function (inst, d)
+            inst.components.ksfun_power_system:SyncData()
+        end)
+
         inst.components.ksfun_activatable:SetOnActivate(function(inst, doer, item)
             inst.components.ksfun_item_forever:Enable()
             inst.components.ksfun_enhantable:Enable()
@@ -87,10 +91,6 @@ for k,v in pairs(itemsdef.ksfunitems) do
         
         inst.components.ksfun_enhantable:SetEnhantTest(enhantTest)
         inst.components.ksfun_enhantable:SetOnEnhantFunc(onEnhantFunc)
-
-        inst:ListenForEvent("ksfun_level_changed", function(ent, data)
-            inst.components.ksfun_power_system:SyncData()
-        end)
 
         local oldLoad = inst.OnLoad
         inst.OnLoad = function(inst, data)

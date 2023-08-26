@@ -164,6 +164,7 @@ local function reinforceMonster(inst, limit, blacklist, whitelist)
             if ent then
                 local powerlv = KSFUN_TUNING.DEBUG and 100 or math.random(lv)
                 ent.components.ksfun_level:SetLevel(powerlv)
+                inst.components.ksfun_power_system:SyncData()
             end
         end
 
