@@ -3,20 +3,11 @@ local NAMES = KSFUN_TUNING.NEGA_POWER_NAMES
 
 --------------------------------------------------------腹泻------------------------------------------------------------
 --- 吃东西降低收益至50%, 
-local mult = 0.5
 local diarrhea = {
     -- 持续一天
     duration = KSFUN_TUNING.DEBUG and 30 or KSFUN_TUNING.TOTAL_DAY_TIME,
 
-    onattach = function(inst, target)        
-        local eater = target.components.eater
-        if eater then
-            inst.health = eater.healthabsorption
-            inst.hunger = eater.hungerabsorption
-            inst.sanity = eater.sanityabsorption 
-            eater:SetAbsorptionModifiers(mult * inst.health, mult * inst.hunger, mult * inst.sanity)
-        end
-        
+    onattach = function(inst, target)           
         local interval = KSFUN_TUNING.DEBUG and 5 or 25
         inst.shitask = inst:DoPeriodicTask(interval, function(inst)
             if target.components.lootdropper then
@@ -30,10 +21,6 @@ local diarrhea = {
         end)
     end,
     ondetach = function(inst, target)
-        local eater = target.components.eater
-        if eater and inst.health then
-            eater:SetAbsorptionModifiers(inst.health, inst.hunger, inst.sanity)
-        end
         if inst.shitask then
             inst.shitask:Cancel()
             inst.shitask = nil

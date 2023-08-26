@@ -7,7 +7,7 @@ KSFUN_TUNING =  {
     MODE = 1,
 
     DEBUG = false,
-    PRINT_LOG = true,
+    PRINT_LOG = false,
     LOG_TAG = "ksfun_log: ",  
 
     -- 角色属性

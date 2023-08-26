@@ -240,6 +240,47 @@ end)
 
 
 
+AddComponentPostInit("edible", function(self)
+    local oldGetSanity = self.GetSanity
+    local oldGetHunger = self.GetHunger
+    local oldGetHealth = self.GetHealth
+
+    local function isDiarrhea(eater)
+        if eater and eater.components.ksfun_power_system then
+            return eater.components.ksfun_power_system:GetPower(KSFUN_TUNING.NEGA_POWER_NAMES.DIARRHEA) ~= nil
+        end
+    end
+
+    self.GetSanity = function(self, eater)
+        local v = oldGetSanity(self, eater)
+        if v and isDiarrhea(eater) then
+            return v * 0.5
+        else
+            return v
+        end
+    end
+    
+    self.GetHealth = function(self, eater)
+        local v = oldGetHealth(self, eater)
+        if v and isDiarrhea(eater) then
+            return v * 0.5
+        else
+            return v
+        end
+    end
+    
+    self.GetHunger = function(self, eater)
+        local v = oldGetHunger(self, eater)
+        if v and isDiarrhea(eater) then
+            return v * 0.5
+        else
+            return v
+        end
+    end
+end)
+
+
+
 
 
 --- 降智光环hook

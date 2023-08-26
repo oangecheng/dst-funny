@@ -9,7 +9,7 @@ name = ch and "更好玩的饥荒！" or "funny dst"
 -- 作者
 author = "橙子"
 -- 版本
-version = "0.1.2.15"
+version = "0.1.3"
 -- klei官方论坛地址，为空则默认是工坊的地址
 forumthread = ""
 -- modicon 下一篇再介绍怎么创建的
@@ -30,8 +30,8 @@ api_version = 10
 
 -- 描述
 description = ch 
-and "更好玩的饥荒！" ..version
-or "funny dst! " ..version
+and "更好玩的饥荒！" ..version .. "详细介绍可查阅 https://note.youdao.com/s/AJz5E0XB"
+or "funny dst! " ..version .. ""
 
 
 
