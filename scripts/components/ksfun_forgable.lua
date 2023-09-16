@@ -12,7 +12,7 @@ local function forg(self, doer, item)
     for i = 1, count do
         if not ksfunlv:IsMax() then
             left = left - 1
-            ksfunlv:GainExp(exp)
+            ksfunlv:DoExpDelta(exp)
         end
     end
     
