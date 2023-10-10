@@ -27,7 +27,8 @@ local function updateHealthStatus(inst, reset)
     local maxhealth = inst.components.ksfun_power:GetData(HEALTH_KEY) or 100
     if health then
         local percent = health:GetPercent()
-        local max = reset and maxhealth or maxhealth + lv
+        local max = reset and maxhealth or maxhealth * (1 + lv * 0.01)
+        max = math.floor(max + 0.5)
         health:SetMaxHealth(max)
         health:SetPercent(percent)
     end
@@ -148,7 +149,7 @@ local function updateHungerStatus(inst, reset)
 
     if hunger then
         local percent = hunger:GetPercent()
-        hunger.max = reset and maxhunger or maxhunger + lv
+        hunger.max = reset and maxhunger or math.floor(maxhunger * (1 + 0.01 * lv) + 0.5)
         hunger:SetPercent(percent)
     end
     updateHungerExtraStatus(inst, reset)
@@ -253,7 +254,7 @@ local function updateSanityStatus(inst, reset)
 
     if sanity then
         local percent = sanity:GetPercent()
-        sanity.max = reset and maxsanity or maxsanity + lv
+        sanity.max = reset and maxsanity or math.floor(maxsanity * (1 + lv*0.01) + 0.5)
         sanity:SetPercent(percent)
     end
 end
