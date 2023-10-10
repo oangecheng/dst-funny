@@ -55,10 +55,8 @@ KSFUN_PUNISHES = {
 
 
 KSFUN_REWARD_TYPES = {
-    -- 普通物品奖励
+    -- 物品奖励
     ITEM  = 1,
-    POTION = 2,
-    GEM   = 3
 }
 
 

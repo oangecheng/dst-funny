@@ -11,7 +11,7 @@ local function default(killtype, initlv)
 
     -- 任务难度系数
     local function calcDifficulty(lv, num)
-        return num > 1 and lv + 1 or lv
+        return num >= 5 and lv + 1 or lv
     end
     local victim, lv, num = MONSTER.randomTaskMonster(initlv)
     return {
@@ -48,7 +48,12 @@ end
 -- 无伤任务
 local function attackedLimit(initlv)
     local ret = default(KILL_TYPES.ATTACKED_LIMIT, initlv)
-    ret.diffculty = ret.diffculty + 3
+    local lv = ret.data.lv
+    local add = 1
+    if lv > 5 then add = 2
+    elseif lv > 3 then add = 1
+    end
+    ret.diffculty = ret.diffculty + add
     return ret
 end
 
@@ -185,13 +190,13 @@ end
 
 --- 计算钓鱼任务难度
 local function calcFishDifficulty(fishtype, lv, num)
-    local base = lv + (num > 1 and 2 or 1)
+    local base = (num > 1 and 2 or 1)
     if fishtype == FISH_TYPES.TIME_LIMIT then
         return base + 1
     elseif fishtype == FISH_TYPES.POND_LIMIT then
-        return base + 1
+        return base + 2
     elseif fishtype == FISH_TYPES.FISH_LIMIT then
-        return base + 2    
+        return base + 3    
     end
     return base
 end
@@ -254,7 +259,7 @@ local function calcCookNum()
 end
 
 local function calcCookDiffculty(cooktype, lv, num)
-    local base = (lv or 0) + (num > 3 and 2 or 1)
+    local base = lv or 1
     if cooktype == COOK_TYPES.TIME_LIMIT then
         return base + 1
     elseif cooktype == COOK_TYPES.FOOD_LIMIT then
@@ -322,7 +327,7 @@ local function workDemand(workaction)
     local num = workNum(workaction)
     return {
         type = WORKTYPES.NORMAL,
-        diffculty = 3,
+        diffculty = 2,
         data = {
           num = num,
           act = workaction

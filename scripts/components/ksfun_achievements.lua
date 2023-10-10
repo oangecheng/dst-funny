@@ -1,4 +1,4 @@
-local STEP = 512
+local STEP = 256
 
 local function sync(self)
     if self.inst.replica.ksfun_achievements then

@@ -1,7 +1,6 @@
 local NAMES  = KSFUN_TUNING.MONSTER_POWER_NAMES
 local scount = 3
 local mcount = 5
-local lcount = 8
 local hcount = 10
 local maxlv  = 7
 
@@ -106,7 +105,13 @@ end
 --- 获取可以作为任务对象的怪物
 --- @return name名称 lv等级 num数量
 monsters.randomTaskMonster = function(initlv)
-    local lv = initlv or math.random(maxlv)
+    local seed = 5
+    if KSFUN_TUNING.DIFFCULTY > 7 then
+        seed = 7
+    elseif KSFUN_TUNING.DIFFCULTY > 5 then
+        seed = 6
+    end
+    local lv = initlv or math.random(seed)
     lv = math.min(maxlv, lv)
     local list = {}
     for k,v in pairs(monstersdef) do

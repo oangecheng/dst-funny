@@ -13,7 +13,7 @@ local function rewardNomralItem(player, data)
                 special = special..s
             end
 
-            for i=1, v.num do
+            for i = 1, v.num do
                 local ent = SpawnPrefab(v.item)
                 if ent then
                     player.components.inventory:GiveItem(ent, nil, player:GetPosition())
@@ -36,31 +36,12 @@ end
 
 
 
---- 特殊物品奖励
-local function rewardKsFunItem(player, data)
-    local item = data and data.item or nil
-    local ent = SpawnPrefab(item)
-    if ent and item then
-        player.components.inventory:GiveItem(ent, nil, player:GetPosition())
-        local itemname = KsFunGetPrefabName(item)
-        local notice = string.format(STRINGS.KSFUN_TASK_REWARD_ITEM, player.name, itemname, tostring(data.num))
-        KsFunShowNotice(notice)
-    end
-end
-
-
-
 local function onWinFunc(inst, player, task)
     local reward = task and task.reward or nil
     --- 根据奖励的不同进行分发
     if reward then
-        KsFunLog("onTaskWin reward", reward.type)
         if reward.type == KSFUN_REWARD_TYPES.ITEM then 
             rewardNomralItem(player, reward.data)
-        elseif reward.type == KSFUN_REWARD_TYPES.GEM then
-            rewardKsFunItem(player, reward.data)
-        elseif reward.type == KSFUN_REWARD_TYPES.POTION then
-            rewardKsFunItem(player, reward.data)
         end
     end
 end

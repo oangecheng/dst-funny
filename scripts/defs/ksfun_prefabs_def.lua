@@ -67,10 +67,9 @@ local foods = {
     ["moqueca"]       = 2,  -- 海鲜杂烩
     ["surfnturf"]     = 2,  -- 海鲜牛排
     ["waffles"]       = 2,  -- 华夫饼
-
-    ["voltgoatjelly"] = 3,  -- 伏特羊角冻
-    ["bonesoup"]      = 3,  -- 骨头汤
-    ["lobsterdinner"] = 3,  -- 龙虾正餐
+    ["voltgoatjelly"] = 2,  -- 伏特羊角冻
+    ["bonesoup"]      = 2,  -- 骨头汤
+    ["lobsterdinner"] = 2,  -- 龙虾正餐
 }
 
 
@@ -140,39 +139,40 @@ local itemsdef = {
     ["trunk_winter"]        = { lv = 4, rcnt = 2  },     -- 冬日象鼻
     ["steelwool"]           = { lv = 4, rcnt = 2  },     -- 钢丝绒 
     ["walrus_tusk"]         = { lv = 4, rcnt = 2  },     -- 海象牙
-    ["thulecite"]           = { lv = 4, rcnt = 2  },     -- 铥矿 
     ["purplegem"]           = { lv = 4, rcnt = 3  },     -- 紫宝石
     ["fossil_piece"]        = { lv = 4, rcnt = 3  },     -- 化石碎片
     ["gears"]               = { lv = 4, rcnt = 2  },     -- 齿轮
     ["slurtlehat"]          = { lv = 4, rcnt = 2  },     -- 蜗牛头盔
 
 
+    ["thulecite"]           = { lv = 5, rcnt = 2  },     -- 铥矿 
     ["greengem"]            = { lv = 5, rcnt = 2  },     -- 绿宝石
     ["orangegem"]           = { lv = 5, rcnt = 2  },     -- 橙宝石 
     ["yellowgem"]           = { lv = 5, rcnt = 2  },     -- 黄宝石
-    ["greenstaff"]          = { lv = 5, rcnt = 1  },     -- 绿魔杖 
-    ["orangestaff"]         = { lv = 5, rcnt = 1  },     -- 橙魔杖 
-    ["yellowstaff"]         = { lv = 5, rcnt = 1  },     -- 黄魔杖
-    ["orangeamulet"]        = { lv = 5, rcnt = 1  },     -- 橙护符
-    ["yellowamulet"]        = { lv = 5, rcnt = 1  },     -- 黄护符 
-    ["greenamulet"]         = { lv = 5, rcnt = 1  },     -- 绿护符 
-    ["nightsword"]          = { lv = 5, rcnt = 1  },     -- 暗影剑
-    ["armor_sanity"]        = { lv = 5, rcnt = 1  },     -- 暗影甲
+
+
+    ["greenstaff"]          = { lv = 6, rcnt = 1  },     -- 绿魔杖 
+    ["orangestaff"]         = { lv = 6, rcnt = 1  },     -- 橙魔杖 
+    ["yellowstaff"]         = { lv = 6, rcnt = 1  },     -- 黄魔杖
+    ["orangeamulet"]        = { lv = 6, rcnt = 1  },     -- 橙护符
+    ["yellowamulet"]        = { lv = 6, rcnt = 1  },     -- 黄护符 
+    ["greenamulet"]         = { lv = 6, rcnt = 1  },     -- 绿护符 
+    ["nightsword"]          = { lv = 6, rcnt = 1  },     -- 暗影剑
+    ["armor_sanity"]        = { lv = 6, rcnt = 1  },     -- 暗影甲
+
 
  
-    ["eyebrellahat"]        = { lv = 6, rcnt = 1  },     -- 眼球伞
-    ["minotaurhorn"]        = { lv = 6, rcnt = 2  },     -- 犀牛角 
-    ["shroom_skin"]         = { lv = 6, rcnt = 2  },     -- 蛤蟆皮 
-    ["deerclops_eyeball"]   = { lv = 6, rcnt = 2  },     -- 眼球 
-    ["dragon_scales"]       = { lv = 6, rcnt = 2  },     -- 龙蝇皮 
-    ["shadowheart"]         = { lv = 6, rcnt = 2  },     -- 暗影之心 
-    ["ruins_bat"]           = { lv = 6, rcnt = 2  },     -- 铥矿棒
-    ["ruinshat"]            = { lv = 6, rcnt = 2  },     -- 铥矿帽
-    ["armorruins"]          = { lv = 6, rcnt = 2  },     -- 铥矿甲
-    ["hivehat"]             = { lv = 6, rcnt = 1  },     -- 峰王帽 
-    ["townportaltalisman"]  = { lv = 6, rcnt = 10 },     -- 沙之石
-
-
+    ["eyebrellahat"]        = { lv = 7, rcnt = 1  },     -- 眼球伞
+    ["minotaurhorn"]        = { lv = 7, rcnt = 2  },     -- 犀牛角 
+    ["shroom_skin"]         = { lv = 7, rcnt = 2  },     -- 蛤蟆皮 
+    ["deerclops_eyeball"]   = { lv = 7, rcnt = 2  },     -- 眼球 
+    ["dragon_scales"]       = { lv = 7, rcnt = 2  },     -- 龙蝇皮 
+    ["shadowheart"]         = { lv = 7, rcnt = 2  },     -- 暗影之心 
+    ["ruins_bat"]           = { lv = 7, rcnt = 2  },     -- 铥矿棒
+    ["ruinshat"]            = { lv = 7, rcnt = 2  },     -- 铥矿帽
+    ["armorruins"]          = { lv = 7, rcnt = 2  },     -- 铥矿甲
+    ["hivehat"]             = { lv = 7, rcnt = 1  },     -- 峰王帽 
+    ["townportaltalisman"]  = { lv = 7, rcnt = 10 },     -- 沙之石
     ["opalpreciousgem"]     = { lv = 7, rcnt = 1  },     -- 彩虹宝石 
     ["opalstaff"]           = { lv = 7, rcnt = 1  },     -- 月杖 
 }
