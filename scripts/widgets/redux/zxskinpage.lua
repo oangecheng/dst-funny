@@ -7,13 +7,33 @@ local TEMPLATES = require "widgets/redux/templates"
 local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
-local powers = {
-	["player_hunger"] = {
-		lv       = 1,
-		exp      = 100,
-		breakcnt = 2,
-	}
-}
+
+local function AddPowerCards(inst)
+
+	local powers = {}
+
+	if TheWorld.ismastersim then
+		local system = inst.components.ksfun_power_system
+		if system ~= nil then
+			local list = system:GetAllPowers()
+			for k,v in pairs(list) do
+				local l = v.components.ksfun_level
+				local d = v.components.ksfun_power:GetDesc()
+				local bcnt = v.components.ksfun_breakable and v.components.ksfun_breakable:GetCount() or -1
+				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d, bcnt = bcnt}
+			end
+		end
+	
+	else
+		local system = inst.replica.ksfun_power_system
+		if system then
+			powers = system:GetPowers()
+		end
+	end
+
+	return powers
+end
+
 
 
 local GridPage = Class(Widget, function(self, parent_widget, owner)
@@ -34,11 +54,6 @@ local GridPage = Class(Widget, function(self, parent_widget, owner)
 	self.skin_money:SetString("888")
 	self.skin_money:SetColour(UICOLOURS.GOLD)
 
-	--货币图标
-	-- self.money_icon = self.root:AddChild(Image("images/medal_skin_money.xml", "medal_skin_money.tex"))
-	-- self.money_icon:SetSize(18, 18)
-	-- self.money_icon:SetPosition(-390, 243)
-
 	--已解锁皮肤数量(文字)
 	self.skin_num = self.root:AddChild(Text(CODEFONT, 24))
 	self.skin_num:SetPosition(-250, 243)
@@ -47,20 +62,22 @@ local GridPage = Class(Widget, function(self, parent_widget, owner)
 	self.skin_num:SetString("已拥有:2/5")
 	self.skin_num:SetColour(UICOLOURS.GOLD)
 
+	local name = STRINGS.NAMES[string.upper(owner.prefab)]
+
 	--提示文字
 	self.skin_help = self.root:AddChild(Text(CODEFONT, 24))
 	self.skin_help:SetPosition(0, 243)
 	self.skin_help:SetRegionSize( 250, 24 )
 	self.skin_help:SetHAlign( ANCHOR_LEFT)
-	self.skin_help:SetString("提示文字")
+	self.skin_help:SetString(name)
 	self.skin_help:SetColour(UICOLOURS.GOLD)
 
 
 	local datas = {}--皮肤数据
-	for k,v in pairs(powers) do--遍历皮肤数据表
-		table.insert(datas, { name = k, info = v})
+	local p = AddPowerCards(owner)
+	for _, v in pairs(p) do--遍历皮肤数据表
+		table.insert(datas, v)
 	end
-	-- table.sort(skin_grid_data, function(a,b) return a.index < b.index end)--排序(免得pairs打乱了)
 	self.skin_grid:SetItemsData(datas)
 	self.parent_default_focus = self.skin_grid
 end)
@@ -164,8 +181,8 @@ function GridPage:BuildSkinScrollGrid()
 
 			local info = data.info
 			if info then
-				w.powerlv:SetString("当前等级:"..info.lv)
-				w.powerdesc:SetString("属性描述")
+				w.powerlv:SetString("等级:"..tostring(info.lv).." 经验:"..tostring(info.exp))
+				w.powerdesc:SetString("属性描述:"..tostring(info.desc))
 			end
 
 			w.buy_button:SetOnClick(function()
