@@ -8,35 +8,9 @@ local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
 
-local function AddPowerCards(inst)
-
-	local powers = {}
-
-	if TheWorld.ismastersim then
-		local system = inst.components.ksfun_power_system
-		if system ~= nil then
-			local list = system:GetAllPowers()
-			for k,v in pairs(list) do
-				local l = v.components.ksfun_level
-				local d = v.components.ksfun_power:GetDesc()
-				local bcnt = v.components.ksfun_breakable and v.components.ksfun_breakable:GetCount() or -1
-				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d, bcnt = bcnt}
-			end
-		end
-	
-	else
-		local system = inst.replica.ksfun_power_system
-		if system then
-			powers = system:GetPowers()
-		end
-	end
-
-	return powers
-end
 
 
-
-local GridPage = Class(Widget, function(self, parent_widget, owner)
+local GridPage = Class(Widget, function(self, parent_widget, owner, powers)
     Widget._ctor(self, "GridPage")
 
     self.parent_widget = parent_widget
@@ -74,8 +48,7 @@ local GridPage = Class(Widget, function(self, parent_widget, owner)
 
 
 	local datas = {}--皮肤数据
-	local p = AddPowerCards(owner)
-	for _, v in pairs(p) do--遍历皮肤数据表
+	for _, v in pairs(powers) do--遍历皮肤数据表
 		table.insert(datas, v)
 	end
 	self.skin_grid:SetItemsData(datas)
@@ -175,14 +148,12 @@ function GridPage:BuildSkinScrollGrid()
 		w.buy_button:SetPosition(0, -95, 0)
 		
 		--皮肤选项卡展示
-		function w:SetSkinPage()
+		function w:SetSkinPage(name)
 			local data = w.data
 			if not data then return end
-
-			local info = data.info
+			local info = data
 			if info then
 				w.powerlv:SetString("等级:"..tostring(info.lv).." 经验:"..tostring(info.exp))
-				w.powerdesc:SetString("属性描述:"..tostring(info.desc))
 			end
 
 			w.buy_button:SetOnClick(function()
@@ -252,7 +223,7 @@ function GridPage:BuildSkinScrollGrid()
 		end
 
 		widget.data = data
-		widget:SetSkinPage()
+		widget:SetSkinPage(data.name)
 
 		widget.powername:SetString(KsFunGetPowerNameStr(data.name))
 
@@ -261,13 +232,15 @@ function GridPage:BuildSkinScrollGrid()
 		-- 	table.insert( spinner_options, { text= 100, data = i } )
 		-- end
 
+		table.insert(spinner_options, { text = 100, data = 1 } )
+
 		widget.cell_root:SetTextures("images/plantregistry.xml", "plant_entry_active.tex", "plant_entry_focus.tex")
 		widget.skin_seperator:SetTexture("images/plantregistry.xml", "plant_entry_seperator_active.tex")
 		widget.skin_spinner:SetOptions(spinner_options)
-		widget.skin_spinner:SetOnChangedFn(function(spinner_data)
-			-- do nothing
+		widget.skin_spinner:SetOnChangedFn(function(_)
+			widget:SetSkinPage(data.name)
 		end)
-		widget.skin_spinner:SetSelected(data.currentid)
+		widget.skin_spinner:SetSelected(1)
     end
 
     local grid = TEMPLATES.ScrollingGrid(

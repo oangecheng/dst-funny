@@ -9,6 +9,62 @@ local TaskPage = require "widgets/redux/ksfun_task_page"
 
 require("util")
 
+
+
+local function getTargetPowers(inst)
+
+	local powers = nil
+
+	if TheWorld.ismastersim then
+		local system = inst.components.ksfun_power_system
+		if system ~= nil then
+			local list = system:GetAllPowers()
+			for k,v in pairs(list) do
+				local l = v.components.ksfun_level
+				local d = v.components.ksfun_power:GetDesc()
+				local bcnt = v.components.ksfun_breakable and v.components.ksfun_breakable:GetCount() or -1
+				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d, bcnt = bcnt}
+			end
+		end
+	
+	else
+		local system = inst.replica.ksfun_power_system
+		if system then
+			powers = system:GetPowers()
+		end
+	end
+
+	return powers
+end
+
+
+local function getEquipmentsPowers(owner)
+	local list = {}
+	if TheWorld.ismastersim then
+		if owner.components.inventory ~= nil then
+			for k, v in pairs(owner.components.inventory.equipslots) do
+				local p = getTargetPowers(v)
+				if p then
+					list[v.prefab] = p
+				end
+			end
+		end
+	else
+		local inventory = owner.replica.inventory
+		if inventory ~= nil then
+			for k, v in pairs(inventory:GetEquips()) do
+				local p = getTargetPowers(v)
+				if p then
+					list[v.prefab] = p
+				end
+			end
+		end
+	end
+
+	return list
+end
+
+
 -------------------------------------------------------------------------------------------------------
 local MultiTabWidget = Class(Widget, function(self, owner)
     Widget._ctor(self, "MultiTabWidget")
@@ -20,11 +76,19 @@ local MultiTabWidget = Class(Widget, function(self, owner)
 
 	local base_size = .7
 
+
+
 	local button_data = {
 		{text = "任务面板", build_panel_fn = function() return TaskPage(self, owner) end},
-		{text = "人物面板", build_panel_fn = function() return SkinPage(self, owner) end},
-		{text = "装备面板", build_panel_fn = function() return SkinPage(self, owner) end},
+		{text = "人物面板", build_panel_fn = function() return SkinPage(self, owner, getTargetPowers(owner)) end},
 	}
+
+	local list = getEquipmentsPowers(owner)
+	if next(list) ~= nil then
+		for k, v in pairs(list) do
+			table.insert(button_data, {text = KsFunGetPrefabName(k), build_panel_fn = function() return SkinPage(self, owner, v) end})
+		end
+	end
 
 	local function MakeTab(data, index)
         local tab = ImageButton("images/plantregistry.xml", "plant_tab_inactive.tex", nil, nil, nil, "plant_tab_active.tex")
