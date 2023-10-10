@@ -221,7 +221,9 @@ function KSFUN_PLAYER_PANEL:AddTaskCards()
 		local system = self.owner.components.ksfun_task_system
 		local temp = system:GetAllTasks()
 		for k,v in pairs(temp) do
-			tasks[k] = v:GetDesc()
+			if v then
+				tasks[k] = v:GetDesc()
+			end
 		end
 	else
 		local system = self.owner.replica.ksfun_task_system
