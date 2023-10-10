@@ -53,18 +53,6 @@ local function attackedLimit(initlv)
 end
 
 
-local function generateNotKillDemand()
-    local mult = math.random(2)
-    local duration  = mult * KSFUN_TUNING.TOTAL_DAY_TIME
-    local diffculty = math.random(2) + (mult > 1 and 2 or 1)
-    return {
-        type = KILL_TYPES.NOT_KILL,
-        duration = duration,
-        diffculty = diffculty,
-        timereverse = true
-    }
-end
-
 
 local exacttypes = {
     KILL_TYPES.NORMAL,
@@ -82,8 +70,6 @@ local kill = {
             return attackedLimit(initlv)
         elseif type == KILL_TYPES.NORMAL then
             return normal(initlv)
-        elseif type == KILL_TYPES.NOT_KILL then
-            return generateNotKillDemand()
         end
     end
 }

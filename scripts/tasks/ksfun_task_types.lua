@@ -17,7 +17,6 @@ KSFUN_DEMAND_TYPES = {
         NORMAL         = 1,
         TIME_LIMIT     = 2,
         ATTACKED_LIMIT = 3,
-        NOT_KILL       = 4,
     },
 
     PICK = {
@@ -66,11 +65,6 @@ KSFUN_REWARD_TYPES = {
 
 local function getKillTaskDesc(demand)
     local KILL_TYPES = KSFUN_DEMAND_TYPES.KILL
-
-    if demand.type == KILL_TYPES.NOT_KILL then
-        return STRINGS.KSFUN_TASK_KILL_NOT_DESC..string.format(STRINGS.KSFUN_TASK_TIME_LIMIT, tostring(demand.duration))
-    end
-
     -- 先从自定义的名称里面拿，有些怪物的名称是一样的，所以要区分一下
     local victimname = KsFunGetPrefabName(demand.data.victim)
     local num = demand.data.num
