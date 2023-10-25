@@ -8,13 +8,13 @@ local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
 
-local function getTaskData()
+local function getTaskData(owner)
 	local tasks = {}
 	if TheWorld ~= nil then
 		if TheWorld.ismastersim then
-			tasks = TheWorld.components.ksfun_task_publiser:GetTasks()
+			tasks = owner.components.ksfun_task_publisher:GetTasks()
 		else
-			tasks = TheWorld.ksfuntask_panel or {}
+			tasks = owner.ksfuntask_panel or {}
 		end
 	end
 	return tasks
@@ -61,9 +61,11 @@ local GridPage = Class(Widget, function(self, parent_widget, owner)
 
 
 	local datas = {} 
-	local p = getTaskData() -- 任务数据
+	local p = getTaskData(owner) -- 任务数据
 	for k, v in pairs(p) do --遍历皮肤数据表
-		table.insert(datas, { taskid = k, taskdata = v})
+		if v ~= nil then
+			table.insert(datas, { taskid = k, taskdata = v})
+		end
 	end
 	self.skin_grid:SetItemsData(datas)
 	self.parent_default_focus = self.skin_grid
@@ -171,7 +173,7 @@ function GridPage:BuildSkinScrollGrid()
 							text = "接受任务", 
 							cb = function() 
 								TheFrontEnd:PopScreen(popup)
-								TheWorld.ksfun_take_task(root.owner, id)
+								root.owner.ksfun_take_task(root.owner, root.owner, id)
 							end
 						},
 						{

@@ -9,7 +9,7 @@ helper.randomTaskData = function(initlv)
     local name,demand = demandsdef.random(initlv)
     local task = {}
     task.name     = name
-    task.tasklv   = demand.diffculty
+    task.tasklv   = math.max(1, demand.diffculty)
     task.duration = demand.duration
     task.demand   = demand
     return task

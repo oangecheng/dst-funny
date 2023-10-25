@@ -24,8 +24,8 @@ function TaskPublisher:CreateTasks(num)
     self.tasks = {}
     for i = 1, num do
         local task = helper.randomTaskData()
-        if KsFunGetTaskDesc(task) ~= nil then
-            self.task[i] = task
+        if task and KsFunGetTaskDesc(task) ~= nil then
+            self.tasks["task"..tostring(i)] = task
         end
     end
     updateTask(self)
@@ -50,7 +50,7 @@ function TaskPublisher:TakeTask(doer, taskid)
     if system and task then
         local ret = system:AddTask(task.name, task)
         if ret ~= nil then
-            table.remove(self.tasks, taskid)
+            self.tasks[taskid] = nil
             updateTask(self)
             return true
         end

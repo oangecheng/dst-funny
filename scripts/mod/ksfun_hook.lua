@@ -516,13 +516,13 @@ local function taskNet(inst)
     inst.ksfuntaskdata = net_string(inst.GUID, "ksfuntaskdata", "ksfun_itemdirty")
     inst:ListenForEvent("ksfun_itemdirty", function(_)
         local data = inst.ksfuntaskdata:value()
-		inst.ksfuntask_panel = data ~= nil and json.decode(data) or {}
+		inst.ksfuntask_panel = (data ~= nil and data ~= "") and json.decode(data) or {}
 	end)
 
-    inst.ksfun_take_task = function (doer, taskid)
+    inst.ksfun_take_task = function(publisher, doer, taskid)
         if taskid ~= nil and doer ~= nil then
             if TheWorld.ismastersim then
-                inst.components.ksfun_task_publiser:TakeTask(doer, taskid)
+                inst.components.ksfun_task_publisher:TakeTask(doer, taskid)
             else
                 SendModRPCToServer(MOD_RPC.ksfun_rpc.taketask, doer, taskid)
             end
@@ -532,7 +532,7 @@ local function taskNet(inst)
 end
 
 
-AddPrefabPostInit("world", function (inst)
+AddPlayerPostInit(function (inst)
     taskNet(inst)
     inst.ksfuntask_panel = {}
 
@@ -540,15 +540,15 @@ AddPrefabPostInit("world", function (inst)
         return
     end
 
-    inst:AddComponent("ksfun_task_publiser")
-    inst.components.ksfun_task_publiser:SetListener(function (_, tasks)
+    inst:AddComponent("ksfun_task_publisher")
+    inst.components.ksfun_task_publisher:SetListener(function (_, tasks)
         local str = json.encode( tasks or {} )
         if inst.ksfuntaskdata then
             inst.ksfuntaskdata:set(str)
         end
     end)
     
-    inst:ListenForEvent("cycleschanged", function (_)
-        inst.components.ksfun_task_publiser:CreateTasks(20)
+    TheWorld:ListenForEvent("cycleschanged", function (_)
+        inst.components.ksfun_task_publisher:CreateTasks(20)
     end)
 end)
