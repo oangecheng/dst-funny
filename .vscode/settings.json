@@ -72,7 +72,11 @@
         "HEADERFONT",
         "CODEFONT",
         "CONTROL_OPEN_CRAFTING",
-        "CONTROL_OPEN_INVENTORY"
+        "CONTROL_OPEN_INVENTORY",
+        "json",
+        "AddModRPCHandler",
+        "SendModRPCToServer",
+        "MOD_RPC"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",

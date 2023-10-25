@@ -505,3 +505,50 @@ AddPlayerPostInit(function (player)
         hookAttack(data.attacker, inst, data.weapon)
     end)
 end)
+
+
+
+
+
+
+
+local function taskNet(inst)
+    inst.ksfuntaskdata = net_string(inst.GUID, "ksfuntaskdata", "ksfun_itemdirty")
+    inst:ListenForEvent("ksfun_itemdirty", function(_)
+        local data = inst.ksfuntaskdata:value()
+		inst.ksfuntask_panel = data ~= nil and json.decode(data) or {}
+	end)
+
+    inst.ksfun_take_task = function (doer, taskid)
+        if taskid ~= nil and doer ~= nil then
+            if TheWorld.ismastersim then
+                inst.components.ksfun_task_publiser:TakeTask(doer, taskid)
+            else
+                SendModRPCToServer(MOD_RPC.ksfun_rpc.taketask, doer, taskid)
+            end
+        end
+        
+    end
+end
+
+
+AddPrefabPostInit("world", function (inst)
+    taskNet(inst)
+    inst.ksfuntask_panel = {}
+
+    if not TheWorld.ismastersim then
+        return
+    end
+
+    inst:AddComponent("ksfun_task_publiser")
+    inst.components.ksfun_task_publiser:SetListener(function (_, tasks)
+        local str = json.encode( tasks or {} )
+        if inst.ksfuntaskdata then
+            inst.ksfuntaskdata:set(str)
+        end
+    end)
+    
+    inst:ListenForEvent("cycleschanged", function (_)
+        inst.components.ksfun_task_publiser:CreateTasks(20)
+    end)
+end)

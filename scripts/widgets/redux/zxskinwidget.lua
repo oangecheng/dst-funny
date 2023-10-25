@@ -4,6 +4,8 @@ local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 
 local SkinPage = require "widgets/redux/zxskinpage"
+local TaskPage = require "widgets/redux/ksfun_task_page"
+
 
 require("util")
 
@@ -19,7 +21,7 @@ local MultiTabWidget = Class(Widget, function(self, owner)
 	local base_size = .7
 
 	local button_data = {
-		{text = "任务面板", build_panel_fn = function() return SkinPage(self, owner) end},
+		{text = "任务面板", build_panel_fn = function() return TaskPage(self, owner) end},
 		{text = "人物面板", build_panel_fn = function() return SkinPage(self, owner) end},
 		{text = "装备面板", build_panel_fn = function() return SkinPage(self, owner) end},
 	}
