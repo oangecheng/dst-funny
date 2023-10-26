@@ -75,6 +75,44 @@ local foods = {
 
 
 
+--------------------------------------------- 钓鱼任务定义---------------------------------------------------------------------
+-- 鱼类定义
+local taskfishes = {
+    ["oceanfish_small_1_inv"]  = 3,
+    ["oceanfish_small_2_inv"]  = 3,
+    ["oceanfish_small_3_inv"]  = 3,
+    ["oceanfish_small_4_inv"]  = 3,
+    ["oceanfish_small_5_inv"]  = 3,
+    ["oceanfish_small_6_inv"]  = 3,
+    ["oceanfish_small_7_inv"]  = 3,
+    ["oceanfish_small_8_inv"]  = 3,
+    ["oceanfish_small_9_inv"]  = 3,
+
+    ["oceanfish_medium_1_inv"] = 4,
+    ["oceanfish_medium_2_inv"] = 4,
+    ["oceanfish_medium_3_inv"] = 4,
+    ["oceanfish_medium_4_inv"] = 4,
+    ["oceanfish_medium_5_inv"] = 4,
+    ["oceanfish_medium_6_inv"] = 5,
+    ["oceanfish_medium_7_inv"] = 5,
+    ["oceanfish_medium_8_inv"] = 5,
+
+    ["wobster_moonglass"]      = 3,
+    ["wobster_sheller"]        = 3,
+    ["eel"]                    = 2,
+}
+
+-- 池塘定义
+local taskponds = {
+    "pond", 
+    "pond_cave", 
+    "pond_mos", 
+    "oasislake"
+}
+
+
+
+
 --- 突破等级上限物品定义
 local breakitemsdef = {
     ["goldnugget"] = 1,
@@ -190,6 +228,8 @@ local prefabs = {
     pickable     = pickabledefs,
     taskpickable = taskpicklist,
     foods        = foods,
+    fishes       = taskfishes,
+    ponds        = taskponds,
 }
 
 

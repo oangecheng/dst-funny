@@ -103,7 +103,9 @@ local function getTaskMonsterNum(lv)
 end
 
 --- 获取可以作为任务对象的怪物
---- @return name名称 lv等级 num数量
+--- @return string 怪物prefab
+--- @return number 数量
+--- @return number 等级
 monsters.randomTaskMonster = function(initlv)
     local seed = 5
     if KSFUN_TUNING.DIFFCULTY > 7 then

@@ -82,6 +82,6 @@
         "undefined-doc-name",
         "redundant-return-value",
         "deprecated",
-        "trailing-space"
+        "trailing-space",
     ]
 }
