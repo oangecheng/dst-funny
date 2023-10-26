@@ -2,7 +2,6 @@ local ZxSkinPopupScreen = require "screens/zxskinscreen"--皮肤界面
 
 
 AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
-    KsFunLog("AddClassPostConstruct", self.owner)
 	self.ShowKsFunScreen = function(_, holder)
 		self.zxskinscreen = ZxSkinPopupScreen(self.owner)
         self:OpenScreenUnderPause(self.zxskinscreen)

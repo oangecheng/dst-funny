@@ -25,6 +25,7 @@ function TaskPublisher:CreateTasks(num)
     for i = 1, num do
         local task = helper.randomTaskData()
         if task and KsFunGetTaskDesc(task) ~= nil then
+            task.index = i
             self.tasks["task"..tostring(i)] = task
         end
     end
@@ -68,6 +69,7 @@ end
 
 function TaskPublisher:OnLoad(data)
     self.tasks = data.tasks or nil
+    updateTask(self)
 end
 
 

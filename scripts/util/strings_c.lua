@@ -198,10 +198,10 @@ STRINGS.KSFUN_TASK_COOK_DESC  = "制作 %s 份 %s"
 STRINGS.KSFUN_TASK_FISH       = "任意的鱼"
 STRINGS.KSFUN_TASK_FOOD       = "任意料理" 
 
-STRINGS.KSFUN_TASK_TIME_LIMIT = "(限制: %s秒)"
-STRINGS.KSFUN_TASK_NO_HURT    = "(限制: 无伤)"
-STRINGS.KSFUN_TASK_FULL_MOON  = "(限制: 满月)"
-STRINGS.KSFUN_TASK_LIMIT      = "(限制: %s)" 
+STRINGS.KSFUN_TASK_TIME_LIMIT = "\n(限制: %s秒)"
+STRINGS.KSFUN_TASK_NO_HURT    = "\n(限制: 无伤)"
+STRINGS.KSFUN_TASK_FULL_MOON  = "\n(限制: 满月)"
+STRINGS.KSFUN_TASK_LIMIT      = "\n(限制: %s)" 
 
 
 

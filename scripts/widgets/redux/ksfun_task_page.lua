@@ -67,6 +67,7 @@ local GridPage = Class(Widget, function(self, parent_widget, owner)
 			table.insert(datas, { taskid = k, taskdata = v})
 		end
 	end
+	table.sort(datas, function(a,b) return a.taskdata.index < b.taskdata.index end)--排序(免得pairs打乱了)
 	self.skin_grid:SetItemsData(datas)
 	self.parent_default_focus = self.skin_grid
 end)
@@ -125,18 +126,22 @@ function GridPage:BuildSkinScrollGrid()
 		w.taskname:SetPosition(0, 100)
 		w.taskname:SetRegionSize( width_label, height )
 		w.taskname:SetHAlign( ANCHOR_MIDDLE )
+		w.taskname:SetColour(UICOLOURS.GOLD)
 
 		--- 任务难度等级
 		w.tasklv = w.cell_root:AddChild(Text(font, font_size))
 		w.tasklv:SetPosition(0, 50)
 		w.tasklv:SetRegionSize( width_label, height )
 		w.tasklv:SetHAlign( ANCHOR_MIDDLE )
+		w.tasklv:SetColour(UICOLOURS.GOLD)
 
 		--- 任务内容要求
 		w.taskdesc = w.cell_root:AddChild(Text(font, font_size))
 		w.taskdesc:SetPosition(0, 0)
-		w.taskdesc:SetRegionSize( width_label, height )
+		w.taskdesc:SetRegionSize( width_label, height * 3 )
 		w.taskdesc:SetHAlign( ANCHOR_MIDDLE )
+		w.taskdesc:SetColour(UICOLOURS.GOLD)
+
 		
 
 		local lean = true
@@ -162,7 +167,7 @@ function GridPage:BuildSkinScrollGrid()
 
 			if task and id then
 				w.tasklv:SetString("任务等级:"..tostring(task.tasklv))
-				w.taskdesc:SetString("任务要求:"..tostring(KsFunGetTaskDesc(task)))
+				w.taskdesc:SetString("任务要求:\n"..tostring(KsFunGetTaskDesc(task)))
 			end
 
 			w.tasktask_btn:SetOnClick(function()
