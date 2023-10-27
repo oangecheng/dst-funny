@@ -60,7 +60,10 @@ function KsFunTaskGetLimitDesc(taskdata)
         local area = taskdata.extra and taskdata.extra.area
         return base..KsFunGetPrefabName(area)
     end
-    return base..LIMITS_STR[taskdata.limit]
+    if taskdata.limit then
+        return base..LIMITS_STR[taskdata.limit]
+    end
+    return nil
 end
 
 
@@ -92,7 +95,7 @@ function KsFunTaskGetDesc(taskdata)
     if target ~= nil then
         local numstr = KsFunTaskGetTargetNumDesc(taskdata)
         local limitstr = KsFunTaskGetLimitDesc(taskdata)
-        return target.."\n"..numstr.."\n"..limitstr
+        return target.."\n"..tostring(numstr).."\n"..tostring(limitstr)
     end
     return nil
 end
