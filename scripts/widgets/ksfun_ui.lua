@@ -1,19 +1,19 @@
-local ZxSkinPopupScreen = require "screens/zxskinscreen"--皮肤界面
+local ZxSkinPopupScreen = require "screens/ksfun_screen"--皮肤界面
 
 
 AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
 	self.ShowKsFunScreen = function(_, holder)
-		self.zxskinscreen = ZxSkinPopupScreen(self.owner)
-        self:OpenScreenUnderPause(self.zxskinscreen)
-        return self.zxskinscreen
+		self.ksfunscreen = ZxSkinPopupScreen(self.owner)
+        self:OpenScreenUnderPause(self.ksfunscreen)
+        return self.ksfunscreen
 	end
 
     self.CloseKsFunScreen = function(_)
-		if self.zxskinscreen ~= nil then
-            if self.zxskinscreen.inst:IsValid() then
-                TheFrontEnd:PopScreen(self.zxskinscreen)
+		if self.ksfunscreen ~= nil then
+            if self.ksfunscreen.inst:IsValid() then
+                TheFrontEnd:PopScreen(self.ksfunscreen)
             end
-            self.zxskinscreen = nil
+            self.ksfunscreen = nil
         end
 	end
 end)
