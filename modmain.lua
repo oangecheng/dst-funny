@@ -4,7 +4,7 @@ modimport("scripts/util/strings_c.lua")
 
 require("ksfun_tuning")
 require("util/ksfun_functions")
-require("tasks/ksfun_task_types")
+require("tasks/ksfun_task_func")
 
 
 
@@ -19,7 +19,7 @@ KSFUN_TUNING.MODE = mode or 0
 PrefabFiles = {
     "ksfun_tasks",
     "ksfun_powers",
-    "ksfun_task_reel",
+    -- "ksfun_task_reel",
     "ksfun_power_gems",
     "ksfun_potion",
 }

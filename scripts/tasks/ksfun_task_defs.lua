@@ -1,34 +1,83 @@
 local PREFABS= require("defs/ksfun_prefabs_def")
 local NAMES = KSFUN_TASK_NAMES
+local TYPES = NAMES
+local LIMITS = KSFUN_TASK_LIMITS
+
+
+---获取不同的任务类型的限制条件
+---@param type string 任务类型
+---@return table 限制列表
+local function getTypeLimits(type)
+    local limits = { LIMITS.NONE, LIMITS.TIME }
+    if type == TYPES.KILL then
+        table.insert(limits, LIMITS.NO_HURT)
+    elseif type == TYPES.PICK then
+        table.insert(limits, LIMITS.FULL_MOON)
+    elseif type == TYPES.FISH  then
+        table.insert(limits, LIMITS.AREA)
+    end
+    return limits
+end
+
+
+---计算限制类型的难度加成
+---@param limit string 限制条件
+---@param orglv integer 原始的任务等级
+---@return integer 额外等级
+local function getLimitExtLv(limit, orglv)
+    if     limit == LIMITS.TIME then return 1
+    elseif limit == LIMITS.FULL_MOON then return 2
+    elseif limit == LIMITS.AREA then return 1
+    elseif limit == LIMITS.NO_HURT then
+        if orglv > 5 then return 3
+        elseif orglv > 3 then return 2
+        else return 1 end 
+    end
+    return 0
+end
 
 
 
-local TYPES = {
-    KILL = "kill",
-    PICK = "pick",
-    FISH = "fish",
-    COOK = "cook",
-}
+---通用的任务校验函数
+---@param taskdata table
+---@param judgedata table
+local function commonTaskCheck(taskdata, judgedata)
+    --- 先校验目标是否符合要求
+    if taskdata.target ~= nil then
+        if judgedata.target == nil or taskdata.target ~= judgedata.target then
+            return false
+        end
+    end
+
+    --- 校验限制条件
+    local limit = taskdata.limit
+    if limit ~= nil then
+        if limit == LIMITS.FULL_MOON then
+            return TheWorld.state.isfullmoon
+        elseif limit == LIMITS.AREA then
+            return taskdata.extra and taskdata.extra.area and judgedata.area
+                and taskdata.extra.area == judgedata.area
+        end
+    end
+
+    return true
+end
 
 
-local LIMITS = {
-    NONE      = "none", 
-    TIME      = "time",
-    FULL_MOON = "fullmoon",
-    NO_HURT   = "nohurt",
-    AREA      = "area"
-}
-
-
-local LIMITS_LV = {}
-LIMITS_LV[LIMITS.NONE].fn      = function () return 0 end
-LIMITS_LV[LIMITS.TIME].fn      = function () return 1 end
-LIMITS_LV[LIMITS.FULL_MOON].fn = function () return 2 end
-LIMITS_LV[LIMITS.AREA].fn      = function () return 1 end
-LIMITS_LV[LIMITS.NO_HURT].fn   = function (originlv)
-    if originlv > 5 then return 3
-    elseif originlv > 3 then return 2
-    else return 1 end
+---任务是否成功的check
+---@param task table
+---@param taskdata table
+---@param delta number
+local function commonTaskCosume(task, taskdata, delta)
+    if delta > 0 and task and taskdata.num ~= nil and taskdata.num > 0 then
+        taskdata.num = taskdata.num - delta
+        if taskdata.num <= 0 then
+            task:Win()
+        else
+            -- 刷新任务状态
+            task:SyncData()
+        end
+    end
 end
 
 
@@ -42,7 +91,7 @@ end
 local function obtainTask(type, tasklv, target, num, limit, extra)
     local time = 0
     if limit == LIMITS.TIME then
-        local days = (tasklv * 0.5) * TUNING.TOTAL_DAY_TIME
+        time = (tasklv * 0.5) * TUNING.TOTAL_DAY_TIME
     end
     return {
         type   = type,
@@ -57,14 +106,26 @@ end
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 ------------------------------------------------------击杀类型的任务定义-------------------------------------------------------------
 local monsters = require("defs/ksfun_monsters_def")
-local killlimits = { LIMITS.NONE, LIMITS.TIME, LIMITS.NO_HURT }
+
 
 local function obtainKillTask()
+    local killlimits = getTypeLimits(TYPES.KILL)
     local victim, num, lv = monsters.randomTaskMonster()
     local limit = GetRandomItem(killlimits)
-    local tasklv = LIMITS_LV[limit].fn(lv) + lv
+    local tasklv = getLimitExtLv(limit, lv) + lv
     return obtainTask(TYPES.KILL, tasklv,  victim, num, limit, nil)
 end
 
@@ -96,7 +157,7 @@ local function onAttacked(inst, data)
     if task then
         local taskdata = task.components.ksfun_task:GetTaskData()
         -- 被任务目标攻击到，认为任务失败
-        if taskdata.demand.data.victim == data.attacker.prefab then
+        if taskdata.target == data.attacker.prefab then
             task.components.ksfun_task:Lose()
         end
     end
@@ -125,7 +186,6 @@ local killJudge = {
 
 ------------------------------------------------------采集类型的任务定义------------------------------------------------------
 local pickables = PREFABS.taskpickable
-local picklimits = { LIMITS.NONE, LIMITS.TIME, LIMITS.FULL_MOON }
 
 local function calcPickItemsNum()
     return KSFUN_TUNING.DEBUG and 1 or math.random(10) + 10
@@ -133,12 +193,13 @@ end
 
 
 local function obtainPickTask()
+    local picklimits = getTypeLimits(TYPES.PICK)
     ---@diagnostic disable-next-line: undefined-field
     local prefab = GetRandomItem(table.getkeys(pickables))
     local orglv  = pickables[prefab]
     local num    = calcPickItemsNum()
     local limit  = GetRandomItem(picklimits)
-    local tasklv = LIMITS_LV[limit].fn(orglv) + orglv
+    local tasklv = getLimitExtLv(limit, orglv) + orglv
     return obtainTask(TYPES.PICK, tasklv, prefab, num, limit, nil)
 end
 
@@ -182,9 +243,10 @@ local pickJudge = {
 
 
 
+
+------------------------------------------------------钓鱼任务定义------------------------------------------------------
 local fishes = PREFABS.fishes
 local ponds  = PREFABS.ponds
-local fishlimits = { LIMITS.NONE, LIMITS.AREA, LIMITS.TIME } 
 
 --- 计算鱼的数量
 local function calcFishNum()
@@ -193,13 +255,13 @@ end
 
 
 local function obtainFishTask()
-    local seed = math.random(2)
 
     local fish = nil
     local orglv = 1
     local extra = nil
-
+    local fishlimits = getTypeLimits(TYPES.FISH)
     local limit = GetRandomItem(fishlimits)
+
     if limit == LIMITS.AREA  then
         local pond = GetRandomItem(ponds)
         extra = { area = pond }
@@ -211,7 +273,7 @@ local function obtainFishTask()
         end
     end
 
-    local tasklv = orglv + LIMITS_LV[limit].fn()
+    local tasklv = orglv + getLimitExtLv(limit, orglv)
     local num = calcFishNum()
 
     return obtainTask(TYPES.FISH, tasklv, fish, num, limit,  extra)
@@ -219,18 +281,41 @@ end
 
 
 
+local function onFishSuccess(inst, data)
+    local task = inst.components.ksfun_task_system:GetTask(NAMES.FISH)
+    local taskdata = task and task.components.ksfun_task:GetTaskData() or nil
+    if taskdata then
+        local judge = { target = data.fish, area = data.pond }
+        if commonTaskCheck(taskdata, judge) then
+           commonTaskCosume(task, taskdata, 1) 
+        end
+    end
+end
+
+
+local fishJudge = {
+    onattach = function(inst, player)
+        player:ListenForEvent(KSFUN_EVENTS.FISH_SUCCESS, onFishSuccess)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback(KSFUN_EVENTS.FISH_SUCCESS, onFishSuccess)
+    end,
+}
 
 
 
+
+
+
+------------------------------------------------------烹调任务定义------------------------------------------------------
 local foods = PREFABS.foods
-local cooklimits = { LIMITS.NONE, LIMITS.TIME }
-
 
 local function calcFoodNum()
     return KSFUN_TUNING.DEBUG and 1 or math.random(5)
 end
 
 local function obtainCookTask()
+    local cooklimits = getTypeLimits(TYPES.COOK)
     local orglv = 0
     local food = nil
     if math.random() <= 0.5  then
@@ -241,6 +326,88 @@ local function obtainCookTask()
 
     local num = calcFoodNum()
     local limit = GetRandomItem(cooklimits)
-    local tasklv = orglv + LIMITS_LV[limit].fn()
+    local tasklv = orglv + getLimitExtLv(limit, orglv)
     return obtainTask(TYPES.COOK, tasklv, food, num, limit, nil)
 end
+
+
+
+local function onHarvestSelfFood(inst, data)
+    local task   = inst.components.ksfun_task_system:GetTask(NAMES.COOK)
+    local taskdata = task and task.components.ksfun_task:GetTaskData() or nil
+    if taskdata then
+        local judge = { target = data.food }
+        if commonTaskCheck(taskdata, judge) then
+            commonTaskCosume(task, taskdata, 1)
+        end
+    end 
+end
+
+local cookJudge = {
+    onattach = function(inst, player)
+        player:ListenForEvent(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestSelfFood)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback(KSFUN_EVENTS.HARVEST_SELF_FOOD, onHarvestSelfFood)
+    end,
+}
+
+
+
+
+-- local function finishWork(player, data)
+--     KsFunLog("finishWork", data.action, data.target)
+--     local task = player.components.ksfun_task_system:GetTask(KSFUN_TASK_NAMES.WORK)
+--     local demand = task and task.components.ksfun_task:GetDemand()
+--     if  demand then
+--         KsFunLog("finishWork 1", demand.type,  demand.data.act,  data.action.id)
+--         if demand.type == WORKTYPES.NORMAL then
+--             local delta = 0
+--             if demand.data.act == data.action.id then
+--                 KsFunLog("finishWork 2", 2)
+--                 delta = 1
+--             end
+--             demand.data.num = demand.data.num - delta
+--             if demand.data.num < 1 then
+--                 task.components.ksfun_task:Win()
+--             end
+--         end
+--     end
+-- end
+
+-- local work = {
+--     onattach = function(inst, player)
+--         player:ListenForEvent("finishedwork", finishWork)
+        
+--     end,
+--     ondetach = function(inst, player)
+--         player:RemoveEventCallback("finishedwork", finishWork)
+--     end,
+--     ondesc = descFunc
+-- }
+
+
+
+
+
+local tasks = {
+    [NAMES.KILL] = {
+        create = obtainKillTask,
+        judge  = killJudge,
+    },
+    [NAMES.PICK] = {
+        create = obtainPickTask,
+        judge  = pickJudge,
+    },
+    [NAMES.FISH] = {
+        create = obtainFishTask,
+        judge  = fishJudge,
+    },
+    [NAMES.COOK] = {
+        create = obtainCookTask,
+        judge  = cookJudge,
+    }
+}
+
+
+return tasks

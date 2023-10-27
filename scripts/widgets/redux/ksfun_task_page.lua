@@ -138,7 +138,7 @@ function GridPage:BuildSkinScrollGrid()
 		--- 任务内容要求
 		w.taskdesc = w.cell_root:AddChild(Text(font, font_size))
 		w.taskdesc:SetPosition(0, 0)
-		w.taskdesc:SetRegionSize( width_label, height * 3 )
+		w.taskdesc:SetRegionSize( width_label, height * 4 )
 		w.taskdesc:SetHAlign( ANCHOR_MIDDLE )
 		w.taskdesc:SetColour(UICOLOURS.GOLD)
 
@@ -167,7 +167,7 @@ function GridPage:BuildSkinScrollGrid()
 
 			if task and id then
 				w.tasklv:SetString("任务等级:"..tostring(task.tasklv))
-				w.taskdesc:SetString("任务要求:\n"..tostring(KsFunGetTaskDesc(task)))
+				w.taskdesc:SetString("任务内容:\n"..tostring(KsFunTaskGetDesc(task)))
 			end
 
 			w.tasktask_btn:SetOnClick(function()

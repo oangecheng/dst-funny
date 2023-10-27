@@ -325,60 +325,6 @@ end)
 
 
 
----------------------------------------------给猪王金子可以获得任务卷轴-------------------------------------------------
-local taskitemsdef = {
-    ["goldnugget"] = 0,
-    ["redgem"]     = 2,
-    ["bluegem"]    = 2,
-    ["purplegem"]  = 4,
-    ["thulecite"]  = 6,
-}
-
-
---- 给予猪王特定的物品可以获得任务卷轴
---- 金块是随机
-AddPrefabPostInit("pigking", function(inst)
-	if TheWorld.ismastersim then
-        local trader = inst.components.trader
-
-        local oldTest = trader.test
-        trader:SetAcceptTest(function(inst, item, giver)
-            ---@diagnostic disable-next-line: undefined-field
-            if table.containskey(taskitemsdef, item.prefab) then
-                return true
-            end
-            return oldTest and oldTest(inst, item, giver)
-        end)
-        
-		if trader and trader.onaccept then
-			local oldonacceptfn = trader.onaccept
-			trader.onaccept = function(inst, giver, item)
-                local lv = taskitemsdef[item.prefab]
-                if lv then
-                    local initlv = math.min( math.random(2) + lv, 7)
-                    local taskreel = KsFunSpawnTaskReel(initlv)
-                    if taskreel then
-                        inst.sg:GoToState("cointoss")
-                        inst:DoTaskInTime(2 / 3, function(item, giver)
-                            LaunchAt(taskreel, inst, giver, 2, 5)
-                        end)
-                    end
-                end
-				oldonacceptfn(inst,giver,item)
-			end
-		end
-	end
-end)
-
-
-
-
-
-
-
-
-
-
 
 
 

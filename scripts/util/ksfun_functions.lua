@@ -15,8 +15,10 @@ end
 --- 有自定义名称的，修改一下
 --- @param prefab string 物品代码
 KsFunGetPrefabName = function(prefab)
-    local name = STRINGS.KSFUN_NAMES[prefab]
-    return name or STRINGS.NAMES[string.upper(prefab)]
+    if prefab ~= nil then
+        local name = STRINGS.KSFUN_NAMES[prefab]
+        return name or STRINGS.NAMES[string.upper(prefab)]
+    end
 end
 
 
@@ -194,23 +196,6 @@ KsFunSpawnHostileMonster = function(player, monstername, num)
     end
 end
 
-
-
---- 生成任务卷轴
-KsFunSpawnTaskReel = function(initlv)
-    local helper = require("tasks/ksfun_task_helper")
-    local inst   = SpawnPrefab("ksfun_task_reel")
-    if inst then
-        local data  = helper.randomTaskData(initlv)
-        local valid = inst.components.ksfun_task_demand:Bind(data)
-        -- 不合法的数据，将卷轴移除
-        if not valid then
-            inst:DoTaskInTime(0, inst:Remove())
-            return nil
-        end
-    end
-    return inst
-end
 
 
 

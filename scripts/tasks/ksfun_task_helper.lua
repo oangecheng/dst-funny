@@ -1,24 +1,26 @@
 local helper = {}
+local NAMES = KSFUN_TASK_NAMES
+
+
+local taskdefs = require("tasks/ksfun_task_defs")
+local function randomTask()
+    local name = GetRandomItem(NAMES)
+    local task = taskdefs[name]
+    if task ~= nil then
+        task.name = name
+        return task
+    end
+end
 
 
 
---------------------------------------------- 生成任务要求函数定义---------------------------------------------------------------------
-local demandsdef = require("tasks/defs/ksfun_demands_def")
-
-helper.randomTaskData = function(initlv)
-    local name,demand = demandsdef.random(initlv)
-    local task = {}
-    task.name     = name
-    task.tasklv   = math.max(1, demand.diffculty)
-    task.duration = demand.duration
-    task.demand   = demand
-    return task
+helper.randomTaskData = function()
+    return randomTask() or {}
 end
 
 
 
 --------------------------------------------- 生成回调处理---------------------------------------------------------------------
-local taskjudge = require("tasks/ksfun_task_judge")
 local taskwin   = require("tasks/ksfun_task_reward")
 local tasklose  = require("tasks/ksfun_task_punish")
 -- 生成惩罚和奖励数据
@@ -39,11 +41,10 @@ end
 
 
 helper.getTaskHandler = function(taskname)
-    local judge = taskjudge[taskname]
+    local judge = taskdefs[taskname].judge
     return {
         onAttachFunc = judge.onattach,
         onDetachFunc = judge.ondetach,
-        descFunc     = judge.ondesc,
         onWinFunc    = onWinFunc,
         onLoseFunc   = onLoseFunc,
     }

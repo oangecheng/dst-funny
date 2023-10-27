@@ -22,7 +22,7 @@ function TaskDemand:Bind(task)
     if task == nil then return end
     self.demand = task
 
-    local content = KsFunGetTaskDesc(self.demand)
+    local content = nil
     if content ~= nil then
         if self.onBind then
             self.onBind(self.inst, self.demand, content)

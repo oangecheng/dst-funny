@@ -5,6 +5,7 @@ KSFUN_TUNING =  {
     -- 难度配置，0为默认
     DIFFCULTY = 0,
     MODE = 1,
+    IS_CH = true,
 
     DEBUG = true,
     PRINT_LOG = true,

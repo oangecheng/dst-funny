@@ -24,7 +24,7 @@ function TaskPublisher:CreateTasks(num)
     self.tasks = {}
     for i = 1, num do
         local task = helper.randomTaskData()
-        if task and KsFunGetTaskDesc(task) ~= nil then
+        if task and KsFunTaskGetTargetDesc(task) ~= nil then
             task.index = i
             self.tasks["task"..tostring(i)] = task
         end
