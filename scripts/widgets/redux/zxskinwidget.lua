@@ -18,6 +18,7 @@ local function getTargetPowers(inst)
 	if TheWorld.ismastersim then
 		local system = inst.components.ksfun_power_system
 		if system ~= nil then
+			powers = {}
 			local list = system:GetAllPowers()
 			for k,v in pairs(list) do
 				local l = v.components.ksfun_level
@@ -86,7 +87,9 @@ local MultiTabWidget = Class(Widget, function(self, owner)
 	local list = getEquipmentsPowers(owner)
 	if next(list) ~= nil then
 		for k, v in pairs(list) do
-			table.insert(button_data, {text = KsFunGetPrefabName(k), build_panel_fn = function() return SkinPage(self, owner, v) end})
+			if v ~= nil and next(v) ~= nil then
+				table.insert(button_data, {text = KsFunGetPrefabName(k), build_panel_fn = function() return SkinPage(self, owner, v) end})
+			end
 		end
 	end
 

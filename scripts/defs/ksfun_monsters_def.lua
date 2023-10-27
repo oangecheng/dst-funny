@@ -123,7 +123,7 @@ monsters.randomTaskMonster = function(initlv)
     end
     local name = GetRandomItem(list)
     local num  = getTaskMonsterNum(lv)
-    return name, lv, num
+    return name, num, lv
 end
 
 

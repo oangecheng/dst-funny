@@ -82,7 +82,7 @@ end
 
 function KsFunTaskGetTargetNumDesc(taskdata)
     local base = isCh and "剩余数量: " or "Left Count: "
-    return base..tostring(math.max(1, taskdata.num))
+    return base..tostring(math.max(1, taskdata.num or 1))
 end
 
 

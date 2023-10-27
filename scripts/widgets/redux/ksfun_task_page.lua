@@ -17,6 +17,13 @@ local function getTaskData(owner)
 			tasks = owner.ksfuntask_panel or {}
 		end
 	end
+
+	if owner.ksfuntask_panelself then
+		for k, v in pairs(owner.ksfuntask_panelself) do
+			tasks[k] = v
+		end
+	end
+
 	return tasks
 end
 
@@ -170,15 +177,23 @@ function GridPage:BuildSkinScrollGrid()
 				w.taskdesc:SetString("任务内容:\n"..tostring(KsFunTaskGetDesc(task)))
 			end
 
+			local isselftask = task.index == 0
+			w.tasktask_btn:SetText( isselftask and "放弃" or "领取" )
 			w.tasktask_btn:SetOnClick(function()
+
+				local str = isselftask and "放弃任务" or "领取任务"
 				local popup
-				popup = PopupDialogScreen("确认领取任务？", "任务未完成可能会触发随机惩罚",
+				popup = PopupDialogScreen(str, "任务未完成可能会触发随机惩罚",
 					{
 						{   
-							text = "接受任务", 
+							text =  "确认", 
 							cb = function() 
 								TheFrontEnd:PopScreen(popup)
-								root.owner.ksfun_take_task(root.owner, root.owner, id)
+								if isselftask then
+									root.owner.ksfun_giveup_task(root.owner, task.name)
+								else
+									root.owner.ksfun_take_task(root.owner, root.owner, id)
+								end
 							end
 						},
 						{
@@ -246,9 +261,13 @@ function GridPage:BuildSkinScrollGrid()
 		widget.data = data
 		widget:SetSkinPage()
 
-		widget.taskname:SetString("任务"..tostring(data.taskid))
+		local name = KsFunGetPrefabName("ksfun_task_"..data.taskdata.name)
+		if data.taskdata.index == 0 then
+			name = name.."[已领取]"
+		end
+		widget.taskname:SetString(name)
 
-		local spinner_options = {}
+		local spinner_options = { {text = "",  data = data.taskdata} }
 
 		widget.cell_root:SetTextures("images/plantregistry.xml", "plant_entry_active.tex", "plant_entry_focus.tex")
 		widget.task_seperator:SetTexture("images/plantregistry.xml", "plant_entry_seperator_active.tex")

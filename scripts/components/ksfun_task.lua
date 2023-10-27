@@ -46,11 +46,6 @@ function KSFUN_TASK:GetTaskLevel()
 end
 
 
-function KSFUN_TASK:SetTaskData(data)
-    self.task_data = data
-end
-
-
 function KSFUN_TASK:GetDesc()
     if self.name and self.player and self.task_data and self.descFunc then
         return self.descFunc(self.inst, self.player, self.name, self.task_data)

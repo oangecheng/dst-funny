@@ -5,7 +5,7 @@ local NAMES = KSFUN_TASK_NAMES
 local taskdefs = require("tasks/ksfun_task_defs")
 local function randomTask()
     local name = GetRandomItem(NAMES)
-    local task = taskdefs[name]
+    local task = taskdefs[name].create()
     if task ~= nil then
         task.name = name
         return task

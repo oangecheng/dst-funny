@@ -55,6 +55,7 @@ local function commonTaskCheck(taskdata, judgedata)
         if limit == LIMITS.FULL_MOON then
             return TheWorld.state.isfullmoon
         elseif limit == LIMITS.AREA then
+            KsFunLog("commonTaskCheck", taskdata.extra.area, judgedata.area)
             return taskdata.extra and taskdata.extra.area and judgedata.area
                 and taskdata.extra.area == judgedata.area
         end
@@ -73,9 +74,6 @@ local function commonTaskCosume(task, taskdata, delta)
         taskdata.num = taskdata.num - delta
         if taskdata.num <= 0 then
             task:Win()
-        else
-            -- 刷新任务状态
-            task:SyncData()
         end
     end
 end
@@ -93,6 +91,7 @@ local function obtainTask(type, tasklv, target, num, limit, extra)
     if limit == LIMITS.TIME then
         time = (tasklv * 0.5) * TUNING.TOTAL_DAY_TIME
     end
+    KsFunLog("obtainTask", type, target, num)
     return {
         type   = type,
         tasklv = tasklv,
@@ -134,16 +133,15 @@ end
 local function onKillOther(killer, data)
     local victim = data.victim
     local system = killer.components.ksfun_task_system
-    if system then
+    if system and victim then
         local inst = system:GetTask(NAMES.KILL)
         local task = inst and inst.components.ksfun_task or nil
         if task then
+            local judge = { target = victim.prefab }
             local taskdata = task:GetTaskData()
-            if taskdata and taskdata.target == victim.prefab then
-                taskdata.num = taskdata.num - 1
-                if taskdata.num < 1 then
-                    task:Win()
-                end
+            if commonTaskCheck(taskdata, judge) then
+                commonTaskCosume(task, taskdata, 1)
+                -- 刷新任务状态
                 system:SyncData()
             end
         end
@@ -157,6 +155,7 @@ local function onAttacked(inst, data)
     if task then
         local taskdata = task.components.ksfun_task:GetTaskData()
         -- 被任务目标攻击到，认为任务失败
+        KsFunLog("onAttach", taskdata.limit, taskdata.target, data.attacker.prefab)
         if taskdata.target == data.attacker.prefab then
             task.components.ksfun_task:Lose()
         end
@@ -166,6 +165,7 @@ end
 local killJudge = {
     onattach = function (inst, player, data)
         player:ListenForEvent("killed", onKillOther)
+        KsFunLog("onAttach", data.limit, data.target)
         if data and data.limit == LIMITS.NO_HURT then
             player:ListenForEvent("attacked", onAttacked)
         end
@@ -209,22 +209,11 @@ local function onPickSomeThing(inst, data)
     local task   = system:GetTask(NAMES.PICK)
     local taskdata = task and task.components.ksfun_task:GetTaskData() or nil
     if taskdata and data then
-        -- 判定是否是目标
-        if taskdata.target == data.object.prefab then
-            local delta = 0
-            if taskdata.limit == LIMITS.FULL_MOON then
-                if TheWorld.state.isfullmoon then
-                    delta = 1
-                end
-            else
-                delta = 1
-            end
-            taskdata.num = taskdata.num - delta
-            if taskdata.num < 1 then
-                task.components.ksfun_task:Win()
-            end
+       local judge = { target = data.object.prefab }
+       if commonTaskCheck(taskdata, judge) then
+            commonTaskCosume(task.components.ksfun_task, taskdata, 1)
             system:SyncData()
-        end
+       end
     end
 end
 
@@ -285,9 +274,10 @@ local function onFishSuccess(inst, data)
     local task = inst.components.ksfun_task_system:GetTask(NAMES.FISH)
     local taskdata = task and task.components.ksfun_task:GetTaskData() or nil
     if taskdata then
-        local judge = { target = data.fish, area = data.pond }
+        local judge = { target = data.fish, area = data.pond.prefab }
         if commonTaskCheck(taskdata, judge) then
-           commonTaskCosume(task, taskdata, 1) 
+           commonTaskCosume(task.components.ksfun_task, taskdata, 1) 
+           inst.components.ksfun_task_system:SyncData()
         end
     end
 end
@@ -316,7 +306,7 @@ end
 
 local function obtainCookTask()
     local cooklimits = getTypeLimits(TYPES.COOK)
-    local orglv = 0
+    local orglv = 1
     local food = nil
     if math.random() <= 0.5  then
         ---@diagnostic disable-next-line: undefined-field
@@ -338,7 +328,8 @@ local function onHarvestSelfFood(inst, data)
     if taskdata then
         local judge = { target = data.food }
         if commonTaskCheck(taskdata, judge) then
-            commonTaskCosume(task, taskdata, 1)
+            commonTaskCosume(task.components.ksfun_task, taskdata, 1)
+            inst.components.ksfun_task_system:SyncData()
         end
     end 
 end

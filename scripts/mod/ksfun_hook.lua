@@ -460,9 +460,12 @@ end)
 
 local function taskNet(inst)
     inst.ksfuntaskdata = net_string(inst.GUID, "ksfuntaskdata", "ksfun_itemdirty")
+    inst.ksfuntaskself = net_string(inst.GUID, "ksfuntaskself", "ksfun_itemdirty")
     inst:ListenForEvent("ksfun_itemdirty", function(_)
         local data = inst.ksfuntaskdata:value()
 		inst.ksfuntask_panel = (data ~= nil and data ~= "") and json.decode(data) or {}
+        local selfdata = inst.ksfuntaskself:value()
+        inst.ksfuntask_panelself = (selfdata and selfdata ~= "") and json.decode(selfdata) or {}
 	end)
 
     inst.ksfun_take_task = function(publisher, doer, taskid)
@@ -473,12 +476,25 @@ local function taskNet(inst)
                 SendModRPCToServer(MOD_RPC.ksfun_rpc.taketask, doer, taskid)
             end
         end
-        
+    end
+
+    inst.ksfun_giveup_task = function (doer, taskname)
+        if doer and taskname then
+            if TheWorld.ismastersim then
+                local task = inst.components.ksfun_task_system:GetTask(taskname)
+                if task ~= nil then
+                    task.components.ksfun_task:Lose()
+                end
+            else
+                SendModRPCToServer(MOD_RPC.ksfun_rpc.giveuptask, taskname)
+            end
+        end
     end
 end
 
 
 AddPlayerPostInit(function (inst)
+
     taskNet(inst)
     inst.ksfuntask_panel = {}
 
@@ -486,15 +502,34 @@ AddPlayerPostInit(function (inst)
         return
     end
 
-    inst:AddComponent("ksfun_task_publisher")
-    inst.components.ksfun_task_publisher:SetListener(function (_, tasks)
-        local str = json.encode( tasks or {} )
-        if inst.ksfuntaskdata then
-            inst.ksfuntaskdata:set(str)
-        end
-    end)
-    
-    TheWorld:ListenForEvent("cycleschanged", function (_)
-        inst.components.ksfun_task_publisher:CreateTasks(20)
-    end)
+    if inst.components.ksfun_task_system then
+
+        inst:AddComponent("ksfun_task_publisher")
+        inst.components.ksfun_task_publisher:SetListener(function (_, tasks)
+            local str = json.encode( tasks or {} )
+            if inst.ksfuntaskdata then
+                inst.ksfuntaskdata:set(str)
+            end
+        end)
+
+        inst.components.ksfun_task_system:SetOnListener(function (_, tasks)
+            local list = {}
+            if tasks then
+                for k, v in pairs(tasks) do
+                    if v and v.inst then
+                        local d = v.inst.components.ksfun_task:GetTaskData()
+                        d.index = 0
+                        list[k] = d
+                    end
+                end
+            end
+            if inst.ksfuntaskself then
+                inst.ksfuntaskself:set(json.encode(list))
+            end
+        end)
+        
+        TheWorld:ListenForEvent("cycleschanged", function (_)
+            inst.components.ksfun_task_publisher:CreateTasks(20)
+        end)
+    end
 end)

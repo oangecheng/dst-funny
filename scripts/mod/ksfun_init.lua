@@ -47,11 +47,19 @@ local function initPowerSystem(player)
             system:RemovePower(data.name)
         end
     end)
-    
 end
+
+
+
+
+
 
 local function initTaskSystem(player)
     player:AddComponent("ksfun_task_system")
+    player.components.ksfun_task_system:SetOnListener(function (_, tasks)
+        
+    end)
+
     -- 任务结束，从任务列表当中移除
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
@@ -207,3 +215,13 @@ for k,v in pairs(monsters) do
         inst:ListenForEvent("death", onMonsterDeath)
     end)
 end
+
+
+
+
+-- 世界初始化
+AddPrefabPostInit("world", function(inst)
+    inst:AddComponent("ksfun_world_monster")
+    inst:AddComponent("ksfun_world_player")
+    inst:AddComponent("ksfun_world_data")
+end)

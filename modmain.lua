@@ -46,7 +46,6 @@ end
 
 
 AddReplicableComponent("ksfun_power_system")
-AddReplicableComponent("ksfun_task_system")
 AddReplicableComponent("ksfun_level")
 AddReplicableComponent("ksfun_achievements")
 
@@ -57,6 +56,15 @@ AddClassPostConstruct("widgets/controls", function(self, owner)
     owner.player_panel:Hide()
     owner.player_panel_showing = false
 end)
+
+
+
+
+if GLOBAL.TheNet:GetIsServer() then
+    modimport("scripts/mod/ksfun_station.lua")
+    modimport("scripts/mod/ksfun_init.lua")
+    modimport("scripts/mod/ksfun_items_maker.lua")
+end
 
 
 
@@ -72,28 +80,7 @@ modimport("scripts/mod/ksfun_rpc.lua")--UI、容器等
 AddPlayerPostInit(function(inst)
     TheInput:AddKeyDownHandler(108, function()
         inst.HUD:ShowKsFunScreen()
-        -- if inst.player_panel_showing then
-        --     inst.player_panel:KsFunHide()
-        --     inst.player_panel_showing = false
-        -- else
-        --     inst.player_panel:KsFunShow()
-        --     inst.player_panel_showing = true
-        -- end
     end)
 end)
 
 
-
-if GLOBAL.TheNet:GetIsServer() then
-
-    -- 世界初始化
-    AddPrefabPostInit("world", function(inst)
-        inst:AddComponent("ksfun_world_monster")
-        inst:AddComponent("ksfun_world_player")
-        inst:AddComponent("ksfun_world_data")
-    end)
-
-    modimport("scripts/mod/ksfun_station.lua")
-    modimport("scripts/mod/ksfun_init.lua")
-    modimport("scripts/mod/ksfun_items_maker.lua")
-end
