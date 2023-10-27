@@ -3,7 +3,7 @@ local ImageButton = require "widgets/imagebutton"
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 
-local SkinPage = require "widgets/redux/zxskinpage"
+local SkinPage = require "widgets/redux/ksfun_power_page"
 local TaskPage = require "widgets/redux/ksfun_task_page"
 
 

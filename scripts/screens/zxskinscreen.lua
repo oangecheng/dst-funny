@@ -2,7 +2,7 @@ local Screen = require "widgets/screen"
 local Widget = require "widgets/widget"
 local ImageButton = require "widgets/imagebutton"
 local TEMPLATES = require "widgets/redux/templates"
-local MultiTabWidget = require "widgets/redux/zxskinwidget"
+local MultiTabWidget = require "widgets/redux/ksfun_task_widget"
 
 local ZxSkinPopupScreen = Class(Screen, function(self, owner)
     self.owner = owner

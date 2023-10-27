@@ -72,7 +72,7 @@ modimport("main/recipes.lua")
 modimport("main/actions.lua")
 modimport("scripts/mod/ksfun_hook.lua")
 modimport("scripts/widgets/ksfun_containers.lua")
-modimport("scripts/widgets/zxui.lua")--UI、容器等
+modimport("scripts/widgets/ksfun_ui.lua")--UI、容器等
 modimport("scripts/mod/ksfun_rpc.lua")--UI、容器等
 
 

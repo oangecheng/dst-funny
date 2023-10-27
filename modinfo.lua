@@ -9,7 +9,7 @@ name = ch and "更好玩的饥荒！" or "funny dst"
 -- 作者
 author = "橙子"
 -- 版本
-version = "0.1.7"
+version = "0.1.7.1"
 -- klei官方论坛地址，为空则默认是工坊的地址
 forumthread = ""
 -- modicon 下一篇再介绍怎么创建的
