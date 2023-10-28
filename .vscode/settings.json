@@ -76,7 +76,9 @@
         "json",
         "AddModRPCHandler",
         "SendModRPCToServer",
-        "MOD_RPC"
+        "MOD_RPC",
+        "ThePlayer",
+        "SetAutopaused"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",

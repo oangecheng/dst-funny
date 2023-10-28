@@ -28,12 +28,11 @@ local ZxSkinPopupScreen = Class(Screen, function(self, owner)
 
 	self.default_focus = self.zxskin
 
-    -- SetAutopaused(true)
+    SetAutopaused(true)
 end)
 
 function ZxSkinPopupScreen:OnDestroy()
-    -- SetAutopaused(false)
-
+    SetAutopaused(false)
     POPUPS.KSFUNSCREEN:Close(self.owner)
 	ZxSkinPopupScreen._base.OnDestroy(self)
 end

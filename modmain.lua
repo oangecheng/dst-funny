@@ -77,10 +77,16 @@ modimport("scripts/mod/ksfun_rpc.lua")--UI、容器等
 
 
 
-AddPlayerPostInit(function(inst)
-    TheInput:AddKeyDownHandler(108, function()
-        inst.HUD:ShowKsFunScreen()
-    end)
+
+TheInput:AddKeyDownHandler(108, function()
+    if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
+        if ThePlayer.HUD.ksfunscreen ~= nil then
+            ThePlayer.HUD:CloseKsFunScreen()
+        else
+            ThePlayer.HUD:ShowKsFunScreen()
+        end
+    end
 end)
+
 
 
