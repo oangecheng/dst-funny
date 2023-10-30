@@ -54,60 +54,45 @@ local extra = {
 local pickabledefs = MergeMaps(taskpicklist, extra)
 
 
---- 食物定义
-local foods = {
-    ["turkeydinner"]  = 1,  -- 火鸡正餐
-    ["unagi"]         = 1,  -- 鳗鱼料理
-    ["flowersalad"]   = 1,  -- 花沙拉
-    ["honeyham"]      = 1,  -- 蜜汁火腿
-    ["fishsticks"]    = 1,  -- 炸鱼排
 
-    ["jellybean"]     = 2,  -- 糖豆
-    ["lobsterbisque"] = 2,  -- 龙虾汤
-    ["moqueca"]       = 2,  -- 海鲜杂烩
-    ["surfnturf"]     = 2,  -- 海鲜牛排
-    ["waffles"]       = 2,  -- 华夫饼
-    ["voltgoatjelly"] = 2,  -- 伏特羊角冻
-    ["bonesoup"]      = 2,  -- 骨头汤
-    ["lobsterdinner"] = 2,  -- 龙虾正餐
-}
+--------------------------------------------- 烹调任务定义 -------------------------------------
+local foodsdef = require("preparedfoods")
+--- 食物定义
+local foods = {}
+for k, v in pairs(foodsdef) do
+    foods[v.name] = 2 
+end
+--- 原材料难得的难度高一点
+foods["jellybean"]     = 3  -- 糖豆
+foods["lobsterbisque"] = 3  -- 龙虾汤
+foods["waffles"]       = 3  -- 华夫饼
+foods["lobsterdinner"] = 3  -- 龙虾正餐
+
 
 
 
 
 --------------------------------------------- 钓鱼任务定义---------------------------------------------------------------------
+local oceanfishes = require("prefabs/oceanfishdef")
 -- 鱼类定义
 local taskfishes = {
-    ["oceanfish_small_1_inv"]  = 3,
-    ["oceanfish_small_2_inv"]  = 3,
-    ["oceanfish_small_3_inv"]  = 3,
-    ["oceanfish_small_4_inv"]  = 3,
-    ["oceanfish_small_5_inv"]  = 3,
-    ["oceanfish_small_6_inv"]  = 3,
-    ["oceanfish_small_7_inv"]  = 3,
-    ["oceanfish_small_8_inv"]  = 3,
-    ["oceanfish_small_9_inv"]  = 3,
-
-    ["oceanfish_medium_1_inv"] = 4,
-    ["oceanfish_medium_2_inv"] = 4,
-    ["oceanfish_medium_3_inv"] = 4,
-    ["oceanfish_medium_4_inv"] = 4,
-    ["oceanfish_medium_5_inv"] = 4,
-    ["oceanfish_medium_6_inv"] = 5,
-    ["oceanfish_medium_7_inv"] = 5,
-    ["oceanfish_medium_8_inv"] = 5,
-
     ["wobster_moonglass"]      = 3,
     ["wobster_sheller"]        = 3,
     ["eel"]                    = 2,
 }
 
+--- 任意一种海鱼的难度都是4
+for k, v in pairs(oceanfishes.fish) do
+    taskfishes[k] = 4
+end
+
+
 -- 池塘定义
 local taskponds = {
-    "pond", 
-    "pond_cave", 
-    "pond_mos", 
-    "oasislake"
+    ["pond"] = 1, 
+    ["pond_cave"] = 1, 
+    ["pond_mos"] = 1, 
+    ["oasislake"] = 2,
 }
 
 

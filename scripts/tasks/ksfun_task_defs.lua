@@ -239,12 +239,11 @@ local ponds  = PREFABS.ponds
 
 --- 计算鱼的数量
 local function calcFishNum()
-    return KSFUN_TUNING.DEBUG and 1 or math.random(3)
+    return 1
 end
 
 
 local function obtainFishTask()
-
     local fish = nil
     local orglv = 1
     local extra = nil
@@ -252,14 +251,11 @@ local function obtainFishTask()
     local limit = GetRandomItem(fishlimits)
 
     if limit == LIMITS.AREA  then
-        local pond = GetRandomItem(ponds)
+        local pond, lv = GetRandomItemWithIndex(ponds)
+        orglv = lv
         extra = { area = pond }
-    else
-        if math.random() <= 0.5 then
-            ---@diagnostic disable-next-line: undefined-field
-            fish = GetRandomItem(table.getkeys(fishes))
-            orglv = fishes[fish]
-        end
+    elseif math.random() <= 0.5 then
+        fish, orglv = GetRandomItemWithIndex(fishes)
     end
 
     local tasklv = orglv + getLimitExtLv(limit, orglv)
@@ -301,7 +297,7 @@ local fishJudge = {
 local foods = PREFABS.foods
 
 local function calcFoodNum()
-    return KSFUN_TUNING.DEBUG and 1 or math.random(5)
+    return 1
 end
 
 local function obtainCookTask()
@@ -309,8 +305,7 @@ local function obtainCookTask()
     local orglv = 1
     local food = nil
     if math.random() <= 0.5  then
-        ---@diagnostic disable-next-line: undefined-field
-        food = GetRandomItem(table.getkeys(foods))
+        food, orglv = GetRandomItemWithIndex(foods)
         orglv = foods[food]
     end
 
