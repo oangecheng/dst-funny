@@ -52,7 +52,7 @@ local TIME_STR = isCh and "%s 秒内完成" or "complete in %s s"
 
 
 
-function KsFunTaskGetLimitDesc(taskdata)
+local function KsFunTaskGetLimitDesc(taskdata)
     local base = isCh and "限制: " or "Limit: "
     if taskdata.limit == LIMITS.TIME then
         return base..string.format(TIME_STR, taskdata.duration)
@@ -68,7 +68,7 @@ end
 
 
 
-function KsFunTaskGetTargetDesc(taskdata)
+local function KsFunTaskGetTargetDesc(taskdata)
     local base = isCh and "目标: " or "Targe: "
     local target = taskdata.target
     if target == nil then
@@ -83,7 +83,7 @@ end
 
 
 
-function KsFunTaskGetTargetNumDesc(taskdata)
+local function KsFunTaskGetTargetNumDesc(taskdata)
     local base = isCh and "剩余数量: " or "Left Count: "
     return base..tostring(math.max(1, taskdata.num or 1))
 end
