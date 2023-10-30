@@ -21,23 +21,7 @@ end
 
 
 --------------------------------------------- 生成回调处理---------------------------------------------------------------------
-local taskwin   = require("tasks/ksfun_task_reward")
-local tasklose  = require("tasks/ksfun_task_punish")
--- 生成惩罚和奖励数据
-local rewards   = require("tasks/defs/ksfun_rewards_def")
-local punishes  = require("tasks/defs/ksfun_punishes_def")
-
-
-local function onWinFunc(inst, player, taskdata)
-    taskdata.reward = rewards.random(player, taskdata.tasklv)
-    taskwin.onWinFunc(inst, player, taskdata)
-end
-
-
-local function onLoseFunc(inst, player, taskdata)
-    taskdata.punish = punishes.random(player, taskdata.tasklv)
-    tasklose.onLoseFunc(inst, player, taskdata)
-end
+local taskfinish   = require("tasks/ksfun_task_finish")
 
 
 helper.getTaskHandler = function(taskname)
@@ -45,8 +29,8 @@ helper.getTaskHandler = function(taskname)
     return {
         onAttachFunc = judge.onattach,
         onDetachFunc = judge.ondetach,
-        onWinFunc    = onWinFunc,
-        onLoseFunc   = onLoseFunc,
+        onWinFunc    = taskfinish.win,
+        onLoseFunc   = taskfinish.lose,
     }
 end
 

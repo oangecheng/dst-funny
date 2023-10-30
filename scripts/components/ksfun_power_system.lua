@@ -25,12 +25,13 @@ end)
 
 
 function KSFUN_POWERS:GetPower(name)
-    local power = self.powers[name]
-    if power then
-        return power.inst
-    else
-        return nil
-    end
+    if name ~= nil then
+        local power = self.powers[name]
+        if power then
+            return power.inst
+        end
+    end  
+    return nil
 end
 
 
