@@ -68,7 +68,7 @@ end
 
 
 
-local function KsFunTaskGetTargetDesc(taskdata)
+function KsFunTaskGetTargetDesc(taskdata)
     local base = isCh and "目标: " or "Targe: "
     local target = taskdata.target
     if target == nil then

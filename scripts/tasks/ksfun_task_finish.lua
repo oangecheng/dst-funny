@@ -111,7 +111,7 @@ end
 --- 随机生成一些物品
 --- 任务等级越高，奖励越丰富，同时附加幸运值策略
 --- @param tasklv number 任务难度等级
---- @return 名称，等级，数量，类型
+--- @return table 名称，等级，数量，类型
 local function randomNormalItem(player, tasklv)
     local itemlv = calcRewardNormalLv(player, tasklv)
     itemlv = math.min(maxitemlv, itemlv)
@@ -147,7 +147,6 @@ local function giveReward(player, data)
         for i,v in ipairs(data) do
             local s = KsFunGetPrefabName(v.item).."x"..v.num
             saystr = saystr..s
-
             if v.special then
                 special = special..s
             end
@@ -179,7 +178,7 @@ local function onTaskWinFunc(inst, player, taskdata)
     if taskdata ~= nil then
         local reward = randomNormalItem(player, taskdata.tasklv)
         if reward ~= nil then
-            giveReward(player, reward)
+            giveReward(player, reward.data)
         end
     end
 end

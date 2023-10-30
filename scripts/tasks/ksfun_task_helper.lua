@@ -4,7 +4,7 @@ local NAMES = KSFUN_TASK_NAMES
 
 local taskdefs = require("tasks/ksfun_task_defs")
 local randoms = {}
-for _, v in ipairs(NAMES) do
+for k, v in pairs(NAMES) do
     if v ~= NAMES.KILL then
         table.insert(randoms, v)
     end
