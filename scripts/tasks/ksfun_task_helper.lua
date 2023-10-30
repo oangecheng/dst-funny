@@ -3,8 +3,17 @@ local NAMES = KSFUN_TASK_NAMES
 
 
 local taskdefs = require("tasks/ksfun_task_defs")
+local randoms = {}
+for _, v in ipairs(NAMES) do
+    if v ~= NAMES.KILL then
+        table.insert(randoms, v)
+    end
+end
+
+---随机生成一个任务，击杀任务占比为50%
+---@return table|nil 任务数据
 local function randomTask()
-    local name = GetRandomItem(NAMES)
+    local name = math.random() <= 0.5 and NAMES.KILL or GetRandomItem(randoms)
     local task = taskdefs[name].create()
     if task ~= nil then
         task.name = name
