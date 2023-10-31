@@ -103,6 +103,7 @@ local taskrocks = {
     ["rock2"] = 1,
     ["rock_ice"] = 1,
     ["rock_moon"] = 2,
+    ["saltstack"] = 3,
 }
 
 
