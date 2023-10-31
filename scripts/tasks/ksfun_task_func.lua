@@ -9,7 +9,7 @@ KSFUN_TASK_NAMES = {
     COOK = "cook",
     MINE = "mine",
     CHOP = "chop",
-    DIG  = "dig" ,
+    -- DIG  = "dig" ,
 }
 
 
@@ -18,7 +18,7 @@ KSFUN_TASK_LIMITS = {
     TIME      = "time",
     FULL_MOON = "fullmoon",
     NO_HURT   = "nohurt",
-    AREA      = "area"
+    AREA      = "area",
 }
 
 
@@ -72,15 +72,15 @@ end
 
 function KsFunTaskGetTargetDesc(taskdata)
     local base = isCh and "目标: " or "Targe: "
-    local target = taskdata.target
-    if target == nil then
+
+    if taskdata.target ~= nil then
+        local str = KsFunGetPrefabName(taskdata.target)
+        return str and base..str or nil
+    elseif taskdata.tag ~= nil then
+        return base..STRINGS.KSFUN_TAGS[taskdata.tag]
+    else
         return base..(isCh and "任意" or "Any")
     end
-    local str = KsFunGetPrefabName(target)
-    if str ~= nil  then
-        return base..str
-    end
-    return nil
 end
 
 

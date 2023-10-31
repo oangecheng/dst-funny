@@ -49,15 +49,26 @@ local function commonTaskCheck(taskdata, judgedata)
         end
     end
 
+    --- 通过tag判定
+    local inst = judgedata.inst
+    if taskdata.tag ~= nil then
+        if inst == nil or inst:HasTag("burnt") then
+            return false
+        end
+        if not inst:HasTag(taskdata.tag) then
+            return false
+        end
+    end
+
     --- 校验限制条件
     local limit = taskdata.limit
+    local extra = taskdata.extra
+
     if limit ~= nil then
         if limit == LIMITS.FULL_MOON then
             return TheWorld.state.isfullmoon
         elseif limit == LIMITS.AREA then
-            KsFunLog("commonTaskCheck", taskdata.extra.area, judgedata.area)
-            return taskdata.extra and taskdata.extra.area and judgedata.area
-                and taskdata.extra.area == judgedata.area
+            return extra and extra.area == judgedata.area
         end
     end
 
@@ -96,6 +107,32 @@ local function obtainTask(type, tasklv, target, num, limit, extra)
         type   = type,
         tasklv = tasklv,
         target = target,
+        duration = time,
+        num    = num,
+        limit  = limit,
+        extra  = extra,
+    }
+end
+
+
+
+--- 生成一条全新的任务数据，使用tag作为判定
+--- @param type string
+--- @param tasklv number
+--- @param tag string
+--- @param num number
+--- @param limit string
+--- @param extra any
+local function obtainTagTask(type, tasklv, tag, num, limit, extra)
+    local time = 0
+    if limit == LIMITS.TIME then
+        time = (tasklv * 0.5) * TUNING.TOTAL_DAY_TIME
+    end
+    KsFunLog("obtainTagTask", type, tag, num)
+    return {
+        type   = type,
+        tasklv = tasklv,
+        tag = tag,
         duration = time,
         num    = num,
         limit  = limit,
@@ -351,7 +388,7 @@ local function onWorkTaskFinsh(player, data, actid)
         local task = player.components.ksfun_task_system:GetTask(TYPES.MINE)
         local taskdata = task and task.components.ksfun_task:GetTaskData()
         if taskdata ~= nil then
-            local judge = { target = data.target.prefab }
+            local judge = { target = data.target.prefab, inst = data.target }
             if commonTaskCheck(taskdata, judge) then
                 commonTaskCosume(task, taskdata, 1)
                 player.components.ksfun_task_system:SyncData()
@@ -396,7 +433,33 @@ local mineJudge = {
 
 
 ------------------------------------------------------砍树任务定义------------------------------------------------------
+local treetags = PREFABS.treetags
 
+local function calcChopNum()
+    return math.random(5, 10)
+end
+
+local function obtainChopTask()
+    local tag, orglv = GetRandomItemWithIndex(treetags)
+    local limit = getTypeLimits(TYPES.CHOP)
+    local num = calcChopNum()
+    local tasklv = getLimitExtLv(limit, orglv)
+    return obtainTagTask(TYPES.CHOP, tasklv, tag, num, limit)
+end
+
+local function onChopFinish(inst, data)
+    onWorkTaskFinsh(inst, data, ACTIONS.CHOP.id)
+end
+
+
+local chopJudge = {
+    onattach = function(inst, player)
+        player:ListenForEvent("finishedwork", onChopFinish)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback("finishedwork", onChopFinish)
+    end,
+}
 
 
 
@@ -422,6 +485,10 @@ local tasks = {
     [NAMES.MINE] = {
         create = obtainMineTask,
         judge  = mineJudge,
+    },
+    [NAMES.CHOP] = {
+        create = obtainChopTask,
+        judge  = chopJudge,
     }
 }
 

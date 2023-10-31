@@ -24,6 +24,14 @@ STRINGS.KSFUN_NAMES = {
 
 
 
+STRINGS.KSFUN_TAGS = {
+    ["tree"] = "任意的树木",
+    ["deciduoustree"] = "任意常青树",
+    ["evergreens"] = "任意桦树",
+}
+
+
+
 
 
 -------------------------------------------------------------------------- 物品相关字符串----------------------------------------------------------------------------------
@@ -179,7 +187,8 @@ STRINGS.NAMES.KSFUN_TASK_KILL = "击杀任务"
 STRINGS.NAMES.KSFUN_TASK_PICK = "采集任务"
 STRINGS.NAMES.KSFUN_TASK_FISH = "钓鱼任务"
 STRINGS.NAMES.KSFUN_TASK_COOK = "烹调任务"
-STRINGS.NAMES.KSFUN_TASK_WORK = "工作任务"
+STRINGS.NAMES.KSFUN_TASK_MINE = "挖矿任务"
+STRINGS.NAMES.KSFUN_TASK_CHOP = "伐木任务"
 
 
 STRINGS.KSFUN_TASK_WIN        = "任务成功"

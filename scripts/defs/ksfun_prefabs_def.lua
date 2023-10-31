@@ -107,6 +107,15 @@ local taskrocks = {
 
 
 
+--- 树木tag定义
+local tasktreetags = {
+    ["tree"] = 1,
+    ["deciduoustree"] = 2,
+    ["evergreens"] = 2,
+}
+
+
+
 
 --- 突破等级上限物品定义
 local breakitemsdef = {
@@ -226,6 +235,7 @@ local prefabs = {
     fishes       = taskfishes,
     ponds        = taskponds,
     rocks        = taskrocks,
+    treetags     = tasktreetags,
 }
 
 
