@@ -7,7 +7,9 @@ KSFUN_TASK_NAMES = {
     PICK = "pick",
     FISH = "fish",
     COOK = "cook",
-    -- WORK = "work",
+    MINE = "mine",
+    CHOP = "chop",
+    DIG  = "dig" ,
 }
 
 

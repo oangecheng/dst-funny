@@ -97,6 +97,16 @@ local taskponds = {
 
 
 
+--- 矿石定义
+local taskrocks = {
+    ["rock1"] = 1,
+    ["rock2"] = 1,
+    ["rock_ice"] = 1,
+    ["rock_moon"] = 2,
+}
+
+
+
 
 --- 突破等级上限物品定义
 local breakitemsdef = {
@@ -215,6 +225,7 @@ local prefabs = {
     foods        = foods,
     fishes       = taskfishes,
     ponds        = taskponds,
+    rocks        = taskrocks,
 }
 
 

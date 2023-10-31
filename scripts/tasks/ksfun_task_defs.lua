@@ -5,8 +5,8 @@ local LIMITS = KSFUN_TASK_LIMITS
 
 
 ---获取不同的任务类型的限制条件
----@param type string 任务类型
----@return table 限制列表
+---@param type string|nil 任务类型
+---@return string 限制列表
 local function getTypeLimits(type)
     local limits = { LIMITS.NONE, LIMITS.TIME }
     if type == TYPES.KILL then
@@ -16,7 +16,7 @@ local function getTypeLimits(type)
     elseif type == TYPES.FISH  then
         table.insert(limits, LIMITS.AREA)
     end
-    return limits
+    return GetRandomItem(limits)
 end
 
 
@@ -73,7 +73,7 @@ local function commonTaskCosume(task, taskdata, delta)
     if delta > 0 and task and taskdata.num ~= nil and taskdata.num > 0 then
         taskdata.num = taskdata.num - delta
         if taskdata.num <= 0 then
-            task:Win()
+            task.components.ksfun_task:Win()
         end
     end
 end
@@ -121,9 +121,8 @@ local monsters = require("defs/ksfun_monsters_def")
 
 
 local function obtainKillTask()
-    local killlimits = getTypeLimits(TYPES.KILL)
+    local limit = getTypeLimits(TYPES.KILL)
     local victim, num, lv = monsters.randomTaskMonster()
-    local limit = GetRandomItem(killlimits)
     local tasklv = getLimitExtLv(limit, lv) + lv
     return obtainTask(TYPES.KILL, tasklv,  victim, num, limit, nil)
 end
@@ -140,7 +139,7 @@ local function onKillOther(killer, data)
             local judge = { target = victim.prefab }
             local taskdata = task:GetTaskData()
             if commonTaskCheck(taskdata, judge) then
-                commonTaskCosume(task, taskdata, 1)
+                commonTaskCosume(inst, taskdata, 1)
                 -- 刷新任务状态
                 system:SyncData()
             end
@@ -193,12 +192,11 @@ end
 
 
 local function obtainPickTask()
-    local picklimits = getTypeLimits(TYPES.PICK)
+    local limit = getTypeLimits(TYPES.PICK)
     ---@diagnostic disable-next-line: undefined-field
     local prefab = GetRandomItem(table.getkeys(pickables))
     local orglv  = pickables[prefab]
     local num    = calcPickItemsNum()
-    local limit  = GetRandomItem(picklimits)
     local tasklv = getLimitExtLv(limit, orglv) + orglv
     return obtainTask(TYPES.PICK, tasklv, prefab, num, limit, nil)
 end
@@ -211,7 +209,7 @@ local function onPickSomeThing(inst, data)
     if taskdata and data then
        local judge = { target = data.object.prefab }
        if commonTaskCheck(taskdata, judge) then
-            commonTaskCosume(task.components.ksfun_task, taskdata, 1)
+            commonTaskCosume(task, taskdata, 1)
             system:SyncData()
        end
     end
@@ -249,8 +247,7 @@ local function obtainFishTask()
     local fish = nil
     local orglv = 1
     local extra = nil
-    local fishlimits = getTypeLimits(TYPES.FISH)
-    local limit = GetRandomItem(fishlimits)
+    local limit = getTypeLimits(TYPES.FISH)
 
     if limit == LIMITS.AREA  then
         local pond, lv = GetRandomItemWithIndex(ponds)
@@ -274,7 +271,7 @@ local function onFishSuccess(inst, data)
     if taskdata then
         local judge = { target = data.fish, area = data.pond.prefab }
         if commonTaskCheck(taskdata, judge) then
-           commonTaskCosume(task.components.ksfun_task, taskdata, 1) 
+           commonTaskCosume(task, taskdata, 1) 
            inst.components.ksfun_task_system:SyncData()
         end
     end
@@ -306,7 +303,7 @@ local function calcFoodNum(food)
 end
 
 local function obtainCookTask()
-    local cooklimits = getTypeLimits(TYPES.COOK)
+    local limit = getTypeLimits(TYPES.COOK)
     local orglv = 1
     local food = nil
     if math.random() <= 0.5  then
@@ -314,7 +311,6 @@ local function obtainCookTask()
         orglv = foods[food]
     end
 
-    local limit = GetRandomItem(cooklimits)
     local tasklv = orglv + getLimitExtLv(limit, orglv)
     local num = calcFoodNum(food)
     return obtainTask(TYPES.COOK, tasklv, food, num, limit, nil)
@@ -328,7 +324,7 @@ local function onHarvestSelfFood(inst, data)
     if taskdata then
         local judge = { target = data.food }
         if commonTaskCheck(taskdata, judge) then
-            commonTaskCosume(task.components.ksfun_task, taskdata, 1)
+            commonTaskCosume(task, taskdata, 1)
             inst.components.ksfun_task_system:SyncData()
         end
     end 
@@ -346,39 +342,61 @@ local cookJudge = {
 
 
 
+---通用工作类型的任务判定
+---@param player any 玩家
+---@param data any work的数据 { target = self.inst, action = self.action }
+---@param actid any string
+local function onWorkTaskFinsh(player, data, actid)
+    if data and data.action.id == actid then
+        local task = player.components.ksfun_task_system:GetTask(TYPES.MINE)
+        local taskdata = task and task.components.ksfun_task:GetTaskData()
+        if taskdata ~= nil then
+            local judge = { target = data.target.prefab }
+            if commonTaskCheck(taskdata, judge) then
+                commonTaskCosume(task, taskdata, 1)
+                player.components.ksfun_task_system:SyncData()
+            end
+        end
+    end 
+end
+
 
 ------------------------------------------------------挖矿任务定义------------------------------------------------------
+local rocks = PREFABS.rocks
 
--- local function finishWork(player, data)
---     KsFunLog("finishWork", data.action, data.target)
---     local task = player.components.ksfun_task_system:GetTask(KSFUN_TASK_NAMES.WORK)
---     local demand = task and task.components.ksfun_task:GetDemand()
---     if  demand then
---         KsFunLog("finishWork 1", demand.type,  demand.data.act,  data.action.id)
---         if demand.type == WORKTYPES.NORMAL then
---             local delta = 0
---             if demand.data.act == data.action.id then
---                 KsFunLog("finishWork 2", 2)
---                 delta = 1
---             end
---             demand.data.num = demand.data.num - delta
---             if demand.data.num < 1 then
---                 task.components.ksfun_task:Win()
---             end
---         end
---     end
--- end
+local function calcRockNum()
+    return math.random(3)
+end
 
--- local work = {
---     onattach = function(inst, player)
---         player:ListenForEvent("finishedwork", finishWork)
-        
---     end,
---     ondetach = function(inst, player)
---         player:RemoveEventCallback("finishedwork", finishWork)
---     end,
---     ondesc = descFunc
--- }
+
+local function obtainMineTask()
+    local rock, orglv = GetRandomItemWithIndex(rocks)
+    local limit  = getTypeLimits(TYPES.MINE)
+    local number = calcRockNum()
+    local tasklv = getLimitExtLv(limit, orglv) + orglv
+    return obtainTask(TYPES.MINE, tasklv, rock, number, limit)
+end
+
+
+local function onMineFinish(inst, data)
+    onWorkTaskFinsh(inst, data, ACTIONS.MINE.id)
+end
+
+
+local mineJudge = {
+    onattach = function(inst, player)
+        player:ListenForEvent("finishedwork", onMineFinish)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback("finishedwork", onMineFinish)
+    end,
+}
+
+
+
+
+------------------------------------------------------砍树任务定义------------------------------------------------------
+
 
 
 
@@ -400,6 +418,10 @@ local tasks = {
     [NAMES.COOK] = {
         create = obtainCookTask,
         judge  = cookJudge,
+    },
+    [NAMES.MINE] = {
+        create = obtainMineTask,
+        judge  = mineJudge,
     }
 }
 
