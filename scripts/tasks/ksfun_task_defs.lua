@@ -237,9 +237,11 @@ local pickJudge = {
 local fishes = PREFABS.fishes
 local ponds  = PREFABS.ponds
 
---- 计算鱼的数量
-local function calcFishNum()
-    return 1
+---计算鱼的数量
+---@param fish string|nil 鱼的代码
+---@return integer 鱼的数量
+local function calcFishNum(fish)
+    return fish ~= nil and 1 or math.random(3)
 end
 
 
@@ -259,7 +261,7 @@ local function obtainFishTask()
     end
 
     local tasklv = orglv + getLimitExtLv(limit, orglv)
-    local num = calcFishNum()
+    local num = calcFishNum(fish)
 
     return obtainTask(TYPES.FISH, tasklv, fish, num, limit,  extra)
 end
@@ -296,8 +298,11 @@ local fishJudge = {
 ------------------------------------------------------烹调任务定义------------------------------------------------------
 local foods = PREFABS.foods
 
-local function calcFoodNum()
-    return 1
+---计算鱼的任务数量
+---@param food string|nil 食物代码，nil代码任意食物
+---@return integer
+local function calcFoodNum(food)
+    return food ~= nil and 1 or math.random(3)
 end
 
 local function obtainCookTask()
@@ -309,9 +314,9 @@ local function obtainCookTask()
         orglv = foods[food]
     end
 
-    local num = calcFoodNum()
     local limit = GetRandomItem(cooklimits)
     local tasklv = orglv + getLimitExtLv(limit, orglv)
+    local num = calcFoodNum(food)
     return obtainTask(TYPES.COOK, tasklv, food, num, limit, nil)
 end
 
@@ -340,6 +345,9 @@ local cookJudge = {
 
 
 
+
+
+------------------------------------------------------挖矿任务定义------------------------------------------------------
 
 -- local function finishWork(player, data)
 --     KsFunLog("finishWork", data.action, data.target)
