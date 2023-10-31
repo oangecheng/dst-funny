@@ -246,7 +246,7 @@ local prefabs = {
     ponds        = taskponds,
     rocks        = taskrocks,
     treetags     = tasktreetags,
-    dryitems  = taskdryitems,
+    dryitems     = taskdryitems,
 }
 
 

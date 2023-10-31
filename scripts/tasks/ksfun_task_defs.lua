@@ -380,12 +380,13 @@ local cookJudge = {
 
 
 ---通用工作类型的任务判定
+---@param taskname string 任务名称 
 ---@param player any 玩家
 ---@param data any work的数据 { target = self.inst, action = self.action }
 ---@param actid any string
-local function onWorkTaskFinsh(player, data, actid)
+local function onWorkTaskFinsh(taskname, player, data, actid)
     if data and data.action.id == actid then
-        local task = player.components.ksfun_task_system:GetTask(TYPES.MINE)
+        local task = player.components.ksfun_task_system:GetTask(taskname)
         local taskdata = task and task.components.ksfun_task:GetTaskData()
         if taskdata ~= nil then
             local judge = { target = data.target.prefab, inst = data.target }
@@ -416,7 +417,7 @@ end
 
 
 local function onMineFinish(inst, data)
-    onWorkTaskFinsh(inst, data, ACTIONS.MINE.id)
+    onWorkTaskFinsh(TYPES.MINE, inst, data, ACTIONS.MINE.id)
 end
 
 
@@ -448,7 +449,7 @@ local function obtainChopTask()
 end
 
 local function onChopFinish(inst, data)
-    onWorkTaskFinsh(inst, data, ACTIONS.CHOP.id)
+    onWorkTaskFinsh(TYPES.CHOP, inst, data, ACTIONS.CHOP.id)
 end
 
 

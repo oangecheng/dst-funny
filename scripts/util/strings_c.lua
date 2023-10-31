@@ -20,14 +20,17 @@ STRINGS.KSFUN_NAMES = {
     ["pond_mos"]           = STRINGS.NAMES[string.upper("pond")].."(蚊子)",
     ["moose"]              = "麋鹿鹅",
     ["gears_blueprint"]    = STRINGS.NAMES[string.upper("gears")].."蓝图",
+    ["rock1"]              = STRINGS.NAMES[string.upper("rock1")].."(硝石)",
+    ["rock2"]              = STRINGS.NAMES[string.upper("rock2")].."(金矿)",
+    ["rock_moon"]          = STRINGS.NAMES[string.upper("rock_moon")].."(月石)",
 }
 
 
 
 STRINGS.KSFUN_TAGS = {
     ["tree"] = "任意的树木",
-    ["deciduoustree"] = "任意常青树",
-    ["evergreens"] = "任意桦树",
+    ["deciduoustree"] = "任意桦树",
+    ["evergreens"] = "任意常青树",
 }
 
 
@@ -189,7 +192,7 @@ STRINGS.NAMES.KSFUN_TASK_FISH = "钓鱼任务"
 STRINGS.NAMES.KSFUN_TASK_COOK = "烹调任务"
 STRINGS.NAMES.KSFUN_TASK_MINE = "挖矿任务"
 STRINGS.NAMES.KSFUN_TASK_CHOP = "伐木任务"
-STRINGS.NAMES.KSFUN_TASK_DRY  = "晾肉任务"
+STRINGS.NAMES.KSFUN_TASK_DRY  = "晾晒任务"
 
 
 STRINGS.KSFUN_TASK_WIN        = "任务成功"
