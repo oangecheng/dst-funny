@@ -117,6 +117,15 @@ local tasktreetags = {
 
 
 
+local taskdryitems = {
+    ["monstermeat_dried"] = 1,
+    ["smallmeat_dried"] = 1,
+    ["meat_dried"] = 2,
+    ["kelp_dried"] = 1,
+}
+
+
+
 
 --- 突破等级上限物品定义
 local breakitemsdef = {
@@ -237,6 +246,7 @@ local prefabs = {
     ponds        = taskponds,
     rocks        = taskrocks,
     treetags     = tasktreetags,
+    dryitems  = taskdryitems,
 }
 
 

@@ -239,6 +239,20 @@ AddComponentPostInit("stewer", function(self)
 end)
 
 
+--- hook晾肉架组件
+AddComponentPostInit("dryer", function (self)
+    local oldHarvest = self.Harvest
+    self.Harvest = function (self, harvester)
+        local success = oldHarvest(self, harvester)
+        if success then
+            harvester:PushEvent(KSFUN_EVENTS.HARVEST_DRY, { product = self.product })
+        end
+        return success
+    end
+end)
+
+
+
 
 AddComponentPostInit("edible", function(self)
     local oldGetSanity = self.GetSanity

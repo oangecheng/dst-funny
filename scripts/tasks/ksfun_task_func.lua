@@ -10,6 +10,7 @@ KSFUN_TASK_NAMES = {
     MINE = "mine",
     CHOP = "chop",
     -- DIG  = "dig" ,
+    DRY  = "dry" ,
 }
 
 

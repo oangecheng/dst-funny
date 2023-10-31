@@ -443,7 +443,7 @@ local function obtainChopTask()
     local tag, orglv = GetRandomItemWithIndex(treetags)
     local limit = getTypeLimits(TYPES.CHOP)
     local num = calcChopNum()
-    local tasklv = getLimitExtLv(limit, orglv)
+    local tasklv = getLimitExtLv(limit, orglv) + orglv
     return obtainTagTask(TYPES.CHOP, tasklv, tag, num, limit)
 end
 
@@ -461,6 +461,49 @@ local chopJudge = {
     end,
 }
 
+
+
+
+------------------------------------------------------收获任务定义------------------------------------------------------
+local dryitems = PREFABS.dryitems
+
+
+local function calcDryNum()
+    return math.random(3, 5)
+end
+
+
+local function obtainHarvestDryTask()
+    local item, orglv = GetRandomItemWithIndex(dryitems)
+    local limit = getTypeLimits(TYPES.DRY)
+    local num = calcDryNum()
+    local tasklv = getLimitExtLv(limit, orglv) + orglv
+    return obtainTask(TYPES.DRY, tasklv, item, num, limit) 
+end
+
+
+local function onHarvestDry(player, data)
+    local task = player.components.ksfun_task_system:GetTask(TYPES.MINE)
+    local taskdata = task and task.components.ksfun_task:GetTaskData()
+    if taskdata ~= nil then
+        local judge = { target = data.product }
+        if commonTaskCheck(taskdata, judge) then
+            commonTaskCosume(task, taskdata, 1)
+            player.components.ksfun_task_system:SyncData()
+        end
+    end
+    
+end
+
+
+local dryJudge = {
+    onattach = function(inst, player)
+        player:ListenForEvent(KSFUN_EVENTS.HARVEST_DRY, onHarvestDry)
+    end,
+    ondetach = function(inst, player)
+        player:RemoveEventCallback(KSFUN_EVENTS.HARVEST_DRY, onHarvestDry)
+    end,
+}
 
 
 
@@ -489,6 +532,10 @@ local tasks = {
     [NAMES.CHOP] = {
         create = obtainChopTask,
         judge  = chopJudge,
+    },
+    [NAMES.DRY] = {
+        create = obtainHarvestDryTask,
+        judge  = dryJudge,
     }
 }
 

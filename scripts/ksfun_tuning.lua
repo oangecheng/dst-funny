@@ -79,4 +79,5 @@ KSFUN_EVENTS = {
     TASK_FINISH       = "ksfun_task_finish",
     PLAYER_PANEL      = "ksfun_player_refresh_panel",
     POWER_ATTACH      = "ksfun_power_attach",
+    HARVEST_DRY       = "ksfun_harvest_dry", 
 }
