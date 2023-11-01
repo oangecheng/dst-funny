@@ -261,7 +261,7 @@ function GridPage:BuildSkinScrollGrid()
 		widget.data = data
 		widget:SetSkinPage()
 
-		local name = KsFunGetPrefabName("ksfun_task_"..data.taskdata.name)
+		local name = KsFunGetTaskName(data.taskdata.name)
 		if data.taskdata.index == 0 then
 			name = name.."[已领取]"
 		end

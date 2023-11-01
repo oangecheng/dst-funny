@@ -16,19 +16,19 @@ local function addTask(self, name, ent, data)
 end
 
 
-local KSFUN_TASK_SYSTEM = Class(function(self, inst)
+local TaskSystem = Class(function(self, inst)
     self.inst = inst
     self.enable = true
     self.tasks = {}
 end)
 
 
-function KSFUN_TASK_SYSTEM:SetOnListener(listener)
+function TaskSystem:SetOnListener(listener)
     self.listener = listener
 end
 
 
-function KSFUN_TASK_SYSTEM:GetTask(name)
+function TaskSystem:GetTask(name)
     local task = nil
     if name == nil then
         if not IsTableEmpty(self.tasks) then
@@ -41,7 +41,7 @@ function KSFUN_TASK_SYSTEM:GetTask(name)
 end
 
 
-function KSFUN_TASK_SYSTEM:GetAllTasks()
+function TaskSystem:GetAllTasks()
     local tasks = {}
     for k, v in pairs(self.tasks) do
         tasks[k] = v.inst
@@ -52,36 +52,37 @@ end
 
 
 
-function KSFUN_TASK_SYSTEM:GetTaskNum()
+function TaskSystem:GetTaskNum()
     return GetTableSize(self.tasks)
 end
 
 
 
-function KSFUN_TASK_SYSTEM:CanAddMoreTask()
+function TaskSystem:CanAddMoreTask()
     return GetTableSize(self.tasks) < MAX_TASK_NUM
 end
 
 
 
-function KSFUN_TASK_SYSTEM:CanAddTaskByName(name)
+function TaskSystem:CanAddTaskByName(name)
     return self.tasks[name] == nil
 end
 
 
-function KSFUN_TASK_SYSTEM:SetEnable(enable)
+function TaskSystem:SetEnable(enable)
     self.enable = enable
 end
 
 
-function KSFUN_TASK_SYSTEM:IsEnable()
+function TaskSystem:IsEnable()
     return self.enable
 end
 
 
---- 新增一个属性
---- @param name type=string
-function KSFUN_TASK_SYSTEM:AddTask(name, data)
+---新增一个任务
+---@param name string
+---@param data table
+function TaskSystem:AddTask(name, data)
     
     if not (self:CanAddMoreTask() and self:CanAddTaskByName(name)) then
         return nil
@@ -106,7 +107,7 @@ end
 
 --- 彻底移除一个属性
 --- 这个属性会被永久移除，一般用于
-function KSFUN_TASK_SYSTEM:RemoveTask(name)
+function TaskSystem:RemoveTask(name)
     local task = self.tasks[name]
     if task ~= nil then
         self.tasks[name] = nil
@@ -122,7 +123,7 @@ end
 
 --- 同步用户数据
 --- 任务数据
-function KSFUN_TASK_SYSTEM:SyncData()
+function TaskSystem:SyncData()
     if self.listener then
         self.listener(self.inst, self.tasks)
     end
@@ -130,7 +131,7 @@ end
 
 
 
-function KSFUN_TASK_SYSTEM:OnSave()
+function TaskSystem:OnSave()
     if next(self.tasks) == nil then return end
     local data = {}
     for k, v in pairs(self.tasks) do
@@ -141,7 +142,7 @@ function KSFUN_TASK_SYSTEM:OnSave()
 end
 
 
-function KSFUN_TASK_SYSTEM:OnLoad(data)
+function TaskSystem:OnLoad(data)
     if data then
         self.enable = data.enable or true
     end
@@ -159,4 +160,4 @@ function KSFUN_TASK_SYSTEM:OnLoad(data)
 end
 
 
-return KSFUN_TASK_SYSTEM
+return TaskSystem

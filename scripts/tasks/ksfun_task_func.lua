@@ -1,6 +1,9 @@
 
 local isCh = KSFUN_TUNING.IS_CH
 
+
+
+
 -- 任务大类型定义
 KSFUN_TASK_NAMES = {
     KILL = "kill",
@@ -12,7 +15,6 @@ KSFUN_TASK_NAMES = {
     DRY  = "dry" ,
 
     NO_KILL = "no_kill"
-
 }
 
 
@@ -134,4 +136,24 @@ function KsFunTaskGetDesc(taskdata)
         return target.."\n"..tostring(numstr).."\n"..tostring(limitstr)
     end
     return nil
+end
+
+
+
+local tasknames = {
+    [NAMES.KILL]    = "击杀任务",
+    [NAMES.PICK]    = "采集任务",
+    [NAMES.FISH]    = "钓鱼任务",
+    [NAMES.COOK]    = "烹调任务",
+    [NAMES.MINE]    = "挖矿任务",
+    [NAMES.CHOP]    = "伐木任务",
+    [NAMES.DRY]     = "晾晒任务",
+    [NAMES.NO_KILL] = "保护动物",
+}
+
+---获取任务标题
+---@param type string 任务类型
+---@return string 任务标题
+function KsFunGetTaskName(type)
+    return tasknames[type]
 end
