@@ -91,7 +91,7 @@ function TaskSystem:AddTask(name, data)
     local task = self.tasks[name]
     local ret = nil
     if task == nil then
-        local prefab = "ksfun_task_"..name
+        local prefab = "ksfun_task_bounty"
         local ent = SpawnPrefab(prefab)
         if ent then
             addTask(self, name, ent, data)

@@ -75,7 +75,7 @@ local MultiTabWidget = Class(Widget, function(self, owner)
 
 	self.backdrop = self.root:AddChild(Image("images/plantregistry.xml", "backdrop.tex"))
 
-	local base_size = .7
+	local base_size = .5
 
 
 
@@ -132,7 +132,7 @@ local MultiTabWidget = Class(Widget, function(self, owner)
 		table.insert(self.tabs, self.tab_root:AddChild(MakeTab(button_data[i], i)))
 		self.tabs[#self.tabs]:MoveToBack()
 	end
-	self:_PositionTabs(self.tabs, 200, 285)
+	self:_PositionTabs(self.tabs, 155, 285)
 
 	-----
 	local starting_tab = ThePlantRegistry:GetFilter("tab")
