@@ -142,7 +142,18 @@ end
 
 
 
-
+---获取任务相关的数据
+---@param player table 玩家
+---@param type string 任务类型
+---@return table|nil 任务数据
+---@return any 任务实体
+---@return any 任务系统
+local function getTaskData(player, type)
+    local system = player.components.ksfun_task_system or nil
+    local task = system and system:GetTask(type) or nil
+    local data = task and task.components.ksfun_task:GetTaskData() or nil
+    return data, task, system 
+end
 
 
 
@@ -484,13 +495,12 @@ end
 
 
 local function onHarvestDry(player, data)
-    local task = player.components.ksfun_task_system:GetTask(TYPES.MINE)
-    local taskdata = task and task.components.ksfun_task:GetTaskData()
-    if taskdata ~= nil then
+    local taskdata, task, system = getTaskData(player, TYPES.DRY)
+    if taskdata then
         local judge = { target = data.product }
         if commonTaskCheck(taskdata, judge) then
             commonTaskCosume(task, taskdata, 1)
-            player.components.ksfun_task_system:SyncData()
+            system:SyncData()
         end
     end
     
