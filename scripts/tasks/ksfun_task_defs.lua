@@ -553,7 +553,7 @@ local function obtainNoKillTask()
     local tasklv = math.random(2, 5)
     local time = calcNoKillTime(tasklv)
     return {
-        time = time,
+        duration = time,
         tasklv = tasklv,
         timereverse = true,
     }
