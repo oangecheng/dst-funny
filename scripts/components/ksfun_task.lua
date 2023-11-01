@@ -92,7 +92,7 @@ end
 -- 判断是否是反转计时的任务
 -- 当计时满的时候，任务不是失败而是成功
 function KSFUN_TASK:IsTimeReverse()
-    return self.task_data and self.task_data.demand.timereverse
+    return self.task_data and self.task_data.timereverse
 end
 
 

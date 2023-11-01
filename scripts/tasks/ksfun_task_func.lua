@@ -9,8 +9,10 @@ KSFUN_TASK_NAMES = {
     COOK = "cook",
     MINE = "mine",
     CHOP = "chop",
-    -- DIG  = "dig" ,
     DRY  = "dry" ,
+
+    NO_KILL = "no_kill"
+
 }
 
 
@@ -20,6 +22,24 @@ KSFUN_TASK_LIMITS = {
     FULL_MOON = "fullmoon",
     NO_HURT   = "nohurt",
     AREA      = "area",
+}
+
+
+local LIMITS = KSFUN_TASK_LIMITS
+local NAMES  = KSFUN_TASK_NAMES
+
+
+
+KSFUN_TASK_TYPE_LIMITS = {
+    [NAMES.KILL] = { LIMITS.NONE, LIMITS.TIME, LIMITS.NO_HURT },
+    [NAMES.PICK] = { LIMITS.NONE, LIMITS.TIME, LIMITS.FULL_MOON },
+    [NAMES.FISH] = { LIMITS.NONE, LIMITS.AREA },
+    [NAMES.COOK] = { LIMITS.NONE },
+    [NAMES.MINE] = { LIMITS.NONE },
+    [NAMES.CHOP] = { LIMITS.NONE },
+    [NAMES.DRY ] = { LIMITS.NONE },
+
+    [NAMES.NO_KILL] = { LIMITS.NONE }
 }
 
 
@@ -40,8 +60,7 @@ KSFUN_REWARD_TYPES = {
 
 
 
-local LIMITS = KSFUN_TASK_LIMITS
-local NAMES  = KSFUN_TASK_NAMES
+
 
 
 local LIMITS_STR = {
@@ -93,7 +112,21 @@ end
 
 
 
+
+local othertasks = {
+    [NAMES.NO_KILL] = function (data)
+        local str = isCh and "%s秒不杀生 \n 放下屠刀，立地成佛" or "%s sec no kill"
+        return string.format(str, tostring(data.time))
+    end
+}
+
 function KsFunTaskGetDesc(taskdata)
+
+    local func = othertasks[taskdata.name]
+    if func ~= nil then
+        return func(taskdata)
+    end
+
     local target = KsFunTaskGetTargetDesc(taskdata)
     if target ~= nil then
         local numstr = KsFunTaskGetTargetNumDesc(taskdata)

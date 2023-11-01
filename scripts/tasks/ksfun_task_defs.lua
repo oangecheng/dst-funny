@@ -4,18 +4,27 @@ local TYPES = NAMES
 local LIMITS = KSFUN_TASK_LIMITS
 
 
+
+---判定预制物是否含有某个tag
+---@param inst table 预制物
+---@param tags table 标签列表
+---@return boolean 
+local function hasOrTag(inst, tags)
+    for _, v in ipairs(tags) do
+        if inst:HasTag(v) then
+            return true
+        end
+    end
+    return false
+end
+
+
+
 ---获取不同的任务类型的限制条件
 ---@param type string|nil 任务类型
----@return string 限制列表
+---@return string 限制条件
 local function getTypeLimits(type)
-    local limits = { LIMITS.NONE, LIMITS.TIME }
-    if type == TYPES.KILL then
-        table.insert(limits, LIMITS.NO_HURT)
-    elseif type == TYPES.PICK then
-        table.insert(limits, LIMITS.FULL_MOON)
-    elseif type == TYPES.FISH  then
-        table.insert(limits, LIMITS.AREA)
-    end
+    local limits = type and KSFUN_TASK_TYPE_LIMITS[type] or { LIMITS.NONE } 
     return GetRandomItem(limits)
 end
 
@@ -90,6 +99,20 @@ local function commonTaskCosume(task, taskdata, delta)
 end
 
 
+
+---计算耗时任务时间
+---@param type string 任务类型
+---@param tasklv integer 任务等级
+---@return integer 任务时间要求
+local function calcTaskTimeByType(type, tasklv)
+    local multi = 0.5
+    if type == TYPES.KILL then
+        multi = 0.5 * tasklv
+    end
+    return TUNING.TOTAL_DAY_TIME * multi
+end
+
+
 --- 生成一条全新的任务数据
 --- @param type string
 --- @param tasklv number
@@ -100,7 +123,7 @@ end
 local function obtainTask(type, tasklv, target, num, limit, extra)
     local time = 0
     if limit == LIMITS.TIME then
-        time = (tasklv * 0.5) * TUNING.TOTAL_DAY_TIME
+        time = calcTaskTimeByType(type, tasklv)
     end
     KsFunLog("obtainTask", type, target, num)
     return {
@@ -126,7 +149,7 @@ end
 local function obtainTagTask(type, tasklv, tag, num, limit, extra)
     local time = 0
     if limit == LIMITS.TIME then
-        time = (tasklv * 0.5) * TUNING.TOTAL_DAY_TIME
+        time = calcTaskTimeByType(type, tasklv)
     end
     KsFunLog("obtainTagTask", type, tag, num)
     return {
@@ -519,6 +542,50 @@ local dryJudge = {
 
 
 
+------------------------------------------------------动物保护任务定义------------------------------------------------------
+local function calcNoKillTime(tasklv)
+    return TUNING.TOTAL_DAY_TIME * 0.5 * tasklv
+end
+
+---生成动物保护任务数据
+---@return table
+local function obtainNoKillTask()
+    local tasklv = math.random(2, 5)
+    local time = calcNoKillTime(tasklv)
+    return {
+        time = time,
+        tasklv = tasklv,
+        timereverse = true,
+    }
+end
+
+
+--- 杀了一个小怪就认为失败了
+local function onKillFunc(player, data)
+    local victim = data.victim
+    if victim and not hasOrTag(victim, { "wall", "structure", "veggie", "balloon" }) then
+        if victim.components.health ~= nil then
+            local _, task, _ = getTaskData(player, TYPES.NO_KILL)
+            if task ~= nil then
+                task.components.ksfun_task:Lose()
+            end
+        end
+    end
+end
+
+
+local noKillJudge = {
+    onattach = function (inst, player, data)
+        player:ListenForEvent("killed", onKillFunc)
+    end,
+    ondetach = function (inst, player, data)
+        player:RemoveEventCallback("killed", onKillFunc)
+    end,
+}
+
+
+
+
 local tasks = {
     [NAMES.KILL] = {
         create = obtainKillTask,
@@ -547,6 +614,10 @@ local tasks = {
     [NAMES.DRY] = {
         create = obtainHarvestDryTask,
         judge  = dryJudge,
+    },
+    [NAMES.NO_KILL] = {
+        create = obtainNoKillTask,
+        judge  = noKillJudge
     }
 }
 

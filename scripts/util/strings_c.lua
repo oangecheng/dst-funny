@@ -186,13 +186,14 @@ STRINGS.KSFUN_BREAK_COUNT = "阶"
 
 
 -------------------------------------------------------------------------- 任务相关字符串----------------------------------------------------------------------------------
-STRINGS.NAMES.KSFUN_TASK_KILL = "击杀任务"
-STRINGS.NAMES.KSFUN_TASK_PICK = "采集任务"
-STRINGS.NAMES.KSFUN_TASK_FISH = "钓鱼任务"
-STRINGS.NAMES.KSFUN_TASK_COOK = "烹调任务"
-STRINGS.NAMES.KSFUN_TASK_MINE = "挖矿任务"
-STRINGS.NAMES.KSFUN_TASK_CHOP = "伐木任务"
-STRINGS.NAMES.KSFUN_TASK_DRY  = "晾晒任务"
+STRINGS.NAMES.KSFUN_TASK_KILL    = "击杀任务"
+STRINGS.NAMES.KSFUN_TASK_PICK    = "采集任务"
+STRINGS.NAMES.KSFUN_TASK_FISH    = "钓鱼任务"
+STRINGS.NAMES.KSFUN_TASK_COOK    = "烹调任务"
+STRINGS.NAMES.KSFUN_TASK_MINE    = "挖矿任务"
+STRINGS.NAMES.KSFUN_TASK_CHOP    = "伐木任务"
+STRINGS.NAMES.KSFUN_TASK_DRY     = "晾晒任务"
+STRINGS.NAMES.KSFUN_TASK_NO_KILL = "保护动物"
 
 
 STRINGS.KSFUN_TASK_WIN        = "任务成功"
