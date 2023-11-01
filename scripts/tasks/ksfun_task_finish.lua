@@ -356,13 +356,13 @@ local function doPunish(player, punish)
 
     local type = punish.type
     if type == punishtypes.MONSTER then
-       doMonsterPunish(player, punish)
+       doMonsterPunish(player, punish.data)
     elseif type == punishtypes.POWER_LV_LOSE then
-        doLosePowerPunish(player, true, punish)
+        doLosePowerPunish(player, true, punish.data)
     elseif type == punishtypes.POWER_EXP_LOSE then
-        doLosePowerPunish(player, false, punish)
+        doLosePowerPunish(player, false, punish.data)
     elseif type == punishtypes.NEGA_POWER then
-        doNegaPowerPunish(player, punish)
+        doNegaPowerPunish(player, punish.data)
     end
 end
 
