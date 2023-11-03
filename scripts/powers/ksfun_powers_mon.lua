@@ -219,6 +219,9 @@ end
 local health = {
     onattach = function(inst, target, name)
         local h = target.components.health
+        if h == nil then
+            return
+        end
         -- 记录原始数据
         inst.components.ksfun_power:SaveData(HEALTH_KEY, h.maxhealth)
         if inst.percent then
