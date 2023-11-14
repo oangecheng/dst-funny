@@ -44,6 +44,11 @@ function KsFunLevel:SetLevel(lv)
 end
 
 
+function KsFunLevel:SetExpFunc(fn)
+    self.expfn = fn
+end
+
+
 function KsFunLevel:GetLevel()
     return self.lv
 end
@@ -82,7 +87,7 @@ function KsFunLevel:DoExpDelta(exp)
         return
     end
     self.exp = math.max(self.exp + exp, 0)
-    local func = defaultExpFunc
+    local func = self.expfn or defaultExpFunc
     local lv = self.lv
     while self.exp >= func(lv) do
         self.exp = self.exp - func(lv)

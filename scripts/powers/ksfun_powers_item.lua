@@ -415,14 +415,17 @@ local waterproofer = {
         -- 眼球伞应该没办法添加防水属性，后面看下怎么加酸雨防护，暂时保留
         local max = math.floor((1 - effect) / 0.01)
         inst.components.ksfun_level:SetMax(max)
+        inst.components.ksfun_level:SetExpFunc(function (lv)
+            return 10
+        end)
     end,
     onstatechange = updateWaterproofStatus,
     ondesc = getPowerDesc,
     forgable = {
         onsuccess = onForgSuccess,
         items = {
-            ["pigskin"] = 20,
-            ["tentaclespots"] = 100
+            ["pigskin"] = 1,
+            ["tentaclespots"] = 10
         }
     },
 }
