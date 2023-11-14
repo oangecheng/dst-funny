@@ -35,11 +35,11 @@ end
 
 function KsFunLevel:SetLevel(lv)
     if self.max == nil or lv <= self.max then
-     if self.lv ~= lv then
-        local delta = lv - self.lv
-        self.lv = lv
-        notifyStateChange(self, delta)
-     end
+        if self.lv ~= lv then
+            local delta = lv - self.lv
+            self.lv = lv
+            notifyStateChange(self, delta)
+        end
     end
 end
 
@@ -77,6 +77,10 @@ end
 
 
 function KsFunLevel:DoExpDelta(exp)
+    if self:IsMax() then
+        self.exp = 0
+        return
+    end
     self.exp = math.max(self.exp + exp, 0)
     local func = defaultExpFunc
     local lv = self.lv
