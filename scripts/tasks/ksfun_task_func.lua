@@ -118,7 +118,7 @@ end
 local othertasks = {
     [NAMES.NO_KILL] = function (data)
         local str = isCh and "%s秒不杀生 \n 放下屠刀，立地成佛" or "%s sec no kill"
-        return string.format(str, tostring(data.time))
+        return string.format(str, tostring(data.duration))
     end
 }
 
