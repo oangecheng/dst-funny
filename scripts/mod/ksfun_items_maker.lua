@@ -13,16 +13,8 @@ local function enhantTest(inst, doer, item)
         if system and level then
             local powercount = system:GetPowerNum()
             local existed = system:GetPower(enhantname)
-
-            if existed then
-                if doer.components.talker then
-                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_2)
-                end
-            -- 判定，装备1级只能附加一个属性，2级2个 ...
-            elseif powercount >= level:GetLevel() then
-                if doer.components.talker then
-                    doer.components.talker:Say(STRINGS.KSFUN_ENHANT_FAIL_1)
-                end
+            if not existed and powercount >= level:GetLevel() then
+                KsFunShowTip(doer, STRINGS.KSFUN_ENHANT_FAIL_1)
             else
                 canEnhant = true
             end
@@ -36,14 +28,20 @@ end
 --- @param inst table 装备物品
 --- @param item table 材料
 local function onEnhantFunc(inst, doer, item)
-    KsFunLog("onEnhantFunc", item.prefab)
     local enhantname = itemsdef.enhantitems[item.prefab]
-    local ret = inst.components.ksfun_power_system:AddPower(enhantname)
-    local username = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
-    local instname = STRINGS.NAMES[string.upper(inst.prefab)]
-    local pname    = STRINGS.NAMES[string.upper(ret.prefab)]
-    local msg  = string.format(STRINGS.KSFUN_ENHANT_SUCCESS, username, instname, pname)
-    KsFunShowNotice(msg)
+    local existed = inst.components.ksfun_power_system:GetPower(enhantname)
+
+    if not existed then
+        local ret = inst.components.ksfun_power_system:AddPower(enhantname)
+        local username = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""
+        local instname = STRINGS.NAMES[string.upper(inst.prefab)]
+        local pname    = STRINGS.NAMES[string.upper(ret.prefab)]
+        local msg  = string.format(STRINGS.KSFUN_ENHANT_SUCCESS, username, instname, pname)
+        KsFunShowNotice(msg)
+    else
+        local level = existed.components.ksfun_level
+        level:DoDelta(1)
+    end
 end
 
 

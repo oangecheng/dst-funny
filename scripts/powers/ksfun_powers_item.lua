@@ -1,18 +1,22 @@
 --- 不需要format的属性描述可以使用这个
 local NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
-
-local function getPowerDesc(inst)
-    local extra = KsFunGetPowerDescExtra(inst.prefab)
-    return KsFunGetPowerDesc(inst, extra)
-end
+local POWERDEFS = require "powers/ksfun_powers_defs"
 
 
 local function onForgSuccess(inst, doer, item)
     local doername  = doer.name
-    local item      = KsFunGetPrefabName(item.prefab)
+    local itemname  = KsFunGetPrefabName(item.prefab)
     local powername = KsFunGetPrefabName(inst.prefab)
-    local msg = string.format(STRINGS.KSFUN_FORG_SUCCESS_NOTICE, doername, item, powername)
+    local msg = string.format(STRINGS.KSFUN_FORG_SUCCESS_NOTICE, doername, itemname, powername)
     KsFunShowNotice(msg)
+end
+
+
+local function obtainForg(name)
+    return {
+        items = POWERDEFS.GetForgItems(name),
+        onsuccess = onForgSuccess,
+    }
 end
 
 
@@ -49,15 +53,11 @@ end
 
 
 local lifesteal = {
+    forgable = obtainForg(NAMES.LIFESTEAL),
     onattach = function(inst)
         inst.components.ksfun_level:SetMax(lifestealmax)
         inst.doattack = doLifestealAttack
     end,
-    ondesc = getPowerDesc,
-    forgable = {
-        items     = {["mosquitosack"] = 20, ["spidergland"] = 10},
-        onsuccess = onForgSuccess,
-    },
 }
 
 
@@ -94,14 +94,6 @@ local function getAoeProperty(aoepower)
     return multi, area
 end
 
-
-local function onGetAoeDescFunc(inst, _, _ )
-    local multi,area = getAoeProperty(inst)
-    local desc = string.format(STRINGS.KSFUN_POWER_DESC[string.upper(inst.prefab)], tostring(area), (multi*100).."%")
-    return KsFunGetPowerDesc(inst, desc)
-end
-
-
 --- 触发aoe伤害
 local function doAoeAttack(attacker, target, weapon, power)
     local lv = power.components.ksfun_level:GetLevel()
@@ -127,11 +119,7 @@ local aoe = {
         inst.components.ksfun_level:SetMax(aoemax)
         inst.doattack = doAoeAttack
     end,
-    ondesc   = onGetAoeDescFunc,
-    forgable = {
-        onsuccess = onForgSuccess,
-        items     = {["minotaurhorn"] = 1000}, --犀牛角
-    }
+    forgable = obtainForg(NAMES.AOE)
 }
 
 
@@ -151,13 +139,9 @@ local mine = {
         if target.components.tool == nil then target:AddComponent("tool") end
         inst.components.ksfun_level:SetMax(100)
     end,
-    ondesc = getPowerDesc,
     onstatechange = updateMineStatus,
     -- 使用大理石或者硝石进行升级
-    forgable = {
-        items = { ["marble"] = 50, ["nitre"]  = 100, ["flint"] = 10, ["rocks"] = 10},
-        onsuccess = onForgSuccess,
-    }
+    forgable = obtainForg(NAMES.MINE)
 }
 
 
@@ -177,13 +161,9 @@ local chop = {
         if target.components.tool == nil then target:AddComponent("tool") end
         inst.components.ksfun_level:SetMax(100)
     end,
-    ondesc = getPowerDesc,
     onstatechange = updateChopStatus,
     -- 使用活木升级
-    forgable = {
-        items = { ["livinglog"] = 50, ["log"] = 10, },
-        onsuccess = onForgSuccess,
-    }
+    forgable = obtainForg(NAMES.CHOP)
 }
 
 
@@ -223,11 +203,7 @@ local maxuses = {
         end
     end,
     onstatechange = updateMaxusesStatus,
-    ondesc = getPowerDesc,
-    forgable = {
-        items = {["dragon_scales"] = 20, }, -- 龙鳞提升耐久
-        onsuccess = onForgSuccess,
-    }
+    forgable = obtainForg(NAMES.MAXUSES)
 }
 
 
@@ -252,17 +228,7 @@ local damage = {
         end
     end,
     onstatechange = updateDamageStatus,
-    ondesc = getPowerDesc,
-    forgable = {
-        onsuccess = onForgSuccess,
-        -- 铥矿棒/狗牙/蜂刺升级
-        items = {
-            ["ruins_bat"]   = 100,
-            ["tentaclespike"] = 10,
-            ["houndstooth"] = 1,
-            ["stinger"]     = 1,
-        }
-    }
+    forgable = obtainForg(NAMES.DAMAGE)
 }
 
 
@@ -341,18 +307,8 @@ local insulator = {
         inst.components.ksfun_power:SaveData(INSULATION_TYPE_KEY, t)
         KsFunAddTrader(target, acceptTestFunc, onItmeGive)
     end,
-    ondesc = getPowerDesc,
     onstatechange = updateInsulatorStatus,
-    forgable = {
-        onsuccess = onForgSuccess,
-        items = {
-            ["trunk_winter"] = 100, -- 冬日象鼻
-            ["trunk_summer"] = 80, -- 夏日象鼻
-            ["silk"] = 2, -- 蜘蛛网
-            ["beardhair"] = 5, -- 胡须
-            ["goose_feather"] = 10 -- 鹅毛
-        }
-    },
+    forgable = obtainForg(NAMES.INSULATOR)
 }
 
 
@@ -376,15 +332,7 @@ local dapperness = {
         inst.components.ksfun_power:SaveData(DAPPERNESS_KEY, equippable.dapperness)
     end,
     onstatechange = updateDappernessStatus,
-    ondesc = getPowerDesc,
-    forgable = {
-        onsuccess = onForgSuccess,
-        items = {
-            ["spiderhat"] = 2, -- 蜘蛛帽
-            ["walrushat"] = 20, -- 海象帽
-            ["hivehat"]   = 50,
-        }
-    }
+    forgable = obtainForg(NAMES.DAPPERNESS)
 }
 
 
@@ -420,14 +368,7 @@ local waterproofer = {
         end)
     end,
     onstatechange = updateWaterproofStatus,
-    ondesc = getPowerDesc,
-    forgable = {
-        onsuccess = onForgSuccess,
-        items = {
-            ["pigskin"] = 1,
-            ["tentaclespots"] = 10
-        }
-    },
+    forgable = obtainForg(NAMES.WATER)
 }
 
 
@@ -451,15 +392,8 @@ local speed = {
         inst.components.ksfun_level:SetMax(speedmax)
     end,
     onstatechange = updateSpeedStatus,
-    ondesc = getPowerDesc,
     -- 海象牙/步行手杖
-    forgable = {
-        onsuccess = onForgSuccess,
-        items = {
-            ["walrus_tusk"] = 200,
-            ["cane"] = 250,
-        }
-    }    
+    forgable = obtainForg(NAMES.SPEED)
 }
 
 
@@ -485,13 +419,7 @@ local absorb = {
         inst.components.ksfun_level:SetMax(max)
     end,
     onstatechange = updateAbsorbStatus,
-    ondesc = getPowerDesc,
-    forgable = {
-        onsuccess = onForgSuccess,
-        items = {
-            ["steelwool"] = 10, -- 钢丝绒
-        }
-    }
+    forgable = obtainForg(NAMES.ABSORB)
 }
 
 
@@ -500,17 +428,17 @@ local absorb = {
 
 
 local itempowers = {
-    [NAMES.WATER_PROOFER] = waterproofer,
-    [NAMES.DAPPERNESS]    = dapperness,
-    [NAMES.INSULATOR]     = insulator,
-    [NAMES.DAMAGE]        = damage,
-    [NAMES.CHOP]          = chop,
-    [NAMES.MINE]          = mine,
-    [NAMES.LIFESTEAL]     = lifesteal,
-    [NAMES.AOE]           = aoe,
-    [NAMES.MAXUSES]       = maxuses,
-    [NAMES.SPEED]         = speed,
-    [NAMES.ABSORB]        = absorb,
+    [NAMES.WATER]      = waterproofer,
+    [NAMES.DAPPERNESS] = dapperness,
+    [NAMES.INSULATOR]  = insulator,
+    [NAMES.DAMAGE]     = damage,
+    [NAMES.CHOP]       = chop,
+    [NAMES.MINE]       = mine,
+    [NAMES.LIFESTEAL]  = lifesteal,
+    [NAMES.AOE]        = aoe,
+    [NAMES.MAXUSES]    = maxuses,
+    [NAMES.SPEED]      = speed,
+    [NAMES.ABSORB]     = absorb,
 }
 
 return itempowers

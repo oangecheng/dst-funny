@@ -7,7 +7,7 @@ local TEMPLATES = require "widgets/redux/templates"
 local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
-local DESC = require "powers/ksfun_powers_desc"
+local DESC = require "powers/ksfun_powers_defs"
 
 
 local GridPage = Class(Widget, function(self, parent_widget, owner, powers)
@@ -140,7 +140,7 @@ function GridPage:BuildSkinScrollGrid()
 		function w:SetSkinPage(name)
 			local data = w.data
 			if not data then return end
-			local info = DESC.ObtainBreackStr(data)
+			local info = DESC.ObtainPowerInfo(data)
 
 			if info then
 				local lvstr = info.lv.content.."\n"..info.xp.content

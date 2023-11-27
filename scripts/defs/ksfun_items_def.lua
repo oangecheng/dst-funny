@@ -67,13 +67,13 @@ local weaponnames = {
 
 local hatnames = {
     NAMES.DAPPERNESS, 
-    NAMES.WATER_PROOFER, 
+    NAMES.WATER, 
     NAMES.INSULATOR,
 }
 
 local armornames = {
     NAMES.DAPPERNESS, 
-    NAMES.WATER_PROOFER, 
+    NAMES.WATER, 
     NAMES.INSULATOR,
     NAMES.MAXUSES,
     NAMES.ABSORB,

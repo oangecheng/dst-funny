@@ -28,7 +28,7 @@ KSFUN_TUNING =  {
 
     -- 物品属性
     ITEM_POWER_NAMES = {
-        WATER_PROOFER = "item_waterproofer",
+        WATER         = "item_waterproofer",
         DAPPERNESS    = "item_dapperness",
         INSULATOR     = "item_insulator",
         
