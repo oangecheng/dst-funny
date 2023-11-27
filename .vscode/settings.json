@@ -78,7 +78,8 @@
         "SendModRPCToServer",
         "MOD_RPC",
         "ThePlayer",
-        "SetAutopaused"
+        "SetAutopaused",
+        "RGB"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",

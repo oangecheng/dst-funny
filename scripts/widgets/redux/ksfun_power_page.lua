@@ -7,7 +7,7 @@ local TEMPLATES = require "widgets/redux/templates"
 local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
-
+local DESC = require "powers/ksfun_powers_desc"
 
 
 local GridPage = Class(Widget, function(self, parent_widget, owner, powers)
@@ -88,9 +88,9 @@ function GridPage:BuildSkinScrollGrid()
 	local font_size = 20
 
 	local function ScrollWidgetsCtor(context, index)
+
 		local w = Widget("skin-cell-".. index)
 		w.cell_root = w:AddChild(ImageButton("images/plantregistry.xml", "plant_entry.tex", "plant_entry_focus.tex"))
-
 		w.focus_forward = w.cell_root
 
 		w.cell_root.ongainfocusfn = function()
@@ -110,22 +110,15 @@ function GridPage:BuildSkinScrollGrid()
 		--- 等级
 		w.powerlv = w.cell_root:AddChild(Text(font, font_size))
 		w.powerlv:SetPosition(0, 50)
-		w.powerlv:SetRegionSize( width_label, height )
+		w.powerlv:SetRegionSize(width_label, height )
 		w.powerlv:SetHAlign( ANCHOR_MIDDLE )
 
-		--- 描述
-		w.powerdesc = w.cell_root:AddChild(Text(font, font_size))
-		w.powerdesc:SetPosition(0, 0)
-		w.powerdesc:SetRegionSize( width_label, height )
-		w.powerdesc:SetHAlign( ANCHOR_MIDDLE )
-
-		--已购买文字显示
-		w.bought_label = w.cell_root:AddChild(Text(font, font_size))
-		w.bought_label:SetPosition(0, -95)
-		w.bought_label:SetRegionSize( width_label, height )
-		w.bought_label:SetHAlign( ANCHOR_MIDDLE )
-		w.bought_label:SetString("已拥有")
-		w.bought_label:SetColour(PLANTREGISTRYUICOLOURS.UNLOCKEDBROWN)
+		-- 突破等阶
+		w.break_label = w.cell_root:AddChild(Text(font, font_size))
+		w.break_label:SetPosition(0, -95)
+		w.break_label:SetRegionSize(width_label, height )
+		w.break_label:SetHAlign( ANCHOR_MIDDLE )
+		w.break_label:SetColour(PLANTREGISTRYUICOLOURS.UNLOCKEDBROWN)
 		
 
 		local lean = true
@@ -137,46 +130,50 @@ function GridPage:BuildSkinScrollGrid()
 		w.skin_spinner.text:SetPosition(8, 12)
 
 		--按钮
-		w.buy_button = w.cell_root:AddChild(
-			TEMPLATES.StandardButton(
-				nil,
-				"确定",--按钮文字
-				{60, 30}--按钮尺寸
-			)
+		w.sure_button = w.cell_root:AddChild(
+			TEMPLATES.StandardButton(nil, "确定", {60, 30})
 		)
-		w.buy_button:SetTextSize(18)
-		w.buy_button:SetPosition(0, -95, 0)
+		w.sure_button:SetTextSize(18)
+		w.sure_button:SetPosition(0, -95, 0)
 		
 		--皮肤选项卡展示
 		function w:SetSkinPage(name)
 			local data = w.data
 			if not data then return end
-			local info = data
+			local info = DESC.ObtainBreackStr(data)
+
 			if info then
-				w.powerlv:SetString("等级:"..tostring(info.lv).." 经验:"..tostring(info.exp))
+				local lvstr = info.lv.content.."\n"..info.xp.content
+				w.powerlv:SetString(lvstr)
+				if info.br then
+					w.break_label:SetString(info.br.content)
+					w.break_label:SetColour(info.br.color)
+				else
+					w.break_label:Hide()
+				end
 			end
 
-			w.buy_button:SetOnClick(function()
+			w.sure_button:SetOnClick(function()
 				local popup
 				popup = PopupDialogScreen("title", "desc",
 					{
-						{text = "按钮1", cb = function()
+						{text = "确认", cb = function()
 							TheFrontEnd:PopScreen(popup)
 						end},
-						{text = "按钮2", cb = function()
+						{text = "取消", cb = function()
 							TheFrontEnd:PopScreen(popup)
 						end},
 					}
 				)
 				TheFrontEnd:PushScreen(popup)
 			end)
-			w.buy_button:Enable()
+			w.sure_button:Enable()
 		end
 
 		local _OnControl = w.cell_root.OnControl
 		w.cell_root.OnControl = function(_, control, down)
 			if w.skin_spinner.focus or (control == CONTROL_PREVVALUE or control == CONTROL_NEXTVALUE) then if w.skin_spinner:IsVisible() then w.skin_spinner:OnControl(control, down) end return true end
-			if w.buy_button.focus or (control == CONTROL_PREVVALUE or control == CONTROL_NEXTVALUE) then if w.buy_button:IsVisible() then w.buy_button:OnControl(control, down) end return true end
+			if w.sure_button.focus or (control == CONTROL_PREVVALUE or control == CONTROL_NEXTVALUE) then if w.sure_button:IsVisible() then w.sure_button:OnControl(control, down) end return true end
 			return _OnControl(_, control, down)
 		end
 

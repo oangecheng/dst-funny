@@ -81,3 +81,8 @@ KSFUN_EVENTS = {
     POWER_ATTACH      = "ksfun_power_attach",
     HARVEST_DRY       = "ksfun_harvest_dry", 
 }
+
+
+KSFUN_POWER_CONFIGS = {
+    PLAYER_3D = 0.01
+}
