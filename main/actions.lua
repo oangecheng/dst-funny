@@ -8,8 +8,10 @@ local ksfun_actions = {
         end,
         fn = function(act)
             local doer = act.doer
-            if doer and act.invobject then
-                return act.invobject.components.ksfun_useable:Use(doer, doer)
+            if doer and act.invobject and act.invobject.usefn then
+                if act.invobject.usefn(act.doer, act.invobject) then
+                    return true
+                end
             end
             return false
         end
@@ -62,9 +64,9 @@ STRINGS.ACTIONS.KSFUN_ITEM_ACTIVATE = {
 
 
 
-AddComponentAction("INVENTORY", "ksfun_useable", function(inst, doer, actions)
+AddComponentAction("INVENTORY", "inventoryitem", function(inst, doer, actions, right)
     if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
-        and inst:HasTag("ksfun_item") and doer:HasTag("player") and not doer:HasTag("playerghost") then
+        and inst:HasTag("ksfun_potion") and doer:HasTag("player") and not doer:HasTag("playerghost") then
         table.insert(actions, ACTIONS.KSFUN_USE_ITEM)
     end
 end)
