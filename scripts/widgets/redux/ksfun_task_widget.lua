@@ -18,20 +18,13 @@ local function getTargetPowers(inst)
 	if TheWorld.ismastersim then
 		local system = inst.components.ksfun_power_system
 		if system ~= nil then
-			powers = {}
-			local list = system:GetAllPowers()
-			for k,v in pairs(list) do
-				local l = v.components.ksfun_level
-				local d = v.components.ksfun_power:GetDesc()
-				local bcnt = v.components.ksfun_breakable and v.components.ksfun_breakable:GetCount() or -1
-				powers[k] = {name = k, lv = l:GetLevel(), exp = l:GetExp(), desc = d, bcnt = bcnt}
-			end
+			powers = system:GetPowersData()
 		end
 	
 	else
 		local system = inst.replica.ksfun_power_system
 		if system then
-			powers = system:GetPowers()
+			powers = system:GetPowersData()
 		end
 	end
 

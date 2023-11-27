@@ -1,43 +1,8 @@
 
 local function onPowerWithLevelDirty(self, inst)
-    local data = self._itempowers:value()
-    if data then
-        self.powers = {}
-        ---@diagnostic disable-next-line: undefined-field
-        local d1 = string.split(data, "#")
-
-        for i1,v1 in pairs(d1) do
-            ---@diagnostic disable-next-line: undefined-field
-            local d2 = string.split(v1, "|")
-
-            --- 标题数据
-            if i1 == 1 then
-                if #d2 == 3 then
-                    local prefab = d2[1]
-                    self.title = {
-                        prefab = prefab,
-                        name   = d2[2],
-                        lv     = tonumber(d2[3]),
-                    }
-                end
-            else
-                --- 属性数据
-                if GetTableSize(d2) == 5 then
-                    local name = d2[1]
-                    local lv   = tonumber(d2[2])
-                    local exp  = tonumber(d2[3])
-                    local desc = d2[4]
-                    local bcnt = tonumber(d2[5])
-                    self.powers[name] = {
-                        name = name,
-                        lv   = lv,
-                        exp  = exp,
-                        desc = desc,
-                        bcnt = bcnt
-                    }
-                end
-            end
-        end
+    local jsdata = self._itempowers:value()
+    if jsdata then
+        self.powers = json.decode(jsdata)
     end
 end
 
@@ -67,12 +32,8 @@ end
 
 --- 获取所有的属性
 --- 包含名称 等级 经验值
-function KSFUN_POWERS:GetPowers()
+function KSFUN_POWERS:GetPowersData()
     return self.powers
-end
-
-function KSFUN_POWERS:GetTitle()
-    return self.title
 end
 
 

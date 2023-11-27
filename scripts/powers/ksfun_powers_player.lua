@@ -1,14 +1,6 @@
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
-
---- 不需要format的属性描述可以使用这个
-local function getPowerDesc(inst)
-    local extra = KsFunGetPowerDescExtra(inst.prefab)
-    return KsFunGetPowerDesc(inst, extra)
-end
-
-
 --- 尝试更新属性的最大值
 local function updatePowerMax(inst, count, isgod, delta)
     local maxlv = isgod and nil or (count + 1) * (delta or 10)
@@ -87,8 +79,6 @@ local health = {
     onbreak = function(inst, count, isgod)
         updatePowerMax(inst, count, isgod, 20)
     end,
-
-    ondesc = getPowerDesc,
 
     onsave = function(inst, data)
         if inst.target then
@@ -207,8 +197,6 @@ local hunger = {
     onbreak = function(inst, count, isgod)
         updatePowerMax(inst, count, isgod, 20)
     end,
-
-    ondesc = getPowerDesc,
 
     onsave = function(inst, data)
         if inst.target then
@@ -330,8 +318,6 @@ local sanity = {
     onbreak = function(inst, count, isgod)
         updatePowerMax(inst, count, isgod, 20)
     end,
-
-    ondesc = getPowerDesc,
 
     onsave = function(inst, data)
         if inst.target then
@@ -472,7 +458,6 @@ local pick = {
         target:RemoveEventCallback("ksfun_picksomething", onPickSomeThing)
     end,
     onbreak = updatePowerMax,
-    ondesc = getPowerDesc,
 }
 
 
@@ -555,7 +540,6 @@ local farm = {
         KsFunSayPowerNotice(inst.target, inst.prefab)
     end,
 
-    ondesc = getPowerDesc,
     onbreak = updatePowerMax,
 }
 
@@ -610,7 +594,6 @@ local killdrop = {
         target:RemoveEventCallback("killed", killItemDrop)
     end,
     onbreak = updatePowerMax,
-    ondesc = getPowerDesc,
 }
 
 
@@ -647,7 +630,6 @@ local locomotor = {
     end,
 
     onbreak = updatePowerMax,
-    ondesc = getPowerDesc,
 }
 
 
@@ -670,7 +652,6 @@ local lucky = {
         target:RemoveEventCallback(KSFUN_EVENTS.TASK_FINISH, onTaskFinish)
     end,
     onbreak = updatePowerMax,
-    ondesc = getPowerDesc,
 }
 
 
@@ -698,7 +679,6 @@ local cooker = {
     end,
 
     onbreak = updatePowerMax,
-    ondesc = getPowerDesc,
 }
 
 

@@ -224,16 +224,9 @@ function GridPage:BuildSkinScrollGrid()
 
 		widget.data = data
 		widget:SetSkinPage(data.name)
-
 		widget.powername:SetString(KsFunGetPowerNameStr(data.name))
-
 		local spinner_options = {} --皮肤选项卡数据
-		-- for i, v in ipairs(data.info) do --遍历数据表，加入到选项卡里
-		-- 	table.insert( spinner_options, { text= 100, data = i } )
-		-- end
-
 		table.insert(spinner_options, { text = 100, data = 1 } )
-
 		widget.cell_root:SetTextures("images/plantregistry.xml", "plant_entry_active.tex", "plant_entry_focus.tex")
 		widget.skin_seperator:SetTexture("images/plantregistry.xml", "plant_entry_seperator_active.tex")
 		widget.skin_spinner:SetOptions(spinner_options)

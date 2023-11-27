@@ -109,52 +109,42 @@ end
 function KSFUN_POWERS:GetAllPowers()
     local list = {}
     for k,v in pairs(self.powers) do
-        if not v.inst.components.ksfun_power:IsTemp() then
-            list[k] = v.inst
-        end
+        list[k] = v.inst
     end
     return list
 end
 
 
 
-local function getTitle(inst)
-    local prefab = inst.prefab
-    local name = KsFunGetPrefabName(inst.prefab)
-    if inst.components.ksfun_activatable and inst.components.ksfun_activatable:IsActivated() then
-        local cnt = inst.components.ksfun_breakable:GetCount()
-        -- 1阶战斗长矛
-        name = cnt..STRINGS.KSFUN_BREAK_COUNT..name
+function KSFUN_POWERS:GetPowersData()
+    local data = {}
+    local powers = self:GetAllPowers()
+    for k, power in pairs(powers) do
+        local lv   = power.components.ksfun_level:GetLevel()
+        local exp  = power.components.ksfun_level:GetExp()
+        local breakcnt = -1
+        if power.components.ksfun_breakable then
+            breakcnt = power.components.ksfun_breakable:GetCount()
+        end
+        data[k] = {
+            name = k,
+            lv = lv,
+            exp = exp,
+            breakcnt = breakcnt
+        }
     end
-    local level = inst.components.ksfun_level
-    local lv = level and level:GetLevel() or -1
-    return prefab,name,lv 
+    return data
 end
 
 
 --- 同步用户数据
 --- power的等级经验
 function KSFUN_POWERS:SyncData()
-
-    local prefab,name,itemlv = getTitle(self.inst)
-    local data = prefab.."|"..name.."|"..itemlv
-
-    local powers = self:GetAllPowers()
-    for k, power in pairs(powers) do
-        local lv   = power.components.ksfun_level:GetLevel()
-        local exp  = power.components.ksfun_level:GetExp()
-        local desc = power.components.ksfun_power:GetDesc()
-        local bcnt = power.components.ksfun_breakable and power.components.ksfun_breakable:GetCount() or -1
-        -- 名称|等级|经验值|描述|等阶
-        local d = k .. "|" .. tostring(lv) .. "|" .. tostring(exp) .. "|" ..desc .."|" .. tostring(bcnt)
-        data = data .."#".. d
-    end
-    if data ~= "" and self.inst.replica.ksfun_power_system then
-        self.inst.replica.ksfun_power_system:SyncData(data)
+    local data = self:GetPowersData()
+    if self.inst.replica.ksfun_power_system then
+        self.inst.replica.ksfun_power_system:SyncData(json.encode(data))
     end
 end
-
-
 
 
 

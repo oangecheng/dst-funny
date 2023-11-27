@@ -46,16 +46,6 @@ local function MakePower(name, data)
         end
     end
 
-
-    local function onGetDescFunc(inst, target, name)
-        local str = "default"
-        if inst.target and data.ondesc then
-            str = data.ondesc(inst, target, name)
-        end
-        return str
-    end
-
-
     local function onLoadFunc(inst, d)
         if data.onload then 
             data.onload(inst, d) 
@@ -112,7 +102,6 @@ local function MakePower(name, data)
         power:SetOnAttachFunc(onAttachFunc)
         power:SetOnDetachFunc(onDetachFunc)
         power:SetOnExtendFunc(onExtendFunc)
-        power:SetOnGetDescFunc(onGetDescFunc)
         power.keepondespawn = true
 
         inst.isgod = false

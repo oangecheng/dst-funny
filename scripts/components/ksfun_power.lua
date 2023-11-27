@@ -11,7 +11,6 @@ local KSFUN_POWER = Class(function(self, inst)
     self.onAttachFunc = nil
     self.onDetachFunc = nil
     self.onExtendFunc = nil
-    self.onGetDescFunc = nil
 end)
 
 --- 设置监听
@@ -30,11 +29,6 @@ end
 --- @param func arg1=self.inst arg2=self.target 
 function KSFUN_POWER:SetOnExtendFunc(func)
     self.onExtendFunc = func
-end
-
-
-function KSFUN_POWER:SetOnGetDescFunc(func)
-    self.onGetDescFunc = func
 end
 
 
@@ -108,17 +102,6 @@ end
 function KSFUN_POWER:Extend()
     if self.onExtendFunc and self.target then
         self.onExtendFunc(self.inst, self.target, self.name)
-    end
-end
-
-
---- 获取属性描述
---- @return string
-function KSFUN_POWER:GetDesc()
-    if self.onGetDescFunc and self.target then
-        return self.onGetDescFunc(self.inst, self.target, self.name)
-    else
-        return "default"
     end
 end
 
