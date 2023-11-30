@@ -4,23 +4,20 @@ local itemsdef = require("defs/ksfun_items_def")
 local function enhantTest(inst, doer, item)
     local enhantname = itemsdef.enhantitems[item.prefab]
     local powernames = itemsdef.ksfunitems[inst.prefab].names
-    local canEnhant = false
-
     ---@diagnostic disable-next-line: undefined-field
     if enhantname and table.contains(powernames, enhantname) then
         local system = inst.components.ksfun_power_system
         local level  = inst.components.ksfun_level
         if system and level then
             local powercount = system:GetPowerNum()
-            local existed = system:GetPower(enhantname)
-            if not existed and powercount >= level:GetLevel() then
-                KsFunShowTip(doer, STRINGS.KSFUN_ENHANT_FAIL_1)
+            if powercount < level:GetLevel() then
+               return true
             else
-                canEnhant = true
+                KsFunShowTip(doer, STRINGS.KSFUN_ENHANT_FAIL_1)
             end
         end
     end
-    return canEnhant
+    return false
 end
 
 
@@ -30,7 +27,6 @@ end
 local function onEnhantFunc(inst, doer, item)
     local enhantname = itemsdef.enhantitems[item.prefab]
     local existed = inst.components.ksfun_power_system:GetPower(enhantname)
-
     if not existed then
         local ret = inst.components.ksfun_power_system:AddPower(enhantname)
         local username = doer.name or STRINGS.NAMES[string.upper(doer.prefab)] or ""

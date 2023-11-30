@@ -72,7 +72,7 @@ AddComponentAction("INVENTORY", "inventoryitem", function(inst, doer, actions, r
 end)
 
 
-AddComponentAction("USEITEM", "ksfun_useable", function(inst, doer, target, actions, right)
+AddComponentAction("USEITEM", "inventoryitem", function(inst, doer, target, actions, right)
     if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
         and inst:HasTag("ksfun_item") and doer:HasTag("player") and not doer:HasTag("playerghost") then
         table.insert(actions, ACTIONS.KSFUN_ITEM_ACTIVATE)

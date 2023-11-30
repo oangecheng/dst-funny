@@ -26,6 +26,7 @@ local function MakePowerGem(name, lv)
     
         MakeInventoryPhysics(inst)
     
+        inst:AddTag("ksfun_gem")
         inst.AnimState:SetBank("ksfun_power_gem")
         inst.AnimState:SetBuild("ksfun_power_gem")
         inst.AnimState:PlayAnimation(name)

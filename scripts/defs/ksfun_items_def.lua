@@ -46,14 +46,6 @@ local function initKsFunItems(list, powernames)
 end
 
 
-local function initKsFunPowerEnhantItems()
-    itemsdef.enhantitems = {}
-    for i,v in ipairs(NAMES) do
-        itemsdef.enhantitems[v] = "ksfun_power_gem_"..v 
-    end
-end
-
-
 ---在这里定义武器能具备哪些属性
 local weaponnames = {
     NAMES.DAMAGE,

@@ -43,8 +43,6 @@ local function startRefine(inst, doer, callback)
         return 0
     end
 
-    local duration = 0
-
     if canBreak(doer, target, material)  then
         local cnt = target.components.ksfun_breakable:GetCount()
         duration = math.max(60, cnt * KSFUN_TUNING.TIME_SEG)
