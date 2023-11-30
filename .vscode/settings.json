@@ -79,7 +79,10 @@
         "MOD_RPC",
         "ThePlayer",
         "SetAutopaused",
-        "RGB"
+        "RGB",
+        "MakePlacer",
+        "MakeObstaclePhysics",
+        "FRAMES"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",

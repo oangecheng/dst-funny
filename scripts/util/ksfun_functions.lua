@@ -318,3 +318,10 @@ KsFunAttackCanHit = function(attacker, target, defaultratio, msg)
     v = KSFUN_TUNING.DEBUG and 100 or v
     return r <= defaultratio * v
 end
+
+
+
+function KsFunIngredient(prefab, num)
+    local atlas = "images/inventoryitems/ksfun_potion_"..prefab..".xml"
+	return Ingredient(prefab, num, atlas)
+end
