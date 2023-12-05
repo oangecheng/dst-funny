@@ -65,16 +65,17 @@ end
 
 
 
---- 查找对应的能力获取经验值
+--- comment 查找对应的能力获取经验值
 --- @param inst table
 --- @param name string 属性名称，不包含前缀
 --- @param exp  number 经验
 KsFunPowerGainExp = function(inst, name, exp)
     if exp == 0 then return end
     if inst.components.ksfun_power_system then
+        exp = math.max(1, math.floor(exp + 0.5))
         local power = inst.components.ksfun_power_system:GetPower(name)
         if power and power.components.ksfun_level then
-            power.components.ksfun_level:DoExpDelta(math.floor(exp + 0.5))
+            power.components.ksfun_level:DoExpDelta(exp)
         end
     end
 end
