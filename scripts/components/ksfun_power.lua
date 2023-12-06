@@ -74,6 +74,7 @@ function KSFUN_POWER:Attach(name, target)
     -- nil说明没解绑，不允许重新绑定
     if self.target ~= nil then return end
     self.target = target
+    self.inst.target = target
     self.name = name
     if self.onAttachFunc then
         self.onAttachFunc(self.inst, target, name)

@@ -22,19 +22,21 @@ local function MakePower(name, data)
         end
     end
 
-
-    local function onStateChange(inst, lvdelta)
+    local function onlvfn(inst, lv, ismax)
         if inst.target then
-            inst.target.components.ksfun_power_system:SyncData()
-            if inst.components.ksfun_level:GetLevel() < 0 then
+            if lv < 0 then
                 inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
             else
-                if lvdelta and data.onstatechange then
-                    -- 等级变更时刷新状态
+                if data.onstatechange then
                     data.onstatechange(inst)
-                    KsFunSayPowerNotice(inst.target, inst.prefab)
                 end
             end
+        end
+    end
+
+    local function onStateChange(inst)
+        if inst.target then
+            inst.target.components.ksfun_power_system:SyncData()
         end  
     end
 
@@ -109,6 +111,7 @@ local function MakePower(name, data)
     
         inst:AddComponent("ksfun_level")
         inst.components.ksfun_level:SetOnStateChange(onStateChange)
+        inst.components.ksfun_level:SetOnLvFn(onlvfn)
 
         -- 锻造功能，提升属性值
         if data.forgable then
