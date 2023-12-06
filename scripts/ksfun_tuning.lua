@@ -86,3 +86,8 @@ KSFUN_EVENTS = {
 KSFUN_POWER_CONFIGS = {
     PLAYER_3D = 0.01
 }
+
+
+KSFUN_TAGS = {
+    REPAIRABLE = "ksfun_repairable"
+}

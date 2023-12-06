@@ -7,7 +7,7 @@ local TEMPLATES = require "widgets/redux/templates"
 local Spinner = require "widgets/spinner"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 
-local DESC = require "powers/ksfun_powers_defs"
+local DESC = require "powers/power_ui"
 
 
 local GridPage = Class(Widget, function(self, parent_widget, owner, powers)

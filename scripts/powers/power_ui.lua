@@ -22,21 +22,6 @@ local breakcolors = {
 }
 
 
-local FORGITEMS = {}
-FORGITEMS[ITEM_NAMES.LIFESTEAL]  = { mosquitosack = 20, spidergland = 10 }
-FORGITEMS[ITEM_NAMES.AOE]        = { minotaurhorn = 1000}
-FORGITEMS[ITEM_NAMES.MINE]       = { marble = 50, nitre = 100,  flint = 10, rocks = 10}
-FORGITEMS[ITEM_NAMES.CHOP]       = { livinglog = 50, log = 10,}
-FORGITEMS[ITEM_NAMES.MAXUSES]    = { dragon_scales = 20, }
-FORGITEMS[ITEM_NAMES.DAMAGE]     = { houndstooth = 5, stinger = 5 }
-FORGITEMS[ITEM_NAMES.INSULATOR]  = { trunk_winter = 100, trunk_summer = 80, silk = 5, beefalowool = 5 }
-FORGITEMS[ITEM_NAMES.DAPPERNESS] = { nightmarefuel = 5, spiderhat = 10,  walrushat = 30 }
-FORGITEMS[ITEM_NAMES.WATER]      = { pigskin = 1, tentaclespots = 10 }
-FORGITEMS[ITEM_NAMES.SPEED]      = { walrus_tusk = 300 }
-FORGITEMS[ITEM_NAMES.ABSORB]     = { steelwool = 20 }
-
-
-
 
 local Defs = {}
 
@@ -58,21 +43,5 @@ Defs.ObtainPowerInfo = function (data)
     end
     return strs
 end
-
-
-Defs.GetForgItems = function (name)
-    return FORGITEMS[name]
-end
-
-Defs.IsForgItem = function(prefab)
-    for k, v in pairs(FORGITEMS) do
-        ---@diagnostic disable-next-line: undefined-field
-        if table.contains(v, prefab) then
-            return true
-        end
-    end
-    return false
-end
-
 
 return Defs

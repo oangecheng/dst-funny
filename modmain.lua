@@ -21,7 +21,7 @@ PrefabFiles = {
     "ksfun_powers",
     -- "ksfun_task_reel",
     "ksfun_power_gems",
-    "ksfun_potion",
+    "ksfun_potions",
 }
 
 Assets = {

@@ -1,6 +1,6 @@
 --- 不需要format的属性描述可以使用这个
 local NAMES = KSFUN_TUNING.ITEM_POWER_NAMES
-local POWERDEFS = require "powers/ksfun_powers_defs"
+local MATERIALS = require "defs/ksfun_materials"
 
 
 local function onForgSuccess(inst, doer, item)
@@ -14,7 +14,7 @@ end
 
 local function obtainForg(name)
     return {
-        items = POWERDEFS.GetForgItems(name),
+        items = MATERIALS.GetForgItems(name),
         onsuccess = onForgSuccess,
     }
 end

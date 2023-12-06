@@ -79,40 +79,6 @@ end
 
 
 
-local function testFunc(inst, data)
-    local system = inst.components.ksfun_power_system
-    local food = data.food and data.food.prefab or nil
-
-    if food == "bird_egg" then
-        onPlayerDeath(inst)
-        return
-    end
-
-    for k,v in pairs(KSFUN_TUNING.NEGA_POWER_NAMES) do
-        local ent = inst.components.ksfun_power_system:AddPower(v)
-    end
-
-    for k,v in pairs(KSFUN_TUNING.PLAYER_POWER_NAMES) do
-        local ent = inst.components.ksfun_power_system:AddPower(v)
-    end
-
-    local ent = SpawnPrefab("spear")
-    ent.components.ksfun_item_forever:Enable()
-    ent.components.ksfun_breakable:Enable()
-    ent.components.ksfun_enhantable:Enable()
-    if ent.components.finiteuses then
-        ent.components.finiteuses:SetPercent(0.01)
-    end
-
-    local ITEMS_DEF  = require "defs/ksfun_items_def"
-    for _,v in ipairs(ITEMS_DEF.ksfunitems["spear"].names) do
-        ent.components.ksfun_power_system:AddPower(v)
-    end
-    inst.components.inventory:GiveItem(ent, nil, inst:GetPosition())
-    inst.components.ksfun_achievements:SetValue(10000)
-end
-
-
 AddPlayerPostInit(function(player)
     --- 只支持原生角色
     local config = playersdef.playerconfig(player)
@@ -120,10 +86,6 @@ AddPlayerPostInit(function(player)
         initAchievements(player, config)
         initPowerSystem(player)
         initTaskSystem(player)
-        --- 测试代码
-        if KSFUN_TUNING.DEBUG then
-            player:ListenForEvent("oneat", testFunc)
-        end
     end
 end)
 
@@ -225,3 +187,15 @@ AddPrefabPostInit("world", function(inst)
     inst:AddComponent("ksfun_world_player")
     inst:AddComponent("ksfun_world_data")
 end)
+
+
+
+
+
+
+
+
+
+
+
+------------------ 物品强化 ---------------------------------
