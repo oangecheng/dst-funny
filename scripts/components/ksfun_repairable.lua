@@ -34,6 +34,9 @@ local function onEnableFn(self, enable)
     if enable then
         self.inst:AddTag(KSFUN_TAGS.REPAIRABLE)
         autoUnequip(self)
+        if self.onenablefn then
+            self.onenablefn(self.inst)
+        end
     end
 end
 
@@ -69,6 +72,10 @@ local Repairable = Class(
     }
 )
 
+
+function Repairable:SetEnableFn(fn)
+    self.onenablefn = fn
+end
 
 ---comment 启用功能
 function Repairable:Enable()

@@ -10,10 +10,9 @@ local function MakePower(name, data)
             data.onattach(inst, target, name) 
         end
         
-        local breakable = inst.components.ksfun_breakable
-        if data.onbreak and breakable then
-            inst.isgod = breakable:IsMax()
-            data.onbreak(inst, breakable:GetCount(), breakable:IsMax())
+        local god = inst.components.ksfungod
+        if data.onbreak and god then
+            data.onbreak(inst, god:GetGod())
         end
 
         -- 首次绑定刷新下状态
@@ -72,10 +71,9 @@ local function MakePower(name, data)
     end
 
     
-    local function onBreakChange(inst, count, isgod)
-        inst.isgod = isgod
+    local function onGodFn(inst, godlv)
         if data.onbreak then
-            data.onbreak(inst, count, isgod)
+            data.onbreak(inst, godlv)
         end
         if inst.target then
             inst.target.components.ksfun_power_system:SyncData()
@@ -125,9 +123,9 @@ local function MakePower(name, data)
 
 
         if data.onbreak then
-            inst:AddComponent("ksfun_breakable")
-            inst.components.ksfun_breakable:Enable()
-            inst.components.ksfun_breakable:SetOnStateChange(onBreakChange)
+            local ksfungod = inst:AddComponent("ksfun_god")
+            ksfungod:Enable()
+            ksfungod:SetOnGodFn(onGodFn)
         end
 
 

@@ -1,10 +1,9 @@
 
-
 local ksfun_actions = {
     KSFUN_USE_ITEM = {
         id = "KSFUN_USE_ITEM",
         strfn = function(act)
-            return act.invobject.prefab == "ksfun_task_reel" and "ACCEPT" or "KSFUN_USE_ITEM"
+            return "KSFUN_USE_ITEM"
         end,
         fn = function(act)
             local doer = act.doer
@@ -16,20 +15,6 @@ local ksfun_actions = {
             return false
         end
     },
-
-    KSFUN_ITEM_ACTIVATE = {
-        id = "KSFUN_ITEM_ACTIVATE",
-        strfn = function(act)
-            return "KSFUN_ITEM_ACTIVATE"
-        end,
-        fn = function(act)
-            local doer = act.doer
-            if doer and act.invobject and act.target then
-                return act.invobject.components.ksfun_useable:Use(doer, act.target)
-            end
-            return false
-        end
-    }
 }
 
 
@@ -57,11 +42,6 @@ STRINGS.ACTIONS.KSFUN_USE_ITEM = {
     KSFUN_USE_ITEM = ACTIONS_KSFUN_USE_ITEM_STR,
     ACCEPT = ACTIONS_KSFUN_TASK_DEMAND_STR,
 }
-STRINGS.ACTIONS.KSFUN_ITEM_ACTIVATE = {
-    GENERIC = ACTIONS_KSFUN_USE_ITEM_GENERIC_STR,
-    KSFUN_ITEM_ACTIVATE = ACTIONS_KSFUN_USE_ITEM_STR
-}
-
 
 
 AddComponentAction("INVENTORY", "inventoryitem", function(inst, doer, actions, right)
@@ -72,19 +52,18 @@ AddComponentAction("INVENTORY", "inventoryitem", function(inst, doer, actions, r
 end)
 
 
-AddComponentAction("USEITEM", "inventoryitem", function(inst, doer, target, actions, right)
-    if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
-        and inst:HasTag("ksfun_item") and doer:HasTag("player") and not doer:HasTag("playerghost") then
-        table.insert(actions, ACTIONS.KSFUN_ITEM_ACTIVATE)
-    end
-end)
+-- AddComponentAction("USEITEM", "inventoryitem", function(inst, doer, target, actions, right)
+--     if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
+--         and inst:HasTag("ksfun_item") and doer:HasTag("player") and not doer:HasTag("playerghost") then
+--         table.insert(actions, ACTIONS.KSFUN_ITEM_ACTIVATE)
+--     end
+-- end)
 
 
 local sgwilsons = {"wilson", "wilson_client"}
 for i, v in ipairs(sgwilsons) do
     local _dolongactions = {
         ACTIONS.KSFUN_USE_ITEM,
-        ACTIONS.KSFUN_ITEM_ACTIVATE,
     }
     for i1, v1 in ipairs(_dolongactions) do
         AddStategraphActionHandler(v, ActionHandler(v1, function(inst, action)

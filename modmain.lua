@@ -47,7 +47,6 @@ end
 
 AddReplicableComponent("ksfun_power_system")
 AddReplicableComponent("ksfun_level")
-AddReplicableComponent("ksfun_achievements")
 
 
 local player_panel = require "mod/my_screen"
@@ -63,7 +62,6 @@ end)
 if GLOBAL.TheNet:GetIsServer() then
     modimport("scripts/mod/ksfun_station.lua")
     modimport("scripts/mod/ksfun_init.lua")
-    modimport("scripts/mod/ksfun_items_maker.lua")
 end
 
 

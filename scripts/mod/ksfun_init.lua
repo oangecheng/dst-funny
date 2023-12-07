@@ -2,14 +2,6 @@ local EVENTS = KSFUN_EVENTS
 local playersdef = require "defs/ksfun_players_def" 
 
 
-local function initAchievements(inst, config)
-    inst:AddComponent("ksfun_achievements")
-    if config.achievements then
-        inst.components.ksfun_achievements:SetValue(config.achievements)
-    end
-end
-
-
 --- 人物死亡，全属性等级随机降低
 local function onPlayerDeath(inst)
     local system = inst.components.ksfun_power_system
@@ -63,13 +55,6 @@ local function initTaskSystem(player)
     -- 任务结束，从任务列表当中移除
     player:ListenForEvent(EVENTS.TASK_FINISH, function(inst, data)
         inst.components.ksfun_task_system:RemoveTask(data.name)
-        local delta = 0
-        if data.iswin then
-            delta = 2 ^ (data.lv or 0)
-        end
-        if player.components.ksfun_achievements then
-            player.components.ksfun_achievements:DoDelta(delta)
-        end
     end)
 
     player:WatchWorldState("cycles", function(inst)
@@ -83,7 +68,6 @@ AddPlayerPostInit(function(player)
     --- 只支持原生角色
     local config = playersdef.playerconfig(player)
     if config ~= nil then
-        initAchievements(player, config)
         initPowerSystem(player)
         initTaskSystem(player)
     end
@@ -185,7 +169,6 @@ end
 AddPrefabPostInit("world", function(inst)
     inst:AddComponent("ksfun_world_monster")
     inst:AddComponent("ksfun_world_player")
-    inst:AddComponent("ksfun_world_data")
 end)
 
 
@@ -199,3 +182,126 @@ end)
 
 
 ------------------ 物品强化 ---------------------------------
+local itemsdef = require("defs/ksfun_items_def")
+
+local function initEquipments(inst)
+    inst.ksfun_activatable = true
+
+    inst:AddComponent("ksfun_enchant")
+    inst:AddComponent("ksfun_power_system")
+
+
+    local level = inst:AddComponent("ksfun_level")
+    level:SetOnStateChange(function ()
+        inst.components.ksfun_power_system:SyncData()
+    end)
+
+    local god =  inst:AddComponent("ksfun_god")
+    god:SetOnGodFn(function (_, lv)
+        level:SetMax(lv)
+    end)
+
+
+    local repairable = inst:AddComponent("ksfun_repairable")
+    repairable:SetEnableFn(function ()
+        if inst.ksfun_activatable then
+            inst.ksfun_activatable = false
+            inst.components.ksfun_enchant:Enable()
+            god:Enable()
+        end
+    end)
+
+
+    local oldLoad = inst.OnLoad
+    inst.OnLoad = function(inst, data)
+        inst.components.ksfun_power_system:SyncData()
+        if oldLoad then
+            oldLoad(inst, data)
+        end
+    end
+end
+
+
+local function getCanForgPower(doer, target, material)
+    local system = target.components.ksfun_power_system
+    if system then
+        local powers = system:GetAllPowers()
+        for k, v in pairs(powers) do
+            local forgable = v.components.ksfun_forgable
+            if forgable and forgable:CanForg(doer, material) then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
+
+local function startRefine(inst, doer)
+    local target = inst.components.container:GetItemInSlot(1)
+    local item   = inst.components.container:GetItemInSlot(2)
+
+    if target and item then
+        -- 进阶武器
+        local god = target.components.ksfun_god
+        if god and god:Upgrade() then
+            item:Remove()
+            return 10
+        end
+
+        -- 附魔武器
+        local enchant = target.components.ksfun_enchant
+        if enchant and enchant:Enchant(item, doer) then
+            item:Remove()
+            return 10
+        end
+
+        -- 强化某个属性
+        local power = getCanForgPower(doer, target, item)
+        if power then
+            power.components.ksfun_forgable:Forg(doer, item)
+            return 3
+        end
+    end
+    return 0
+end
+
+
+local function onStationWorkFinish(inst, data)
+    if data.name == "refine" then
+        inst.components.container.canbeopened = true
+    end
+end
+
+
+local function delayOpenFn(chest, doer)
+    local time = KSFUN_TUNING.DEBUG and 1
+        or startRefine(chest, doer)
+    if time > 0 then
+        chest.components.container:Close(doer)
+        chest.components.timer:StartTimer("refine", time)
+        chest.components.container.canbeopened = false
+    end
+end
+
+
+local function initStation(inst)
+    local cotainer = inst.components.container
+        or inst:AddComponent("cotainer")
+    cotainer:WidgetSetup("dragonflyfurnace")
+    cotainer.onopenfn = nil
+    cotainer.onclosefn = nil
+    cotainer.skipclosesnd = true
+    cotainer.skipopensnd = true
+    if inst.components.timer == nil then
+        inst:AddComponent("timer")
+    end
+    inst:ListenForEvent("timerdone", onStationWorkFinish)
+    inst.startWork = delayOpenFn
+end
+
+
+AddPrefabPostInit("dragonflyfurnace", initStation)
+for k, _ in pairs(itemsdef.ksfunitems) do
+    AddPrefabPostInit(k, initEquipments)
+end

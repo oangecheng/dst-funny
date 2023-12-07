@@ -123,8 +123,8 @@ function KSFUN_POWERS:GetPowersData()
         local lv   = power.components.ksfun_level:GetLevel()
         local exp  = power.components.ksfun_level:GetExp()
         local breakcnt = -1
-        if power.components.ksfun_breakable then
-            breakcnt = power.components.ksfun_breakable:GetCount()
+        if power.components.ksfun_god then
+            breakcnt = power.components.ksfun_god:GetGod()
         end
         data[k] = {
             name = k,

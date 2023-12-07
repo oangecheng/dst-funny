@@ -24,8 +24,6 @@ function KSFUN_WORLD_PLAYERS:CachePlayerStatus(player)
     if player.components.ksfun_power_system then
         local data = self.playerdatas[player.userid] or {}
         data.powers = player.components.ksfun_power_system:GetAllPowers()
-        -- 保存成就值
-        data.achievements  = player.components.ksfun_achievements:GetValue()
         for k,v in pairs(data.powers) do
             v.components.ksfun_power:Detach()
         end
@@ -62,7 +60,6 @@ function KSFUN_WORLD_PLAYERS:OnSave()
     local data = {}
     for k, v in pairs(self.playerdatas) do
         local userdata = {}
-        userdata.achievements = v.achievements or 0
         if next(v.powers) then
             local powers = {}
             for k1, v1 in pairs(v.powers) do
@@ -85,8 +82,6 @@ function KSFUN_WORLD_PLAYERS:OnLoad(data)
         for k, v in pairs(data) do
             
             local userdata = {}
-            userdata.achievements = data.achievements or 0
-
             if next(v.powers) then
                 local powers = {}
                 for k1, v1 in pairs(v.powers) do

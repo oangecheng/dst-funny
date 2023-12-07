@@ -31,13 +31,6 @@ local function canRewardSpecial(player, tasklv)
     if hit then
         return true
     end
-
-    --- 兜底策略
-    if player.components.achievements then
-        if player.components.achievements:Consume() then
-            return true
-        end
-    end
     return false
 end
 
