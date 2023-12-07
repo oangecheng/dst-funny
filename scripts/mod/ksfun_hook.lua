@@ -212,7 +212,7 @@ end)
 
 
 local function cookTimeMulti(doer)
-    local lv = KsFunGetPowerLv(doer, KSFUN_TUNING.PLAYER_POWER_NAMES.COOKER)
+    local lv = KsFunGetPowerLv(doer, KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
     return lv and math.max(1 - lv * 0.005, 0.5) or 1
 end
 

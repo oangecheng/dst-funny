@@ -82,7 +82,8 @@
         "RGB",
         "MakePlacer",
         "MakeObstaclePhysics",
-        "FRAMES"
+        "FRAMES",
+        "KSFUN_TAGS"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",

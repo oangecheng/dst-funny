@@ -1,0 +1,12 @@
+<Atlas>
+	<Texture filename="ksfun_potions.tex" />
+    <Elements>
+        <Element name="farmer.tex" u1="0" u2="0.125" v1="0.875" v2="1" />
+        <Element name="health.tex" u1="0.125" u2="0.25" v1="0.875" v2="1" />
+        <Element name="hunger.tex" u1="0.25" u2="0.375" v1="0.875" v2="1" />
+        <Element name="hunter.tex" u1="0.375" u2="0.5" v1="0.875" v2="1" />
+        <Element name="lucky.tex" u1="0.5" u2="0.625" v1="0.875" v2="1" />
+        <Element name="picker.tex" u1="0.625" u2="0.75" v1="0.875" v2="1" />
+        <Element name="sanity.tex" u1="0.75" u2="0.875" v1="0.875" v2="1" />
+    </Elements>
+</Atlas>

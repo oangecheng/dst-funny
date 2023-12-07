@@ -49,18 +49,8 @@ AddReplicableComponent("ksfun_power_system")
 AddReplicableComponent("ksfun_level")
 
 
-local player_panel = require "mod/my_screen"
-AddClassPostConstruct("widgets/controls", function(self, owner)
-	owner.player_panel = self:AddChild(player_panel(self.owner))
-    owner.player_panel:Hide()
-    owner.player_panel_showing = false
-end)
-
-
-
 
 if GLOBAL.TheNet:GetIsServer() then
-    modimport("scripts/mod/ksfun_station.lua")
     modimport("scripts/mod/ksfun_init.lua")
 end
 

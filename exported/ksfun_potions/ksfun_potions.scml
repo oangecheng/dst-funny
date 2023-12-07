@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spriter_data scml_version="1.0" generator="BrashMonkey Spriter" generator_version="b5">
+    <folder id="0" name="image">
+        <file id="0" name="image/1.png" width="150" height="150" pivot_x="0.532895" pivot_y="0.131579"/>
+    </folder>
+    <folder id="1" name="sanity">
+        <file id="0" name="sanity/8.png" width="150" height="150" pivot_x="0.467105" pivot_y="0.177632"/>
+    </folder>
+    <folder id="2" name="picker">
+        <file id="0" name="picker/9.png" width="150" height="150" pivot_x="0.5" pivot_y="0.151316"/>
+    </folder>
+    <folder id="3" name="lucky">
+        <file id="0" name="lucky/7.png" width="150" height="150" pivot_x="0.539474" pivot_y="0.210526"/>
+    </folder>
+    <folder id="4" name="hunter">
+        <file id="0" name="hunter/4.png" width="150" height="150" pivot_x="0.513158" pivot_y="0.111842"/>
+    </folder>
+    <folder id="5" name="hunger">
+        <file id="0" name="hunger/1.png" width="150" height="150" pivot_x="0.539474" pivot_y="0.151316"/>
+    </folder>
+    <folder id="6" name="health">
+        <file id="0" name="health/5.png" width="150" height="150" pivot_x="0.506579" pivot_y="0.203947"/>
+    </folder>
+    <folder id="7" name="farmer">
+        <file id="0" name="farmer/11.png" width="150" height="150" pivot_x="0.539474" pivot_y="0.203947"/>
+    </folder>
+    <entity id="0" name="ksfun_potions">
+        <animation id="0" name="idle" length="1000">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" name="1" folder="0" file="0" abs_x="0" abs_y="0" abs_pivot_x="0.532895" abs_pivot_y="0.131579" abs_angle="0" abs_scale_x="1" abs_scale_y="1" abs_a="1" timeline="0" key="0" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="1">
+                <key id="0" spin="0">
+                    <object folder="0" file="0" angle="0"/>
+                </key>
+            </timeline>
+        </animation>
+    </entity>
+</spriter_data>

@@ -2,17 +2,13 @@ local PLAYER_POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
 local assets = {
-    Asset("ANIM" , "anim/ksfun_potions.zip"),	
+    Asset("ANIM" , "anim/ksfun_potions.zip"),
+    Asset("ATLAS", "images/inventoryitems/ksfun_potions.xml"),
+    Asset("IMAGE", "images/inventoryitems/ksfun_potions.tex")
 }
 
 --- 属性宝石前缀
 local prefix = "ksfun_potion_"
-
-
-for k,v in pairs(PLAYER_POWERS) do
-    table.insert( assets, Asset("ATLAS", "images/inventoryitems/ksfun_potion_"..v..".xml"))
-    table.insert( assets, Asset("IMAGE", "images/inventoryitems/ksfun_potion_"..v..".tex"))
-end
 
 
 local function onUseFn(doer, potion)
@@ -53,9 +49,10 @@ local function MakePotion(name)
 
         MakeInventoryPhysics(inst)
     
-        inst.AnimState:SetBank("ksfun_potion")
-        inst.AnimState:SetBuild("ksfun_potion")
-        inst.AnimState:PlayAnimation(name)
+        inst.AnimState:SetBank("ksfun_potions")
+        inst.AnimState:SetBuild("ksfun_potions")
+        inst.AnimState:OverrideSymbol("image", "ksfun_potions", name)
+        inst.AnimState:PlayAnimation("idle")
     
         inst:AddTag("ksfun_potion")
     
@@ -70,9 +67,10 @@ local function MakePotion(name)
 
         inst:AddComponent("inspectable")
         inst:AddComponent("stackable")
-        inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITE
+        inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
         inst:AddComponent("inventoryitem")
-        inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_potion_"..name..".xml"
+        inst.components.inventoryitem.imagename = name
+        inst.components.inventoryitem.atlasname = "images/inventoryitems/ksfun_potions.xml"
     
         return inst
     end

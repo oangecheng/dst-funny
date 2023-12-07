@@ -47,7 +47,7 @@ end
 ---comment 设置等级，一般只用在怪物身上
 ---@param lv integer 等级
 function KsFunLevel:SetLevel(lv)
-    local tlv = math.min(lv, self.max)
+    local tlv = self.max and math.min(lv, self.max) or lv
     if tlv ~= self.lv then
         self.lv = tlv
     end
@@ -74,7 +74,7 @@ end
 
 --- 判断当前是否已是最大等级
 function KsFunLevel:IsMax()
-    return self.lv >= self.max
+    return self.max and self.lv >= self.max
 end
 
 

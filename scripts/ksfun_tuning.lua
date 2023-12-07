@@ -7,23 +7,19 @@ KSFUN_TUNING =  {
     MODE = 1,
     IS_CH = true,
 
-    DEBUG = false,
+    DEBUG = true,
     PRINT_LOG = true,
     LOG_TAG = "ksfun_log: ",  
 
     -- 角色属性
     PLAYER_POWER_NAMES = {
-
-        HEALTH        = "player_health",
-        HUNGER        = "player_hunger",
-        SANITY        = "player_sanity",
-        LUCKY         = "player_lucky",
-        -- LOCOMOTOR     = "player_locomotor",
-        PICK          = "player_pick",
-        FARM          = "player_farm",
-        KILL_DROP     = "player_killdrop",
-        COOKER        = "player_cooker",
-        
+        HEALTH        = "health",
+        HUNGER        = "hunger",
+        SANITY        = "sanity",
+        LUCKY         = "lucky",
+        PICK          = "picker",
+        FARM          = "farmer",
+        HUNTER        = "hunter",        
     },
 
     -- 物品属性

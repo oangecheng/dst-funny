@@ -557,7 +557,7 @@ local function killItemDrop(inst, data)
             return
         end
 
-        local power = inst.components.ksfun_power_system:GetPower(NAMES.KILL_DROP)
+        local power = inst.components.ksfun_power_system:GetPower(NAMES.HUNTER)
         if power == nil then
             return
         end
@@ -578,7 +578,7 @@ local function killItemDrop(inst, data)
         if victim.components.health then
             local max = victim.components.health.maxhealth
             if max >= 1000 then
-                KsFunPowerGainExp(inst, NAMES.KILL_DROP, max/100)
+                KsFunPowerGainExp(inst, NAMES.HUNTER, max/100)
             end 
         end
     end
@@ -663,7 +663,7 @@ local lucky = {
 ------------------------------------------------------------------------------------------- 厨子 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local function onHarvestFood(inst, data)
     if data.food  then
-        KsFunPowerGainExp(inst, NAMES.COOKER, 10)
+        KsFunPowerGainExp(inst, NAMES.HUNGER, 10)
     end
 end
 
@@ -691,10 +691,8 @@ local playerpowers = {
     [NAMES.HEALTH]      = health,
     [NAMES.PICK]        = pick,
     [NAMES.FARM]        = farm,
-    [NAMES.KILL_DROP]   = killdrop,
-    [NAMES.LOCOMOTOR]   = locomotor,
+    [NAMES.HUNTER]      = killdrop,
     [NAMES.LUCKY]       = lucky,
-    [NAMES.COOKER]      = cooker,
 }
 
 

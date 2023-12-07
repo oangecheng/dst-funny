@@ -133,6 +133,8 @@ function KSFUN_POWERS:GetPowersData()
             breakcnt = breakcnt
         }
     end
+
+    KsFunLog("GetPowersData", data)
     return data
 end
 
@@ -140,10 +142,10 @@ end
 --- 同步用户数据
 --- power的等级经验
 function KSFUN_POWERS:SyncData()
-    local data = self:GetPowersData()
-    if self.inst.replica.ksfun_power_system then
-        self.inst.replica.ksfun_power_system:SyncData(json.encode(data))
-    end
+    -- local data = self:GetPowersData()
+    -- if next(data) ~= nil and self.inst.replica.ksfun_power_system then
+    --     self.inst.replica.ksfun_power_system:SyncData(json.encode(data))
+    -- end
 end
 
 
