@@ -1,9 +1,9 @@
 
-local ksfun_actions = {
+local actions = {
     KSFUN_USE_ITEM = {
         id = "KSFUN_USE_ITEM",
         strfn = function(act)
-            return "KSFUN_USE_ITEM"
+            return "DRINK_POTION"
         end,
         fn = function(act)
             local doer = act.doer
@@ -19,7 +19,7 @@ local ksfun_actions = {
 
 
 
-for k, v in pairs(ksfun_actions) do
+for k, v in pairs(actions) do
     local _action = Action()
     _action.id = v.id
     _action.priority = v.priority or 0
@@ -36,12 +36,6 @@ for k, v in pairs(ksfun_actions) do
     AddAction(_action)
 end
 
-
-STRINGS.ACTIONS.KSFUN_USE_ITEM = {
-    GENERIC = ACTIONS_KSFUN_USE_ITEM_GENERIC_STR,
-    KSFUN_USE_ITEM = ACTIONS_KSFUN_USE_ITEM_STR,
-    ACCEPT = ACTIONS_KSFUN_TASK_DEMAND_STR,
-}
 
 
 AddComponentAction("INVENTORY", "inventoryitem", function(inst, doer, actions, right)

@@ -1,6 +1,5 @@
 GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) end})
 
-modimport("scripts/util/strings_c.lua")
 
 require("ksfun_tuning")
 require("util/ksfun_functions")
@@ -13,6 +12,11 @@ local diffculty = GetModConfigData("diffculty")
 KSFUN_TUNING.DIFFCULTY = diffculty or 0
 local mode = GetModConfigData("mode")
 KSFUN_TUNING.MODE = mode or 0 
+
+
+
+modimport("scripts/strings/strings_c.lua")
+modimport("scripts/strings/action_strs.lua")
 
 
 

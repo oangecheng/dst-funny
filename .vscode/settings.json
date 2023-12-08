@@ -83,7 +83,9 @@
         "MakePlacer",
         "MakeObstaclePhysics",
         "FRAMES",
-        "KSFUN_TAGS"
+        "KSFUN_TAGS",
+        "AddStategraphPostInit",
+        "AddActionQueuerAction"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",
