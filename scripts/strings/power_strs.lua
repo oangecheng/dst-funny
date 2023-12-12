@@ -10,20 +10,13 @@ STRINGS.NAMES.KSFUN_POWER_HUNTER = "猎人"
 STRINGS.NAMES.KSFUN_POWER_LUCKY  = "幸运"
 
 
-STRINGS.PLAYER_POWERS = {
-    HUNGER = {
-        isch and "饥民" or "Hungry people",
-        isch and "助手" or "Assistant",
-        isch and "厨子" or "Cooker",
-        isch and ""
-    },
-    HEALTH = {
-        isch and "侍从" or "Squire",
-        isch and "狂战士" or "Warrior", 
-        isch and "骑士" or "Knight",
-        isch and "圣骑士" or "Paladin",
-        isch and "战神" or "Mars",
-    }
+STRINGS.PLAYER_POWERS = isch and {
+    HUNGER = { "饥民", "助手", "厨子", "主厨", "食神" },
+    SANITY = { "学徒", "通识者", "解密专家" },
+    HEALTH = { "侍从", "狂战士", "骑士", "圣骑士", "战神" }
+} or {
+    HUNGER = { "Hungry people", "Assistant", "Cooker", "Chief", "Food god" },
+    HEALTH = { "Squire", "Warrior", "Knight", "Paladin", "Mars", }
 }
 
 
