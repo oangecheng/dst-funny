@@ -295,51 +295,40 @@ function KsFunIngredient(prefab, num)
 end
 
 
-
-
-
 --添加临时标签
-function KsFunTag(owner, tag, isadd)
-    if isadd then
-        --标签计数
-        owner.medal_tag = owner.medal_tag or {}
-        owner.medal_tag[tag] = owner.medal_tag[tag] and owner.medal_tag[tag] + 1 or 1
-        if not owner:HasTag(tag) then
-            owner:AddTag(tag)
-            --临时标签组
-            owner.medal_t_tag = owner.medal_t_tag or {}
-            owner.medal_t_tag[tag] = true
-        end
-    else
-        if owner.medal_tag and owner.medal_tag[tag] then
-            owner.medal_tag[tag]=owner.medal_tag[tag]>1 and owner.medal_tag[tag]-1 or nil
-            if not owner.medal_tag[tag] and owner.medal_t_tag and owner.medal_t_tag[tag] then
-                owner:RemoveTag(tag)
-                owner.medal_t_tag[tag]=nil
-            end
+function KsFunAddTag(owner, tag)
+    owner.ksfun_tag = owner.ksfun_tag or {}
+    if not owner:HasTag(tag) then
+        owner:AddTag(tag)
+        owner.ksfun_tag[tag] = true
+    end
+end
+
+--移除临时标签
+function KsFunRemoveTag(owner, tag)
+    if owner.ksfun_tag and owner.ksfun_tag[tag] then
+        if owner:HasTag(tag) then
+            owner:RemoveTag(tag)
+            owner.ksfun_tag[tag] = nil
         end
     end
 end
 
 --添加临时组件
-function KsFunAddComponent(owner,com)
-	--组件计数
-	owner.medal_com=owner.medal_com or {}
-	owner.medal_com[com]=owner.medal_com[com] and owner.medal_com[com]+1 or 1
-	if not owner.components[com] then
-		owner:AddComponent(com)
-		--临时组件组
-		owner.medal_t_com=owner.medal_t_com or {}
-		owner.medal_t_com[com]=true
-	end
+function KsFunAddComponent(owner, com)
+    owner.ksfun_com = owner.ksfun_com or {}
+    if not owner.components[com] then
+        owner:AddComponent(com)
+        owner.ksfun_com[com] = true
+    end
 end
+
 --移除临时组件
-function KsFunRemoveComponent(owner,com)
-	if owner.medal_com and owner.medal_com[com] then
-		owner.medal_com[com]=owner.medal_com[com]>1 and owner.medal_com[com]-1 or nil
-		if not owner.medal_com[com] and owner.medal_t_com and owner.medal_t_com[com] then
-			owner:RemoveComponent(com)
-			owner.medal_t_com[com]=nil
-		end
-	end
+function KsFunRemoveComponnet(owner, com)
+    if owner.ksfun_com and owner.ksfun_com[com] then
+        if owner.components[com] then
+            owner:RemoveComponent(com)
+            owner.ksfun_t_com[com] = nil
+        end
+    end
 end

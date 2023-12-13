@@ -1,6 +1,11 @@
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 
+
+local function giveBlueprint()
+    
+end
+
 local function onbuilditemfn(player)
     local exp = math.random(3, 5)
     KsFunPowerGainExp(player, NAMES.SANITY, exp)
@@ -9,23 +14,46 @@ end
 local function onbuildstructurefn(player)
     local exp = math.random(6, 10)
     KsFunPowerGainExp(player, NAMES.SANITY, exp)
+
 end
 
 
-local function updatefn(inst, target, reset)
+local function updatefn(inst, target)
     local maxsanity = inst.maxsanity or 100
     local sanity = target.components.sanity
     local lv = inst.components.ksfun_level:GetLevel()
 
     if lv > 0 and sanity then
         local percent = sanity:GetPercent()
-        sanity.max = reset and maxsanity or math.floor(maxsanity * (1 + lv * 0.01) + 0.5)
+        sanity.max = math.floor(maxsanity * (1 + lv * 0.01) + 0.5)
         sanity:SetPercent(percent)
     end
 
     if lv > 20 then
-        KsFunTag(target, "reader", not reset)
-        KsFunTag(target, "bookbuilder", not reset)
+        KsFunAddTag(target,"handyperson")--女工科技
+		KsFunAddTag(target,"fastbuilder")--快速建造
+    end
+
+    if lv > 40 then
+        KsFunAddTag(target, "bookbuilder")
+        KsFunAddComponent(target, "reader")
+        local reader = target.components.reader
+        if inst.penaltymulti ~= nil and reader then
+            inst.penaltymulti = reader:GetSanityPenaltyMultiplier()
+        end
+        if inst.penaltymulti then
+            --初始0.8倍消耗
+            local m = math.max(1 - (lv - 20) * 0.01, 0.5)
+            reader:SetSanityPenaltyMultiplier(inst.penaltymulti * m)
+        end
+    end
+
+    if lv > 60 then
+        
+    end
+
+    if lv > 20 then
+        target:PushEvent("refreshcrafting")--更新制作栏
     end
 end
 

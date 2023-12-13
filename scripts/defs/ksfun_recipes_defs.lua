@@ -23,3 +23,10 @@ local recipespick = {
 local recipessanity = {
     gears               = { placer = 0, materials = { [potionsanity] = 1, goldnugget = 10, redgem = 1, bluegem = 1 }}
 }
+
+
+
+return {
+    [NAMES.SANITY] = recipessanity,
+    -- [NAMES.PICK]   = recipespick
+}
