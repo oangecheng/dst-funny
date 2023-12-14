@@ -1,8 +1,7 @@
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
-local PREFIX = "ksfun_potion_"
 
-local potionpick   = PREFIX..NAMES.PICK
-local potionsanity = PREFIX..NAMES.SANITY
+local potionpick   = NAMES.PICK
+local potionsanity = NAMES.SANITY
 
 
 

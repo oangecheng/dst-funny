@@ -85,7 +85,8 @@
         "FRAMES",
         "KSFUN_TAGS",
         "AddStategraphPostInit",
-        "AddActionQueuerAction"
+        "AddActionQueuerAction",
+        "KsFunGetPowerData"
     ],
     "Lua.diagnostics.disable": [
         "undefined-doc-name",

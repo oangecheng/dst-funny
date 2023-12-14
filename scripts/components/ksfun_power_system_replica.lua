@@ -1,9 +1,9 @@
 
 local function onPowerWithLevelDirty(self, inst)
-    -- local jsdata = self._itempowers:value()
-    -- if jsdata then
-    --     self.powers = json.decode(jsdata)
-    -- end
+    local jsdata = self._itempowers:value()
+    if jsdata and jsdata ~= "" then
+        self.powers = json.decode(jsdata)
+    end
 end
 
 

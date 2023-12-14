@@ -21,22 +21,24 @@ AddRecipe2(
 local NAMES = KSFUN_TUNING.PLAYER_POWER_NAMES
 local PREFIX = "ksfun_potion_"
 local potions = {
-    PREFIX..NAMES.PICK,
-    PREFIX..NAMES.SANITY
+    NAMES.PICK,
+    NAMES.SANITY
 }
 
 local recipes = require("defs/ksfun_recipes_defs")
 for k, v in pairs(recipes) do
     for k1, v1 in pairs(v) do
         local ingredients = {}
-        
         for m, num in pairs(v1.materials) do
             local atlas = nil
+            local image = nil
             ---@diagnostic disable-next-line: undefined-field
             if table.contains(potions, m) then
-                atlas  = "images/inventoryitems/"..m..".xml"
+                atlas = "images/inventoryitems/ksfun_potions.xml"
+                image = m..".tex"
+                m = PREFIX..m
             end
-            table.insert(ingredients, Ingredient(m, num, atlas))
+            table.insert(ingredients, Ingredient(m, num, atlas, nil, image))
         end
 
         local placer = nil

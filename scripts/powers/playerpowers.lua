@@ -10,7 +10,7 @@ local recipes = require "defs/ksfun_recipes_defs"
 ---@param lv integer 等级
 ---@return integer 当前等阶
 local function getGodLv(lv)
-    return math.floor(lv * 0.05) + 1
+    return math.min(math.floor(lv * 0.05) + 1, 6)
 end
 
 
@@ -20,12 +20,12 @@ local function tryGiveBlueprint(target, name)
         local r = KsFunGetPowerData(target, name, BLUEPRINTS_KEY)
         local hit = r and math.random() < r or false
         local drops = recipes[name]
-        if hit and drops and target.components.builder and target.components.builder.inventory then
+        if hit and drops and target.components.builder and target.components.inventory then
             for k, v in pairs(drops) do
                 if not target.components.builder:KnowsRecipe(k) then
                     local item = SpawnPrefab(k.."_blueprint")
                     if item then
-                        target.components.builder.inventory:GiveItem(item)
+                        target.components.inventory:GiveItem(item)
                     end
                 end
             end
@@ -84,7 +84,7 @@ end
 
 
 local sanity6 = function (inst, target, lv)
-    target:AddTag("ksfun_god"..NAMES.SANITY)
+    KsFunAddTag(target, "ksfun_god"..NAMES.SANITY)
 end
 
 
@@ -106,6 +106,7 @@ end
 local function updatefn(inst, target)
     local lv = inst.components.ksfun_level:GetLevel()
     local godlv = getGodLv(lv)
+    KsFunLog("onLevelChange", NAMES.SANITY, lv, godlv)
     for i = 1, godlv do
         local fn = sanitygods[i]
         fn(inst, target, lv)
