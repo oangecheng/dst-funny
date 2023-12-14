@@ -332,3 +332,29 @@ function KsFunRemoveComponnet(owner, com)
         end
     end
 end
+
+
+---comment 临时存一份数据到target上
+---@param target any
+---@param name string
+---@param datakey string
+---@param data any 类型自己做好管理
+function KsFunSetPowerData(target, name, datakey, data)
+    local key = "ksfun_power_".. name
+    target[key] = target[key] or {}
+    target[key][datakey] = data
+end
+
+
+---comment 从目标上取数据
+---@param target any
+---@param name string
+---@param datakey string
+---@return any 数据
+function KsFunGetPowerData(target, name, datakey)
+    local key = "ksfun_power_".. name
+    if target[key] ~= nil then
+        return target[key][datakey]
+    end
+    return nil
+end

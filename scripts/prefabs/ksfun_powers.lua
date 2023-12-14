@@ -17,7 +17,7 @@ local function MakePower(name, data)
 
         -- 首次绑定刷新下状态
         if data.onstatechange then
-            data.onstatechange(inst)
+            data.onstatechange(inst, target, name)
         end
     end
 
@@ -27,7 +27,7 @@ local function MakePower(name, data)
                 inst.target:PushEvent(KSFUN_EVENTS.POWER_REMOVE, { name = name })
             else
                 if data.onstatechange then
-                    data.onstatechange(inst)
+                    data.onstatechange(inst, inst.target, name)
                 end
             end
         end
@@ -105,6 +105,7 @@ local function MakePower(name, data)
         power.keepondespawn = true
 
         inst.isgod = false
+        inst.name  = name
 
     
         inst:AddComponent("ksfun_level")
@@ -155,7 +156,7 @@ local powers = {}
 
 local powersdef = MergeMaps(
     require("powers/ksfun_powers_item"),
-    require("powers/ksfun_powers_player"),
+    require("powers/playerpowers"),
     require("powers/ksfun_powers_mon"),
     require("powers/ksfun_powers_nega")
 )
