@@ -87,3 +87,8 @@ KSFUN_POWER_CONFIGS = {
 KSFUN_TAGS = {
     REPAIRABLE = "ksfun_repairable"
 }
+
+
+KSFUN_RESISTS = {
+    SANITYAURA = "sanityaura"
+}
