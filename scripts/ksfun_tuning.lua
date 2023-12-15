@@ -85,7 +85,8 @@ KSFUN_POWER_CONFIGS = {
 
 
 KSFUN_TAGS = {
-    REPAIRABLE = "ksfun_repairable"
+    REPAIRABLE = "ksfun_repairable",
+    CHEF = "ksfun_chef",
 }
 
 

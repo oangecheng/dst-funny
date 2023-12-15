@@ -236,6 +236,7 @@ end
 ---comment 饱食度三阶
 ---加厨师的一堆标签
 ---烹饪加速
+---晾晒加速
 local function hunger3Fn(power, target, lv, excuted)
     KsFunAddTag(target,"masterchef")--大厨标签
 	KsFunAddTag(target,"professionalchef")--调料站
@@ -243,11 +244,11 @@ local function hunger3Fn(power, target, lv, excuted)
 end
 
 
-
+---comment 饱食度四阶，制作特殊物品，使用特殊物品
 local function hunger4Fn(power, target, lv, excuted)
-    
-    
+    KsFunAddTag(target, KSFUN_TAGS.CHEF)
 end
+
 
 
 ---comment 计算食物能够获得的经验值
