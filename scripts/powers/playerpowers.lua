@@ -22,12 +22,15 @@ end
 local function updatePowerLvFn(fns, power, target)
     local lv = power.components.ksfun_level:GetLevel()
     local godlv = getGodLv(lv)
+    local size  = GetTableSize(fns)
     KsFunLog("onLevelChange", power.prefab, lv, godlv)
     for i = 1, godlv do
-        local data = fns[i]
-        if data then
-            data.fn(power, target, lv, data.excuted)
-            data.excuted = true
+        if i <= size then
+            local data = fns[i]
+            if data then
+                data.fn(power, target, lv, data.excuted)
+                data.excuted = true
+            end
         end
     end
 end
@@ -161,19 +164,8 @@ local function onBuildFn(player, multiplier)
     tryGiveBlueprint(player, NAMES.SANITY)
 end
 
-
-local sanityfns = {
-    { fn = sanity1Fn,  excuted = false },
-    { fn = sanity2Fn,  excuted = false },
-    { fn = sanity3Fn,  excuted = false },
-    { fn = sanity4Fn,  excuted = false },
-    { fn = sanity5Fn,  excuted = false },
-    { fn = sanity6Fn,  excuted = false },
-}
-
-
+---comment 精神绑定
 local function onSanityAttachFn(inst, target)
-    
     local sanity = target.components.sanity
     inst.sanitymax = sanity and sanity.max or nil
     if inst.percent then
@@ -191,7 +183,14 @@ local function onSanityAttachFn(inst, target)
     end)
 end
 
-
+local sanityfns = {
+    { fn = sanity1Fn,  excuted = false },
+    { fn = sanity2Fn,  excuted = false },
+    { fn = sanity3Fn,  excuted = false },
+    { fn = sanity4Fn,  excuted = false },
+    { fn = sanity5Fn,  excuted = false },
+    { fn = sanity6Fn,  excuted = false },
+}
 local sanity = {
     onattach = onSanityAttachFn,
     onstatechange = function (inst, target) updatePowerLvFn(sanityfns, inst, target) end,
@@ -202,6 +201,95 @@ local sanity = {
 
 
 
+
+
+------------------------------------------------------------------------------------------- 饱食度 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+---comment 饱食度一阶 增加饱食上限
+local function hunger1Fn(power, target, lv, excuted)
+    local maxhunger = power.maxhunger or 100
+    local hunger = target.components.hunger
+    if hunger then
+        local percent = hunger:GetPercent()
+        hunger.max = math.floor(maxhunger * (1 + 0.01 * lv) + 0.5)
+        hunger:SetPercent(percent)
+    end
+end
+
+
+---comment 饱食度二阶，增加工作效率
+---每级新增1%的饱食度下降,最大不超过25%
+---升级可以提升角色的工作效率,无上限
+local function hunger2Fn(power, target, lv, excuted)
+    local hunger_multi = math.min((lv - 20) * 0.01 + 1, 1.25)
+    target.components.hunger.burnratemodifiers:SetModifier("ksfun_power_player_hunger", hunger_multi)
+    local workmultiplier = target.components.workmultiplier
+    if workmultiplier then
+        local work_multi = lv * 0.01 + 1
+        workmultiplier:AddMultiplier(ACTIONS.CHOP  , work_multi, power)
+        workmultiplier:AddMultiplier(ACTIONS.MINE  , work_multi, power)
+        workmultiplier:AddMultiplier(ACTIONS.HAMMER, work_multi, power)
+    end
+end
+
+
+---comment 饱食度三阶
+---加厨师的一堆标签
+---烹饪加速
+local function hunger3Fn(power, target, lv, excuted)
+    KsFunAddTag(target,"masterchef")--大厨标签
+	KsFunAddTag(target,"professionalchef")--调料站
+	KsFunAddTag(target,"expertchef")--熟练烹饪标签
+end
+
+
+
+local function hunger4Fn(power, target, lv, excuted)
+    
+    
+end
+
+
+---comment 计算食物能够获得的经验值
+---经验系数 饱食0.2  生命值0.3 精神值0.5
+---如果是某一项为负值，此次获得的经验值可能为负数
+local function onEat(eater, data)
+    local edible = data.food and data.food.components.edible
+    if not edible then
+        return
+    end
+    local hungerexp = edible:GetHunger(eater)
+    local healthexp = edible:GetHealth(eater)
+    local sanityexp = edible:GetSanity(eater)
+    local exp = 0.2 * hungerexp + healthexp * 0.3 + sanityexp * 0.5
+    KsFunPowerGainExp(eater, NAMES.HUNGER, exp)
+end
+
+
+---comment 饱食绑定
+local function onHungerAttachFn(power, target)
+    target:ListenForEvent("oneat", onEat)
+    local hunger = target.components.hunger
+    power.maxhunger = hunger.max
+    if power.percent then
+        hunger:SetPercent(power.percent)
+    end
+end
+
+local hungerfns = {
+    { fn = hunger1Fn, excuted = false },
+    { fn = hunger2Fn, excuted = false },
+    { fn = hunger3Fn, excuted = false },
+}
+local hunger = {
+    onattach = onHungerAttachFn,
+    onstatechange = function (power, target) updatePowerLvFn(hungerfns, power, target) end,
+    onsave = function (inst, data) data.percent = inst.target and inst.target.components.hunger:GetPercent() end,
+    onload = function (inst, data) inst.percent = data.percent or nil end
+}
+
+
 return {
-    [NAMES.SANITY] = sanity
+    [NAMES.SANITY] = sanity,
+    [NAMES.HUNGER] = hunger,
 }
