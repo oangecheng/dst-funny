@@ -320,17 +320,22 @@ end)
 --- 实现方式，在执行晾晒之前打上标记，获取时间的时候就可以根据标记计算时间
 AddComponentPostInit("dryable", function (self)
     local oldtimefn = self.GetDryTime
-    local mult = self.inst.drymaster and 0.1 or 1
-    return oldtimefn(self) * mult
+    self.GetDryTime = function (_)
+        local mult = self.inst.drymaster and 0.1 or 1
+        local t = oldtimefn(self)
+        KsFunLog("dryable hook", t, mult)
+        return t and t * mult or t
+    end
 end)
-
-local olddryfn = ACTIONS.DRY.fn
-ACTIONS.DRY.fn = function (act)
-    if act.invobject then act.invobject.drymaster = true end
-    local ret, reason = olddryfn(act)
-    act.invobject.drymaster = false
-    return ret, reason
-end
+AddComponentPostInit("dryer", function (self)
+    local oldSartDrying = self.StartDrying
+    self.StartDrying = function (_, dryable)
+        dryable.drymaster = true
+        local ret = oldSartDrying(self, dryable)
+        dryable.drymaster = false
+        return ret
+    end
+end)
 
 
 
