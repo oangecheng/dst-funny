@@ -1,3 +1,4 @@
+local PLAYER_POWERS = KSFUN_TUNING.PLAYER_POWER_NAMES
 
 ----------------------------------------------------------------------饱食度对移速的hook--------------------------------------------------------------------------------------------------
 local HOOK_SPEED_LEVEL = 100
@@ -212,8 +213,7 @@ end)
 
 
 local function cookTimeMulti(doer)
-    local lv = KsFunGetPowerLv(doer, KSFUN_TUNING.PLAYER_POWER_NAMES.HUNGER)
-    return lv and math.max(1 - lv * 0.005, 0.5) or 1
+    return KsFunGetPowerData(doer, PLAYER_POWERS.HUNGER, "COOK_MULTI") or 1
 end
 
 --修改烹饪组件,在锅中收获自己做的料理的时候推送事件
@@ -235,19 +235,6 @@ AddComponentPostInit("stewer", function(self)
             oldStartCooking(self, doer)
         end
         self.cooktimemult = oldmulti
-    end
-end)
-
-
---- hook晾肉架组件
-AddComponentPostInit("dryer", function (self)
-    local oldHarvest = self.Harvest
-    self.Harvest = function (self, harvester)
-        local success = oldHarvest(self, harvester)
-        if success then
-            harvester:PushEvent(KSFUN_EVENTS.HARVEST_DRY, { product = self.product })
-        end
-        return success
     end
 end)
 
@@ -316,30 +303,51 @@ end)
 
 
 
---- 晾晒加速hook
+--- 晾晒加速hook， 由于晾晒的动作没有传入doer，所以hook比较麻烦
 --- 实现方式，在执行晾晒之前打上标记，获取时间的时候就可以根据标记计算时间
 AddComponentPostInit("dryable", function (self)
     local oldtimefn = self.GetDryTime
     self.GetDryTime = function (_)
-        local mult = self.inst.drymaster and 0.1 or 1
+        local mult = self.inst.drymulti or 1
         local t = oldtimefn(self)
         KsFunLog("dryable hook", t, mult)
         return t and t * mult or t
     end
 end)
+
 AddComponentPostInit("dryer", function (self)
     local oldSartDrying = self.StartDrying
     self.StartDrying = function (_, dryable)
-        dryable.drymaster = true
+        dryable.drymulti = self.inst.drymulti
         local ret = oldSartDrying(self, dryable)
-        dryable.drymaster = false
+        dryable.drymulti = nil
         return ret
+    end
+
+    --- 推送收获事件
+    local oldHarvest = self.Harvest
+    self.Harvest = function (self, harvester)
+        local success = oldHarvest(self, harvester)
+        if success then
+            harvester:PushEvent(KSFUN_EVENTS.HARVEST_DRY, { product = self.product })
+        end
+        return success
     end
 end)
 
-
-
-
+--- hook 动作
+local oldDrnfn = ACTIONS.DRY.fn
+ACTIONS.DRY.fn = function(act)
+    if act.target and act.doer then
+        act.target.drymulti = KsFunGetPowerData(
+            act.doer, PLAYER_POWERS.HUNGER, "DRY_MULTI")
+    end
+    local ret, str = oldDrnfn(act)
+    if act.target and act.doer then
+        act.target.drymulti = nil
+    end
+    return ret, str
+end
 
 
 

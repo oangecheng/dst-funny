@@ -79,6 +79,9 @@ end
 local function sanity2Fn(inst, target, lv, excuted)
     KsFunAddTag(target, "handyperson")
     KsFunAddTag(target, "fastbuilder")
+    if not excuted then
+        target:PushEvent("refreshcrafting")
+    end
 end
 
 
@@ -94,6 +97,9 @@ local function sanity3Fn(inst, target, lv, excuted)
         local r = math.max(1 - (lv - 20) * 0.01, 0.5)
         KsFunLog("sanity3", r)
         reader:SetSanityPenaltyMultiplier(inst.pmcache * r)
+    end
+    if not excuted then
+        target:PushEvent("refreshcrafting")
     end
 end
 
@@ -234,19 +240,58 @@ end
 
 
 ---comment 饱食度三阶
----加厨师的一堆标签
 ---烹饪加速
 ---晾晒加速
 local function hunger3Fn(power, target, lv, excuted)
-    KsFunAddTag(target,"masterchef")--大厨标签
-	KsFunAddTag(target,"professionalchef")--调料站
-	KsFunAddTag(target,"expertchef")--熟练烹饪标签
+    local multi = 1 - math.min ((lv - GOD_STEP * 2) * 0.025, 0.5)
+    KsFunSetPowerData(target, NAMES.HUNGER, "DRY_MULTI", multi)
+    KsFunSetPowerData(target, NAMES.HUNGER, "COOK_MULTI", multi)
 end
 
 
----comment 饱食度四阶，制作特殊物品，使用特殊物品
+---comment 饱食度四阶
+---加厨师的一堆标签
 local function hunger4Fn(power, target, lv, excuted)
-    KsFunAddTag(target, KSFUN_TAGS.CHEF)
+    KsFunAddTag(target,"masterchef")--大厨标签
+	KsFunAddTag(target,"professionalchef")--调料站
+	KsFunAddTag(target,"expertchef")--熟练烹饪标签
+    if not excuted then
+        target:PushEvent("refreshcrafting")
+    end
+end
+
+
+---comment 饱食度五阶, 当饱食度>50%时，消耗2饱食度转换成1生命值
+local function hunger5Fn(power, target, lv, excuted)
+    if not excuted then
+        target:ListenForEvent("healthdelta", function (inst, data)
+            local health = inst.components.health
+            local hunger = inst.components.hunger
+            if health and hunger then
+                if inst.hungertask ~= nil then
+                    inst.hungertask:Cancel()
+                    inst.hungertask = nil
+                end
+                inst.hungertask = inst:DoPeriodicTask(3, function ()
+                    if hunger:GetPercent() > 0.5 and health:GetPercentWithPenalty() < 1 then
+                        hunger:DoDelta(2)
+                        health:DoDelta(1)
+                    else
+                        if inst.hungertask ~= nil then
+                            inst.hungertask:Cancel()
+                            inst.hungertask = nil
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+end
+
+
+---comment 饱食度六阶，制作传说中的厨具
+local function hunger6Fn(power, target, lv, excuted)
+    KsFunAddTag(target, "ksfun_god"..NAMES.HUNGER)
 end
 
 
@@ -281,6 +326,10 @@ local hungerfns = {
     { fn = hunger1Fn, excuted = false },
     { fn = hunger2Fn, excuted = false },
     { fn = hunger3Fn, excuted = false },
+    { fn = hunger4Fn, excuted = false },
+    { fn = hunger5Fn, excuted = false },
+    { fn = hunger6Fn, excuted = false },
+
 }
 local hunger = {
     onattach = onHungerAttachFn,

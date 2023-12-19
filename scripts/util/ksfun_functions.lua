@@ -358,3 +358,19 @@ function KsFunGetPowerData(target, name, datakey)
     end
     return nil
 end
+
+
+---comment 添加可以升级某个物品的标签
+---@param target any 玩家
+---@param itemprefab string 物品代码
+function KsFunAddUpgradeTag(target, itemprefab)
+    KsFunAddTag(target, "ksfun_upgrade"..itemprefab)
+end
+
+---comment 玩家是否可以升级某个物品
+---@param target any 玩家
+---@param itemprefab string 物品代码
+---@return boolean 是否具备
+function KsFunHasUpgradeTag(target, itemprefab)
+    return target and target:HasTag("ksfun_upgrade"..itemprefab)
+end
