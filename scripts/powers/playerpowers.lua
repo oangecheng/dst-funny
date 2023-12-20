@@ -261,28 +261,39 @@ local function hunger4Fn(power, target, lv, excuted)
 end
 
 
----comment 饱食度五阶, 当饱食度>50%时，消耗2饱食度转换成1生命值
+---comment 饱食度五阶, 每次进入夜晚时，当饱食度>60%时，每3s消耗2饱食度转换成1生命值
 local function hunger5Fn(power, target, lv, excuted)
     if not excuted then
-        target:ListenForEvent("healthdelta", function (inst, data)
-            local health = inst.components.health
-            local hunger = inst.components.hunger
-            if health and hunger then
-                if inst.hungertask ~= nil then
-                    inst.hungertask:Cancel()
-                    inst.hungertask = nil
-                end
-                inst.hungertask = inst:DoPeriodicTask(3, function ()
-                    if hunger:GetPercent() > 0.5 and health:GetPercentWithPenalty() < 1 then
-                        hunger:DoDelta(2)
-                        health:DoDelta(1)
-                    else
-                        if inst.hungertask ~= nil then
-                            inst.hungertask:Cancel()
-                            inst.hungertask = nil
-                        end
+
+        local function cancelTask()
+            if target.hungertask then
+                target.hungertask:Cancel()
+                target.hungertask = nil
+            end
+        end
+
+        target:WatchWorldState("isnight", function (inst, isnight)
+            if not isnight then
+                cancelTask()
+            else
+                local health = inst.components.health
+                local hunger = inst.components.hunger
+                if hunger and health  then
+                    local dhunger = (hunger:GetPercent() - 0.6) * hunger.max
+                    local dhealth = health:GetMaxWithPenalty() - (health.currenthealth or 0)
+                    if dhunger > 0 and dhealth > 0 then
+                        local cnt = math.floor(math.min(dhunger * 0.5, dhealth))
+                        inst.hungertask = inst:DoPeriodicTask(3, function ()
+                            if cnt > 0 then
+                                hunger:DoDelta(2)
+                                health:DoDelta(1, nil, power.prefab)
+                                cnt = cnt - 1
+                            else
+                                cancelTask()
+                            end
+                        end)
                     end
-                end)
+                end
             end
         end)
     end
