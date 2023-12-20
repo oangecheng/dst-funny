@@ -350,6 +350,86 @@ local hunger = {
 }
 
 
+
+
+
+
+------------------------------------------------------------------------------------------- 血量 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+---comment 血量一阶，增加血量上限
+local function health1Fn(power, target, lv, excuted)
+    local maxhealth = power.maxhealth or 100
+    local healthcom = target.components.health
+    if healthcom then
+        local percent = healthcom:GetPercent()
+        local max = math.floor(maxhealth * (1 + lv * 0.01) + 0.5)
+        healthcom:SetMaxHealth(max)
+        healthcom:SetPercent(percent)
+    end
+end
+
+
+---comment 血量二阶，增加防御，增加攻击
+local function health2Fn(power, target, lv, excuted)
+    local combat = target.components.combat
+    if combat then
+        local v = math.min((lv - GOD_STEP) * 0.01, 0.25)
+        combat.externaldamagemultipliers:SetModifier(power.prefab, v + 1)
+        combat.externaldamagetakenmultipliers:SetModifier(power.prefab, 1 - lv)
+    end
+end
+
+
+
+local function onKill(killer, data)
+    local victim = data.victim
+    if victim and victim.components.health and victim.components.freezable then
+        -- 所有经验都是10*lv 因此血量也需要计算为1/10
+        local exp = math.max(victim.components.health.maxhealth * 0.1, 1)
+        -- 击杀者能够得到满额的经验
+        KsFunPowerGainExp(killer, NAMES.HEALTH, exp)
+        -- 非击杀者经验值计算，范围10以内其他玩家
+        local x, y, z = victim.Transform:GetWorldPosition()
+        local players = TheSim:FindEntities(x, y, z, 10, { "player" })
+        if players then
+            local players_count = #players
+            -- 单人模式经验100%，多人经验获取会减少，最低50%
+            local multi = math.max((6 - players_count) * 0.2, 0.5)
+            for _, player in ipairs(players) do
+                -- 击杀者已经给了经验了
+                if player ~= killer then
+                    KsFunPowerGainExp(player, NAMES.HEALTH, exp * multi)
+                end
+            end
+        end
+    end
+end
+
+local function onHealthAttach(power, target)
+    target:ListenForEvent("killed", onKill)
+    local healthcom = target.components.health
+    power.maxhealth = healthcom.maxhealth
+    if power.percent then
+        healthcom:SetPercent(power.percent)
+    end
+end
+
+local healthfns = {
+
+}
+
+local health = {
+    onattach = onHungerAttachFn,
+    onstatechange = function (power, target) updatePowerLvFn(healthfns, power, target) end,
+    onsave = function (inst, data) data.percent = inst.target and inst.target.components.health:GetPercent() end,
+    onload = function (inst, data) inst.percent = data.percent or nil end
+}
+
+
+
+
+
+
 return {
     [NAMES.SANITY] = sanity,
     [NAMES.HUNGER] = hunger,
