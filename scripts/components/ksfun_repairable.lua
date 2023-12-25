@@ -96,7 +96,7 @@ end
 ---@return boolean 是否修理成功
 function Repairable:Repair(material, doer)
     local percent =  REPAIRITEMS.GetRepairItem(material, self.inst)
-    if self:Enable() and percent then
+    if self:IsEnabled() and percent then
         doRepair(self, material)
         return true
     end

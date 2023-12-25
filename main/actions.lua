@@ -15,6 +15,22 @@ local actions = {
             return false
         end
     },
+
+    KSFUN_REPAIR = {
+        id = "KSFUN_REPAIR",
+        strfn = function(act)
+            return "REPAIR"
+        end,
+        fn = function(act)
+            local doer = act.doer
+            if doer and act.target and act.target.components.ksfun_repairable then
+                if act.target and act.target.components.ksfun_repairable:Repair(act.invobject, act.doer) then
+                    return true
+                end
+            end
+            return false
+        end
+    },
 }
 
 
@@ -46,12 +62,11 @@ AddComponentAction("INVENTORY", "inventoryitem", function(inst, doer, actions, r
 end)
 
 
--- AddComponentAction("USEITEM", "inventoryitem", function(inst, doer, target, actions, right)
---     if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())
---         and inst:HasTag("ksfun_item") and doer:HasTag("player") and not doer:HasTag("playerghost") then
---         table.insert(actions, ACTIONS.KSFUN_ITEM_ACTIVATE)
---     end
--- end)
+AddComponentAction("USEITEM", "inventoryitem", function(inst, doer, target, actions, right)
+    if inst.prefab == "goldnugget" and target:HasTag("ksfun_item") then
+        table.insert(actions, ACTIONS.KSFUN_REPAIR)
+    end
+end)
 
 
 local sgwilsons = {"wilson", "wilson_client"}

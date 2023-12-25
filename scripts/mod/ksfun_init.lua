@@ -187,6 +187,8 @@ local itemsdef = require("defs/ksfun_items_def")
 local function initEquipments(inst)
     inst.ksfun_activatable = true
 
+    inst:AddTag("ksfun_item")
+
     inst:AddComponent("ksfun_enchant")
     inst:AddComponent("ksfun_power_system")
 
@@ -219,6 +221,8 @@ local function initEquipments(inst)
             oldLoad(inst, data)
         end
     end
+
+    repairable:Enable()
 end
 
 
