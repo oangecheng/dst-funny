@@ -575,3 +575,37 @@ AddPlayerPostInit(function (inst)
         end)
     end
 end)
+
+
+
+
+---hook状态
+AddStategraphPostInit("wilson", function(sg)
+
+    --击飞抗性
+    if sg.events and sg.events.knockback then
+        local oldfn = sg.events.knockback.fn
+        sg.events.knockback.fn = function(inst, data)
+            local v = KsFunGetPowerData(inst, PLAYER_POWERS.HEALTH, KSFUN_RESISTS.KNOCK)
+            if v and math.random() < v then
+               return
+            elseif oldfn then
+                return oldfn(inst, data)
+            end
+        end
+    end
+
+    --僵直抗性，概率抵抗
+	if sg.events and sg.events.attacked then
+		local oldfn = sg.events.attacked.fn
+		sg.events.attacked.fn = function(inst, data)
+            local v = KsFunGetPowerData(inst, PLAYER_POWERS.HEALTH, KSFUN_RESISTS.STIFF)
+			if inst:HasTag("playerghost") or ( v and math.random() < v )then
+				return
+			elseif oldfn then
+				return oldfn(inst, data)
+			end
+            
+        end
+	end
+end)

@@ -287,7 +287,7 @@ end
 
 local function initStation(inst)
     local cotainer = inst.components.container
-        or inst:AddComponent("cotainer")
+        or inst:AddComponent("container")
     cotainer:WidgetSetup("dragonflyfurnace")
     cotainer.onopenfn = nil
     cotainer.onclosefn = nil

@@ -380,6 +380,80 @@ local function health2Fn(power, target, lv, excuted)
 end
 
 
+---comment 血量三阶，多个减免
+---击飞抗性
+---吸血抗性
+---反伤抗性
+---真伤抗性
+local function health3Fn(power, target, lv, excuted)
+    local v = math.min((lv - GOD_STEP * 2) * 0.05, 1)
+    local n = NAMES.HEALTH
+    KsFunSetPowerData(target, n, KSFUN_RESISTS.STEAL, v)
+    KsFunSetPowerData(target, n, KSFUN_RESISTS.KNOCK, v)
+    KsFunSetPowerData(target, n, KSFUN_RESISTS.BRAMBLE, v)
+    KsFunSetPowerData(target, n, KSFUN_RESISTS.REALITY, v)
+end
+
+
+
+---comment 血量四阶
+---位面伤害&减伤
+---暗影增伤&减伤
+local function health4Fn(power, target, lv, excuted)
+    KsFunAddTag(target, "player_lunar_aligned")
+    KsFunAddTag(target, "player_shadow_aligned")
+    local v = math.min((lv - GOD_STEP * 3) * 0.01, 0.2)
+    local persist = target.components.damagetyperesist
+    if persist then
+        persist:AddResist("shadow_aligned", target, 1 - v, power.prefab)
+        persist:AddResist("lunar_aligned", target, 1 - v, power.prefab)
+    end
+    local bouns = target.components.damagetypebonus
+    if bouns then
+        bouns:AddBonus("lunar_aligned", target, 1 + v, power.prefab)
+        bouns:AddBonus("shadow_aligned", target, 1 + v, power.prefab)
+    end
+end
+
+
+---comment 血量5阶，僵直抗性
+local function health5Fn(power, target, lv, excuted)
+    local v = math.min((lv - GOD_STEP * 4) * 0.05, 1)
+    KsFunSetPowerData(target, NAMES.HEALTH, KSFUN_RESISTS.STIFF, v)
+end
+
+
+
+
+---comment 血量6阶，成神技能
+--- 永生，死亡后3s复活
+local function health6Fn(power, target, lv, excuted)
+    KsFunAddTag(target, "ksfun_god"..NAMES.HEALTH)
+
+    local function respawnfn(inst)
+        if inst.respawntask then
+           inst.respawntask:Cancel()
+           inst.respawntask = nil
+        end
+        inst.respawntask = inst:DoTaskInTime(3, function ()
+            inst.respawntask = nil
+            if inst:HasTag("playerghost") then
+                inst:PushEvent("respawnfromghost")
+            end
+        end)       
+    end
+    if target:HasTag("playerghost") then
+        respawnfn(target)
+    end
+    if not excuted then
+        target:ListenForEvent("ms_becameghost", function (inst)
+            respawnfn(inst)
+        end)
+    end
+end
+
+
+
 
 local function onKill(killer, data)
     local victim = data.victim
@@ -415,11 +489,16 @@ local function onHealthAttach(power, target)
 end
 
 local healthfns = {
-
+    { fn = health1Fn, excuted = false },
+    { fn = health2Fn, excuted = false },
+    { fn = health3Fn, excuted = false },
+    { fn = health4Fn, excuted = false },
+    { fn = health5Fn, excuted = false },
+    { fn = health6Fn, excuted = false },
 }
 
 local health = {
-    onattach = onHungerAttachFn,
+    onattach = onHealthAttach,
     onstatechange = function (power, target) updatePowerLvFn(healthfns, power, target) end,
     onsave = function (inst, data) data.percent = inst.target and inst.target.components.health:GetPercent() end,
     onload = function (inst, data) inst.percent = data.percent or nil end
@@ -433,4 +512,5 @@ local health = {
 return {
     [NAMES.SANITY] = sanity,
     [NAMES.HUNGER] = hunger,
+    [NAMES.HEALTH] = health,
 }

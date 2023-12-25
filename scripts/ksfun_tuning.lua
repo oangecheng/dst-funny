@@ -90,6 +90,11 @@ KSFUN_TAGS = {
 }
 
 
+---抗性定义
 KSFUN_RESISTS = {
-    SANITYAURA = "sanityaura"
+    STEAL = "health_steal",
+    KNOCK = "knockback",
+    BRAMBLE = "bramble",
+    REALITY = "reality",
+    STIFF = "stiff", --僵直
 }
