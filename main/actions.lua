@@ -63,7 +63,7 @@ end)
 
 
 AddComponentAction("USEITEM", "inventoryitem", function(inst, doer, target, actions, right)
-    if inst.prefab == "goldnugget" and target:HasTag("ksfun_item") then
+    if inst.prefab == "goldnugget"  then
         table.insert(actions, ACTIONS.KSFUN_REPAIR)
     end
 end)
@@ -73,6 +73,7 @@ local sgwilsons = {"wilson", "wilson_client"}
 for i, v in ipairs(sgwilsons) do
     local _dolongactions = {
         ACTIONS.KSFUN_USE_ITEM,
+        ACTIONS.KSFUN_REPAIR
     }
     for i1, v1 in ipairs(_dolongactions) do
         AddStategraphActionHandler(v, ActionHandler(v1, function(inst, action)

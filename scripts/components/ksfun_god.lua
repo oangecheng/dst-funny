@@ -54,6 +54,7 @@ end
 
 ---comment 提升等阶
 function God:Upgrade()
+    KsFunLog("Upgrade", self.enable, self.max, self.god)
     if self.enable then
         local god = math.min(self.max, self.god + 1)
         if self.god ~= god then

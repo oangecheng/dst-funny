@@ -185,32 +185,30 @@ end)
 local itemsdef = require("defs/ksfun_items_def")
 
 local function initEquipments(inst)
-    inst.ksfun_activatable = true
-
     inst:AddTag("ksfun_item")
-
     inst:AddComponent("ksfun_enchant")
     inst:AddComponent("ksfun_power_system")
 
 
     local level = inst:AddComponent("ksfun_level")
     level:SetOnStateChange(function ()
+        KsFunLog("weapon 3")
         inst.components.ksfun_power_system:SyncData()
     end)
 
     local god =  inst:AddComponent("ksfun_god")
     god:SetOnGodFn(function (_, lv)
+        KsFunLog("weapon 2")
         level:SetMax(lv)
+        level:SetLevel(lv)
     end)
 
 
     local repairable = inst:AddComponent("ksfun_repairable")
     repairable:SetEnableFn(function ()
-        if inst.ksfun_activatable then
-            inst.ksfun_activatable = false
-            inst.components.ksfun_enchant:Enable()
-            god:Enable()
-        end
+        KsFunLog("weapon 1")
+        inst.components.ksfun_enchant:Enable()
+        inst.components.ksfun_god:Enable()
     end)
 
 
@@ -222,7 +220,6 @@ local function initEquipments(inst)
         end
     end
 
-    repairable:Enable()
 end
 
 
@@ -247,8 +244,14 @@ local function startRefine(inst, doer)
 
     if target and item then
         -- 进阶武器
+        local repairable = target.components.ksfun_repairable
+        if item.prefab == "redgem" and repairable and not repairable:IsEnabled() then
+            repairable:Enable()
+            return
+        end
+
         local god = target.components.ksfun_god
-        if god and god:Upgrade() then
+        if item.prefab == "goldnugget" and god and god:Upgrade() then
             item:Remove()
             return 10
         end
@@ -279,9 +282,8 @@ end
 
 
 local function delayOpenFn(chest, doer)
-    local time = KSFUN_TUNING.DEBUG and 1
-        or startRefine(chest, doer)
-    if time > 0 then
+    local time = startRefine(chest, doer)
+    if time and time > 0 then
         chest.components.container:Close(doer)
         chest.components.timer:StartTimer("refine", time)
         chest.components.container.canbeopened = false

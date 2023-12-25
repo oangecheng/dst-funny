@@ -97,7 +97,7 @@ end
 function Repairable:Repair(material, doer)
     local percent =  REPAIRITEMS.GetRepairItem(material, self.inst)
     if self:IsEnabled() and percent then
-        doRepair(self, material)
+        doRepair(self, percent)
         return true
     end
     return false
