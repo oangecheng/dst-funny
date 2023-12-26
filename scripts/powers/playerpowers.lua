@@ -363,7 +363,8 @@ local function health1Fn(power, target, lv, excuted)
     if healthcom then
         local percent = healthcom:GetPercent()
         local max = math.floor(maxhealth * (1 + lv * 0.01) + 0.5)
-        healthcom:SetMaxHealth(max)
+        KsFunLog("health1Fn", maxhealth, max, percent)
+        healthcom.maxhealth = max
         healthcom:SetPercent(percent)
     end
 end
@@ -375,7 +376,7 @@ local function health2Fn(power, target, lv, excuted)
     if combat then
         local v = math.min((lv - GOD_STEP) * 0.01, 0.25)
         combat.externaldamagemultipliers:SetModifier(power.prefab, v + 1)
-        combat.externaldamagetakenmultipliers:SetModifier(power.prefab, 1 - lv)
+        combat.externaldamagetakenmultipliers:SetModifier(power.prefab, 1 - v)
     end
 end
 
@@ -457,9 +458,10 @@ end
 
 local function onKill(killer, data)
     local victim = data.victim
-    if victim and victim.components.health and victim.components.freezable then
+    if victim and victim.components.health and victim.components.combat then
         -- 所有经验都是10*lv 因此血量也需要计算为1/10
         local exp = math.max(victim.components.health.maxhealth * 0.1, 1)
+        KsFunLog("onKill", exp)
         -- 击杀者能够得到满额的经验
         KsFunPowerGainExp(killer, NAMES.HEALTH, exp)
         -- 非击杀者经验值计算，范围10以内其他玩家
