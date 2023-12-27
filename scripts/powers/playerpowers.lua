@@ -521,9 +521,35 @@ local function pick1fn(power, target, lv, excuted)
     power.plantpick = true
 end
 
-
+---comment 采集二阶，多倍采集农作物
 local function pick2fn(power, target, lv, excuted)
     power.farmpick = true 
+end
+
+
+---comment 采集三阶，施肥效率提升
+local function pick3fn(power, target, lv, excuted)
+    local multi = (lv - GOD_STEP * 2) * 0.05
+    KsFunSetPowerData(target, NAMES.PICK, "NUTRIENTS", multi)
+end
+
+
+---comment 采集四阶，浆果施肥不再枯萎
+local function pick4fn(power, target, lv, excuted)
+    KsFunAddTag(target, KSFUN_TAGS.FERTILIZER)
+end
+
+
+
+---comment 采集五阶，
+local function pick5fn(power, target, lv, excuted)
+    
+end
+
+
+---comment
+local function pick6fn(power, target, lv, excuted)
+    KsFunAddTag(target, "ksfun_god"..NAMES.PICK)
 end
 
 

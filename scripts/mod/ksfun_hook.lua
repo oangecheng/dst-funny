@@ -86,13 +86,8 @@ end
 -- 每10级提升一个倍率，倍率无上限，但是施肥的最大值是 100
 local function calcFertilizeMulti(deployer)
     if not deployer then return 1 end
-    local farm = deployer.components.ksfun_power_system:GetPower(KSFUN_TUNING.PLAYER_POWER_NAMES.FARM)
-    if farm ~= nil then
-        local lv = farm.components.ksfun_level:GetLevel()
-        return 1 + lv/10
-    end
-    -- default value
-    return 1
+    local multi = KsFunGetPowerData(deployer, PLAYER_POWERS.PICK, "NUTRIENTS")
+    return 1 + (multi or 0)
 end
 
 -- 根据用户等级计算肥力值的倍率对肥力值进行修改
@@ -282,6 +277,35 @@ end)
 
 
 
+--多汁浆果采集是掉落
+AddPrefabPostInit("berrybush_juicy", function(inst)
+    if GLOBAL.TheWorld.ismastersim then
+        if inst.components.pickable then
+            local oldpickfn = inst.components.pickable.onpickedfn
+            inst.components.pickable.onpickedfn = function(inst, picker, loot)
+                picker:PushEvent("ksfun_picksomething", { object = inst, prefab = "berries_juicy", num = 3 })
+                if oldpickfn then
+                    oldpickfn(inst, picker, loot)
+                end
+            end
+        end
+    end
+end)
+
+---给移植的植物施肥不再枯萎
+AddComponentPostInit("pickable", function(self)
+    local oldfn = self.Fertilize
+    self.Fertilize = function (_, fertilizer, doer)
+        local ret = oldfn(self, fertilizer, doer)
+        if doer:HasTag(KSFUN_TAGS.FERTILIZER) then
+            self.cycles_left  = nil
+            self.transplanted = nil
+        end
+        return ret
+    end
+end)
+
+
 
 
 --- 降智光环hook
@@ -352,22 +376,6 @@ end
 
 
 -----------------------------------------------------------------其他逻辑处理--------------------------------------------------------------------------------------
-
---多汁浆果采集是掉落
-AddPrefabPostInit("berrybush_juicy",function(inst)
-	if GLOBAL.TheWorld.ismastersim then
-		if inst.components.pickable then
-			local oldpickfn=inst.components.pickable.onpickedfn
-			inst.components.pickable.onpickedfn=function(inst, picker, loot)
-				picker:PushEvent("ksfun_picksomething", { object = inst, prefab = "berries_juicy", num = 3})
-				if oldpickfn then
-					oldpickfn(inst, picker, loot)
-				end
-			end
-		end
-	end
-end)
-
 
 
 
