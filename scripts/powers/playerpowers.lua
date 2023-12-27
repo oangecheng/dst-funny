@@ -417,6 +417,7 @@ local function health4Fn(power, target, lv, excuted)
 end
 
 
+
 ---comment 血量5阶，僵直抗性
 local function health5Fn(power, target, lv, excuted)
     local v = math.min((lv - GOD_STEP * 4) * 0.05, 1)
@@ -481,6 +482,7 @@ local function onKill(killer, data)
     end
 end
 
+
 local function onHealthAttach(power, target)
     target:ListenForEvent("killed", onKill)
     local healthcom = target.components.health
@@ -510,14 +512,13 @@ local health = {
 
 
 ------------------------------------------------------------------------------------------- 采集 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- 可多倍采集的物品定义
 local PICKABLE_DEFS = require("defs/ksfun_prefabs_def").pickable
-
+local PICK_MAX = 5  --最高额外采集数量，比如石果是3，最多能 3+5 = 8
 
 
 ---comment 采集一阶，多倍采集植物
 local function pick1fn(power, target, lv, excuted)
-    power.plantpick = true 
+    power.plantpick = true
 end
 
 
@@ -528,10 +529,12 @@ end
 
 ---comment 计算倍率，最高5倍采集
 ---@param power table 属性
+---@param initlv integer 初始等级
 ---@return integer 额外掉落物，累加计数
-local function calcPickMulti(power)
-    local lv = math.floor(power.components.ksfun_level:GetLevel() * 0.05)
-    local seed = 2 ^ 5
+local function calcPickMulti(power, initlv)
+    local lv = power.components.ksfun_level:GetLevel() - initlv
+    lv = math.min(math.floor(lv * 0.05), PICK_MAX)
+    local seed = 2 ^ PICK_MAX
     if lv < 1 then
         return math.random() < 0.1 and 1 or 0
     end
@@ -547,96 +550,87 @@ end
 
 
 local function onPickPlant(player, data, power)
-    local obj = data.object
+    local obj  = data.object
+    local loot = data.loot
     local exp = (PICKABLE_DEFS[obj.prefab] or 0)
-    if exp <= 0 then 
+    if not (exp > 0 and obj) then 
         return 
     end
+    KsFunPowerGainExp(player, NAMES.PICK, exp)
 
-    -- 处理特殊case，目前支持多汁浆果
-    if obj and data.prefab then
-        if exp > 0 then
-            KsFunPowerGainExp(player, NAMES.PICK, exp)
-            local num = calcPickMulti(power)
-            if num > 0 and obj.components.lootdropper then
-                local pt = obj:GetPosition()
-                pt.y = pt.y + (obj.components.pickable.dropheight or 0)
-                for i = 1, num * data.num do
-                    obj.components.lootdropper:SpawnLootPrefab(data.prefab, pt)
-                end
-            end
-        end
+    if not power.plantpick then
         return
     end
 
-    -- 正常采集
-    local loot = data and data.loot or nil
-    if not (power and loot and obj) then 
-        return 
-    end
-
-    KsFunPowerGainExp(player, NAMES.PICK, exp)
-
-    --- 单个物品
-    if loot.prefab ~= nil then
-         -- 根据等级计算可以额外掉落的数量
-        local num = calcPickMulti(power)
-        if num > 0 then
-            for i = 1, num do
-                local item = SpawnPrefab(loot.prefab)
-                player.components.inventory:GiveItem(item, nil, player:GetPosition())
-            end       
+    -- 处理特殊case，目前支持多汁浆果
+    if data.prefab then
+        local num = calcPickMulti(power, 0)
+        if num > 0 and obj.components.lootdropper then
+            local pt = obj:GetPosition()
+            pt.y = pt.y + (obj.components.pickable.dropheight or 0)
+            for _ = 1, num * data.num do
+                obj.components.lootdropper:SpawnLootPrefab(data.prefab, pt)
+            end
         end
-    
-    -- 多物品掉落(好像没走这个逻辑，确认下是不是农场作物掉落, 暂时保留)
-    elseif not IsTableEmpty(loot) then
-        -- 额外掉落物
-        local extraloot = {}
-        local lootdropper = obj.components.lootdropper
-        local num = calcPickMulti(power)
-        local dropper = lootdropper:GenerateLoot()
-        if (not IsTableEmpty(dropper)) and num > 0 then
-            for _, prefab in ipairs(dropper) do
-                for i = 1, num do
-                    table.insert(extraloot, lootdropper:SpawnLootPrefab(prefab))
+
+    elseif loot then
+        --- 单个物品
+        if loot.prefab ~= nil then
+            -- 根据等级计算可以额外掉落的数量
+            local num = calcPickMulti(power, 0)
+            if num > 0 then
+                for _ = 1, num do
+                    local item = SpawnPrefab(loot.prefab)
+                    player.components.inventory:GiveItem(item, nil, player:GetPosition())
                 end
             end
-            -- 给予玩家物品
-            for _, item in ipairs(extraloot) do
-                player.components.inventory:GiveItem(item, nil, player:GetPosition())
-            end 
+
+        -- 多物品掉落(好像没走这个逻辑，确认下是不是农场作物掉落, 暂时保留)
+        elseif not IsTableEmpty(loot) then
+            -- 额外掉落物
+            local extraloot = {}
+            local lootdropper = obj.components.lootdropper
+            local num = calcPickMulti(power, 0)
+            local dropper = lootdropper:GenerateLoot()
+            if (not IsTableEmpty(dropper)) and num > 0 then
+                for _, prefab in ipairs(dropper) do
+                    for i = 1, num do
+                        table.insert(extraloot, lootdropper:SpawnLootPrefab(prefab))
+                    end
+                end
+                for i, item in ipairs(extraloot) do
+                    player.components.inventory:GiveItem(item, nil, player:GetPosition())
+                end
+            end
+        end
+
+        -- 仙人掌花单独处理
+        if obj.has_flower and (obj.prefab == "cactus" or obj.prefab == "oasis_cactus") then
+            local n = calcPickMulti(power, 0)
+            for i = 1, n do
+                local flower = SpawnPrefab("cactus_flower")
+                player.components.inventory:GiveItem(flower, nil, player:GetPosition())
+            end
         end
     end
-
-    -- 仙人掌花单独处理
-    if obj.has_flower and (obj.prefab == "cactus" or obj.prefab == "oasis_cactus") then
-        local n = calcPickMulti(power)
-        for i = 1, n do
-            local flower = SpawnPrefab("cactus_flower")
-            player.components.inventory:GiveItem(flower, nil, player:GetPosition())
-        end
-     end
 end
 
 
 local function onPickFarmPlant(player, data, power)
     local prefab = data.loot[1] and data.loot[1].prefab
-    if prefab and string.find(prefab, "oversized") then
-        KsFunPowerGainExp(player, NAMES.FARM, 10)
-    else
-        KsFunPowerGainExp(player, NAMES.FARM,  5)
-    end
+    local exp = string.find(prefab or "", "oversized" ) and 10 or 5
+    KsFunPowerGainExp(player, NAMES.FARM, exp)
 
-    local lootdropper = data.object.components.lootdropper
+    local dropper = data.object.components.lootdropper
     -- 额外掉落物
-    if lootdropper then
-        local num = calcPickMulti(power)
-        local loot = lootdropper:GenerateLoot()
+    if dropper and power.farmpick then
+        local num = calcPickMulti(power, GOD_STEP)
+        local loot = dropper:GenerateLoot()
         if num <= 0 or IsTableEmpty(loot) then return end
         local extraloot = {}
         for _, p in ipairs(loot) do
             for i = 1, num do
-                table.insert(extraloot, lootdropper:SpawnLootPrefab(p))
+                table.insert(extraloot, dropper:SpawnLootPrefab(p))
             end
         end
  
@@ -647,14 +641,12 @@ local function onPickFarmPlant(player, data, power)
     end
 end
 
-
+---comment 采集能够获得经验，等级提升后可以多倍采集
 local function onPickSomeThing(player, data)
     local power = player.components.ksfun_power_system:GetPower(NAMES.PICK)
     if power and data and data.object then
         if data.object:HasTag("farm_plant") then
-            if power.farmpick then
-                onPickFarmPlant(player, data, power)
-            end
+            onPickFarmPlant(player, data, power)
         else
             onPickPlant(player, data, power)
         end
@@ -669,9 +661,9 @@ end
 
 
 local pickfns = {
-
+    { fn = pick1fn, excuted = false },
+    { fn = pick2fn, excuted = false },
 }
-
 local pick = {
     onattach = onPickAttach,
     onstatechange = function (power, target) updatePowerLvFn(pickfns, power, target) end,
