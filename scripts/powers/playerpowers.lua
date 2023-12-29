@@ -527,16 +527,17 @@ local function pick2fn(power, target, lv, excuted)
 end
 
 
----comment 采集三阶，施肥效率提升
+---comment 采集三阶，多倍采集巨大化作物
 local function pick3fn(power, target, lv, excuted)
-    local multi = (lv - GOD_STEP * 2) * 0.05
-    KsFunSetPowerData(target, NAMES.PICK, "NUTRIENTS", multi)
+    power.farmpick_oversized = true
 end
 
 
----comment 采集四阶，浆果施肥不再枯萎
+---comment 采集四阶，肥料仙人
 local function pick4fn(power, target, lv, excuted)
     KsFunAddTag(target, KSFUN_TAGS.FERTILIZER)
+    local multi = (lv - GOD_STEP * 2) * 0.05
+    KsFunSetPowerData(target, NAMES.PICK, "NUTRIENTS", multi)
 end
 
 
@@ -547,7 +548,7 @@ local function pick5fn(power, target, lv, excuted)
 end
 
 
----comment
+---comment 照料的作物全部巨大化
 local function pick6fn(power, target, lv, excuted)
     KsFunAddTag(target, "ksfun_god"..NAMES.PICK)
 end
@@ -644,13 +645,20 @@ end
 
 local function onPickFarmPlant(player, data, power)
     local prefab = data.loot[1] and data.loot[1].prefab
-    local exp = string.find(prefab or "", "oversized" ) and 10 or 5
+    local oversized = string.find(prefab or "", "oversized" ) 
+    local exp = oversized and 10 or 5
     KsFunPowerGainExp(player, NAMES.FARM, exp)
+
+    -- 巨大作物需要满足标记
+    if oversized and not power.farmpick_oversized then
+        return
+    end
 
     local dropper = data.object.components.lootdropper
     -- 额外掉落物
     if dropper and power.farmpick then
-        local num = calcPickMulti(power, GOD_STEP)
+        local initlv = oversized and GOD_STEP * 2 or GOD_STEP
+        local num = calcPickMulti(power, initlv)
         local loot = dropper:GenerateLoot()
         if num <= 0 or IsTableEmpty(loot) then return end
         local extraloot = {}
