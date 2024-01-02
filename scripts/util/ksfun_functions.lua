@@ -374,3 +374,9 @@ end
 function KsFunHasUpgradeTag(target, itemprefab)
     return target and target:HasTag("ksfun_upgrade"..itemprefab)
 end
+
+
+
+function KsFunIsGod(player, power)
+    return player and player:HasTag("ksfun_god_"..power)
+end

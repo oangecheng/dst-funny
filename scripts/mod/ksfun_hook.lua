@@ -77,59 +77,6 @@ end
 
 
 
-
-
-----------------------------------------------------------------------肥力hook--------------------------------------------------------------------------------------------------
-
-
--- 计算施肥倍率
--- 每10级提升一个倍率，倍率无上限，但是施肥的最大值是 100
-local function calcFertilizeMulti(deployer)
-    if not deployer then return 1 end
-    local multi = KsFunGetPowerData(deployer, PLAYER_POWERS.PICK, "NUTRIENTS")
-    return 1 + (multi or 0)
-end
-
--- 根据用户等级计算肥力值的倍率对肥力值进行修改
--- 并且返回原始的肥力值，如果之前的肥力值不存在，则返回nil
-local function tryModifyNutrients(fertilizer, deployer)
-    if not fertilizer or not deployer then return nil end
-    local cacheValue = fertilizer.nutrients
-    if not cacheValue then return nil end
-
-    local multi = calcFertilizeMulti(deployer)
-    local newValue = {}
-    for i,v in ipairs(cacheValue) do
-        -- 土地肥力值的上限就是100
-        table.insert(newValue, math.min(math.floor(v * multi), 100))
-    end
-    fertilizer.nutrients = newValue
-    return cacheValue
-end
-
--- hook ondeploy函数
--- 在回调之前篡改肥力值，回调后恢复
-local function hookOnDeploy(deployable)
-    if not TheWorld.ismastersim then
-        return
-    end
-    deployable.OldDeploy = deployable.Deploy
-    function deployable:Deploy(pt, deployer, rot)
-        local inst = self.inst
-        local fertilizer = inst.components.fertilizer
-        local ret = tryModifyNutrients(fertilizer, deployer)
-        local deployed = deployable:OldDeploy(pt, deployer, rot)
-        if ret then
-            inst.components.fertilizer.nutrients = ret
-        end
-		return deployed
-    end
-end
-
--- 这里不处理植物人吃肥料
-AddComponentPostInit("deployable", hookOnDeploy)
-
-
 --- 鼠标移动到位置上显示任务内容
 AddClassPostConstruct("widgets/hoverer", function(self)
     local old_SetString = self.text.SetString
@@ -177,6 +124,50 @@ end)
 
 
 -----------------------------------------------------------------一些组件的hook-------------------------------------------------------------------------------------
+
+
+-- 计算施肥倍率
+-- 每10级提升一个倍率，倍率无上限，但是施肥的最大值是 100
+local function calcFertilizeMulti(deployer)
+    if not deployer then return 1 end
+    local multi = KsFunGetPowerData(deployer, PLAYER_POWERS.PICK, "NUTRIENTS")
+    return 1 + (multi or 0)
+end
+
+-- 根据用户等级计算肥力值的倍率对肥力值进行修改
+-- 并且返回原始的肥力值，如果之前的肥力值不存在，则返回nil
+local function tryModifyNutrients(fertilizer, deployer)
+    if not fertilizer or not deployer then return nil end
+    local cacheValue = fertilizer.nutrients
+    if not cacheValue then return nil end
+
+    local multi = calcFertilizeMulti(deployer)
+    local newValue = {}
+    for i,v in ipairs(cacheValue) do
+        -- 土地肥力值的上限就是100
+        table.insert(newValue, math.min(math.floor(v * multi), 100))
+    end
+    fertilizer.nutrients = newValue
+    return cacheValue
+end
+
+---comments hook 施肥组件
+AddComponentPostInit("deployable", function (deployable)
+    local oldfn = deployable.Deploy
+    deployable.Deploy = function (self, pt, deployer, rot)
+        local inst = self.inst
+        local fertilizer = inst.components.fertilizer
+        local ret = tryModifyNutrients(fertilizer, deployer)
+        local deployed = oldfn(self, pt, deployer, rot)
+        if ret then
+            inst.components.fertilizer.nutrients = ret
+        end
+		return deployed
+    end
+end)
+
+
+
 --修改海钓竿组件
 AddComponentPostInit("oceanfishingrod", function(self)
 	local oldCatchFish = self.CatchFish
@@ -203,6 +194,11 @@ AddComponentPostInit("fishingrod", function(fishingrod)
 		end
 	end
 end)
+
+
+
+
+
 
 
 
@@ -372,6 +368,38 @@ ACTIONS.DRY.fn = function(act)
     end
     return ret, str
 end
+
+
+
+
+--- comment 照料作物巨大化
+AddComponentPostInit("farmplanttendable", function (tendable)
+    local oldfn = tendable.TendTo
+    tendable.TendTo = function (self, doer)
+        if self.inst.components.ksfun_mark and KsFunIsGod(doer, PLAYER_POWERS.PICK) then
+            self.inst.components.ksfun_mark:Add("oversized")
+        end
+        return oldfn(self, doer)
+    end
+end)
+
+
+local farmplants = require("prefabs/farm_plant_defs").PLANT_DEFS
+for k, v in pairs(farmplants) do
+    AddPrefabPostInit(k, function (inst)
+        if TheWorld.ismastersim then
+            inst:AddComponent("ksfun_mark")
+            inst.components.ksfun_mark:SetMarkFn("oversized", function ()
+                inst.force_oversized = true
+            end)
+        end
+    end)
+end
+
+
+
+
+
 
 
 

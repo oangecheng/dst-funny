@@ -145,7 +145,7 @@ end
 
 ---comment 精神值六阶，制作物品材料减半
 local function sanity6Fn(inst, target, lv, excuted)
-    KsFunAddTag(target, "ksfun_god"..NAMES.SANITY)
+    KsFunAddTag(target, "ksfun_god_"..NAMES.SANITY)
     local builder = target.components.builder
     builder.ingredientmod = .5
     --- 需要监听绿色护符佩戴
@@ -302,7 +302,7 @@ end
 
 ---comment 饱食度六阶，制作传说中的厨具
 local function hunger6Fn(power, target, lv, excuted)
-    KsFunAddTag(target, "ksfun_god"..NAMES.HUNGER)
+    KsFunAddTag(target, "ksfun_god_"..NAMES.HUNGER)
 end
 
 
@@ -430,7 +430,7 @@ end
 ---comment 血量6阶，成神技能
 --- 永生，死亡后3s复活
 local function health6Fn(power, target, lv, excuted)
-    KsFunAddTag(target, "ksfun_god"..NAMES.HEALTH)
+    KsFunAddTag(target, "ksfun_god_"..NAMES.HEALTH)
 
     local function respawnfn(inst)
         if inst.respawntask then
@@ -550,7 +550,7 @@ end
 
 ---comment 照料的作物全部巨大化
 local function pick6fn(power, target, lv, excuted)
-    KsFunAddTag(target, "ksfun_god"..NAMES.PICK)
+    KsFunAddTag(target, "ksfun_god_"..NAMES.PICK)
 end
 
 
@@ -644,8 +644,7 @@ end
 
 
 local function onPickFarmPlant(player, data, power)
-    local prefab = data.loot[1] and data.loot[1].prefab
-    local oversized = string.find(prefab or "", "oversized" ) 
+    local oversized = data.object.is_oversized
     local exp = oversized and 10 or 5
     KsFunPowerGainExp(player, NAMES.FARM, exp)
 
