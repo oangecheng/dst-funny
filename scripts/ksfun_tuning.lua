@@ -87,7 +87,8 @@ KSFUN_POWER_CONFIGS = {
 KSFUN_TAGS = {
     REPAIRABLE = "ksfun_repairable",
     FERTILIZER = "ksfun_fertilizer",
-    
+    SEEDMAKER  = "ksfun_seedmaker",
+
 }
 
 

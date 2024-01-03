@@ -542,9 +542,12 @@ end
 
 
 
----comment 采集五阶，
+---comment 采集五阶，获得生命之种的制作配方
 local function pick5fn(power, target, lv, excuted)
-    
+    KsFunAddTag(target, KSFUN_TAGS.SEEDMAKER)
+    if not excuted then
+        target:PushEvent("refreshcrafting")
+    end
 end
 
 
@@ -696,6 +699,11 @@ end
 local pickfns = {
     { fn = pick1fn, excuted = false },
     { fn = pick2fn, excuted = false },
+    { fn = pick3fn, excuted = false },
+    { fn = pick4fn, excuted = false },
+    { fn = pick5fn, excuted = false },
+    { fn = pick6fn, excuted = false },
+
 }
 local pick = {
     onattach = onPickAttach,
@@ -708,4 +716,5 @@ return {
     [NAMES.SANITY] = sanity,
     [NAMES.HUNGER] = hunger,
     [NAMES.HEALTH] = health,
+    [NAMES.PICK]   = pick,
 }
