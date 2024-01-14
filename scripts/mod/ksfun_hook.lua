@@ -386,7 +386,7 @@ end)
 
 local farmplants = require("prefabs/farm_plant_defs").PLANT_DEFS
 for k, v in pairs(farmplants) do
-    AddPrefabPostInit(k, function (inst)
+    AddPrefabPostInit(v.prefab, function (inst)
         if TheWorld.ismastersim then
             inst:AddComponent("ksfun_mark")
             inst.components.ksfun_mark:SetMarkFn("oversized", function ()

@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-field
 
 local function addMark(self, mark)
-    if mark and not table.contains(self.tags, mark) then
+    if mark and not table.contains(self.marks, mark) then
         table.insert(self.marks, mark)
         local fn = self.fns[mark]
         if fn then
