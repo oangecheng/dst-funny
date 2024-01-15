@@ -529,6 +529,7 @@ end
 
 ---comment 采集三阶，多倍采集巨大化作物
 local function pick3fn(power, target, lv, excuted)
+    KsFunAddTag(target,"fastpicker")--快采标签
     power.farmpick_oversized = true
 end
 

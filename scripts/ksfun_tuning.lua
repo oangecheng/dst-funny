@@ -7,7 +7,7 @@ KSFUN_TUNING =  {
     MODE = 1,
     IS_CH = true,
 
-    DEBUG = true,
+    DEBUG = false,
     PRINT_LOG = true,
     LOG_TAG = "ksfun_log: ",  
 
